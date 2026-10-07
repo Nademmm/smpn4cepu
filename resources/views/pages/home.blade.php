@@ -1,5 +1,5 @@
 <x-layouts.app title="Beranda">
-    {{-- Hero Section dengan Logo SMPN 4 Cepu Besar & Miring Serong --}}
+    {{-- Hero Section dengan Logo SMPN 4 Cepu Lurus & Menyatu di Background --}}
     <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
         {{-- Lingkaran Cahaya Dekoratif Latar Belakang --}}
         <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sun/15 blur-3xl pointer-events-none" aria-hidden="true"></div>
@@ -7,7 +7,7 @@
 
         <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {{-- Kolom Teks Utama --}}
-            <div class="lg:col-span-7 space-y-6">
+            <div class="lg:col-span-7 space-y-6 relative z-10">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-xs border border-white/20 text-xs font-black text-sun tracking-wider uppercase">
                     <span>NPSN: 20314928</span>
                     <span class="text-white/40">·</span>
@@ -32,17 +32,17 @@
                 </div>
             </div>
 
-            {{-- Kolom Kanan: Tepat Satu Logo SMPN 4 Cepu Gede & Miring Serong --}}
-            <div class="lg:col-span-5 flex items-center justify-center relative py-6">
-                {{-- Ambient Aura Emas di Belakang Logo --}}
-                <div class="absolute w-72 sm:w-96 h-72 sm:h-96 bg-sun/20 blur-3xl rounded-full pointer-events-none"></div>
+            {{-- Kolom Kanan: Logo SMPN 4 Cepu Lurus, Gede, Menyatu Transparan dengan Background --}}
+            <div class="lg:col-span-5 flex items-center justify-center relative py-6 select-none">
+                {{-- Ambient Cahaya di Belakang Logo --}}
+                <div class="absolute w-72 sm:w-96 h-72 sm:h-96 bg-sun/15 blur-3xl rounded-full pointer-events-none"></div>
 
-                {{-- Satu Logo Utama Berukuran Besar & Miring Serong --}}
-                <div class="relative transform rotate-[14deg] hover:rotate-[6deg] transition-all duration-500 ease-out cursor-pointer group">
+                {{-- Logo Lurus Tegak, Agak Transparan Menyatu dengan Background namun Tetap Kelihatan Jelas --}}
+                <div class="relative">
                     <img
                         src="{{ asset('images/logo.png') }}"
                         alt="Logo SMP Negeri 4 Cepu"
-                        class="w-64 sm:w-80 lg:w-[380px] xl:w-[420px] h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-500"
+                        class="w-72 sm:w-88 lg:w-[420px] xl:w-[460px] h-auto object-contain opacity-35 hover:opacity-55 transition-opacity duration-300 drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
                     >
                 </div>
             </div>
