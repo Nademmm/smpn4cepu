@@ -1,13 +1,8 @@
 <x-layouts.app title="Beranda">
     {{-- Hero Section dengan Logo SMPN 4 Cepu Besar & Miring Serong --}}
     <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-        {{-- Watermark Logo Raksasa di Latar Belakang --}}
-        <div class="absolute -right-20 -bottom-20 w-[420px] sm:w-[560px] lg:w-[680px] h-[420px] sm:h-[560px] lg:h-[680px] opacity-15 rotate-[16deg] pointer-events-none select-none" aria-hidden="true">
-            <img src="{{ asset('images/logo.png') }}" alt="" class="w-full h-full object-contain filter grayscale contrast-200">
-        </div>
-
-        {{-- Lingkaran Cahaya Dekoratif --}}
-        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sun/20 blur-3xl pointer-events-none" aria-hidden="true"></div>
+        {{-- Lingkaran Cahaya Dekoratif Latar Belakang --}}
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sun/15 blur-3xl pointer-events-none" aria-hidden="true"></div>
         <div class="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none" aria-hidden="true"></div>
 
         <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -37,17 +32,17 @@
                 </div>
             </div>
 
-            {{-- Kolom Kanan: Logo SMPN 4 Cepu Gede & Miring Serong Menempel di Background --}}
+            {{-- Kolom Kanan: Tepat Satu Logo SMPN 4 Cepu Gede & Miring Serong --}}
             <div class="lg:col-span-5 flex items-center justify-center relative py-6">
                 {{-- Ambient Aura Emas di Belakang Logo --}}
-                <div class="absolute w-72 sm:w-96 h-72 sm:h-96 bg-sun/25 blur-3xl rounded-full pointer-events-none"></div>
+                <div class="absolute w-72 sm:w-96 h-72 sm:h-96 bg-sun/20 blur-3xl rounded-full pointer-events-none"></div>
 
-                {{-- Logo Utama Besar & Serong --}}
+                {{-- Satu Logo Utama Berukuran Besar & Miring Serong --}}
                 <div class="relative transform rotate-[14deg] hover:rotate-[6deg] transition-all duration-500 ease-out cursor-pointer group">
                     <img
                         src="{{ asset('images/logo.png') }}"
                         alt="Logo SMP Negeri 4 Cepu"
-                        class="w-72 sm:w-96 lg:w-[420px] xl:w-[460px] h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-500"
+                        class="w-64 sm:w-80 lg:w-[380px] xl:w-[420px] h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-500"
                     >
                 </div>
             </div>
