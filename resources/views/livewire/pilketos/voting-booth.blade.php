@@ -141,41 +141,44 @@
             </div>
         </div>
 
-        {{-- Modal Konfirmasi Pilihan Suara --}}
-        <div
-            x-show="showModal"
-            x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/70 backdrop-blur-xs"
-        >
-            <div class="card max-w-md w-full text-center space-y-4 p-6 sm:p-7 shadow-xl">
-                <div class="w-14 h-14 rounded-2xl bg-sky-soft text-brand flex items-center justify-center mx-auto">
-                    <x-app-icon name="vote" class="w-7 h-7" />
-                </div>
-                <h3 class="text-xl font-extrabold text-navy">Konfirmasi Pilihan Anda</h3>
-                <p class="text-xs text-ink-soft leading-relaxed font-medium">
-                    Apakah Anda yakin ingin memberikan suara untuk pasangan calon:
-                </p>
-                <div class="card bg-sky-soft p-3.5 font-black text-brand text-base border-brand/20" x-text="candidateName"></div>
-                <p class="text-[11px] text-ink-mute font-medium">
-                    Satu perangkat hanya dapat memberikan satu suara. Pilihan yang sudah dikirimkan bersifat final.
-                </p>
-                <div class="flex justify-center gap-3 pt-2">
-                    <button
-                        type="button"
-                        @click="showModal = false"
-                        class="btn-ghost text-xs"
-                    >
-                        Batal
-                    </button>
-                    <button
-                        type="button"
-                        @click="executeVote()"
-                        class="btn-primary text-xs shadow-xs"
-                    >
-                        Ya, Kirim Suara Sekarang
-                    </button>
+        {{-- Modal Konfirmasi Pilihan Suara (Teleport ke Body) --}}
+        <template x-teleport="body">
+            <div
+                x-show="showModal"
+                x-cloak
+                @keydown.escape.window="showModal = false"
+                class="fixed inset-0 z-[100] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm overflow-y-auto"
+            >
+                <div class="card max-w-md w-full text-center space-y-4 p-6 sm:p-7 bg-white shadow-2xl">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-soft text-brand flex items-center justify-center mx-auto">
+                        <x-app-icon name="vote" class="w-7 h-7" />
+                    </div>
+                    <h3 class="text-xl font-extrabold text-navy">Konfirmasi Pilihan Anda</h3>
+                    <p class="text-xs text-ink-soft leading-relaxed font-medium">
+                        Apakah Anda yakin ingin memberikan suara untuk pasangan calon:
+                    </p>
+                    <div class="card bg-sky-soft p-3.5 font-black text-brand text-base border-brand/20" x-text="candidateName"></div>
+                    <p class="text-[11px] text-ink-mute font-medium">
+                        Satu perangkat hanya dapat memberikan satu suara. Pilihan yang sudah dikirimkan bersifat final.
+                    </p>
+                    <div class="flex justify-center gap-3 pt-2">
+                        <button
+                            type="button"
+                            @click="showModal = false"
+                            class="btn-ghost text-xs"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="button"
+                            @click="executeVote()"
+                            class="btn-primary text-xs shadow-xs"
+                        >
+                            Ya, Kirim Suara Sekarang
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </template>
     </div>
 </div>

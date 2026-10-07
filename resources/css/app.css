@@ -15,9 +15,10 @@
         display: none !important;
     }
 
+    /* Scrollbar: Warna netral default sistem dengan bentuk modern & halus */
     ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 8px;
+        height: 8px;
     }
 
     ::-webkit-scrollbar-track {
@@ -25,8 +26,17 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #FFE3A0;
-        border-radius: 4px;
+        background: #cbd5e1;
+        border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
     }
 
     :focus-visible {

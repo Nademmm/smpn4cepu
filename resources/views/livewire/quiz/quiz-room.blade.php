@@ -106,40 +106,43 @@
                 </div>
             </x-card>
 
-            {{-- Modal Konfirmasi Kirim Jawaban --}}
-            <div
-                x-show="confirmFinish"
-                x-cloak
-                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60 backdrop-blur-xs"
-            >
-                <div class="card max-w-md w-full text-center space-y-4">
-                    <div class="w-14 h-14 rounded-full bg-sun-soft flex items-center justify-center text-brand mx-auto">
-                        <x-app-icon name="quiz" class="w-7 h-7" />
-                    </div>
-                    <h3 class="text-xl font-extrabold text-navy">Selesaikan Latihan?</h3>
-                    <p class="text-xs text-ink-soft leading-relaxed">
-                        Periksa kembali apakah seluruh butir soal sudah terjawab. Skor akan dihitung otomatis oleh sistem setelah dikirim.
-                    </p>
-                    <div class="flex justify-center gap-3 pt-2">
-                        <button
-                            type="button"
-                            @click="confirmFinish = false"
-                            class="btn-ghost text-xs"
-                        >
-                            Periksa Lagi
-                        </button>
-                        <button
-                            type="button"
-                            wire:click="submitQuiz"
-                            wire:loading.attr="disabled"
-                            class="btn-primary text-xs"
-                        >
-                            <span wire:loading.remove>Ya, Kirim Sekarang</span>
-                            <span wire:loading>Menghitung Skor...</span>
-                        </button>
+            {{-- Modal Konfirmasi Kirim Jawaban (Teleport ke Body) --}}
+            <template x-teleport="body">
+                <div
+                    x-show="confirmFinish"
+                    x-cloak
+                    @keydown.escape.window="confirmFinish = false"
+                    class="fixed inset-0 z-[100] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm overflow-y-auto"
+                >
+                    <div class="card max-w-md w-full text-center space-y-4 bg-white shadow-2xl">
+                        <div class="w-14 h-14 rounded-full bg-sun-soft flex items-center justify-center text-brand mx-auto">
+                            <x-app-icon name="quiz" class="w-7 h-7" />
+                        </div>
+                        <h3 class="text-xl font-extrabold text-navy">Selesaikan Latihan?</h3>
+                        <p class="text-xs text-ink-soft leading-relaxed">
+                            Periksa kembali apakah seluruh butir soal sudah terjawab. Skor akan dihitung otomatis oleh sistem setelah dikirim.
+                        </p>
+                        <div class="flex justify-center gap-3 pt-2">
+                            <button
+                                type="button"
+                                @click="confirmFinish = false"
+                                class="btn-ghost text-xs"
+                            >
+                                Periksa Lagi
+                            </button>
+                            <button
+                                type="button"
+                                wire:click="submitQuiz"
+                                wire:loading.attr="disabled"
+                                class="btn-primary text-xs"
+                            >
+                                <span wire:loading.remove>Ya, Kirim Sekarang</span>
+                                <span wire:loading>Menghitung Skor...</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
     @else
         {{-- Layar Hasil / Skor Figma --}}

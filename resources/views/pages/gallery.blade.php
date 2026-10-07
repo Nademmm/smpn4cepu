@@ -89,25 +89,28 @@
             @endforeach
         </div>
 
-        {{-- Modal Preview Foto --}}
-        <div
-            x-show="activeImage !== null"
-            x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/80 backdrop-blur-xs"
-        >
+        {{-- Modal Preview Foto (Teleport ke Body) --}}
+        <template x-teleport="body">
             <div
-                @click.away="activeImage = null"
-                class="card max-w-2xl w-full p-4 space-y-3"
+                x-show="activeImage !== null"
+                x-cloak
+                @keydown.escape.window="activeImage = null"
+                class="fixed inset-0 z-[100] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm overflow-y-auto"
             >
-                <div class="flex items-center justify-between pb-2 border-b-2 border-sun-soft">
-                    <h3 class="font-extrabold text-navy text-base" x-text="activeTitle"></h3>
-                    <button type="button" @click="activeImage = null" class="p-1 rounded-lg text-ink-mute hover:text-navy">
-                        <x-app-icon name="x" class="w-5 h-5" />
-                    </button>
+                <div
+                    @click.away="activeImage = null"
+                    class="card max-w-2xl w-full p-4 space-y-3 bg-white shadow-2xl"
+                >
+                    <div class="flex items-center justify-between pb-2 border-b-2 border-sun-soft">
+                        <h3 class="font-extrabold text-navy text-base" x-text="activeTitle"></h3>
+                        <button type="button" @click="activeImage = null" class="p-1 rounded-lg text-ink-mute hover:text-navy">
+                            <x-app-icon name="x" class="w-5 h-5" />
+                        </button>
+                    </div>
+                    <img :src="activeImage" :alt="activeTitle" class="w-full max-h-[70vh] object-contain rounded-xl border border-sun-soft">
+                    <p class="text-xs text-ink-soft font-semibold" x-text="activeCaption"></p>
                 </div>
-                <img :src="activeImage" :alt="activeTitle" class="w-full max-h-[70vh] object-contain rounded-xl border border-sun-soft">
-                <p class="text-xs text-ink-soft font-semibold" x-text="activeCaption"></p>
             </div>
-        </div>
+        </template>
     </div>
 </x-layouts.app>

@@ -33,6 +33,7 @@
                 this.reservationSubmitted = true;
             }
         }"
+        x-effect="document.body.classList.toggle('overflow-hidden', selectedBook !== null)"
     >
         {{-- Ringkasan Koleksi Perpustakaan --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -369,12 +370,14 @@
             </div>
         </div>
 
-        {{-- Modal Komprehensif: Detail Bibliografi & Reservasi Peminjaman --}}
-        <div
-            x-show="selectedBook !== null"
-            x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/70 backdrop-blur-xs"
-        >
+        {{-- Modal Komprehensif: Detail Bibliografi & Reservasi Peminjaman (Teleport ke Body untuk Layar Penuh Mutlak) --}}
+        <template x-teleport="body">
+            <div
+                x-show="selectedBook !== null"
+                x-cloak
+                @keydown.escape.window="selectedBook = null"
+                class="fixed inset-0 z-[100] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm overflow-y-auto"
+            >
             <div
                 @click.away="selectedBook = null"
                 class="card max-w-2xl w-full p-0 overflow-hidden shadow-2xl max-h-[92vh] flex flex-col bg-white"
@@ -619,5 +622,6 @@
                 </div>
             </div>
         </div>
+        </template>
     </div>
 </x-layouts.app>
