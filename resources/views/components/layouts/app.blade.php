@@ -4,8 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'SMP Negeri 4 Cepu' }} - Satu Sekolah, Satu Ruang Digital</title>
+    <title>{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}</title>
     <meta name="description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
+    
+    {{-- Favicon / Icon Tab Browser --}}
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
