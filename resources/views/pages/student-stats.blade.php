@@ -5,7 +5,7 @@
         crumb="Statistik Siswa"
     />
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-8">
         {{-- Total Rangkuman Card --}}
         @php
             $totalMale = $stats->sum('male_count');

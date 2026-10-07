@@ -38,7 +38,7 @@
         ];
     @endphp
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-4">
         @foreach ($downloads as $doc)
             <x-card class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 hover:border-brand transition-colors">
                 <div class="flex items-start gap-4">

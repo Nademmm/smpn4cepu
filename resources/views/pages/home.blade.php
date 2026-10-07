@@ -7,9 +7,6 @@
 
         <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div class="lg:col-span-7">
-                <span class="inline-block rounded-full bg-sun px-3.5 py-1 text-xs font-extrabold text-navy mb-4">
-                    Sekolah Unggulan Cepu
-                </span>
                 <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight mb-4 max-w-xl">
                     Tumbuh bersama,<br>berkarya nyata di Cepu.
                 </h1>
@@ -35,9 +32,28 @@
                         class="w-full h-56 object-cover"
                     >
                 </div>
-                <div class="mt-3 rounded-xl bg-sun/25 border border-sun/40 px-5 py-2 text-xs font-bold text-sun text-center">
-                    Terakreditasi A · NPSN 20314928
-                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Statistik Resmi Sekolah (Band Biru Figma dengan Data Nyata) --}}
+    <section class="bg-brand py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-sun">1979</div>
+                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Tahun Berdiri</div>
+            </div>
+            <div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-sun">33</div>
+                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Guru & Tenaga Pendidik</div>
+            </div>
+            <div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-sun">11</div>
+                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Fasilitas Utama</div>
+            </div>
+            <div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-sun">A</div>
+                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Akreditasi Sekolah</div>
             </div>
         </div>
     </section>
@@ -86,28 +102,6 @@
                     </div>
                     <span class="font-extrabold text-sm sm:text-base text-navy group-hover:text-brand">Bilik Pilketos</span>
                 </a>
-            </div>
-        </div>
-    </section>
-
-    {{-- Statistik Resmi Sekolah (Band Biru Figma dengan Data Nyata) --}}
-    <section class="bg-brand py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div>
-                <div class="text-3xl sm:text-4xl font-extrabold text-sun">1979</div>
-                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Tahun Berdiri</div>
-            </div>
-            <div>
-                <div class="text-3xl sm:text-4xl font-extrabold text-sun">33</div>
-                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Guru & Tenaga Pendidik</div>
-            </div>
-            <div>
-                <div class="text-3xl sm:text-4xl font-extrabold text-sun">11</div>
-                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Fasilitas Utama</div>
-            </div>
-            <div>
-                <div class="text-3xl sm:text-4xl font-extrabold text-sun">A</div>
-                <div class="text-xs sm:text-sm font-semibold text-white/80 mt-1">Akreditasi Sekolah</div>
             </div>
         </div>
     </section>

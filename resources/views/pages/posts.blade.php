@@ -5,7 +5,7 @@
         crumb="Berita"
     />
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {{-- Kolom Utama: Pencarian, Filter Chip, Daftar Berita --}}
             <div class="lg:col-span-8 space-y-6">

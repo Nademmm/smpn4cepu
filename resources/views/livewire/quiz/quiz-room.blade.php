@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto py-8 px-4 sm:px-6">
+<div class="max-w-3xl mx-auto py-8 sm:py-12 pb-16 px-4 sm:px-6">
     @if (! $isFinished)
         @php
             $totalQuestions = count($questions);

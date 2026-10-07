@@ -49,7 +49,7 @@
         </div>
     </section>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-8">
         {{-- Pesan Status / Error --}}
         @if ($hasVoted)
             <div class="rounded-2xl border-2 border-emerald-400 bg-emerald-50 p-5 text-center text-emerald-900 font-extrabold text-sm sm:text-base shadow-xs">

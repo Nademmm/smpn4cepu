@@ -4,7 +4,7 @@
         crumb="Detail Berita"
     />
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16">
         <x-card class="space-y-6">
             <div>
                 <a href="{{ route('posts') }}" class="link-brand text-sm inline-flex items-center gap-1.5 mb-4">
