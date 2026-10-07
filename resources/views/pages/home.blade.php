@@ -1,20 +1,34 @@
 <x-layouts.app title="Beranda">
-    {{-- Hero Section (Sesuai Desain Figma) --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        {{-- Lingkaran Dekoratif Aksen Figma --}}
-        <div class="absolute -top-16 -right-16 w-80 h-80 rounded-full bg-sun/10 pointer-events-none" aria-hidden="true"></div>
-        <div class="absolute -bottom-10 left-1/3 w-52 h-52 rounded-full bg-white/5 pointer-events-none" aria-hidden="true"></div>
+    {{-- Hero Section dengan Logo SMPN 4 Cepu Besar & Miring Serong --}}
+    <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+        {{-- Watermark Logo Raksasa di Latar Belakang --}}
+        <div class="absolute -right-20 -bottom-20 w-[420px] sm:w-[560px] lg:w-[680px] h-[420px] sm:h-[560px] lg:h-[680px] opacity-15 rotate-[16deg] pointer-events-none select-none" aria-hidden="true">
+            <img src="{{ asset('images/logo.png') }}" alt="" class="w-full h-full object-contain filter grayscale contrast-200">
+        </div>
+
+        {{-- Lingkaran Cahaya Dekoratif --}}
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sun/20 blur-3xl pointer-events-none" aria-hidden="true"></div>
+        <div class="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none" aria-hidden="true"></div>
 
         <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div class="lg:col-span-7">
-                <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight mb-4 max-w-xl">
+            {{-- Kolom Teks Utama --}}
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-xs border border-white/20 text-xs font-black text-sun tracking-wider uppercase">
+                    <span>NPSN: 20314928</span>
+                    <span class="text-white/40">·</span>
+                    <span class="text-white/90">Blora, Jawa Tengah</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl lg:text-[54px] font-black text-white leading-[1.15] tracking-tight max-w-xl">
                     Tumbuh bersama,<br>berkarya nyata di Cepu.
                 </h1>
-                <p class="text-base sm:text-lg text-white/85 leading-relaxed mb-8 max-w-lg">
-                    SMP Negeri 4 Cepu berkomitmen mencetak generasi berkarakter, berprestasi, mandiri, dan siap menghadapi tantangan masa depan.
+
+                <p class="text-base sm:text-lg text-white/90 leading-relaxed max-w-lg font-medium">
+                    SMP Negeri 4 Cepu berkomitmen mencetak generasi berkarakter CERIA BERIMAN, mandiri, berprestasi, dan berwawasan lingkungan hidup.
                 </p>
-                <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('posts') }}" class="btn-primary">
+
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <a href="{{ route('posts') }}" class="btn-primary shadow-md">
                         Jelajahi Sekolah
                     </a>
                     <a href="{{ route('profile') }}" class="btn-outline">
@@ -23,13 +37,17 @@
                 </div>
             </div>
 
-            {{-- Ilustrasi / Foto Gedung Sekolah --}}
-            <div class="lg:col-span-5 flex flex-col items-center">
-                <div class="w-full max-w-sm sm:max-w-md rounded-3xl overflow-hidden border-2 border-white/20 shadow-2xl bg-white/10">
+            {{-- Kolom Kanan: Logo SMPN 4 Cepu Gede & Miring Serong Menempel di Background --}}
+            <div class="lg:col-span-5 flex items-center justify-center relative py-6">
+                {{-- Ambient Aura Emas di Belakang Logo --}}
+                <div class="absolute w-72 sm:w-96 h-72 sm:h-96 bg-sun/25 blur-3xl rounded-full pointer-events-none"></div>
+
+                {{-- Logo Utama Besar & Serong --}}
+                <div class="relative transform rotate-[14deg] hover:rotate-[6deg] transition-all duration-500 ease-out cursor-pointer group">
                     <img
-                        src="{{ asset('images/assets/20260717_092659.jpg') }}"
-                        alt="Gedung SMP Negeri 4 Cepu"
-                        class="w-full h-64 sm:h-72 object-cover"
+                        src="{{ asset('images/logo.png') }}"
+                        alt="Logo SMP Negeri 4 Cepu"
+                        class="w-72 sm:w-96 lg:w-[420px] xl:w-[460px] h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-500"
                     >
                 </div>
             </div>
