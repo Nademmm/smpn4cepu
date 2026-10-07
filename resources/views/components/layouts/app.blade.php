@@ -36,16 +36,28 @@
                     </a>
 
                     {{-- Dropdown Profil --}}
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                        <button type="button" class="px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-colors {{ request()->is('profil*') || request()->routeIs('student-stats') ? 'bg-sky-soft text-brand font-extrabold' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
+                        <button type="button" @click="open = !open" class="px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-colors {{ request()->is('profil*') || request()->routeIs('student-stats') ? 'bg-sky-soft text-brand font-extrabold' : 'text-navy hover:text-brand' }}">
                             <span>Profil</span>
                             <x-app-icon name="chevron-down" class="w-3.5 h-3.5 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
-                        <div x-show="open" x-cloak class="absolute left-0 mt-1 w-56 bg-white rounded-2xl shadow-xl border-2 border-sun-soft py-2 z-50">
-                            <a href="{{ route('profile') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Sejarah & Visi Misi</a>
-                            <a href="{{ route('facilities') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">11 Fasilitas Sekolah</a>
-                            <a href="{{ route('gallery') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Galeri Foto Kegiatan</a>
-                            <a href="{{ route('student-stats') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Statistik Rombel Siswa</a>
+                        <div
+                            x-show="open"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 top-full pt-1 w-56 z-50"
+                        >
+                            <div class="bg-white rounded-2xl shadow-xl border-2 border-sun-soft py-2">
+                                <a href="{{ route('profile') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Sejarah & Visi Misi</a>
+                                <a href="{{ route('facilities') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">11 Fasilitas Sekolah</a>
+                                <a href="{{ route('gallery') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Galeri Foto Kegiatan</a>
+                                <a href="{{ route('student-stats') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Statistik Rombel Siswa</a>
+                            </div>
                         </div>
                     </div>
 
@@ -58,14 +70,26 @@
                     </a>
 
                     {{-- Dropdown Belajar --}}
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                        <button type="button" class="px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-colors {{ request()->is('materi*') || request()->is('latihan-soal*') ? 'bg-sky-soft text-brand font-extrabold' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
+                        <button type="button" @click="open = !open" class="px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-colors {{ request()->is('materi*') || request()->is('latihan-soal*') ? 'bg-sky-soft text-brand font-extrabold' : 'text-navy hover:text-brand' }}">
                             <span>Belajar</span>
                             <x-app-icon name="chevron-down" class="w-3.5 h-3.5 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
-                        <div x-show="open" x-cloak class="absolute left-0 mt-1 w-52 bg-white rounded-2xl shadow-xl border-2 border-sun-soft py-2 z-50">
-                            <a href="{{ route('materials') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Materi Pelajaran</a>
-                            <a href="{{ route('quizzes') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Latihan Soal Mandiri</a>
+                        <div
+                            x-show="open"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 top-full pt-1 w-52 z-50"
+                        >
+                            <div class="bg-white rounded-2xl shadow-xl border-2 border-sun-soft py-2">
+                                <a href="{{ route('materials') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Materi Pelajaran</a>
+                                <a href="{{ route('quizzes') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Latihan Soal Mandiri</a>
+                            </div>
                         </div>
                     </div>
 
@@ -74,14 +98,26 @@
                     </a>
 
                     {{-- Dropdown Pilketos --}}
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                        <button type="button" class="px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-colors {{ request()->is('pilketos*') ? 'bg-sky-soft text-brand font-extrabold' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
+                        <button type="button" @click="open = !open" class="px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-colors {{ request()->is('pilketos*') ? 'bg-sky-soft text-brand font-extrabold' : 'text-navy hover:text-brand' }}">
                             <span>Pilketos</span>
                             <x-app-icon name="chevron-down" class="w-3.5 h-3.5 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
-                        <div x-show="open" x-cloak class="absolute left-0 mt-1 w-52 bg-white rounded-2xl shadow-xl border-2 border-sun-soft py-2 z-50">
-                            <a href="{{ route('pilketos') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Bilik Suara E-Voting</a>
-                            <a href="{{ route('pilketos.live') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Quick Count Suara</a>
+                        <div
+                            x-show="open"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 top-full pt-1 w-52 z-50"
+                        >
+                            <div class="bg-white rounded-2xl shadow-xl border-2 border-sun-soft py-2">
+                                <a href="{{ route('pilketos') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Bilik Suara E-Voting</a>
+                                <a href="{{ route('pilketos.live') }}" class="block px-4 py-2 hover:bg-sky-soft text-navy text-sm font-semibold">Quick Count Suara</a>
+                            </div>
                         </div>
                     </div>
 
