@@ -16,17 +16,23 @@ class LibraryBook extends Model
         'author',
         'publisher',
         'category',
+        'synopsis',
         'publication_year',
+        'page_count',
+        'language',
         'shelf_location',
+        'call_number',
         'total_stock',
         'available_stock',
         'cover_image',
+        'digital_file_path',
     ];
 
     protected function casts(): array
     {
         return [
             'publication_year' => 'integer',
+            'page_count' => 'integer',
             'total_stock' => 'integer',
             'available_stock' => 'integer',
         ];

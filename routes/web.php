@@ -66,14 +66,16 @@ Route::get('/pilketos/live-count', function () {
     return view('pages.pilketos-live');
 })->name('pilketos.live');
 
-// 8. Perpustakaan Digital
+// 8. Perpustakaan Digital (Katalog OPAC Modern)
 Route::get('/perpustakaan', function (Request $request) {
     $query = LibraryBook::query();
 
-    if ($search = $request->input('q')) {
+    if ($search = trim((string) $request->input('q'))) {
         $query->where(function ($q) use ($search) {
             $q->where('title', 'like', "%{$search}%")
               ->orWhere('author', 'like', "%{$search}%")
+              ->orWhere('publisher', 'like', "%{$search}%")
+              ->orWhere('call_number', 'like', "%{$search}%")
               ->orWhere('isbn', 'like', "%{$search}%");
         });
     }
@@ -82,10 +84,38 @@ Route::get('/perpustakaan', function (Request $request) {
         $query->where('category', $category);
     }
 
-    $books = $query->orderBy('title')->get();
+    if ($stock = $request->input('stock')) {
+        if ($stock === 'available') {
+            $query->where('available_stock', '>', 0);
+        } elseif ($stock === 'digital') {
+            $query->whereNotNull('digital_file_path');
+        }
+    }
+
+    $sort = $request->input('sort', 'newest');
+    if ($sort === 'title_asc') {
+        $query->orderBy('title', 'asc');
+    } elseif ($sort === 'title_desc') {
+        $query->orderBy('title', 'desc');
+    } elseif ($sort === 'year_desc') {
+        $query->orderBy('publication_year', 'desc');
+    } elseif ($sort === 'stock_desc') {
+        $query->orderBy('available_stock', 'desc');
+    } else {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    $books = $query->paginate(12)->withQueryString();
     $categories = LibraryBook::select('category')->distinct()->whereNotNull('category')->pluck('category');
 
-    return view('pages.library', compact('books', 'categories'));
+    $stats = [
+        'total_titles' => LibraryBook::count(),
+        'total_copies' => (int) LibraryBook::sum('total_stock'),
+        'available_copies' => (int) LibraryBook::sum('available_stock'),
+        'digital_books' => LibraryBook::whereNotNull('digital_file_path')->count(),
+    ];
+
+    return view('pages.library', compact('books', 'categories', 'stats'));
 })->name('library');
 
 // 9. Ruang Belajar Mandiri: Materi

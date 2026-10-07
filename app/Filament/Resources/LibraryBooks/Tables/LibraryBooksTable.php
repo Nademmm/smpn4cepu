@@ -18,28 +18,35 @@ class LibraryBooksTable
     {
         return $table
             ->columns([
-                TextColumn::make('isbn')
-                    ->searchable(),
+                ImageColumn::make('cover_image')
+                    ->label('Sampul')
+                    ->disk('public'),
                 TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('author')
-                    ->searchable(),
-                TextColumn::make('publisher')
-                    ->searchable(),
+                    ->label('Judul Buku')
+                    ->description(fn ($record) => $record->author . ' · ' . $record->publisher)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('category')
+                    ->label('Kategori')
+                    ->badge()
                     ->searchable(),
-                TextColumn::make('publication_year')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('shelf_location')
+                    ->label('Lokasi Rak')
+                    ->description(fn ($record) => $record->call_number ? 'No. Panggil: ' . $record->call_number : null)
                     ->searchable(),
-                TextColumn::make('total_stock')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('available_stock')
-                    ->numeric()
+                    ->label('Stok Pinjam')
+                    ->formatStateUsing(fn ($record) => $record->available_stock . ' / ' . $record->total_stock . ' Eks')
+                    ->badge()
+                    ->color(fn ($record) => $record->available_stock > 0 ? 'success' : 'danger')
                     ->sortable(),
-                ImageColumn::make('cover_image'),
+                TextColumn::make('publication_year')
+                    ->label('Tahun')
+                    ->sortable(),
+                TextColumn::make('isbn')
+                    ->label('ISBN')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
