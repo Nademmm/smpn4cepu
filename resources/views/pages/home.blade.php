@@ -37,12 +37,12 @@
                 {{-- Ambient Cahaya di Belakang Logo --}}
                 <div class="absolute w-72 sm:w-96 h-72 sm:h-96 bg-sun/15 blur-3xl rounded-full pointer-events-none"></div>
 
-                {{-- Logo Lurus Tegak, Agak Transparan Menyatu dengan Background namun Tetap Kelihatan Jelas --}}
+                {{-- Logo Lurus Tegak dengan Opasitas Nyala Tetap Menyatu di Background --}}
                 <div class="relative">
                     <img
                         src="{{ asset('images/logo.png') }}"
                         alt="Logo SMP Negeri 4 Cepu"
-                        class="w-72 sm:w-88 lg:w-[420px] xl:w-[460px] h-auto object-contain opacity-35 hover:opacity-55 transition-opacity duration-300 drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
+                        class="w-72 sm:w-88 lg:w-[420px] xl:w-[460px] h-auto object-contain opacity-55 drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
                     >
                 </div>
             </div>
