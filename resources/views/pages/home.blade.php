@@ -25,11 +25,11 @@
 
             {{-- Ilustrasi / Foto Gedung Sekolah --}}
             <div class="lg:col-span-5 flex flex-col items-center">
-                <div class="w-full max-w-xs sm:max-w-sm rounded-3xl overflow-hidden border-2 border-white/20 shadow-2xl bg-white/10">
+                <div class="w-full max-w-sm sm:max-w-md rounded-3xl overflow-hidden border-2 border-white/20 shadow-2xl bg-white/10">
                     <img
                         src="{{ asset('images/assets/20260717_092659.jpg') }}"
                         alt="Gedung SMP Negeri 4 Cepu"
-                        class="w-full h-56 object-cover"
+                        class="w-full h-64 sm:h-72 object-cover"
                     >
                 </div>
             </div>
@@ -64,43 +64,43 @@
             <h2 class="text-2xl font-extrabold text-navy text-center mb-6">Akses Cepat</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                 {{-- 1. Berita --}}
-                <a href="{{ route('posts') }}" class="card bg-sky-soft hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2 p-5 group">
-                    <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-brand shadow-xs">
-                        <x-app-icon name="news" class="w-6 h-6" />
+                <a href="{{ route('posts') }}" class="card bg-sky-soft hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2.5 p-5 group">
+                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-brand shadow-xs">
+                        <x-app-icon name="news" class="w-7 h-7" />
                     </div>
-                    <span class="font-extrabold text-sm sm:text-base text-navy group-hover:text-brand">Berita Sekolah</span>
+                    <span class="font-extrabold text-[15px] sm:text-base text-navy group-hover:text-brand">Berita Sekolah</span>
                 </a>
 
                 {{-- 2. Guru & Tendik --}}
-                <a href="{{ route('staff') }}" class="card bg-[#FFFBEB] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2 p-5 group">
-                    <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-amber-600 shadow-xs">
-                        <x-app-icon name="users" class="w-6 h-6" />
+                <a href="{{ route('staff') }}" class="card bg-[#FFFBEB] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2.5 p-5 group">
+                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-amber-600 shadow-xs">
+                        <x-app-icon name="users" class="w-7 h-7" />
                     </div>
-                    <span class="font-extrabold text-sm sm:text-base text-navy group-hover:text-brand">Guru & Tendik</span>
+                    <span class="font-extrabold text-[15px] sm:text-base text-navy group-hover:text-brand">Guru & Tendik</span>
                 </a>
 
                 {{-- 3. Belajar --}}
-                <a href="{{ route('materials') }}" class="card bg-[#F5F3FF] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2 p-5 group">
-                    <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-grape shadow-xs">
-                        <x-app-icon name="quiz" class="w-6 h-6" />
+                <a href="{{ route('materials') }}" class="card bg-[#F5F3FF] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2.5 p-5 group">
+                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-grape shadow-xs">
+                        <x-app-icon name="quiz" class="w-7 h-7" />
                     </div>
-                    <span class="font-extrabold text-sm sm:text-base text-navy group-hover:text-brand">Belajar Mandiri</span>
+                    <span class="font-extrabold text-[15px] sm:text-base text-navy group-hover:text-brand">Belajar Mandiri</span>
                 </a>
 
                 {{-- 4. Perpustakaan --}}
-                <a href="{{ route('library') }}" class="card bg-[#F0FDF4] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2 p-5 group">
-                    <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-emerald-600 shadow-xs">
-                        <x-app-icon name="book" class="w-6 h-6" />
+                <a href="{{ route('library') }}" class="card bg-[#F0FDF4] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2.5 p-5 group">
+                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-emerald-600 shadow-xs">
+                        <x-app-icon name="book" class="w-7 h-7" />
                     </div>
-                    <span class="font-extrabold text-sm sm:text-base text-navy group-hover:text-brand">Perpustakaan</span>
+                    <span class="font-extrabold text-[15px] sm:text-base text-navy group-hover:text-brand">Perpustakaan</span>
                 </a>
 
                 {{-- 5. Pilketos --}}
-                <a href="{{ route('pilketos') }}" class="card bg-[#FFF7ED] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2 p-5 col-span-2 sm:col-span-1 group">
-                    <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-orange-600 shadow-xs">
-                        <x-app-icon name="vote" class="w-6 h-6" />
+                <a href="{{ route('pilketos') }}" class="card bg-[#FFF7ED] hover:-translate-y-1 transition-transform text-center flex flex-col items-center gap-2.5 p-5 col-span-2 sm:col-span-1 group">
+                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-orange-600 shadow-xs">
+                        <x-app-icon name="vote" class="w-7 h-7" />
                     </div>
-                    <span class="font-extrabold text-sm sm:text-base text-navy group-hover:text-brand">Bilik Pilketos</span>
+                    <span class="font-extrabold text-[15px] sm:text-base text-navy group-hover:text-brand">Bilik Pilketos</span>
                 </a>
             </div>
         </div>
@@ -216,7 +216,7 @@
                 @foreach ($featuredFacilities as $facility)
                     <x-card class="flex flex-col hover:border-brand transition-colors">
                         @if ($facility->photo_path && file_exists(public_path('images/assets/' . $facility->photo_path)))
-                            <img src="{{ asset('images/assets/' . $facility->photo_path) }}" alt="{{ $facility->name }}" class="w-full h-32 object-cover rounded-xl mb-3">
+                            <img src="{{ asset('images/assets/' . $facility->photo_path) }}" alt="{{ $facility->name }}" class="w-full h-36 sm:h-40 object-cover rounded-xl mb-3">
                         @else
                             <div class="w-12 h-12 rounded-xl bg-sky-soft flex items-center justify-center text-brand mb-3">
                                 <x-app-icon name="building" class="w-6 h-6" />
