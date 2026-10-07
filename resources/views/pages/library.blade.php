@@ -1,75 +1,166 @@
 <x-layouts.app title="Perpustakaan Digital">
-    <section class="bg-gradient-to-b from-blue-900 via-indigo-950 to-slate-950 text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
-            <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Pusat Sumber Literasi</span>
-            <h1 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight">Katalog Perpustakaan Digital</h1>
-            <p class="text-sm text-slate-300 mt-2 max-w-2xl">
-                Temukan buku pelajaran, buku fiksi sastra, dan referensi teknologi. Periksa lokasi rak fisik dan ketersediaan stok pinjam.
-            </p>
-        </div>
-    </section>
+    <x-page-header
+        title="Perpustakaan Digital"
+        subtitle="Temukan katalog buku pelajaran, nomor rak penyimpanan fisik, dan ketersediaan stok pinjam."
+        crumb="Perpustakaan"
+    />
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {{-- Form Pencarian Buku --}}
-        <form method="GET" action="{{ route('library') }}" class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-8 flex flex-col sm:flex-row gap-4">
-            <div class="flex-grow relative">
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul buku, penulis, atau ISBN..."
-                       class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <button type="submit" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors flex-shrink-0">
-                Cari Koleksi
-            </button>
-            @if(request('q'))
-                <a href="{{ route('library') }}" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center">
-                    Reset
-                </a>
+    <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6"
+        x-data="{
+            selectedBook: null,
+            openDetail(book) {
+                this.selectedBook = book;
+            }
+        }"
+    >
+        {{-- Search & Chip Kategori Figma --}}
+        <div class="space-y-4">
+            <form method="GET" action="{{ route('library') }}" class="relative max-w-xl">
+                @if (request('category'))
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                @endif
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request('q') }}"
+                    placeholder="Cari judul buku, pengarang, atau nomor ISBN..."
+                    class="field pl-11"
+                >
+                <x-app-icon name="search" class="w-5 h-5 text-ink-mute absolute left-3.5 top-1/2 -translate-y-1/2" />
+            </form>
+
+            @if ($categories->isNotEmpty())
+                <div class="flex flex-wrap gap-2">
+                    <a
+                        href="{{ route('library', request('q') ? ['q' => request('q')] : []) }}"
+                        class="chip {{ !request('category') ? 'chip-active' : '' }}"
+                    >
+                        Semua Kategori
+                    </a>
+                    @foreach ($categories as $cat)
+                        <a
+                            href="{{ route('library', array_merge(request('q') ? ['q' => request('q')] : [], ['category' => $cat])) }}"
+                            class="chip {{ request('category') === $cat ? 'chip-active' : '' }}"
+                        >
+                            {{ $cat }}
+                        </a>
+                    @endforeach
+                </div>
             @endif
-        </form>
+        </div>
 
-        {{-- Grid Buku --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @forelse($books as $book)
-                <div class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wide bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                                {{ $book->category }}
-                            </span>
-                            <span class="font-mono text-xs text-slate-400 font-semibold">
-                                {{ $book->publication_year }}
-                            </span>
+        {{-- Grid Katalog Buku Figma --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            @forelse ($books as $book)
+                <x-card class="flex flex-col justify-between hover:border-brand transition-colors p-5">
+                    <div>
+                        {{-- Cover Area Figma --}}
+                        <div class="h-28 rounded-xl bg-sky-soft flex items-center justify-center text-brand mb-4 overflow-hidden border border-sun-soft/50">
+                            @if ($book->cover_image && file_exists(public_path('storage/' . $book->cover_image)))
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+                            @else
+                                <x-app-icon name="book" class="w-12 h-12" />
+                            @endif
                         </div>
 
-                        <h3 class="font-bold text-slate-900 dark:text-white text-base leading-snug mb-2 line-clamp-2">
+                        <h3 class="font-extrabold text-navy text-sm sm:text-base leading-snug line-clamp-2 mb-1">
                             {{ $book->title }}
                         </h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">
-                            Penulis: <strong class="text-slate-700 dark:text-slate-300">{{ $book->author }}</strong>
+                        <p class="text-xs text-ink-soft mb-3 line-clamp-1">
+                            {{ $book->author ?? 'Penulis tidak tercatat' }}
                         </p>
-                        <p class="text-xs text-slate-400">
-                            Penerbit: {{ $book->publisher }}
-                        </p>
+
+                        <div class="flex items-center justify-between gap-2 text-xs mb-3">
+                            <x-badge type="blue">{{ $book->category ?? 'Umum' }}</x-badge>
+                            @if ($book->available_stock > 0)
+                                <x-badge type="green">Stok: {{ $book->available_stock }}</x-badge>
+                            @else
+                                <x-badge type="orange">Habis</x-badge>
+                            @endif
+                        </div>
+
+                        <div class="bg-cream/60 rounded-lg p-2 text-xs text-navy font-semibold flex items-center gap-1.5 mb-4">
+                            <span class="text-ink-mute text-[11px]">Rak:</span>
+                            <span class="font-extrabold text-brand">{{ $book->shelf_location ?? 'Layanan Sirkulasi' }}</span>
+                        </div>
                     </div>
 
-                    <div class="px-6 pb-6 pt-3 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/20 text-xs flex items-center justify-between">
-                        <div>
-                            <span class="text-slate-400 block text-[11px]">Lokasi Rak:</span>
-                            <span class="font-mono font-bold text-slate-800 dark:text-slate-200">{{ $book->shelf_location ?: 'Gudang' }}</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-slate-400 block text-[11px]">Sisa Stok:</span>
-                            <span class="font-mono font-black {{ $book->available_stock > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500' }}">
-                                {{ $book->available_stock }} / {{ $book->total_stock }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                    <button
+                        type="button"
+                        @click="openDetail({{ json_encode($book) }})"
+                        class="btn-primary w-full text-xs !min-h-[38px]"
+                    >
+                        Detail & Posisi Rak
+                    </button>
+                </x-card>
             @empty
-                <div class="col-span-full py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800">
-                    <p class="text-slate-500 text-sm">Tidak ada buku yang sesuai dengan pencarian Anda.</p>
+                <div class="col-span-full">
+                    <x-empty-state
+                        title="Buku Belum Ditemukan"
+                        text="Tidak ada buku yang sesuai dengan pencarian atau filter kategori yang dipilih."
+                    />
                 </div>
             @endforelse
+        </div>
+
+        {{-- Modal Detail Buku Sesuai Figma --}}
+        <div
+            x-show="selectedBook !== null"
+            x-cloak
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60 backdrop-blur-xs"
+        >
+            <div
+                @click.away="selectedBook = null"
+                class="card max-w-lg w-full space-y-4 max-h-[90vh] overflow-y-auto"
+            >
+                <div class="flex items-start justify-between gap-4 pb-3 border-b-2 border-sun-soft">
+                    <div>
+                        <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-1" x-text="selectedBook?.category || 'Katalog'"></span>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-navy leading-snug" x-text="selectedBook?.title"></h2>
+                    </div>
+                    <button
+                        type="button"
+                        @click="selectedBook = null"
+                        class="p-1 rounded-lg text-ink-mute hover:text-navy"
+                    >
+                        <x-app-icon name="x" class="w-5 h-5" />
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="card p-3 bg-sky-soft/50">
+                        <span class="text-[11px] text-ink-mute block">Penulis</span>
+                        <strong class="font-extrabold text-navy" x-text="selectedBook?.author || '-'"></strong>
+                    </div>
+                    <div class="card p-3 bg-sky-soft/50">
+                        <span class="text-[11px] text-ink-mute block">Penerbit & Tahun</span>
+                        <strong class="font-extrabold text-navy" x-text="(selectedBook?.publisher || '-') + ' (' + (selectedBook?.publication_year || '-') + ')'"></strong>
+                    </div>
+                    <div class="card p-3 bg-sky-soft/50">
+                        <span class="text-[11px] text-ink-mute block">Nomor Rak Fisik</span>
+                        <strong class="font-extrabold text-brand" x-text="selectedBook?.shelf_location || 'Layanan Sirkulasi'"></strong>
+                    </div>
+                    <div class="card p-3 bg-sky-soft/50">
+                        <span class="text-[11px] text-ink-mute block">Ketersediaan Stok</span>
+                        <strong class="font-extrabold text-emerald-700" x-text="selectedBook?.available_stock + ' dari ' + selectedBook?.total_stock + ' eksemplar'"></strong>
+                    </div>
+                </div>
+
+                <div class="rounded-xl bg-amber-50 border border-sun-soft p-3 text-xs text-amber-900 leading-relaxed font-semibold">
+                    Silakan kunjungi ruang perpustakaan sekolah dan temukan buku ini pada nomor rak yang tertera untuk peminjaman fisik melalui pustakawan sekolah.
+                </div>
+
+                <div class="text-right pt-2">
+                    <button
+                        type="button"
+                        @click="selectedBook = null"
+                        class="btn-primary text-xs"
+                    >
+                        Tutup Informasi
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </x-layouts.app>

@@ -13,8 +13,32 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                cream: '#F1EBDA',
+                navy: '#1B2A4A',
+                ink: {
+                    soft: '#4B5563',
+                    mute: '#5B6577',
+                },
+                brand: {
+                    DEFAULT: '#1F5FBF',
+                    dark: '#163D8A',
+                    deep: '#0D2960',
+                },
+                sun: {
+                    DEFAULT: '#F5B700',
+                    soft: '#FFE3A0',
+                },
+                sky: {
+                    soft: '#EEF3FB',
+                },
+                grape: '#7C3AED',
+            },
             fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+            },
+            borderRadius: {
+                card: '20px',
             },
         },
     },

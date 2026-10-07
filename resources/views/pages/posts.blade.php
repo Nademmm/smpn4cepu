@@ -1,69 +1,126 @@
-<x-layouts.app title="Berita & Informasi Sekolah">
-    <section class="bg-gradient-to-b from-blue-900 via-indigo-950 to-slate-950 text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
-            <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Informasi Kedinasan & Berita</span>
-            <h1 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight">Kabar & Agenda SMP Negeri 4 Cepu</h1>
-            <p class="text-sm text-slate-300 mt-2 max-w-2xl">
-                Dapatkan kabar terkini seputar prestasi siswa, pengumuman resmi sekolah, dan jadwal agenda akademik mendatang.
-            </p>
-        </div>
-    </section>
+<x-layouts.app title="Berita & Informasi">
+    <x-page-header
+        title="Berita Sekolah"
+        subtitle="Informasi terkini seputar kegiatan dan prestasi SMP Negeri 4 Cepu"
+        crumb="Berita"
+    />
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {{-- Kategori Filter --}}
-        <div class="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
-            <a href="{{ route('posts') }}" class="px-4 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap {{ !request('cat') ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50' }}">
-                Semua Informasi
-            </a>
-            <a href="{{ route('posts', ['cat' => 'berita']) }}" class="px-4 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap {{ request('cat') === 'berita' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50' }}">
-                Berita
-            </a>
-            <a href="{{ route('posts', ['cat' => 'pengumuman']) }}" class="px-4 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap {{ request('cat') === 'pengumuman' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50' }}">
-                Pengumuman
-            </a>
-            <a href="{{ route('posts', ['cat' => 'agenda']) }}" class="px-4 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap {{ request('cat') === 'agenda' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50' }}">
-                Agenda
-            </a>
-        </div>
-
-        {{-- Grid Post --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @forelse($posts as $post)
-                <div class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div>
-                        @if($post->featured_image)
-                            <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover">
-                        @else
-                            <div class="w-full h-48 bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-                            </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {{-- Kolom Utama: Pencarian, Filter Chip, Daftar Berita --}}
+            <div class="lg:col-span-8 space-y-6">
+                {{-- Form Pencarian & Chip Kategori --}}
+                <div class="space-y-3">
+                    <form method="GET" action="{{ route('posts') }}" class="relative">
+                        @if (request('cat'))
+                            <input type="hidden" name="cat" value="{{ request('cat') }}">
                         @endif
-                        <div class="p-6">
-                            <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wide bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-3">
-                                {{ $post->category->value }}
-                            </span>
-                            <h3 class="font-bold text-slate-900 dark:text-white text-base leading-snug mb-2 line-clamp-2">
-                                <a href="{{ route('post.detail', $post->slug) }}" class="hover:text-blue-600 transition-colors">
-                                    {{ $post->title }}
+                        <input
+                            type="text"
+                            name="q"
+                            value="{{ request('q') }}"
+                            placeholder="Cari berita..."
+                            class="field pl-11"
+                        >
+                        <x-app-icon name="search" class="w-5 h-5 text-ink-mute absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    </form>
+
+                    <div class="flex flex-wrap gap-2">
+                        <a
+                            href="{{ route('posts', request('q') ? ['q' => request('q')] : []) }}"
+                            class="chip {{ !request('cat') ? 'chip-active' : '' }}"
+                        >Semua</a>
+                        @foreach (\App\Enums\PostCategory::cases() as $cat)
+                            <a
+                                href="{{ route('posts', array_merge(request('q') ? ['q' => request('q')] : [], ['cat' => $cat->value])) }}"
+                                class="chip {{ request('cat') === $cat->value ? 'chip-active' : '' }}"
+                            >{{ $cat->label() }}</a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Daftar Berita Kartu Horizontal Figma --}}
+                <div class="space-y-4">
+                    @forelse ($posts as $post)
+                        <x-card class="p-0 overflow-hidden flex flex-col sm:flex-row hover:border-brand transition-colors">
+                            @if ($post->featured_image)
+                                <img
+                                    src="{{ asset('storage/' . $post->featured_image) }}"
+                                    alt="{{ $post->title }}"
+                                    class="w-full sm:w-48 h-40 object-cover shrink-0"
+                                >
+                            @else
+                                <div class="w-full sm:w-48 h-40 bg-sky-soft flex items-center justify-center text-brand shrink-0">
+                                    <x-app-icon name="news" class="w-10 h-10" />
+                                </div>
+                            @endif
+
+                            <div class="p-5 flex flex-col justify-between grow">
+                                <div>
+                                    <div class="mb-2">
+                                        <x-badge type="blue">{{ $post->category->label() }}</x-badge>
+                                    </div>
+                                    <h2 class="text-base font-extrabold text-navy leading-snug mb-1">
+                                        <a href="{{ route('post.detail', $post->slug) }}" class="hover:text-brand">
+                                            {{ $post->title }}
+                                        </a>
+                                    </h2>
+                                    <p class="text-xs text-ink-soft line-clamp-2 leading-relaxed mb-2">
+                                        {{ $post->excerpt }}
+                                    </p>
+                                </div>
+
+                                <div class="flex items-center justify-between text-xs pt-2 border-t border-sun-soft">
+                                    <span class="font-semibold text-ink-mute">
+                                        {{ $post->published_at?->translatedFormat('d M Y') ?? $post->created_at->translatedFormat('d M Y') }}
+                                    </span>
+                                    <a href="{{ route('post.detail', $post->slug) }}" class="link-brand">
+                                        Baca Selengkapnya
+                                        <x-app-icon name="arrow-right" class="w-3.5 h-3.5 inline ml-0.5" />
+                                    </a>
+                                </div>
+                            </div>
+                        </x-card>
+                    @empty
+                        <x-empty-state
+                            title="Berita tidak ditemukan"
+                            text="Tidak ada berita yang cocok dengan kata kunci atau kategori yang Anda pilih."
+                        />
+                    @endforelse
+                </div>
+
+                {{-- Paginasi --}}
+                @if ($posts->hasPages())
+                    <div class="pt-4 flex justify-center">
+                        {{ $posts->links() }}
+                    </div>
+                @endif
+            </div>
+
+            {{-- Kolom Sidebar (300px Sesuai Figma) --}}
+            <aside class="lg:col-span-4 space-y-6">
+                <x-card class="p-5">
+                    <div class="flex items-center gap-2 font-extrabold text-base text-navy pb-3 border-b-2 border-sun-soft mb-3">
+                        <x-app-icon name="megaphone" class="w-5 h-5 text-brand" />
+                        <span>Pengumuman</span>
+                    </div>
+
+                    <div class="divide-y divide-sun-soft">
+                        @forelse ($announcements as $ann)
+                            <div class="py-3 first:pt-0 last:pb-0">
+                                <a href="{{ route('post.detail', $ann->slug) }}" class="font-bold text-xs sm:text-sm text-navy hover:text-brand line-clamp-2 leading-snug">
+                                    {{ $ann->title }}
                                 </a>
-                            </h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                                {{ $post->excerpt }}
-                            </p>
-                        </div>
+                                <span class="block text-[11px] font-semibold text-ink-mute mt-1">
+                                    {{ $ann->published_at?->translatedFormat('d M Y') ?? $ann->created_at->translatedFormat('d M Y') }}
+                                </span>
+                            </div>
+                        @empty
+                            <p class="text-xs text-ink-soft py-2">Belum ada pengumuman terbaru.</p>
+                        @endforelse
                     </div>
-                    <div class="px-6 pb-6 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                        <span>{{ $post->published_at ? $post->published_at->format('d M Y') : $post->created_at->format('d M Y') }}</span>
-                        <a href="{{ route('post.detail', $post->slug) }}" class="font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                            Baca Selengkapnya
-                        </a>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-full py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800">
-                    <p class="text-slate-500 text-sm">Belum ada artikel atau pengumuman yang sesuai.</p>
-                </div>
-            @endforelse
+                </x-card>
+            </aside>
         </div>
     </div>
 </x-layouts.app>

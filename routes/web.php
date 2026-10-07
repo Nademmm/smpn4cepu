@@ -13,15 +13,22 @@ use Illuminate\Support\Facades\Route;
 // 1. Beranda
 Route::get('/', function () {
     $recentPosts = Post::where('is_published', true)
+        ->where('category', '!=', PostCategory::AGENDA)
         ->orderByDesc('published_at')
         ->limit(3)
         ->get();
 
-    $featuredFacilities = SchoolFacility::orderBy('display_order')
-        ->limit(3)
+    $agendas = Post::where('is_published', true)
+        ->where('category', PostCategory::AGENDA)
+        ->orderBy('event_date')
+        ->limit(4)
         ->get();
 
-    return view('pages.home', compact('recentPosts', 'featuredFacilities'));
+    $featuredFacilities = SchoolFacility::orderBy('display_order')
+        ->limit(4)
+        ->get();
+
+    return view('pages.home', compact('recentPosts', 'agendas', 'featuredFacilities'));
 })->name('home');
 
 // 2. Profil Sekolah
@@ -71,8 +78,14 @@ Route::get('/perpustakaan', function (Request $request) {
         });
     }
 
+    if ($category = $request->input('category')) {
+        $query->where('category', $category);
+    }
+
     $books = $query->orderBy('title')->get();
-    return view('pages.library', compact('books'));
+    $categories = LibraryBook::select('category')->distinct()->whereNotNull('category')->pluck('category');
+
+    return view('pages.library', compact('books', 'categories'));
 })->name('library');
 
 // 9. Ruang Belajar Mandiri: Materi
@@ -108,8 +121,22 @@ Route::get('/berita', function (Request $request) {
         }
     }
 
-    $posts = $query->get();
-    return view('pages.posts', compact('posts'));
+    if ($search = $request->input('q')) {
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('excerpt', 'like', "%{$search}%")
+              ->orWhere('content', 'like', "%{$search}%");
+        });
+    }
+
+    $posts = $query->paginate(6)->withQueryString();
+    $announcements = Post::where('is_published', true)
+        ->where('category', PostCategory::PENGUMUMAN)
+        ->orderByDesc('published_at')
+        ->limit(4)
+        ->get();
+
+    return view('pages.posts', compact('posts', 'announcements'));
 })->name('posts');
 
 // 13. Detail Berita
