@@ -113,7 +113,7 @@
     </section>
 
     {{-- Sambutan Kepala Sekolah (Sesuai Desain Figma) --}}
-    <section class="bg-cream py-14 px-4 sm:px-6 lg:px-8">
+    <section class="bg-white py-12 sm:py-14 px-4 sm:px-6 lg:px-8 border-b-2 border-sun-soft/40">
         <div class="max-w-4xl mx-auto">
             <x-card class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start">
                 <div class="w-24 h-24 rounded-full bg-brand text-white flex items-center justify-center shrink-0 shadow-md">
@@ -208,7 +208,7 @@
     @endif
 
     {{-- Fasilitas Sekolah (Sesuai Desain Figma) --}}
-    <section class="bg-sky-soft py-14 px-4 sm:px-6 lg:px-8">
+    <section class="bg-white py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between gap-4 mb-7">
                 <h2 class="text-2xl font-extrabold text-navy">Fasilitas Sekolah</h2>
@@ -224,7 +224,7 @@
                         @if ($facility->photo_path && file_exists(public_path('images/assets/' . $facility->photo_path)))
                             <img src="{{ asset('images/assets/' . $facility->photo_path) }}" alt="{{ $facility->name }}" class="w-full h-32 object-cover rounded-xl mb-3">
                         @else
-                            <div class="w-12 h-12 rounded-xl bg-cream flex items-center justify-center text-brand mb-3">
+                            <div class="w-12 h-12 rounded-xl bg-sky-soft flex items-center justify-center text-brand mb-3">
                                 <x-app-icon name="building" class="w-6 h-6" />
                             </div>
                         @endif

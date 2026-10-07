@@ -5,7 +5,7 @@
         crumb="Fasilitas"
     />
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($facilities as $facility)
                 <x-card class="p-0 overflow-hidden flex flex-col justify-between hover:border-brand transition-colors">
