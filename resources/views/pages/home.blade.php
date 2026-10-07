@@ -1,6 +1,6 @@
 <x-layouts.app title="Beranda">
     {{-- Hero Section dengan Logo SMPN 4 Cepu Lurus & Menyatu di Background --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+    <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
         {{-- Lingkaran Cahaya Dekoratif Latar Belakang --}}
         <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sun/15 blur-3xl pointer-events-none" aria-hidden="true"></div>
         <div class="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none" aria-hidden="true"></div>
