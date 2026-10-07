@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'SMP Negeri 4 Cepu' }} | Satu Sekolah, Satu Ruang Digital</title>
+    <title>{{ $title ?? 'SMP Negeri 4 Cepu' }} - Satu Sekolah, Satu Ruang Digital</title>
     <meta name="description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,12 +20,16 @@
     <nav class="sticky top-0 z-50 bg-white border-b-2 border-sun-soft shadow-xs" x-data="{ mobileMenuOpen: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-[70px] gap-4">
-                {{-- Logo & Brand --}}
-                <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0 group py-1">
-                    <x-logo size="46" class="h-11 sm:h-12 w-auto object-contain drop-shadow-xs group-hover:scale-105 transition-transform" />
-                    <div class="flex flex-col justify-center select-none">
-                        <span class="text-xs sm:text-[14px] font-black text-brand uppercase tracking-wider leading-none">SMP NEGERI 4</span>
-                        <span class="text-lg sm:text-[22px] font-black text-navy tracking-tight leading-none mt-1">CEPU</span>
+                {{-- Logo & Brand: Minimalis, Sejajar & Profesional --}}
+                <a href="{{ route('home') }}" class="flex items-center gap-2.5 sm:gap-3 shrink-0 group py-1">
+                    <x-logo size="42" class="h-10 sm:h-11 w-auto object-contain drop-shadow-xs group-hover:scale-105 transition-transform" />
+                    <div class="flex items-center gap-1.5 select-none">
+                        <span class="text-[15px] sm:text-[18px] font-black tracking-tight text-navy group-hover:text-brand transition-colors">
+                            SMP NEGERI 4
+                        </span>
+                        <span class="text-[15px] sm:text-[18px] font-black tracking-tight text-brand">
+                            CEPU
+                        </span>
                     </div>
                 </a>
 
