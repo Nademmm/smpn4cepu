@@ -69,51 +69,60 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t-2 border-sun-soft text-xs">
-                <div class="card bg-sky-soft p-4">
-                    <span class="text-ink-mute block text-[11px]">Nomor Pokok Sekolah Nasional</span>
-                    <strong class="font-extrabold text-navy text-sm">20314928</strong>
+                <div class="bg-white border-2 border-sun-soft rounded-2xl p-4 shadow-xs">
+                    <span class="text-ink-mute block text-[11px] font-bold uppercase tracking-wider mb-1">NPSN Resmi</span>
+                    <strong class="font-black text-brand text-base">20314928</strong>
                 </div>
-                <div class="card bg-sky-soft p-4">
-                    <span class="text-ink-mute block text-[11px]">Status & Akreditasi</span>
-                    <strong class="font-extrabold text-navy text-sm">Negeri · Akreditasi A</strong>
+                <div class="bg-white border-2 border-sun-soft rounded-2xl p-4 shadow-xs">
+                    <span class="text-ink-mute block text-[11px] font-bold uppercase tracking-wider mb-1">Status & Akreditasi</span>
+                    <strong class="font-black text-navy text-base">Negeri · Akreditasi A</strong>
                 </div>
-                <div class="card bg-sky-soft p-4">
-                    <span class="text-ink-mute block text-[11px]">Wilayah Administratif</span>
-                    <strong class="font-extrabold text-navy text-sm">Mulyorejo, Cepu, Blora</strong>
+                <div class="bg-white border-2 border-sun-soft rounded-2xl p-4 shadow-xs">
+                    <span class="text-ink-mute block text-[11px] font-bold uppercase tracking-wider mb-1">Wilayah Administratif</span>
+                    <strong class="font-black text-navy text-base">Mulyorejo, Cepu, Blora</strong>
                 </div>
             </div>
         </x-card>
 
         {{-- 3 Karakteristik Satuan Pendidikan --}}
         <div>
-            <h2 class="text-xl font-extrabold text-navy mb-4">Karakteristik Lingkungan Satuan Pendidikan</h2>
+            <div class="mb-5">
+                <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-0.5">Keunggulan Lokal</span>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-navy">Karakteristik Lingkungan Satuan Pendidikan</h2>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <x-card class="space-y-2">
-                    <div class="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center font-black">
+                <x-card class="p-5 sm:p-6 space-y-3 hover:border-brand transition-all shadow-xs group">
+                    <div class="w-11 h-11 rounded-2xl bg-sky-soft text-brand flex items-center justify-center font-black text-base group-hover:scale-105 transition-transform">
                         1
                     </div>
-                    <h3 class="font-extrabold text-navy text-base">Kawasan Vokasi Energi Migas</h3>
-                    <p class="text-xs text-ink-soft leading-relaxed">
+                    <h3 class="font-extrabold text-navy text-base leading-snug group-hover:text-brand transition-colors">
+                        Kawasan Vokasi Energi Migas
+                    </h3>
+                    <p class="text-xs sm:text-sm text-ink-soft leading-relaxed font-medium">
                         Kedekatan dengan sentra industri migas dan pusat pendidikan energi (PPSDM Migas Cepu) menumbuhkan etos kedisiplinan kerja, kecintaan pada sains, dan adaptasi teknologi terapan sejak dini.
                     </p>
                 </x-card>
 
-                <x-card class="space-y-2">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black">
+                <x-card class="p-5 sm:p-6 space-y-3 hover:border-brand transition-all shadow-xs group">
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-black text-base group-hover:scale-105 transition-transform">
                         2
                     </div>
-                    <h3 class="font-extrabold text-navy text-base">Wawasan Adiwiyata & Lingkungan</h3>
-                    <p class="text-xs text-ink-soft leading-relaxed">
+                    <h3 class="font-extrabold text-navy text-base leading-snug group-hover:text-brand transition-colors">
+                        Wawasan Adiwiyata & Lingkungan
+                    </h3>
+                    <p class="text-xs sm:text-sm text-ink-soft leading-relaxed font-medium">
                         Terletak di Desa Mulyorejo yang asri, sekolah mengintegrasikan budaya pelestarian alam, pemilahan sampah organik, dan penghijauan ke dalam proyek profil pelajar Pancasila.
                     </p>
                 </x-card>
 
-                <x-card class="space-y-2">
-                    <div class="w-10 h-10 rounded-xl bg-grape text-white flex items-center justify-center font-black">
+                <x-card class="p-5 sm:p-6 space-y-3 hover:border-brand transition-all shadow-xs group">
+                    <div class="w-11 h-11 rounded-2xl bg-purple-50 text-grape flex items-center justify-center font-black text-base group-hover:scale-105 transition-transform">
                         3
                     </div>
-                    <h3 class="font-extrabold text-navy text-base">Penguatan Literasi & Spiritual</h3>
-                    <p class="text-xs text-ink-soft leading-relaxed">
+                    <h3 class="font-extrabold text-navy text-base leading-snug group-hover:text-brand transition-colors">
+                        Penguatan Literasi & Spiritual
+                    </h3>
+                    <p class="text-xs sm:text-sm text-ink-soft leading-relaxed font-medium">
                         Fasilitas perpustakaan digital terpadu, pembiasaan sholat berjamaah, dan kegiatan Baca Tulis Alquran (BTA) melahirkan lulusan yang cakap bernalar kritis sekaligus kokoh secara moral.
                     </p>
                 </x-card>

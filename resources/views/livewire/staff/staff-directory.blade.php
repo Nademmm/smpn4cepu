@@ -48,36 +48,39 @@
         {{-- Grid Kartu Guru & Tendik (Sesuai Desain Figma) --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             @forelse ($staffMembers as $staff)
-                <x-card class="text-center p-6 flex flex-col items-center hover:border-brand transition-colors">
-                    {{-- Avatar Bulat Biru Figma --}}
-                    @if ($staff->photo_path && file_exists(public_path('storage/' . $staff->photo_path)))
-                        <img
-                            src="{{ asset('storage/' . $staff->photo_path) }}"
-                            alt="{{ $staff->name }}"
-                            class="w-20 h-20 rounded-full object-cover border-2 border-sun-soft mb-3.5"
-                        >
-                    @else
-                        @php
-                            $words = explode(' ', trim($staff->name));
-                            $initials = strtoupper(substr($words[0] ?? 'G', 0, 1) . substr($words[1] ?? '', 0, 1));
-                        @endphp
-                        <div class="w-20 h-20 rounded-full bg-brand text-white flex items-center justify-center font-extrabold text-xl shadow-xs mb-3.5 border-2 border-sun-soft">
-                            {{ $initials }}
-                        </div>
-                    @endif
+                <x-card class="text-center p-6 flex flex-col justify-between items-center h-full hover:border-brand transition-all group">
+                    <div class="flex flex-col items-center w-full">
+                        {{-- Avatar Squircle Modern --}}
+                        @if ($staff->photo_path && file_exists(public_path('storage/' . $staff->photo_path)))
+                            <img
+                                src="{{ asset('storage/' . $staff->photo_path) }}"
+                                alt="{{ $staff->name }}"
+                                class="w-20 h-20 rounded-2xl object-cover border-2 border-sun-soft mb-3.5 group-hover:scale-105 transition-transform duration-200 shadow-2xs"
+                            >
+                        @else
+                            @php
+                                $words = explode(' ', trim($staff->name));
+                                $initials = strtoupper(substr($words[0] ?? 'G', 0, 1) . substr($words[1] ?? '', 0, 1));
+                            @endphp
+                            <div class="w-20 h-20 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xl shadow-2xs mb-3.5 border-2 border-sun-soft group-hover:scale-105 transition-transform duration-200">
+                                {{ $initials }}
+                            </div>
+                        @endif
 
-                    <h3 class="font-extrabold text-navy text-sm sm:text-base leading-snug mb-1">
-                        {{ $staff->name }}
-                    </h3>
-                    <div class="text-xs font-bold text-brand mb-1">
-                        {{ $staff->position }}
-                    </div>
-                    @if ($staff->nip)
-                        <div class="text-[11px] font-semibold text-ink-mute">
-                            NIP. {{ $staff->nip }}
+                        <h3 class="font-extrabold text-navy text-[15px] sm:text-base leading-snug mb-1 group-hover:text-brand transition-colors">
+                            {{ $staff->name }}
+                        </h3>
+                        <div class="text-xs font-bold text-brand mb-1">
+                            {{ $staff->position }}
                         </div>
-                    @endif
-                    <div class="mt-3">
+                        @if ($staff->nip)
+                            <div class="text-[11px] font-semibold text-ink-mute">
+                                NIP. {{ $staff->nip }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-sun-soft/60 w-full flex justify-center">
                         <x-badge type="{{ $staff->employment_status->value === 'pns' ? 'blue' : ($staff->employment_status->value === 'pppk' ? 'green' : 'orange') }}">
                             {{ $staff->employment_status->label() }}
                         </x-badge>

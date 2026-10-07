@@ -53,45 +53,48 @@
         {{-- Grid Katalog Buku Figma --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             @forelse ($books as $book)
-                <x-card class="flex flex-col justify-between hover:border-brand transition-colors p-5">
+                <x-card class="flex flex-col justify-between hover:border-brand transition-all p-5 group">
                     <div>
-                        {{-- Cover Area Figma --}}
-                        <div class="h-28 rounded-xl bg-sky-soft flex items-center justify-center text-brand mb-4 overflow-hidden border border-sun-soft/50">
+                        {{-- Cover Area Proporsional --}}
+                        <div class="h-44 sm:h-48 rounded-xl bg-sky-soft flex items-center justify-center text-brand mb-4 overflow-hidden border border-sun-soft/60 relative">
                             @if ($book->cover_image && file_exists(public_path('storage/' . $book->cover_image)))
-                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             @else
-                                <x-app-icon name="book" class="w-12 h-12" />
+                                <div class="flex flex-col items-center gap-2 text-brand">
+                                    <x-app-icon name="book" class="w-12 h-12" />
+                                    <span class="text-[11px] font-bold text-ink-mute uppercase tracking-wider">Koleksi Buku</span>
+                                </div>
                             @endif
                         </div>
 
-                        <h3 class="font-extrabold text-navy text-sm sm:text-base leading-snug line-clamp-2 mb-1">
+                        <div class="flex items-center justify-between gap-2 text-xs mb-2">
+                            <x-badge type="blue">{{ $book->category ?? 'Umum' }}</x-badge>
+                            @if ($book->available_stock > 0)
+                                <x-badge type="green">Tersedia ({{ $book->available_stock }})</x-badge>
+                            @else
+                                <x-badge type="orange">Dipinjam</x-badge>
+                            @endif
+                        </div>
+
+                        <h3 class="font-extrabold text-navy text-[15px] sm:text-base leading-snug line-clamp-2 mb-1 group-hover:text-brand transition-colors">
                             {{ $book->title }}
                         </h3>
-                        <p class="text-xs text-ink-soft mb-3 line-clamp-1">
+                        <p class="text-xs text-ink-soft mb-3 line-clamp-1 font-medium">
                             {{ $book->author ?? 'Penulis tidak tercatat' }}
                         </p>
 
-                        <div class="flex items-center justify-between gap-2 text-xs mb-3">
-                            <x-badge type="blue">{{ $book->category ?? 'Umum' }}</x-badge>
-                            @if ($book->available_stock > 0)
-                                <x-badge type="green">Stok: {{ $book->available_stock }}</x-badge>
-                            @else
-                                <x-badge type="orange">Habis</x-badge>
-                            @endif
-                        </div>
-
-                        <div class="bg-cream/60 rounded-lg p-2 text-xs text-navy font-semibold flex items-center gap-1.5 mb-4">
-                            <span class="text-ink-mute text-[11px]">Rak:</span>
-                            <span class="font-extrabold text-brand">{{ $book->shelf_location ?? 'Layanan Sirkulasi' }}</span>
+                        <div class="bg-cream/80 rounded-xl p-2.5 text-xs text-navy font-semibold flex items-center justify-between gap-1.5 mb-4 border border-sun-soft/60">
+                            <span class="text-ink-mute text-[11px]">Lokasi Rak:</span>
+                            <span class="font-black text-brand">{{ $book->shelf_location ?? 'Layanan Sirkulasi' }}</span>
                         </div>
                     </div>
 
                     <button
                         type="button"
                         @click="openDetail({{ json_encode($book) }})"
-                        class="btn-primary w-full text-xs !min-h-[38px]"
+                        class="btn-primary w-full text-xs !min-h-[38px] shadow-2xs"
                     >
-                        Detail & Posisi Rak
+                        Lihat Informasi Rak
                     </button>
                 </x-card>
             @empty

@@ -29,19 +29,20 @@
         }
     }"
 >
-    {{-- Banner Sesuai Desain Figma --}}
+    {{-- Banner Resmi Pilketos --}}
     <section class="bg-gradient-to-br from-brand to-brand-dark text-white py-12 px-4 sm:px-6 lg:px-8 text-center">
         <div class="max-w-4xl mx-auto space-y-4">
-            <span class="inline-block rounded-full bg-emerald-500 text-white px-5 py-1.5 text-xs font-extrabold shadow-xs">
-                🟢 Pemilihan Sedang Berlangsung
+            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 px-4 py-1.5 text-xs font-extrabold shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Pemilihan Sedang Berlangsung</span>
             </span>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white">Pemilihan Ketua & Wakil OSIS</h1>
-            <p class="text-sm sm:text-base text-white/85 max-w-2xl mx-auto">
+            <p class="text-sm sm:text-base text-white/85 max-w-2xl mx-auto font-medium">
                 Gunakan hak suaramu secara cerdas, berintegritas, langsung, umum, bebas, rahasia, jujur, dan adil.
             </p>
 
             <div class="pt-2 flex justify-center gap-3">
-                <a href="{{ route('pilketos.live') }}" class="btn-primary text-xs !min-h-[38px]">
+                <a href="{{ route('pilketos.live') }}" class="btn-primary text-xs !min-h-[38px] shadow-xs">
                     Pantau Quick Count Suara
                     <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
                 </a>
@@ -144,19 +145,19 @@
         <div
             x-show="showModal"
             x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60 backdrop-blur-xs"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/70 backdrop-blur-xs"
         >
-            <div class="card max-w-md w-full text-center space-y-4">
-                <div class="w-14 h-14 rounded-full bg-sun text-navy flex items-center justify-center text-xl font-black mx-auto">
-                    🗳️
+            <div class="card max-w-md w-full text-center space-y-4 p-6 sm:p-7 shadow-xl">
+                <div class="w-14 h-14 rounded-2xl bg-sky-soft text-brand flex items-center justify-center mx-auto">
+                    <x-app-icon name="vote" class="w-7 h-7" />
                 </div>
                 <h3 class="text-xl font-extrabold text-navy">Konfirmasi Pilihan Anda</h3>
-                <p class="text-xs text-ink-soft leading-relaxed">
-                    Apakah Anda yakin ingin memberikan suara untuk pasangan:
+                <p class="text-xs text-ink-soft leading-relaxed font-medium">
+                    Apakah Anda yakin ingin memberikan suara untuk pasangan calon:
                 </p>
-                <div class="card bg-sky-soft p-3 font-extrabold text-brand text-sm" x-text="candidateName"></div>
-                <p class="text-[11px] text-ink-mute">
-                    Satu perangkat hanya dapat memberikan satu suara. Pilihan tidak dapat dibatalkan setelah dikirim.
+                <div class="card bg-sky-soft p-3.5 font-black text-brand text-base border-brand/20" x-text="candidateName"></div>
+                <p class="text-[11px] text-ink-mute font-medium">
+                    Satu perangkat hanya dapat memberikan satu suara. Pilihan yang sudah dikirimkan bersifat final.
                 </p>
                 <div class="flex justify-center gap-3 pt-2">
                     <button
@@ -169,9 +170,9 @@
                     <button
                         type="button"
                         @click="executeVote()"
-                        class="btn-primary text-xs"
+                        class="btn-primary text-xs shadow-xs"
                     >
-                        Ya, Yakin & Kirim Suara
+                        Ya, Kirim Suara Sekarang
                     </button>
                 </div>
             </div>

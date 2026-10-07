@@ -42,41 +42,43 @@
                 {{-- Daftar Berita Kartu Horizontal Figma --}}
                 <div class="space-y-4">
                     @forelse ($posts as $post)
-                        <x-card class="p-0 overflow-hidden flex flex-col sm:flex-row hover:border-brand transition-colors">
+                        <x-card class="p-0 overflow-hidden flex flex-col sm:flex-row hover:border-brand transition-all group shadow-xs">
                             @if ($post->featured_image)
-                                <img
-                                    src="{{ asset('storage/' . $post->featured_image) }}"
-                                    alt="{{ $post->title }}"
-                                    class="w-full sm:w-48 h-40 object-cover shrink-0"
-                                >
+                                <div class="w-full sm:w-56 h-48 sm:h-auto shrink-0 overflow-hidden">
+                                    <img
+                                        src="{{ asset('storage/' . $post->featured_image) }}"
+                                        alt="{{ $post->title }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    >
+                                </div>
                             @else
-                                <div class="w-full sm:w-48 h-40 bg-sky-soft flex items-center justify-center text-brand shrink-0">
+                                <div class="w-full sm:w-56 h-48 sm:h-auto bg-sky-soft flex items-center justify-center text-brand shrink-0">
                                     <x-app-icon name="news" class="w-10 h-10" />
                                 </div>
                             @endif
 
-                            <div class="p-5 flex flex-col justify-between grow">
+                            <div class="p-5 sm:p-6 flex flex-col justify-between grow">
                                 <div>
-                                    <div class="mb-2">
+                                    <div class="mb-2.5">
                                         <x-badge type="blue">{{ $post->category->label() }}</x-badge>
                                     </div>
-                                    <h2 class="text-base font-extrabold text-navy leading-snug mb-1">
-                                        <a href="{{ route('post.detail', $post->slug) }}" class="hover:text-brand">
+                                    <h2 class="text-base sm:text-lg font-extrabold text-navy leading-snug mb-2">
+                                        <a href="{{ route('post.detail', $post->slug) }}" class="group-hover:text-brand transition-colors">
                                             {{ $post->title }}
                                         </a>
                                     </h2>
-                                    <p class="text-xs text-ink-soft line-clamp-2 leading-relaxed mb-2">
+                                    <p class="text-xs sm:text-sm text-ink-soft line-clamp-2 leading-relaxed mb-3 font-medium">
                                         {{ $post->excerpt }}
                                     </p>
                                 </div>
 
-                                <div class="flex items-center justify-between text-xs pt-2 border-t border-sun-soft">
+                                <div class="flex items-center justify-between text-xs pt-3 border-t border-sun-soft">
                                     <span class="font-semibold text-ink-mute">
                                         {{ $post->published_at?->translatedFormat('d M Y') ?? $post->created_at->translatedFormat('d M Y') }}
                                     </span>
-                                    <a href="{{ route('post.detail', $post->slug) }}" class="link-brand">
-                                        Baca Selengkapnya
-                                        <x-app-icon name="arrow-right" class="w-3.5 h-3.5 inline ml-0.5" />
+                                    <a href="{{ route('post.detail', $post->slug) }}" class="link-brand font-black inline-flex items-center gap-1">
+                                        <span>Baca Selengkapnya</span>
+                                        <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
                                     </a>
                                 </div>
                             </div>

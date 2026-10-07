@@ -55,39 +55,37 @@
     >
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($photos as $p)
-                <x-card class="p-0 overflow-hidden flex flex-col justify-between hover:border-brand transition-colors group">
+                <div
+                    class="card p-0 overflow-hidden flex flex-col justify-between hover:border-brand transition-all group cursor-pointer shadow-xs"
+                    @click="openPreview('{{ asset('images/assets/' . $p['file']) }}', '{{ addslashes($p['title']) }}', '{{ addslashes($p['caption']) }}')"
+                >
                     <div>
-                        <div class="relative overflow-hidden cursor-pointer" @click="openPreview('{{ asset('images/assets/' . $p['file']) }}', '{{ addslashes($p['title']) }}', '{{ addslashes($p['caption']) }}')">
+                        <div class="relative overflow-hidden">
                             <img
                                 src="{{ asset('images/assets/' . $p['file']) }}"
                                 alt="{{ $p['title'] }}"
-                                class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+                                class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
                             >
-                            <span class="absolute top-3 left-3 bg-brand text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-xs">
+                            <span class="absolute top-3.5 left-3.5 bg-navy/85 backdrop-blur-xs text-white text-[11px] font-extrabold px-3 py-1 rounded-full border border-white/20">
                                 {{ $p['tag'] }}
                             </span>
+                            <div class="absolute inset-0 bg-navy/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                                <span class="bg-white/90 text-navy text-xs font-black px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
+                                    <x-app-icon name="photo" class="w-3.5 h-3.5 text-brand" />
+                                    <span>Perbesar</span>
+                                </span>
+                            </div>
                         </div>
-                        <div class="p-5">
-                            <h3 class="font-extrabold text-navy text-base leading-snug mb-1">
+                        <div class="p-5 sm:p-6">
+                            <h3 class="font-extrabold text-navy text-base leading-snug mb-1.5 group-hover:text-brand transition-colors">
                                 {{ $p['title'] }}
                             </h3>
-                            <p class="text-xs text-ink-soft leading-relaxed">
+                            <p class="text-xs sm:text-sm text-ink-soft leading-relaxed font-medium">
                                 {{ $p['caption'] }}
                             </p>
                         </div>
                     </div>
-
-                    <div class="px-5 pb-5 pt-0">
-                        <button
-                            type="button"
-                            @click="openPreview('{{ asset('images/assets/' . $p['file']) }}', '{{ addslashes($p['title']) }}', '{{ addslashes($p['caption']) }}')"
-                            class="btn-ghost text-xs w-full"
-                        >
-                            <x-app-icon name="photo" class="w-4 h-4" />
-                            Lihat Foto Penuh
-                        </button>
-                    </div>
-                </x-card>
+                </div>
             @endforeach
         </div>
 

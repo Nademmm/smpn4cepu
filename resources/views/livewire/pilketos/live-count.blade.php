@@ -25,7 +25,7 @@
             <div class="space-y-2">
                 <div class="flex flex-wrap items-center justify-between gap-2 text-sm sm:text-base font-extrabold">
                     <span class="text-navy">
-                        Paslon {{ $cand->candidate_number }} — {{ $cand->candidate_name }} & {{ $cand->vice_candidate_name }}
+                        Paslon {{ $cand->candidate_number }}: {{ $cand->candidate_name }} & {{ $cand->vice_candidate_name }}
                     </span>
                     <span class="text-brand">
                         {{ $votes }} suara ({{ $percent }}%)

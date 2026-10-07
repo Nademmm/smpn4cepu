@@ -14,29 +14,57 @@
             $classCount = $stats->count();
         @endphp
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-            <x-card class="p-4 bg-sky-soft">
-                <span class="text-xs font-bold text-ink-mute block">Total Peserta Didik</span>
-                <strong class="text-2xl sm:text-3xl font-extrabold text-brand">{{ $grandTotal }}</strong>
-                <span class="text-[11px] text-ink-mute block mt-0.5">Siswa Aktif</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+            <x-card class="p-5 bg-white flex flex-col justify-between hover:border-brand transition-all shadow-xs">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-ink-mute uppercase tracking-wider">Total Siswa</span>
+                    <div class="w-8 h-8 rounded-lg bg-sky-soft text-brand flex items-center justify-center">
+                        <x-app-icon name="users" class="w-4 h-4" />
+                    </div>
+                </div>
+                <div>
+                    <strong class="text-3xl sm:text-4xl font-black text-brand leading-none block">{{ $grandTotal }}</strong>
+                    <span class="text-xs text-ink-soft font-semibold block mt-1.5">Peserta Didik Aktif</span>
+                </div>
             </x-card>
 
-            <x-card class="p-4 bg-sky-soft">
-                <span class="text-xs font-bold text-ink-mute block">Siswa Laki-Laki</span>
-                <strong class="text-2xl sm:text-3xl font-extrabold text-navy">{{ $totalMale }}</strong>
-                <span class="text-[11px] text-ink-mute block mt-0.5">Orang</span>
+            <x-card class="p-5 bg-white flex flex-col justify-between hover:border-brand transition-all shadow-xs">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-ink-mute uppercase tracking-wider">Laki-Laki</span>
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+                        <x-app-icon name="user" class="w-4 h-4" />
+                    </div>
+                </div>
+                <div>
+                    <strong class="text-3xl sm:text-4xl font-black text-navy leading-none block">{{ $totalMale }}</strong>
+                    <span class="text-xs text-ink-soft font-semibold block mt-1.5">Siswa Putra</span>
+                </div>
             </x-card>
 
-            <x-card class="p-4 bg-sky-soft">
-                <span class="text-xs font-bold text-ink-mute block">Siswa Perempuan</span>
-                <strong class="text-2xl sm:text-3xl font-extrabold text-navy">{{ $totalFemale }}</strong>
-                <span class="text-[11px] text-ink-mute block mt-0.5">Orang</span>
+            <x-card class="p-5 bg-white flex flex-col justify-between hover:border-brand transition-all shadow-xs">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-ink-mute uppercase tracking-wider">Perempuan</span>
+                    <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                        <x-app-icon name="user" class="w-4 h-4" />
+                    </div>
+                </div>
+                <div>
+                    <strong class="text-3xl sm:text-4xl font-black text-navy leading-none block">{{ $totalFemale }}</strong>
+                    <span class="text-xs text-ink-soft font-semibold block mt-1.5">Siswa Putri</span>
+                </div>
             </x-card>
 
-            <x-card class="p-4 bg-sky-soft">
-                <span class="text-xs font-bold text-ink-mute block">Jumlah Rombel</span>
-                <strong class="text-2xl sm:text-3xl font-extrabold text-sun">{{ $classCount }}</strong>
-                <span class="text-[11px] text-ink-mute block mt-0.5">Kelas 7, 8, 9</span>
+            <x-card class="p-5 bg-white flex flex-col justify-between hover:border-brand transition-all shadow-xs">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-ink-mute uppercase tracking-wider">Rombel</span>
+                    <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                        <x-app-icon name="building" class="w-4 h-4" />
+                    </div>
+                </div>
+                <div>
+                    <strong class="text-3xl sm:text-4xl font-black text-navy leading-none block">{{ $classCount }}</strong>
+                    <span class="text-xs text-ink-soft font-semibold block mt-1.5">Kelas VII, VIII, IX</span>
+                </div>
             </x-card>
         </div>
 

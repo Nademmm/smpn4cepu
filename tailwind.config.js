@@ -27,6 +27,7 @@ export default {
                 },
                 sun: {
                     DEFAULT: '#F5B700',
+                    hover: '#E5AB00',
                     soft: '#FFE3A0',
                 },
                 sky: {

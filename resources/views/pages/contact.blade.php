@@ -54,21 +54,26 @@
 
                     <div class="pt-4 border-t-2 border-sun-soft">
                         <span class="text-xs font-bold text-ink-mute uppercase block mb-1">Jam Pelayanan Tata Usaha</span>
-                        <p class="text-xs font-semibold text-navy">
-                            Senin – Kamis: 07.00 – 14.00 WIB<br>
-                            Jumat: 07.00 – 11.00 WIB · Sabtu: 07.00 – 13.00 WIB
+                        <p class="text-xs font-semibold text-navy leading-relaxed">
+                            Senin - Kamis: 07.00 - 14.00 WIB<br>
+                            Jumat: 07.00 - 11.00 WIB · Sabtu: 07.00 - 13.00 WIB
                         </p>
                     </div>
                 </x-card>
             </div>
 
             {{-- Kolom Kanan: Peta Google Maps & Formulir Pesan --}}
-            <div class="lg:col-span-7 space-y-6">
+            <div class="lg:col-span-7 space-y-6" x-data="{ sent: false }">
                 {{-- Sematan Peta Interaktif --}}
-                <x-card class="p-0 overflow-hidden">
-                    <div class="p-4 bg-sky-soft border-b-2 border-sun-soft">
-                        <h3 class="font-extrabold text-navy text-sm">Peta Lokasi Satuan Pendidikan</h3>
-                        <p class="text-[11px] text-ink-soft">Koordinat: -7.1576081, 111.5662531</p>
+                <x-card class="p-0 overflow-hidden shadow-xs">
+                    <div class="p-4 bg-sky-soft border-b-2 border-sun-soft flex items-center justify-between">
+                        <div>
+                            <h3 class="font-extrabold text-navy text-sm">Peta Lokasi Satuan Pendidikan</h3>
+                            <p class="text-[11px] text-ink-soft">Koordinat: -7.1576081, 111.5662531</p>
+                        </div>
+                        <span class="text-xs font-black text-brand bg-white px-3 py-1 rounded-full border border-sun-soft">
+                            Google Maps
+                        </span>
                     </div>
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.8256193796336!2d111.56367817574345!3d-7.157602770284422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e776994781498b3%3A0x6a053cbfd38cce88!2sSMP%20Negeri%204%20Cepu!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
@@ -83,35 +88,46 @@
                 </x-card>
 
                 {{-- Formulir Pesan --}}
-                <x-card class="space-y-4">
-                    <h3 class="font-extrabold text-navy text-base pb-2 border-b-2 border-sun-soft">
-                        Kirim Pesan / Pertanyaan
-                    </h3>
+                <x-card class="space-y-4 p-5 sm:p-6 shadow-xs">
+                    <div class="flex items-center justify-between pb-3 border-b-2 border-sun-soft">
+                        <h3 class="font-extrabold text-navy text-base">
+                            Kirim Pesan / Pertanyaan
+                        </h3>
+                        <span class="text-xs text-ink-mute font-medium">Layanan Tata Usaha</span>
+                    </div>
 
-                    <form onsubmit="event.preventDefault(); alert('Pesan Anda telah terkirim kepada bagian tata usaha sekolah.');" class="space-y-3">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {{-- Feedback Sukses --}}
+                    <div x-show="sent" x-cloak class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-800 text-xs font-bold flex items-center justify-between">
+                        <span>Terima kasih! Pesan Anda telah kami terima dan akan segera diteruskan ke staf sekolah.</span>
+                        <button type="button" @click="sent = false" class="text-emerald-600 hover:text-emerald-900">
+                            <x-app-icon name="x" class="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="sent = true" class="space-y-3.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                             <div>
-                                <label class="block text-xs font-bold text-navy mb-1">Nama Lengkap</label>
+                                <label class="block text-xs font-bold text-navy mb-1.5">Nama Lengkap</label>
                                 <input type="text" required placeholder="Nama Anda..." class="field">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-navy mb-1">Email / No. Telepon</label>
+                                <label class="block text-xs font-bold text-navy mb-1.5">Email / No. Telepon</label>
                                 <input type="text" required placeholder="kontak@example.com" class="field">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-navy mb-1">Perihal / Topik</label>
+                            <label class="block text-xs font-bold text-navy mb-1.5">Perihal / Topik</label>
                             <input type="text" required placeholder="Keperluan informasi, PPDB, atau legalisir..." class="field">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-navy mb-1">Pesan Lengkap</label>
+                            <label class="block text-xs font-bold text-navy mb-1.5">Pesan Lengkap</label>
                             <textarea rows="3" required placeholder="Tuliskan pesan Anda secara jelas..." class="field"></textarea>
                         </div>
 
-                        <div class="text-right">
-                            <button type="submit" class="btn-primary text-xs">
+                        <div class="text-right pt-1">
+                            <button type="submit" class="btn-primary text-xs !min-h-[40px] px-6 shadow-2xs">
                                 Kirim Pesan Sekarang
                             </button>
                         </div>

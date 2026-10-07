@@ -41,43 +41,43 @@
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full bg-sun px-6 py-2.5 font-bold text-navy transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-ink-mute;
+        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full bg-sun px-6 py-2.5 font-extrabold text-navy transition-all hover:bg-sun-hover active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-ink-mute;
     }
 
     .btn-outline {
-        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-bold text-white transition-colors hover:bg-white/10;
+        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-extrabold text-white transition-colors hover:bg-white/10;
     }
 
     .btn-ghost {
-        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full border-2 border-sun-soft bg-white px-5 py-2 text-sm font-bold text-navy transition-colors hover:border-brand;
+        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full border-2 border-sun-soft bg-white px-5 py-2 text-sm font-extrabold text-navy transition-colors hover:border-brand;
     }
 
     .link-brand {
-        @apply font-extrabold text-brand underline-offset-4 hover:underline;
+        @apply font-black text-brand underline-offset-4 hover:underline;
     }
 
     .chip {
-        @apply inline-flex items-center min-h-[44px] sm:min-h-[36px] rounded-full border-2 border-sun-soft bg-white px-4 py-1.5 text-[13px] font-semibold text-navy transition-colors hover:border-brand;
+        @apply inline-flex items-center min-h-[44px] sm:min-h-[36px] rounded-full border-2 border-sun-soft bg-white px-4 py-1.5 text-[13px] font-bold text-navy transition-colors hover:border-brand;
     }
 
     .chip-active {
-        @apply bg-navy text-white border-navy hover:border-navy;
+        @apply bg-navy text-white border-navy hover:border-navy font-black;
     }
 
     .badge-green {
-        @apply inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800;
+        @apply inline-block rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300/60 px-3 py-0.5 text-[11px] font-black tracking-wide;
     }
 
     .badge-orange {
-        @apply inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-800;
+        @apply inline-block rounded-full bg-amber-50 text-amber-900 border border-amber-300/60 px-3 py-0.5 text-[11px] font-black tracking-wide;
     }
 
     .badge-blue {
-        @apply inline-block rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-bold text-blue-800;
+        @apply inline-block rounded-full bg-sky-50 text-brand border border-sky-300/60 px-3 py-0.5 text-[11px] font-black tracking-wide;
     }
 
     .field {
-        @apply w-full rounded-xl border-2 border-sun-soft bg-white px-4 py-3 text-sm font-semibold text-navy placeholder:text-ink-mute focus:border-brand focus:ring-0;
+        @apply w-full rounded-xl border-2 border-sun-soft bg-white px-4 py-3 text-sm font-semibold text-navy placeholder:text-ink-mute focus:border-brand focus:ring-0 transition-colors;
     }
 
     .page-header {

@@ -38,22 +38,33 @@
         ];
     @endphp
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-4" x-data="{ notice: '' }">
+        {{-- Banner Notifikasi Interaktif --}}
+        <div x-show="notice !== ''" x-cloak class="p-4 rounded-2xl bg-sky-soft border-2 border-brand/30 text-navy text-xs font-bold flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <x-app-icon name="megaphone" class="w-4 h-4 text-brand shrink-0" />
+                <span x-text="notice"></span>
+            </div>
+            <button type="button" @click="notice = ''" class="text-ink-mute hover:text-navy">
+                <x-app-icon name="x" class="w-4 h-4" />
+            </button>
+        </div>
+
         @foreach ($downloads as $doc)
-            <x-card class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 hover:border-brand transition-colors">
+            <x-card class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 p-5 sm:p-6 hover:border-brand transition-all group">
                 <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-sky-soft text-brand flex items-center justify-center shrink-0">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-soft text-brand flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <x-app-icon name="download" class="w-6 h-6" />
                     </div>
                     <div>
-                        <div class="flex items-center gap-2 mb-1">
+                        <div class="flex items-center gap-2 mb-1.5">
                             <x-badge type="blue">{{ $doc['category'] }}</x-badge>
-                            <span class="text-[11px] font-bold text-ink-mute uppercase">{{ $doc['format'] }} · {{ $doc['size'] }}</span>
+                            <span class="text-[11px] font-bold text-ink-mute uppercase tracking-wider">{{ $doc['format'] }} · {{ $doc['size'] }}</span>
                         </div>
-                        <h2 class="font-extrabold text-navy text-base leading-snug">
+                        <h2 class="font-extrabold text-navy text-base leading-snug group-hover:text-brand transition-colors">
                             {{ $doc['title'] }}
                         </h2>
-                        <p class="text-xs text-ink-soft leading-relaxed mt-1">
+                        <p class="text-xs text-ink-soft leading-relaxed mt-1 font-medium">
                             {{ $doc['description'] }}
                         </p>
                     </div>
@@ -62,8 +73,8 @@
                 <div class="shrink-0 w-full sm:w-auto">
                     <button
                         type="button"
-                        onclick="alert('Berkas digital sedang disiapkan di server.')"
-                        class="btn-primary text-xs w-full sm:w-auto !min-h-[38px]"
+                        @click="notice = 'Berkas digital ' + '{{ addslashes($doc['title']) }}' + ' sedang disiapkan oleh staf tata usaha.'"
+                        class="btn-primary text-xs w-full sm:w-auto !min-h-[38px] shadow-2xs"
                     >
                         <x-app-icon name="download" class="w-4 h-4" />
                         Unduh Berkas
