@@ -193,51 +193,159 @@
             </div>
         </div>
 
-        {{-- Mobile Drawer Menu: 4 Kategori Terstruktur dengan Tipografi Nyaman --}}
-        <div x-show="mobileMenuOpen" x-cloak class="lg:hidden border-t-2 border-sun-soft bg-white px-4 py-4 space-y-4 shadow-lg">
-            <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-xl text-[15px] font-black {{ request()->routeIs('home') ? 'bg-sky-soft text-brand' : 'text-navy' }}">
-                Beranda
+        {{-- Mobile Drawer Menu: Accordion Bersih & Profesional (Tidak Menumpuk Semua Menu) --}}
+        <div
+            x-show="mobileMenuOpen"
+            x-cloak
+            x-data="{
+                activeSection: '{{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') ? 'profil' : (request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'belajar' : (request()->is('pilketos*') || request()->routeIs('gallery') ? 'kesiswaan' : (request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'informasi' : ''))) }}'
+            }"
+            class="lg:hidden border-t-2 border-sun-soft bg-white px-4 py-4 space-y-2 shadow-xl max-h-[85vh] overflow-y-auto"
+        >
+            {{-- 1. Beranda --}}
+            <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-[15px] font-black transition-colors {{ request()->routeIs('home') ? 'bg-sky-soft text-brand' : 'text-navy hover:bg-cream' }}">
+                <x-app-icon name="home" class="w-5 h-5 text-brand shrink-0" />
+                <span>Beranda</span>
             </a>
 
-            <div>
-                <span class="px-4 text-xs font-black uppercase tracking-wider text-ink-mute block mb-1">Profil Sekolah</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('profile') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Sejarah & Visi Misi</a>
-                    <a href="{{ route('facilities') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">11 Fasilitas Sekolah</a>
-                    <a href="{{ route('staff') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Guru & Tenaga Kependidikan</a>
-                    <a href="{{ route('student-stats') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Statistik Rombel Siswa</a>
+            {{-- 2. Profil Sekolah (Accordion) --}}
+            <div class="rounded-2xl border-2 {{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+                <button
+                    type="button"
+                    @click="activeSection = (activeSection === 'profil' ? '' : 'profil')"
+                    class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
+                >
+                    <div class="flex items-center gap-3">
+                        <x-app-icon name="building" class="w-5 h-5 text-brand shrink-0" />
+                        <span>Profil Sekolah</span>
+                    </div>
+                    <x-app-icon name="chevron-down" class="w-4 h-4 text-ink-mute transition-transform duration-200" ::class="{ 'rotate-180': activeSection === 'profil' }" />
+                </button>
+                <div
+                    x-show="activeSection === 'profil'"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 -translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
+                >
+                    <a href="{{ route('profile') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('profile') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Sejarah & Visi Misi</span>
+                    </a>
+                    <a href="{{ route('facilities') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('facilities') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>11 Fasilitas Sekolah</span>
+                    </a>
+                    <a href="{{ route('staff') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('staff') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Guru & Tenaga Kependidikan</span>
+                    </a>
+                    <a href="{{ route('student-stats') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('student-stats') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Statistik Rombel Siswa</span>
+                    </a>
                 </div>
             </div>
 
-            <div>
-                <span class="px-4 text-xs font-black uppercase tracking-wider text-ink-mute block mb-1">Ruang Belajar</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('materials') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Materi Pelajaran</a>
-                    <a href="{{ route('quizzes') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Latihan Soal Mandiri</a>
-                    <a href="{{ route('library') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Perpustakaan Digital</a>
+            {{-- 3. Ruang Belajar (Accordion) --}}
+            <div class="rounded-2xl border-2 {{ request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+                <button
+                    type="button"
+                    @click="activeSection = (activeSection === 'belajar' ? '' : 'belajar')"
+                    class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
+                >
+                    <div class="flex items-center gap-3">
+                        <x-app-icon name="book" class="w-5 h-5 text-brand shrink-0" />
+                        <span>Ruang Belajar</span>
+                    </div>
+                    <x-app-icon name="chevron-down" class="w-4 h-4 text-ink-mute transition-transform duration-200" ::class="{ 'rotate-180': activeSection === 'belajar' }" />
+                </button>
+                <div
+                    x-show="activeSection === 'belajar'"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 -translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
+                >
+                    <a href="{{ route('materials') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('materials') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Materi Pelajaran</span>
+                    </a>
+                    <a href="{{ route('quizzes') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('quizzes') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Latihan Soal Mandiri</span>
+                    </a>
+                    <a href="{{ route('library') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('library') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Perpustakaan Digital</span>
+                    </a>
                 </div>
             </div>
 
-            <div>
-                <span class="px-4 text-xs font-black uppercase tracking-wider text-ink-mute block mb-1">Kesiswaan</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('pilketos') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Bilik Suara E-Voting</a>
-                    <a href="{{ route('pilketos.live') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Quick Count Real-Time</a>
-                    <a href="{{ route('gallery') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Galeri Foto Kegiatan</a>
+            {{-- 4. Kesiswaan (Accordion) --}}
+            <div class="rounded-2xl border-2 {{ request()->is('pilketos*') || request()->routeIs('gallery') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+                <button
+                    type="button"
+                    @click="activeSection = (activeSection === 'kesiswaan' ? '' : 'kesiswaan')"
+                    class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
+                >
+                    <div class="flex items-center gap-3">
+                        <x-app-icon name="vote" class="w-5 h-5 text-brand shrink-0" />
+                        <span>Kesiswaan</span>
+                    </div>
+                    <x-app-icon name="chevron-down" class="w-4 h-4 text-ink-mute transition-transform duration-200" ::class="{ 'rotate-180': activeSection === 'kesiswaan' }" />
+                </button>
+                <div
+                    x-show="activeSection === 'kesiswaan'"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 -translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
+                >
+                    <a href="{{ route('pilketos') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('pilketos') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Bilik Suara E-Voting</span>
+                    </a>
+                    <a href="{{ route('pilketos.live') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('pilketos.live') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Quick Count Suara Real-Time</span>
+                    </a>
+                    <a href="{{ route('gallery') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('gallery') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Galeri Foto Kegiatan</span>
+                    </a>
                 </div>
             </div>
 
-            <div>
-                <span class="px-4 text-xs font-black uppercase tracking-wider text-ink-mute block mb-1">Informasi & Layanan</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('posts') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Berita & Pengumuman</a>
-                    <a href="{{ route('downloads') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Pusat Unduhan Berkas</a>
-                    <a href="{{ route('contact') }}" class="block px-4 py-2 rounded-lg text-sm font-bold text-navy hover:bg-sky-soft transition-colors">Kontak & Lokasi</a>
+            {{-- 5. Informasi & Layanan (Accordion) --}}
+            <div class="rounded-2xl border-2 {{ request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+                <button
+                    type="button"
+                    @click="activeSection = (activeSection === 'informasi' ? '' : 'informasi')"
+                    class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
+                >
+                    <div class="flex items-center gap-3">
+                        <x-app-icon name="news" class="w-5 h-5 text-brand shrink-0" />
+                        <span>Informasi & Layanan</span>
+                    </div>
+                    <x-app-icon name="chevron-down" class="w-4 h-4 text-ink-mute transition-transform duration-200" ::class="{ 'rotate-180': activeSection === 'informasi' }" />
+                </button>
+                <div
+                    x-show="activeSection === 'informasi'"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 -translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
+                >
+                    <a href="{{ route('posts') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('posts*') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Berita & Pengumuman</span>
+                    </a>
+                    <a href="{{ route('downloads') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('downloads') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Pusat Unduhan Berkas</span>
+                    </a>
+                    <a href="{{ route('contact') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('contact') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <span>Kontak & Lokasi</span>
+                    </a>
                 </div>
             </div>
 
+            {{-- Tombol Masuk / Login CTA --}}
             <div class="pt-3 border-t-2 border-sun-soft">
-                <a href="{{ url('/admin') }}" class="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-sun text-navy font-black text-sm text-center shadow-xs">
+                <a href="{{ url('/admin') }}" class="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-sun text-navy font-black text-sm text-center shadow-xs hover:bg-sun-hover active:scale-95 transition-all">
                     <x-app-icon name="user" class="w-4 h-4 text-navy" />
                     <span>Masuk / Login</span>
                 </a>
