@@ -28,8 +28,12 @@ else
     echo "==> [2/6] DB_HOST belum diatur ke remote host. Melewati migrasi otomatis saat booting."
 fi
 
-# 3. Pastikan symlink storage terhubung
+# 3. Pastikan symlink storage terhubung dan salin aset staf jika belum ada
 echo "==> [3/6] Memastikan symlink storage publik..."
+mkdir -p /app/storage/app/public/staff
+if [ -d "/app/public/images/staff" ]; then
+    cp -rn /app/public/images/staff/* /app/storage/app/public/staff/ 2>/dev/null || true
+fi
 php artisan storage:link || true
 
 # 4. Optimalkan caching Laravel & Filament untuk performa produksi
