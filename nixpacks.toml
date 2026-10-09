@@ -1,11 +1,27 @@
 [phases.setup]
-nixPkgs = ['php82', 'php82Packages.composer', 'nodejs_20']
+nixPkgs = [
+  'php82',
+  'php82Extensions.pdo_mysql',
+  'php82Extensions.intl',
+  'php82Extensions.zip',
+  'php82Extensions.mbstring',
+  'php82Extensions.fileinfo',
+  'php82Extensions.gd',
+  'php82Extensions.bcmath',
+  'php82Extensions.opcache',
+  'php82Packages.composer',
+  'nodejs_20'
+]
+
+[phases.install]
+cmds = [
+  'npm install --prefer-offline --no-audit',
+  'composer install --no-dev --no-scripts --optimize-autoloader --no-interaction'
+]
 
 [phases.build]
 cmds = [
-  'npm install --prefer-offline --no-audit',
   'npm run build',
-  'composer install --no-dev --no-scripts --optimize-autoloader --no-interaction',
   'composer dump-autoload --optimize --no-dev --no-scripts'
 ]
 
