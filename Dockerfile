@@ -46,6 +46,9 @@ RUN install-php-extensions \
 
 WORKDIR /app
 
+# Pasang Composer biner resmi
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 # Salin composer.json & composer.lock untuk caching layer Composer
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
