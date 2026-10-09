@@ -354,6 +354,13 @@ class DemoSchoolSeeder extends Seeder
         ];
 
         foreach ($staffData as $s) {
+            if (!empty($s['nip'])) {
+                $existingByNip = StaffMember::where('nip', $s['nip'])->first();
+                if ($existingByNip) {
+                    $existingByNip->update(array_merge($s, ['is_active' => true]));
+                    continue;
+                }
+            }
             StaffMember::updateOrCreate(
                 ['name' => $s['name']],
                 array_merge($s, ['is_active' => true])
