@@ -12,21 +12,27 @@ use Illuminate\Support\Facades\Route;
 
 // 1. Beranda
 Route::get('/', function () {
-    $recentPosts = Post::where('is_published', true)
-        ->where('category', '!=', PostCategory::AGENDA)
-        ->orderByDesc('published_at')
-        ->limit(3)
-        ->get();
+    try {
+        $recentPosts = Post::where('is_published', true)
+            ->where('category', '!=', PostCategory::AGENDA)
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
 
-    $agendas = Post::where('is_published', true)
-        ->where('category', PostCategory::AGENDA)
-        ->orderBy('event_date')
-        ->limit(4)
-        ->get();
+        $agendas = Post::where('is_published', true)
+            ->where('category', PostCategory::AGENDA)
+            ->orderBy('event_date')
+            ->limit(4)
+            ->get();
 
-    $featuredFacilities = SchoolFacility::orderBy('display_order')
-        ->limit(4)
-        ->get();
+        $featuredFacilities = SchoolFacility::orderBy('display_order')
+            ->limit(4)
+            ->get();
+    } catch (\Throwable $e) {
+        $recentPosts = collect();
+        $agendas = collect();
+        $featuredFacilities = collect();
+    }
 
     return view('pages.home', compact('recentPosts', 'agendas', 'featuredFacilities'));
 })->name('home');
