@@ -1,0 +1,19 @@
+{
+    {$CADDY_GLOBAL_OPTIONS}
+    auto_https off
+}
+
+:{$PORT:80} {
+    root * /app/public
+    encode zstd gzip
+
+    # Layani aplikasi PHP (Laravel)
+    php_server
+
+    # Proteksi berkas tersembunyi (.env, .git, .htaccess)
+    @blocked {
+        path */.*
+        not path /.well-known/*
+    }
+    respond @blocked 404
+}
