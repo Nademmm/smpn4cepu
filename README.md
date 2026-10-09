@@ -7,7 +7,7 @@
 [![Tailwind CSS v3](https://img.shields.io/badge/TailwindCSS-v3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
 [![Chart.js v4](https://img.shields.io/badge/Chart.js-v4.4-FF6384?style=flat-square&logo=chart.js)](https://www.chartjs.org)
 [![Hostinger Cloud](https://img.shields.io/badge/Hostinger-Cloud%20Startup-673AB7?style=flat-square&logo=hostinger)](https://hostinger.com)
-[![Tests Passing](https://img.shields.io/badge/Tests-8%20Passed%20(47%20assertions)-success?style=flat-square)]()
+[![Tests Passing](https://img.shields.io/badge/Tests-8%20Passed%20(47%20assertions)-brightgreen?style=flat-square)](#-pengujian-otomatis-automated-testing)
 
 Sistem Informasi Terpadu dan Layanan Digital Resmi **SMP Negeri 4 Cepu** (NPSN: 20314928) yang berlandaskan konsep **"Satu Sekolah, Satu Ruang Digital"**. Proyek ini mentransformasi portal web sekolah konvensional menjadi ekosistem digital terpusat yang mencakup portal informasi sekolah, pemilihan ketua OSIS elektronik (Pilketos), perpustakaan digital, modul materi & latihan soal mandiri, serta panel administrasi terpadu berbasis kontrol akses peran (RBAC).
 
@@ -15,12 +15,12 @@ Sistem Informasi Terpadu dan Layanan Digital Resmi **SMP Negeri 4 Cepu** (NPSN: 
 
 ## 📌 Indeks Dokumentasi Proyek
 
-Dokumentasi lengkap dan spesifikasi teknis mendalam tersedia pada direktori [`docs/`](file:///C:/Users/nadem/.gemini/antigravity-ide/scratch/smpn4cepu/docs):
+Dokumentasi lengkap dan spesifikasi teknis mendalam tersedia pada direktori [`docs/`](docs/):
 
-1. **[Product Requirements Document (PRD)](file:///C:/Users/nadem/.gemini/antigravity-ide/scratch/smpn4cepu/docs/PRD.md)**: Analisis latar belakang, visi sekolah, ruang lingkup fungsional/non-fungsional, user persona, dan peta jalan rilis V1 hingga V4.
-2. **[Software Architecture Document (SAD)](file:///C:/Users/nadem/.gemini/antigravity-ide/scratch/smpn4cepu/docs/ARCHITECTURE.md)**: Cetak biru arsitektur modular monolith, diagram relasi entitas 3NF (ERD), mesin keamanan multi-tier Pilketos, zero client leakage kuis, serta integrasi LiteSpeed Web Server.
-3. **[Panduan Deployment Hostinger Cloud](file:///C:/Users/nadem/.gemini/antigravity-ide/scratch/smpn4cepu/docs/DEPLOYMENT.md)**: Prosedur isolasi direktori privat (`laravel_app`), symlink `public_html`, otomatisasi Git hPanel, konfigurasi bypass LiteSpeed Cache, dan skrip `deploy.sh`.
-4. **[Master Data Dictionary & Data Resmi](file:///C:/Users/nadem/.gemini/antigravity-ide/scratch/smpn4cepu/docs/DATA_DICTIONARY_AND_SEEDS.md)**: Profil lengkap sekolah, sejarah resmi 1979, 11 butir misi, direktori 33 GTK lengkap dengan NIP & Golongan, 11 fasilitas, dan 11 mata pelajaran Kurikulum Merdeka.
+1. **[Product Requirements Document (PRD)](docs/PRD.md)**: Analisis latar belakang, visi sekolah, ruang lingkup fungsional/non-fungsional, user persona, dan peta jalan rilis V1 hingga V4.
+2. **[Software Architecture Document (SAD)](docs/ARCHITECTURE.md)**: Cetak biru arsitektur modular monolith, diagram relasi entitas 3NF (ERD), mesin keamanan multi-tier Pilketos, zero client leakage kuis, serta integrasi LiteSpeed Web Server.
+3. **[Panduan Deployment Hostinger Cloud](docs/DEPLOYMENT.md)**: Prosedur isolasi direktori privat (`laravel_app`), symlink `public_html`, otomatisasi Git hPanel, konfigurasi bypass LiteSpeed Cache, dan skrip `deploy.sh`.
+4. **[Master Data Dictionary & Data Resmi](docs/DATA_DICTIONARY_AND_SEEDS.md)**: Profil lengkap sekolah, sejarah resmi 1979, 11 butir misi, direktori 33 GTK lengkap dengan NIP & Golongan, 11 fasilitas, dan 11 mata pelajaran Kurikulum Merdeka.
 
 ---
 
@@ -68,7 +68,7 @@ Seluruh akun telah diisi melalui `DatabaseSeeder` dengan hak akses peran terveri
 | **Super Admin** | `admin@smpn4cepu.sch.id` | `AdminCepu2026!` | Hak penuh atas seluruh modul dan manajemen role |
 | **Guru** | `guru@smpn4cepu.sch.id` | `GuruCepu2026!` | Pengelolaan materi ajar, bank soal, dan posting berita |
 | **Staf Perpus** | `perpus@smpn4cepu.sch.id` | `PerpusCepu2026!` | Pengelolaan katalog dan stok buku perpustakaan |
-| **Panitia Pilketos**| `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pengelolaan kandidat paslon dan pemantauan suara |
+| **Panitia Pilketos** | `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pengelolaan kandidat paslon dan pemantauan suara |
 
 ---
 
@@ -79,7 +79,7 @@ Seluruh akun telah diisi melalui `DatabaseSeeder` dengan hak akses peran terveri
 - Composer 2.x
 - Node.js 18+ & NPM
 
-### Langkah Menjalankan:
+### Langkah Menjalankan
 ```bash
 # 1. Masuk ke direktori proyek
 cd smpn4cepu
@@ -100,59 +100,3 @@ npm run build
 
 # 6. Jalankan server lokal
 php artisan serve
-```
-
-Buka peramban di:
-- **Portal Publik**: `http://127.0.0.1:8000`
-- **Panel Administrasi**: `http://127.0.0.1:8000/admin`
-
----
-
-## 🧪 Pengujian Otomatis (Automated Testing)
-
-Jalankan test suite PHPUnit untuk memverifikasi keutuhan logika sistem:
-```bash
-php artisan test
-```
-
-Hasil verifikasi:
-```text
-   PASS  Tests\Unit\ExampleTest
-  ✓ that true is true
-
-   PASS  Tests\Feature\CoreServicesTest
-  ✓ quiz assessment service zero client leakage
-  ✓ quiz assessment service scoring
-  ✓ pilketos fingerprint generation and voting
-  ✓ roles and permissions assigned properly
-
-   PASS  Tests\Feature\AdminPanelTest
-  ✓ admin can access filament dashboard (HTTP 200)
-  ✓ guest is redirected to filament login (HTTP 302)
-
-   PASS  Tests\Feature\ExampleTest
-  ✓ the application returns a successful response
-
-  Tests:    8 passed (47 assertions)
-  Duration: 1.25s
-```
-
----
-
-## 🌐 Deployment Produksi (Hostinger Cloud Startup)
-
-Panduan konfigurasi hosting berbasis LiteSpeed Web Server, struktur direktori terisolasi (`laravel_app`), dan skrip deployment otomatis dapat dilihat secara rinci pada:
-👉 **[Panduan Deployment Hostinger Cloud](file:///C:/Users/nadem/.gemini/antigravity-ide/scratch/smpn4cepu/docs/DEPLOYMENT.md)**
-
-```bash
-# Menjalankan pembaruan otomatis di server SSH Hostinger
-cd /home/uXXXXX/domains/smpn4cepu.sch.id/laravel_app
-./deploy.sh
-```
-
----
-
-## 📄 Lisensi
-Hak Cipta © 2026 SMP Negeri 4 Cepu. Dikembangkan untuk inisiatif modernisasi pendidikan digital sekolah.
-#   s m p n 4 c e p u  
- 
