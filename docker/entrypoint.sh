@@ -5,9 +5,13 @@ echo "=========================================================="
 echo "🚀 Memulai SMP Negeri 4 Cepu Web Service (PaaS / Docker)"
 echo "=========================================================="
 
-# 1. Tunggu dan jalankan migrasi basis data jika koneksi DB telah dikonfigurasi
+# 1. Jalankan package discovery
+echo "==> [1/6] Menemukan paket Laravel & Filament..."
+php artisan package:discover --ansi || true
+
+# 2. Tunggu dan jalankan migrasi basis data jika koneksi DB telah dikonfigurasi
 if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
-    echo "==> [1/5] Memeriksa koneksi basis data ke $DB_HOST:$DB_PORT..."
+    echo "==> [2/6] Memeriksa koneksi basis data ke $DB_HOST:$DB_PORT..."
     
     # Jalankan migrasi basis data
     echo "==> Menjalankan migrasi basis data..."
@@ -21,26 +25,26 @@ if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
         php artisan db:seed --force || echo "⚠️ Seeder dilewati atau sudah terisi."
     fi
 else
-    echo "==> [1/5] DB_HOST belum diatur ke remote host. Melewati migrasi otomatis saat booting."
+    echo "==> [2/6] DB_HOST belum diatur ke remote host. Melewati migrasi otomatis saat booting."
 fi
 
-# 2. Pastikan symlink storage terhubung
-echo "==> [2/5] Memastikan symlink storage publik..."
+# 3. Pastikan symlink storage terhubung
+echo "==> [3/6] Memastikan symlink storage publik..."
 php artisan storage:link || true
 
-# 3. Optimalkan caching Laravel & Filament untuk performa produksi
-echo "==> [3/5] Mengoptimalkan cache konfigurasi, route, view, dan komponen..."
+# 4. Optimalkan caching Laravel & Filament untuk performa produksi
+echo "==> [4/6] Mengoptimalkan cache konfigurasi, route, view, dan komponen..."
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 php artisan event:cache || true
 php artisan filament:cache-components || true
 
-# 4. Pastikan kepemilikan dan hak akses direktori storage & bootstrap/cache
-echo "==> [4/5] Memperbarui hak akses direktori storage dan cache..."
+# 5. Pastikan kepemilikan dan hak akses direktori storage & bootstrap/cache
+echo "==> [5/6] Memperbarui hak akses direktori storage dan cache..."
 chmod -R 775 /app/storage /app/bootstrap/cache || true
 chown -R www-data:www-data /app/storage /app/bootstrap/cache || true
 
-# 5. Eksekusi proses server web
-echo "==> [5/5] Menjalankan server web pada PORT: ${PORT:-80}..."
+# 6. Eksekusi proses server web
+echo "==> [6/6] Menjalankan server web pada PORT: ${PORT:-80}..."
 exec "$@"

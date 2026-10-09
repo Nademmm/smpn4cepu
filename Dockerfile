@@ -7,15 +7,17 @@
 # --------------------------------------------------------
 # Tahap 1: Build Aset Frontend (Tailwind CSS, Vite, Chart.js)
 # --------------------------------------------------------
-FROM node:20-alpine AS frontend-builder
+FROM node:20-bookworm-slim AS frontend-builder
 WORKDIR /app
 
-# Salin package.json & lockfile untuk caching layer NPM
+# Salin package.json & lockfile
 COPY package*.json ./
-RUN npm ci --no-audit --prefer-offline
+# Gunakan npm install agar dependensi biner Linux (seperti rollup/vite) terpasang dengan benar
+RUN npm install --prefer-offline --no-audit
 
-# Salin sumber daya aset frontend
+# Salin sumber daya aset frontend dan file yang dipindai Tailwind
 COPY resources ./resources
+COPY app ./app
 COPY vite.config.js tailwind.config.js postcss.config.js ./
 COPY public ./public
 
@@ -54,13 +56,16 @@ COPY . .
 # Salin hasil kompilasi aset dari Tahap 1
 COPY --from=frontend-builder /app/public/build ./public/build
 
-# Optimasi autoloader Composer
-RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
+# Optimasi autoloader Composer (--no-scripts mencegah artisan filament:upgrade dijalankan saat build tanpa DB)
+RUN composer dump-autoload --optimize --no-dev --no-scripts --classmap-authoritative
 
 # Salin konfigurasi Caddyfile & script entrypoint
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Normalisasi baris baru LF (mencegah error CRLF dari Windows) dan beri izin eksekusi
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 # Konfigurasi hak akses direktori storage dan cache
 RUN mkdir -p /app/storage /app/bootstrap/cache \

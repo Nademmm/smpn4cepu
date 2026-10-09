@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ['php82', 'php82Packages.composer', 'nodejs_20']
+
+[phases.build]
+cmds = [
+  'npm install --prefer-offline --no-audit',
+  'npm run build',
+  'composer install --no-dev --no-scripts --optimize-autoloader --no-interaction',
+  'composer dump-autoload --optimize --no-dev --no-scripts'
+]
+
+[start]
+cmd = 'sh docker/entrypoint.sh php -S 0.0.0.0:$PORT -t public'
