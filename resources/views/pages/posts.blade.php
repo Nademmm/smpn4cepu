@@ -7,39 +7,9 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {{-- Kolom Utama: Pencarian, Filter Chip, Daftar Berita --}}
+            {{-- Kolom Utama: Daftar Berita --}}
             <div class="lg:col-span-8 space-y-6">
-                {{-- Form Pencarian & Chip Kategori --}}
-                <div class="space-y-3">
-                    <form method="GET" action="{{ route('posts') }}" class="relative">
-                        @if (request('cat'))
-                            <input type="hidden" name="cat" value="{{ request('cat') }}">
-                        @endif
-                        <input
-                            type="text"
-                            name="q"
-                            value="{{ request('q') }}"
-                            placeholder="Cari berita..."
-                            class="field pl-11"
-                        >
-                        <x-app-icon name="search" class="w-5 h-5 text-ink-mute absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    </form>
-
-                    <div class="flex flex-wrap gap-2">
-                        <a
-                            href="{{ route('posts', request('q') ? ['q' => request('q')] : []) }}"
-                            class="chip {{ !request('cat') ? 'chip-active' : '' }}"
-                        >Semua</a>
-                        @foreach (\App\Enums\PostCategory::cases() as $cat)
-                            <a
-                                href="{{ route('posts', array_merge(request('q') ? ['q' => request('q')] : [], ['cat' => $cat->value])) }}"
-                                class="chip {{ request('cat') === $cat->value ? 'chip-active' : '' }}"
-                            >{{ $cat->label() }}</a>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- Daftar Berita Kartu Horizontal Figma --}}
+                {{-- Daftar Berita Kartu Horizontal --}}
                 <div class="space-y-4">
                     @forelse ($posts as $post)
                         <x-card class="p-0 overflow-hidden flex flex-col sm:flex-row hover:border-brand transition-all group shadow-xs">
@@ -59,9 +29,6 @@
 
                             <div class="p-5 sm:p-6 flex flex-col justify-between grow">
                                 <div>
-                                    <div class="mb-2.5">
-                                        <x-badge type="blue">{{ $post->category->label() }}</x-badge>
-                                    </div>
                                     <h2 class="text-base sm:text-lg font-extrabold text-navy leading-snug mb-2">
                                         <a href="{{ route('post.detail', $post->slug) }}" class="group-hover:text-brand transition-colors">
                                             {{ $post->title }}
@@ -85,8 +52,8 @@
                         </x-card>
                     @empty
                         <x-empty-state
-                            title="Berita tidak ditemukan"
-                            text="Tidak ada berita yang cocok dengan kata kunci atau kategori yang Anda pilih."
+                            title="Belum ada berita"
+                            text="Daftar berita terbaru sekolah akan segera dipublikasikan di sini."
                         />
                     @endforelse
                 </div>

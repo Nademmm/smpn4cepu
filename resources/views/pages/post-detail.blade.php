@@ -20,10 +20,6 @@
                     >
                 @endif
 
-                <div class="mb-3">
-                    <x-badge type="blue">{{ $post->category->label() }}</x-badge>
-                </div>
-
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-navy leading-tight mb-3">
                     {{ $post->title }}
                 </h1>

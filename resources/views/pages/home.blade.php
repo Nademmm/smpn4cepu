@@ -169,9 +169,6 @@
                             </div>
                         @endif
                         <div class="p-5 flex flex-col grow">
-                            <div class="mb-2.5">
-                                <x-badge type="blue">{{ $post->category->label() }}</x-badge>
-                            </div>
                             <h3 class="font-extrabold text-navy text-base leading-snug mb-2 line-clamp-2">
                                 <a href="{{ route('post.detail', $post->slug) }}" class="hover:text-brand transition-colors">
                                     {{ $post->title }}
