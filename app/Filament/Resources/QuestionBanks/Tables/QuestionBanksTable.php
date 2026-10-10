@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\QuestionBanks\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -15,30 +16,42 @@ class QuestionBanksTable
     {
         return $table
             ->columns([
+                TextColumn::make('title')
+                    ->label('Judul Kuis / Ujian')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold')
+                    ->wrap(),
                 TextColumn::make('subject.name')
+                    ->label('Mata Pelajaran')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('grade_level')
-                    ->numeric()
+                    ->label('Kelas')
+                    ->formatStateUsing(fn ($state) => 'Kelas ' . $state)
+                    ->badge()
+                    ->color('info')
                     ->sortable(),
-                TextColumn::make('title')
-                    ->searchable(),
                 TextColumn::make('duration_minutes')
-                    ->numeric()
+                    ->label('Durasi')
+                    ->formatStateUsing(fn ($state) => $state . ' Menit')
                     ->sortable(),
                 TextColumn::make('passing_grade')
-                    ->numeric()
+                    ->label('KKM')
+                    ->formatStateUsing(fn ($state) => $state . ' Poin')
+                    ->badge()
+                    ->color('success')
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label('Status Aktif')
                     ->boolean(),
-                TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('author.name')
+                    ->label('Pembuat Kuis')
+                    ->searchable()
+                    ->placeholder('-'),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Dibuat')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -47,6 +60,7 @@ class QuestionBanksTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -55,3 +69,4 @@ class QuestionBanksTable
             ]);
     }
 }
+

@@ -44,4 +44,29 @@ class LearningMaterial extends Model
     {
         return $query->where('grade_level', $grade);
     }
+
+    public function getAttachmentUrlAttribute(): ?string
+    {
+        if ($this->external_url) {
+            return $this->external_url;
+        }
+
+        if (!$this->attachment_path) {
+            return null;
+        }
+
+        if (str_starts_with($this->attachment_path, 'http://') || str_starts_with($this->attachment_path, 'https://')) {
+            return $this->attachment_path;
+        }
+
+        if (file_exists(public_path('storage/' . $this->attachment_path))) {
+            return asset('storage/' . $this->attachment_path);
+        }
+
+        if (file_exists(public_path($this->attachment_path))) {
+            return asset($this->attachment_path);
+        }
+
+        return asset('storage/' . $this->attachment_path);
+    }
 }

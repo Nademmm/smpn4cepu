@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LibraryBooks\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -20,12 +21,14 @@ class LibraryBooksTable
             ->columns([
                 ImageColumn::make('cover_image')
                     ->label('Sampul')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->defaultImageUrl(fn ($record) => $record->cover_url),
                 TextColumn::make('title')
                     ->label('Judul Buku')
                     ->description(fn ($record) => $record->author . ' · ' . $record->publisher)
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->wrap(),
                 TextColumn::make('category')
                     ->label('Kategori')
                     ->badge()
@@ -48,15 +51,8 @@ class LibraryBooksTable
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Ditambahkan')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -65,6 +61,7 @@ class LibraryBooksTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -75,3 +72,4 @@ class LibraryBooksTable
             ]);
     }
 }
+

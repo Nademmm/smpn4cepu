@@ -8,4 +8,11 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateLearningMaterial extends CreateRecord
 {
     protected static string $resource = LearningMaterialResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['created_by'] ??= auth()->id();
+        return $data;
+    }
 }
+

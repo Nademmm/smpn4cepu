@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\SchoolFacilities\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -14,27 +16,31 @@ class SchoolFacilitiesTable
     {
         return $table
             ->columns([
+                ImageColumn::make('photo_path')
+                    ->label('Foto Sarana')
+                    ->disk('public')
+                    ->defaultImageUrl(fn ($record) => $record->photo_url),
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('photo_path')
-                    ->searchable(),
+                    ->label('Nama Fasilitas')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                TextColumn::make('description')
+                    ->label('Deskripsi')
+                    ->limit(60)
+                    ->wrap(),
                 TextColumn::make('display_order')
+                    ->label('Urutan')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('display_order', 'asc')
             ->filters([
                 //
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -43,3 +49,4 @@ class SchoolFacilitiesTable
             ]);
     }
 }
+

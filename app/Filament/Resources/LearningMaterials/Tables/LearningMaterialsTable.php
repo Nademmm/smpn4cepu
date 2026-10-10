@@ -3,10 +3,12 @@
 namespace App\Filament\Resources\LearningMaterials\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -17,40 +19,42 @@ class LearningMaterialsTable
     {
         return $table
             ->columns([
+                TextColumn::make('title')
+                    ->label('Judul Materi')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold')
+                    ->wrap(),
                 TextColumn::make('subject.name')
+                    ->label('Mata Pelajaran')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('grade_level')
-                    ->numeric()
+                    ->label('Kelas')
+                    ->formatStateUsing(fn ($state) => 'Kelas ' . $state)
+                    ->badge()
+                    ->color('info')
                     ->sortable(),
-                TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('attachment_path')
-                    ->searchable(),
-                TextColumn::make('external_url')
-                    ->searchable(),
-                TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
+                IconColumn::make('attachment_path')
+                    ->label('Berkas')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-paper-clip')
+                    ->falseIcon('heroicon-o-minus'),
+                TextColumn::make('author.name')
+                    ->label('Penyusun')
+                    ->searchable()
+                    ->placeholder('-'),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Dibuat')
+                    ->dateTime('d M Y')
+                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -61,3 +65,4 @@ class LearningMaterialsTable
             ]);
     }
 }
+

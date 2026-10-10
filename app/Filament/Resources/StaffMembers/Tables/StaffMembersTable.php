@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\StaffMembers\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -15,36 +17,42 @@ class StaffMembersTable
     {
         return $table
             ->columns([
-                TextColumn::make('nip')
-                    ->searchable(),
+                ImageColumn::make('photo_path')
+                    ->label('Foto')
+                    ->circular()
+                    ->disk('public')
+                    ->defaultImageUrl(fn ($record) => $record->photo_url),
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Nama Pendidik / Tendik')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                TextColumn::make('nip')
+                    ->label('NIP / Identitas')
+                    ->searchable()
+                    ->placeholder('-'),
                 TextColumn::make('position')
+                    ->label('Jabatan')
                     ->searchable(),
                 TextColumn::make('employment_status')
+                    ->label('Status')
                     ->badge()
                     ->searchable(),
-                TextColumn::make('photo_path')
-                    ->searchable(),
                 TextColumn::make('display_order')
+                    ->label('Urutan')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label('Aktif')
                     ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('display_order', 'asc')
             ->filters([
                 //
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -53,3 +61,4 @@ class StaffMembersTable
             ]);
     }
 }
+

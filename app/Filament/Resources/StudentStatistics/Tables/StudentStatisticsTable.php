@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StudentStatistics\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -15,35 +16,39 @@ class StudentStatisticsTable
         return $table
             ->columns([
                 TextColumn::make('academic_year')
+                    ->label('Tahun Ajaran')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('grade_level')
-                    ->numeric()
+                    ->label('Tingkat')
+                    ->formatStateUsing(fn ($state) => 'Kelas ' . $state)
                     ->sortable(),
                 TextColumn::make('class_name')
-                    ->searchable(),
+                    ->label('Rombel')
+                    ->searchable()
+                    ->weight('bold'),
                 TextColumn::make('male_count')
+                    ->label('Laki-laki')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('female_count')
+                    ->label('Perempuan')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('total_count')
+                    ->label('Total Siswa')
                     ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->badge()
+                    ->color('success'),
             ])
+            ->defaultSort('academic_year', 'desc')
             ->filters([
                 //
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -52,3 +57,4 @@ class StudentStatisticsTable
             ]);
     }
 }
+

@@ -77,7 +77,7 @@
                                 {{ $mat->title }}
                             </h3>
                             <p class="text-xs text-ink-soft leading-relaxed line-clamp-3 mb-4 font-medium">
-                                {{ $mat->description ?? 'Modul pembelajaran Kurikulum Merdeka yang disusun oleh tenaga pendidik SMP Negeri 4 Cepu.' }}
+                                {{ $mat->summary ?? 'Modul pembelajaran Kurikulum Merdeka yang disusun oleh tenaga pendidik SMP Negeri 4 Cepu.' }}
                             </p>
                         </div>
 
@@ -86,9 +86,9 @@
                                 <x-app-icon name="user" class="w-3.5 h-3.5 text-brand" />
                                 <span class="line-clamp-1">{{ $mat->author?->name ?? 'Guru Pengampu' }}</span>
                             </div>
-                            @if ($mat->file_path)
+                            @if ($mat->attachment_url)
                                 <a
-                                    href="{{ asset('storage/' . $mat->file_path) }}"
+                                    href="{{ $mat->attachment_url }}"
                                     target="_blank"
                                     class="btn-primary text-xs !py-1.5 !px-3.5 !min-h-[36px] shadow-2xs"
                                 >

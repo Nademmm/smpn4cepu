@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Posts\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -19,34 +20,37 @@ class PostsTable
     {
         return $table
             ->columns([
-                TextColumn::make('author.name')
-                    ->searchable(),
+                ImageColumn::make('featured_image')
+                    ->label('Foto Sampul')
+                    ->disk('public')
+                    ->defaultImageUrl(fn ($record) => $record->featured_image_url),
+                TextColumn::make('title')
+                    ->label('Judul Berita')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
                 TextColumn::make('category')
+                    ->label('Kategori')
                     ->badge()
                     ->searchable(),
-                TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
+                TextColumn::make('author.name')
+                    ->label('Penulis')
                     ->searchable(),
                 TextColumn::make('event_date')
-                    ->date()
-                    ->sortable(),
-                ImageColumn::make('featured_image'),
+                    ->label('Tgl Agenda')
+                    ->date('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_published')
+                    ->label('Tayang')
                     ->boolean(),
                 TextColumn::make('published_at')
-                    ->dateTime()
+                    ->label('Waktu Publikasi')
+                    ->dateTime('d M Y H:i')
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Dibuat')
+                    ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -55,6 +59,7 @@ class PostsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -65,3 +70,4 @@ class PostsTable
             ]);
     }
 }
+
