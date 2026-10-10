@@ -7,8 +7,28 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {{-- Kolom Utama: Daftar Berita --}}
+            {{-- Kolom Utama: Pencarian & Daftar Berita --}}
             <div class="lg:col-span-8 space-y-6">
+                {{-- Form Pencarian Berita --}}
+                <form method="GET" action="{{ route('posts') }}" class="relative">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ request('q') }}"
+                        placeholder="Cari berita sekolah..."
+                        class="field pl-11 !py-3 pr-24 shadow-2xs"
+                    >
+                    <x-app-icon name="search" class="w-5 h-5 text-ink-mute absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    @if (request('q'))
+                        <a
+                            href="{{ route('posts') }}"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-ink-mute hover:text-navy px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 transition-colors"
+                        >
+                            Reset
+                        </a>
+                    @endif
+                </form>
+
                 {{-- Daftar Berita Kartu Horizontal --}}
                 <div class="space-y-4">
                     @forelse ($posts as $post)
@@ -52,8 +72,8 @@
                         </x-card>
                     @empty
                         <x-empty-state
-                            title="Belum ada berita"
-                            text="Daftar berita terbaru sekolah akan segera dipublikasikan di sini."
+                            title="{{ request('q') ? 'Berita tidak ditemukan' : 'Belum ada berita' }}"
+                            text="{{ request('q') ? 'Tidak ada berita yang cocok dengan kata kunci pencarian Anda.' : 'Daftar berita terbaru sekolah akan segera dipublikasikan di sini.' }}"
                         />
                     @endforelse
                 </div>
