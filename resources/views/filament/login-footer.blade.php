@@ -1,5 +1,6 @@
-<div class="w-full text-center mt-6 pt-4 border-t border-slate-100">
-    <p class="text-[11px] text-slate-400 font-medium">
+<div style="width: 100%; text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+    <p style="font-size: 0.7rem; color: #94a3b8; font-weight: 500; margin: 0; line-height: 1.4;">
         Akses dibatasi khusus staf, guru, dan pengelola resmi SMP Negeri 4 Cepu.
     </p>
 </div>
+
