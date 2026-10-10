@@ -50,26 +50,9 @@
             @forelse ($staffMembers as $staff)
                 <x-card class="text-center p-6 flex flex-col justify-between items-center h-full hover:border-brand transition-all group">
                     <div class="flex flex-col items-center w-full">
-                        {{-- Avatar Squircle Modern --}}
-                        @php
-                            $photoSrc = null;
-                            if ($staff->photo_path) {
-                                if (str_starts_with($staff->photo_path, 'http://') || str_starts_with($staff->photo_path, 'https://')) {
-                                    $photoSrc = $staff->photo_path;
-                                } elseif (file_exists(public_path('storage/' . $staff->photo_path))) {
-                                    $photoSrc = asset('storage/' . $staff->photo_path);
-                                } elseif (file_exists(public_path($staff->photo_path))) {
-                                    $photoSrc = asset($staff->photo_path);
-                                } elseif (file_exists(public_path('images/' . $staff->photo_path))) {
-                                    $photoSrc = asset('images/' . $staff->photo_path);
-                                } else {
-                                    $photoSrc = asset('storage/' . $staff->photo_path);
-                                }
-                            }
-                        @endphp
-                        @if ($photoSrc)
+                        @if ($staff->photo_url)
                             <img
-                                src="{{ $photoSrc }}"
+                                src="{{ $staff->photo_url }}"
                                 alt="{{ $staff->name }}"
                                 class="w-20 h-20 rounded-2xl object-cover border-2 border-sun-soft mb-3.5 group-hover:scale-105 transition-transform duration-200 shadow-2xs"
                             >

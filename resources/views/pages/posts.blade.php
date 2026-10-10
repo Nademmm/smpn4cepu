@@ -33,10 +33,10 @@
                 <div class="space-y-4">
                     @forelse ($posts as $post)
                         <x-card class="p-0 overflow-hidden flex flex-col sm:flex-row hover:border-brand transition-all group shadow-xs">
-                            @if ($post->featured_image)
+                            @if ($post->featured_image_url)
                                 <div class="w-full sm:w-56 h-48 sm:h-auto shrink-0 overflow-hidden">
                                     <img
-                                        src="{{ asset('storage/' . $post->featured_image) }}"
+                                        src="{{ $post->featured_image_url }}"
                                         alt="{{ $post->title }}"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     >

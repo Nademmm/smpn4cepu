@@ -161,8 +161,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @forelse ($recentPosts as $post)
                     <x-card class="p-0 overflow-hidden flex flex-col h-full hover:border-brand transition-colors group">
-                        @if ($post->featured_image)
-                            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
+                        @if ($post->featured_image_url)
+                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="w-full h-44 bg-cream flex items-center justify-center text-brand">
                                 <x-app-icon name="news" class="w-10 h-10" />
@@ -237,8 +237,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 @foreach ($featuredFacilities as $facility)
                     <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
-                        @if ($facility->photo_path && file_exists(public_path('images/assets/' . $facility->photo_path)))
-                            <img src="{{ asset('images/assets/' . $facility->photo_path) }}" alt="{{ $facility->name }}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                        @if ($facility->photo_url)
+                            <img src="{{ $facility->photo_url }}" alt="{{ $facility->name }}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="w-full h-40 bg-sky-soft flex items-center justify-center text-brand">
                                 <x-app-icon name="building" class="w-8 h-8" />

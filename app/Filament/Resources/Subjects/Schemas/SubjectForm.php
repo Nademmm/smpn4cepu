@@ -12,9 +12,16 @@ class SubjectForm
         return $schema
             ->components([
                 TextInput::make('code')
-                    ->required(),
+                    ->label('Kode Mata Pelajaran')
+                    ->required()
+                    ->placeholder('Contoh: MTK, IPA, BIND, BING')
+                    ->unique(ignoreRecord: true),
+
                 TextInput::make('name')
-                    ->required(),
+                    ->label('Nama Mata Pelajaran')
+                    ->required()
+                    ->placeholder('Contoh: Matematika, Ilmu Pengetahuan Alam'),
             ]);
     }
 }
+

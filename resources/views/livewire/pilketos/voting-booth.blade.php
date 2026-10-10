@@ -81,9 +81,9 @@
                         <div>
                             {{-- Foto Paslon --}}
                             <div class="mt-4 mb-4 flex justify-center">
-                                @if ($cand->photo_path && file_exists(public_path('storage/' . $cand->photo_path)))
+                                @if ($cand->photo_url)
                                     <img
-                                        src="{{ asset('storage/' . $cand->photo_path) }}"
+                                        src="{{ $cand->photo_url }}"
                                         alt="{{ $cand->candidate_name }}"
                                         class="w-28 h-28 rounded-full object-cover border-4 border-sun-soft shadow-xs"
                                     >

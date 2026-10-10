@@ -200,9 +200,9 @@
                     <div>
                         {{-- Cover Area Proporsional (Format Buku 3:4) --}}
                         <div class="h-48 sm:h-52 rounded-xl bg-sky-soft flex items-center justify-center text-brand mb-4 overflow-hidden border border-sun-soft/60 relative">
-                            @if ($book->cover_image && file_exists(public_path('storage/' . $book->cover_image)))
+                            @if ($book->cover_url)
                                 <img
-                                    src="{{ asset('storage/' . $book->cover_image) }}"
+                                    src="{{ $book->cover_url }}"
                                     alt="{{ $book->title }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 >

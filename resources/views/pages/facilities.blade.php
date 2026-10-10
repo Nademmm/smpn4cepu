@@ -9,10 +9,10 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($facilities as $facility)
                 <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-all group">
-                    @if ($facility->photo_path && file_exists(public_path('images/assets/' . $facility->photo_path)))
+                    @if ($facility->photo_url)
                         <div class="overflow-hidden">
                             <img
-                                src="{{ asset('images/assets/' . $facility->photo_path) }}"
+                                src="{{ $facility->photo_url }}"
                                 alt="{{ $facility->name }}"
                                 class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
                             >

@@ -51,4 +51,29 @@ class Post extends Model
         $value = $category instanceof PostCategory ? $category->value : $category;
         return $query->where('category', $value);
     }
+
+    public function getFeaturedImageUrlAttribute(): ?string
+    {
+        if (!$this->featured_image) {
+            return null;
+        }
+
+        if (str_starts_with($this->featured_image, 'http://') || str_starts_with($this->featured_image, 'https://')) {
+            return $this->featured_image;
+        }
+
+        if (file_exists(public_path('storage/' . $this->featured_image))) {
+            return asset('storage/' . $this->featured_image);
+        }
+
+        if (file_exists(public_path($this->featured_image))) {
+            return asset($this->featured_image);
+        }
+
+        if (file_exists(public_path('images/assets/' . $this->featured_image))) {
+            return asset('images/assets/' . $this->featured_image);
+        }
+
+        return asset('storage/' . $this->featured_image);
+    }
 }

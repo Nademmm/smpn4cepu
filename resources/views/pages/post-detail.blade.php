@@ -12,9 +12,9 @@
                     <span>Kembali ke daftar berita</span>
                 </a>
 
-                @if ($post->featured_image)
+                @if ($post->featured_image_url)
                     <img
-                        src="{{ asset('storage/' . $post->featured_image) }}"
+                        src="{{ $post->featured_image_url }}"
                         alt="{{ $post->title }}"
                         class="w-full h-72 sm:h-96 object-cover rounded-2xl mb-6 border-2 border-sun-soft"
                     >
