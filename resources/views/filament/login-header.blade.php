@@ -21,13 +21,11 @@
     {{-- Logo Sekolah & Branding Tengah --}}
     <div style="text-align: center; margin-bottom: 1.25rem;">
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 0.85rem;">
-            <div style="width: 68px; height: 68px; background: #ffffff; border-radius: 1rem; border: 1px solid #e2e8f0; padding: 0.4rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-                <img
-                    src="{{ asset('images/logo.png') }}"
-                    alt="Logo SMP Negeri 4 Cepu"
-                    style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block;"
-                />
-            </div>
+            <img
+                src="{{ asset('images/logo.png') }}"
+                alt="Logo SMP Negeri 4 Cepu"
+                style="height: 72px; width: auto; max-width: 100%; object-fit: contain; display: block;"
+            />
         </div>
 
         <h1 style="font-size: 1.25rem; font-weight: 900; color: #0f172a; letter-spacing: -0.02em; margin: 0; line-height: 1.3;">

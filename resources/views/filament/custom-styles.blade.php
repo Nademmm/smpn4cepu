@@ -143,12 +143,19 @@
         box-shadow: none !important;
         color: #94a3b8 !important;
         cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 0.3rem !important;
         border-radius: 0.5rem !important;
         transition: color 0.15s, background-color 0.15s !important;
+    }
+
+    /* Pastikan tombol mata yang di-hide Alpine / x-show benar-benar tersembunyi */
+    .fi-input-wrp-actions button[x-cloak],
+    .fi-input-wrp-actions button[style*="display: none"],
+    .fi-input-wrp-actions button.hidden {
+        display: none !important;
     }
 
     .fi-input-wrp-actions button:hover,
@@ -199,7 +206,7 @@
         margin: 0 !important;
     }
 
-    /* 7. Action Button: Tombol Submit Masuk (Kunci Mutlak agar Tidak Gepeng / Rusak) */
+    /* 7. Action Button: Tombol Masuk Biasa & Sederhana (Tanpa Animasi Berlebihan) */
     .fi-sc-actions,
     #content\.form-actions,
     .fi-ac.fi-width-full {
@@ -216,39 +223,40 @@
         align-items: center !important;
         justify-content: center !important;
         width: 100% !important;
-        min-height: 48px !important;
-        height: 48px !important;
+        min-height: 46px !important;
+        height: 46px !important;
         padding: 0.75rem 1.5rem !important;
-        border-radius: 0.875rem !important; /* 14px */
-        font-weight: 800 !important;
+        border-radius: 0.625rem !important; /* 10px rapi */
+        font-weight: 700 !important;
         font-size: 0.9375rem !important;
-        letter-spacing: 0.02em !important;
         color: #ffffff !important;
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        background-color: #d97706 !important; /* Amber solid standar yang tenang */
         border: none !important;
         cursor: pointer !important;
-        box-shadow: 0 4px 10px -1px rgba(217, 119, 6, 0.3), 0 2px 4px -2px rgba(217, 119, 6, 0.15) !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        transition: background-color 0.15s ease !important; /* Transisi warna wajar tanpa loncat */
+        transform: none !important;
         box-sizing: border-box !important;
     }
 
     form button[type="submit"]:hover,
     .fi-ac-btn-action:hover {
-        background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%) !important;
-        filter: brightness(1.05) !important;
-        box-shadow: 0 8px 16px -2px rgba(217, 119, 6, 0.4) !important;
-        transform: translateY(-1px) !important;
+        background-color: #b45309 !important; /* Sedikit lebih gelap saat di-hover */
+        transform: none !important;
+        filter: none !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
     }
 
     form button[type="submit"]:active,
     .fi-ac-btn-action:active {
-        transform: scale(0.985) !important;
+        background-color: #92400e !important;
+        transform: none !important;
     }
 
     form button[type="submit"] span,
     .fi-ac-btn-action span {
         color: #ffffff !important;
-        font-weight: 800 !important;
+        font-weight: 700 !important;
         font-size: 0.9375rem !important;
         display: inline-block !important;
     }
