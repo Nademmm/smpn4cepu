@@ -1,4 +1,4 @@
-# SMP Negeri 4 Cepu — "Satu Sekolah, Satu Ruang Digital" (Tahap V1)
+# SMP Negeri 4 Cepu — "Satu Sekolah, Satu Ruang Digital"
 
 [![Laravel 11](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel)](https://laravel.com)
 [![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=flat-square&logo=php)](https://php.net)
