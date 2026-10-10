@@ -82,6 +82,31 @@
             </div>
         </div>
 
+        {{-- Profil Pengelola Perpustakaan Resmi --}}
+        <div class="card p-5 sm:p-6 bg-gradient-to-r from-sky-soft/40 via-white to-sky-soft/20 border border-sky-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-start sm:items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-brand text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <x-app-icon name="academic-cap" class="w-6 h-6" />
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-navy">Unit Pengelola Perpustakaan SMP Negeri 4 Cepu</h3>
+                    <p class="text-xs text-ink-mute mt-0.5">Mendukung gerakan literasi sekolah, riset digital, dan sirkulasi koleksi fisik terstandar.</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 text-xs">
+                <div class="px-3.5 py-2 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                    <span class="text-[10px] uppercase font-bold text-ink-mute block">Penanggung Jawab</span>
+                    <span class="font-bold text-navy">Laeli Hasanah, S.Pd.</span>
+                    <span class="text-[10px] text-ink-soft block">Kepala / Pengelola Perpustakaan</span>
+                </div>
+                <div class="px-3.5 py-2 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                    <span class="text-[10px] uppercase font-bold text-ink-mute block">Tenaga Teknis Pustakawan</span>
+                    <span class="font-bold text-navy">Yaatun, A.Ma.Pust.</span>
+                    <span class="text-[10px] text-brand font-semibold block">Pustakawan Terampil</span>
+                </div>
+            </div>
+        </div>
+
         {{-- Toolbar Pencarian & Filter OPAC --}}
         <div class="card p-5 sm:p-6 bg-white space-y-4 shadow-xs">
             <form method="GET" action="{{ route('library') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
