@@ -71,10 +71,66 @@
                             </div>
                         </x-card>
                     @empty
-                        <x-empty-state
-                            title="{{ request('q') ? 'Berita tidak ditemukan' : 'Belum ada berita' }}"
-                            text="{{ request('q') ? 'Tidak ada berita yang cocok dengan kata kunci pencarian Anda.' : 'Daftar berita terbaru sekolah akan segera dipublikasikan di sini.' }}"
-                        />
+                        <div class="card p-6 sm:p-8 bg-white border border-slate-200/80 text-center space-y-5 shadow-xs">
+                            <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+                                <x-app-icon name="search" class="w-7 h-7" />
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-extrabold text-navy">
+                                    {{ request('q') ? 'Tidak ada berita yang cocok dengan "' . request('q') . '"' : 'Belum Ada Berita' }}
+                                </h3>
+                                <p class="text-xs sm:text-sm text-ink-soft max-w-md mx-auto mt-1.5 leading-relaxed font-medium">
+                                    {{ request('q') 
+                                        ? 'Coba gunakan kata kunci yang lebih umum, periksa ejaan, atau jelajahi rekomendasi berita terbaru di bawah ini.' 
+                                        : 'Daftar berita dan dokumentasi kegiatan sekolah akan segera dipublikasikan di sini.' }}
+                                </p>
+                            </div>
+
+                            @if (request('q'))
+                                <div class="flex items-center justify-center gap-3 pt-1">
+                                    <a href="{{ route('posts') }}" class="btn-primary !min-h-[40px] px-5 text-xs">
+                                        <span>Tampilkan Semua Berita</span>
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Rekomendasi Berita Pilihan Saat Pencarian Tidak Ditemukan --}}
+                        @if (isset($suggestedPosts) && $suggestedPosts->isNotEmpty())
+                            <div class="pt-4 space-y-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-brand"></div>
+                                    <h4 class="text-sm font-extrabold text-navy uppercase tracking-wider">
+                                        Mungkin Anda Tertarik Membaca Ini:
+                                    </h4>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                                    @foreach ($suggestedPosts as $sPost)
+                                        <a href="{{ route('post.detail', $sPost->slug) }}" class="card p-4 bg-white hover:border-brand transition-all group block shadow-2xs">
+                                            @if ($sPost->featured_image)
+                                                <img
+                                                    src="{{ asset('storage/' . $sPost->featured_image) }}"
+                                                    alt="{{ $sPost->title }}"
+                                                    class="w-full h-28 object-cover rounded-xl mb-2.5 group-hover:scale-105 transition-transform"
+                                                >
+                                            @else
+                                                <div class="w-full h-28 bg-sky-soft rounded-xl mb-2.5 flex items-center justify-center text-brand">
+                                                    <x-app-icon name="news" class="w-8 h-8" />
+                                                </div>
+                                            @endif
+                                            <h5 class="text-xs font-bold text-navy group-hover:text-brand line-clamp-2 leading-snug">
+                                                {{ $sPost->title }}
+                                            </h5>
+                                            <span class="block text-[10px] text-ink-mute mt-1.5 font-medium">
+                                                {{ $sPost->published_at?->translatedFormat('d M Y') ?? $sPost->created_at->translatedFormat('d M Y') }}
+                                            </span>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     @endforelse
                 </div>
 

@@ -151,28 +151,39 @@ Route::get('/latihan-soal/{id}', function (int $id) {
 Route::get('/berita', function (Request $request) {
     $query = Post::where('is_published', true)->orderByDesc('published_at');
 
-    if ($cat = $request->input('cat')) {
-        if ($catEnum = PostCategory::tryFrom($cat)) {
-            $query->where('category', $catEnum);
-        }
-    }
-
-    if ($search = $request->input('q')) {
-        $query->where(function ($q) use ($search) {
+    $search = trim((string) $request->input('q'));
+    if ($search !== '') {
+        $keywords = array_filter(explode(' ', $search));
+        $query->where(function ($q) use ($search, $keywords) {
             $q->where('title', 'like', "%{$search}%")
               ->orWhere('excerpt', 'like', "%{$search}%")
               ->orWhere('content', 'like', "%{$search}%");
+
+            foreach ($keywords as $kw) {
+                $q->orWhere('title', 'like', "%{$kw}%")
+                  ->orWhere('excerpt', 'like', "%{$kw}%");
+            }
         });
     }
 
     $posts = $query->paginate(6)->withQueryString();
+    
+    // Jika pencarian tidak menemukan data, ambil rekomendasi berita terbaru agar pengunjung tetap mendapat konten bermanfaat
+    $suggestedPosts = collect();
+    if ($search !== '' && $posts->isEmpty()) {
+        $suggestedPosts = Post::where('is_published', true)
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+    }
+
     $announcements = Post::where('is_published', true)
         ->where('category', PostCategory::PENGUMUMAN)
         ->orderByDesc('published_at')
         ->limit(4)
         ->get();
 
-    return view('pages.posts', compact('posts', 'announcements'));
+    return view('pages.posts', compact('posts', 'announcements', 'suggestedPosts', 'search'));
 })->name('posts');
 
 // 13. Detail Berita

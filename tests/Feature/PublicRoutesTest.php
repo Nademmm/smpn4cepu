@@ -40,4 +40,12 @@ class PublicRoutesTest extends TestCase
             $this->assertTrue(true);
         }
     }
+
+    public function test_unknown_route_returns_custom_404_page(): void
+    {
+        $response = $this->get('/halaman-yang-pasti-tidak-ada-12345');
+        $response->assertStatus(404);
+        $response->assertSee('Halaman Tidak Ditemukan');
+        $response->assertSee('Kembali ke Beranda');
+    }
 }
