@@ -48,11 +48,10 @@ jobs:
           cp .env.example .env
           php artisan key:generate
           touch database/database.sqlite
+          php artisan migrate --force
+          php artisan db:seed --force
 
-      - name: Execute Tests (PHPUnit with In-Memory SQLite)
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ':memory:'
+      - name: Execute Tests (PHPUnit)
         run: php artisan test
 
   auto-deploy:
