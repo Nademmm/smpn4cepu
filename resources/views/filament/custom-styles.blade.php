@@ -437,6 +437,47 @@
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
     }
 
+    /* Hilangkan tombol panah chevron duplikat di topbar agar hanya ada 1 tombol navigasi menu */
+    .fi-topbar-collapse-sidebar-btn-ctn {
+        display: none !important;
+    }
+
+    /* Pastikan satu tombol toggle sidebar (hamburger / close) tampil konsisten di desktop & mobile */
+    .fi-topbar-open-sidebar-btn:not([style*="display: none"]),
+    .fi-topbar-close-sidebar-btn:not([style*="display: none"]) {
+        display: inline-flex !important;
+        margin-right: 0.5rem !important;
+    }
+
+    .fi-topbar-open-sidebar-btn[style*="display: none"],
+    .fi-topbar-close-sidebar-btn[style*="display: none"] {
+        display: none !important;
+    }
+
+    /* Penataan jarak logo/nama sekolah di samping tombol toggle */
+    .fi-topbar-start .fi-logo {
+        margin-inline-start: 0.25rem !important;
+    }
+
+    /* Tombol icon topbar kontras & transisi halus */
+    html:not(.dark) .fi-topbar .fi-icon-btn {
+        color: #475569 !important;
+    }
+
+    html:not(.dark) .fi-topbar .fi-icon-btn:hover {
+        color: #0f172a !important;
+        background-color: #f1f5f9 !important;
+    }
+
+    html.dark .fi-topbar .fi-icon-btn {
+        color: #94a3b8 !important;
+    }
+
+    html.dark .fi-topbar .fi-icon-btn:hover {
+        color: #f8fafc !important;
+        background-color: #1e293b !important;
+    }
+
     /* 10. Sidebar Admin (Light & Dark Ready) */
     aside.fi-sidebar {
         transition: background-color 0.2s, border-color 0.2s !important;
