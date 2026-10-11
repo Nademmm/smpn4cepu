@@ -1,5 +1,5 @@
 <style>
-    /* 1. Global Font & Panel Base */
+    /* 1. Global Font, Panel Base & Minimalist Grey Scrollbar */
     body.fi-body {
         font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         -webkit-font-smoothing: antialiased !important;
@@ -13,6 +13,68 @@
     html.dark body.fi-body {
         background-color: #090d16 !important;
         color: #f8fafc !important;
+    }
+
+    /* Minimalist Grey Scrollbars (Light & Dark Ready) */
+    html,
+    body.fi-body,
+    .fi-body *,
+    .fi-body *::before,
+    .fi-body *::after {
+        scrollbar-width: thin !important;
+    }
+
+    html:not(.dark),
+    html:not(.dark) body.fi-body,
+    html:not(.dark) .fi-body * {
+        scrollbar-color: #cbd5e1 transparent !important;
+    }
+
+    html.dark,
+    html.dark body.fi-body,
+    html.dark .fi-body * {
+        scrollbar-color: #475569 transparent !important;
+    }
+
+    /* WebKit Scrollbar (Chrome, Edge, Safari, Opera) */
+    .fi-body ::-webkit-scrollbar,
+    ::-webkit-scrollbar {
+        width: 6px !important;
+        height: 6px !important;
+    }
+
+    .fi-body ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+
+    html:not(.dark) .fi-body ::-webkit-scrollbar-thumb,
+    html:not(.dark) ::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1 !important;
+        border-radius: 9999px !important;
+        border: 1px solid transparent !important;
+    }
+
+    html:not(.dark) .fi-body ::-webkit-scrollbar-thumb:hover,
+    html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+        background-color: #94a3b8 !important;
+    }
+
+    html.dark .fi-body ::-webkit-scrollbar-thumb,
+    html.dark ::-webkit-scrollbar-thumb {
+        background-color: #475569 !important;
+        border-radius: 9999px !important;
+        border: 1px solid transparent !important;
+    }
+
+    html.dark .fi-body ::-webkit-scrollbar-thumb:hover,
+    html.dark ::-webkit-scrollbar-thumb:hover {
+        background-color: #64748b !important;
+    }
+
+    .fi-body ::-webkit-scrollbar-corner,
+    ::-webkit-scrollbar-corner {
+        background: transparent !important;
     }
 
     /* 2. Login Page Container & Modern Card ala Skomda */
@@ -100,24 +162,23 @@
         font-weight: 900 !important;
     }
 
-    /* 4. Input Wrapper & Field Reset (Light & Dark Ready) */
+    /* 4. Input Wrapper & Field Reset (Profesional, Clean & Responsif) */
     .fi-input-wrp {
         display: flex !important;
-        align-items: center !important;
         position: relative !important;
         width: 100% !important;
-        min-height: 46px !important;
-        height: 46px !important;
+        min-height: 42px !important;
+        height: auto !important; /* Fleksibel untuk text biasa maupun textarea multiline */
         border-radius: 0.75rem !important; /* 12px */
-        transition: all 0.15s ease-in-out !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out !important;
         box-shadow: none !important;
-        overflow: hidden !important;
+        overflow: visible !important; /* Cegah teks dan placeholder terpotong vertikal */
         box-sizing: border-box !important;
     }
 
     html:not(.dark) .fi-input-wrp {
-        border: 1.5px solid #e2e8f0 !important;
-        background-color: #f8fafc !important;
+        border: 1.5px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
     }
 
     html:not(.dark) .fi-input-wrp:focus-within {
@@ -141,49 +202,115 @@
         display: flex !important;
         flex: 1 1 0% !important;
         width: 100% !important;
-        height: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
         align-items: center !important;
     }
 
+    /* Single-line Text Input */
     .fi-input-wrp input,
     input.fi-input {
         display: block !important;
         width: 100% !important;
-        height: 100% !important;
+        min-height: 40px !important;
+        height: auto !important;
+        line-height: 1.5 !important;
         background: transparent !important;
         background-color: transparent !important;
         border: none !important;
         border-width: 0 !important;
         outline: none !important;
         box-shadow: none !important;
-        padding: 0.65rem 1rem !important;
+        padding: 0.55rem 0.875rem !important;
         font-size: 0.875rem !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
         box-sizing: border-box !important;
         -webkit-appearance: none !important;
         appearance: none !important;
     }
 
+    /* Khusus Textarea (Multiline Input Visi, Misi, Deskripsi dll) */
+    .fi-fo-textarea-wrp .fi-input-wrp,
+    .fi-input-wrp:has(textarea),
+    .fi-fo-textarea {
+        min-height: 110px !important;
+        height: auto !important;
+        align-items: stretch !important;
+    }
+
+    .fi-fo-textarea textarea,
+    .fi-input-wrp textarea,
+    textarea.fi-input {
+        display: block !important;
+        width: 100% !important;
+        min-height: 110px !important;
+        height: auto !important;
+        line-height: 1.6 !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-width: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        padding: 0.75rem 0.875rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        font-family: inherit !important;
+        resize: vertical !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Warna Teks dan Placeholder */
     html:not(.dark) .fi-input-wrp input,
-    html:not(.dark) input.fi-input {
+    html:not(.dark) .fi-input-wrp textarea,
+    html:not(.dark) input.fi-input,
+    html:not(.dark) textarea.fi-input {
         color: #0f172a !important;
     }
 
     html.dark .fi-input-wrp input,
-    html.dark input.fi-input {
+    html.dark .fi-input-wrp textarea,
+    html.dark input.fi-input,
+    html.dark textarea.fi-input {
         color: #f8fafc !important;
     }
 
     html:not(.dark) .fi-input-wrp input::placeholder,
-    html:not(.dark) input.fi-input::placeholder {
+    html:not(.dark) .fi-input-wrp textarea::placeholder,
+    html:not(.dark) input.fi-input::placeholder,
+    html:not(.dark) textarea.fi-input::placeholder {
         color: #94a3b8 !important;
-        font-weight: 500 !important;
+        font-weight: 400 !important;
     }
 
     html.dark .fi-input-wrp input::placeholder,
-    html.dark input.fi-input::placeholder {
+    html.dark .fi-input-wrp textarea::placeholder,
+    html.dark input.fi-input::placeholder,
+    html.dark textarea.fi-input::placeholder {
         color: #64748b !important;
+        font-weight: 400 !important;
+    }
+
+    /* Select Input & Options */
+    .fi-select-input,
+    select.fi-input {
+        min-height: 40px !important;
+        padding: 0.55rem 0.875rem !important;
+        font-size: 0.875rem !important;
         font-weight: 500 !important;
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+    }
+
+    html:not(.dark) select.fi-input option {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    html.dark select.fi-input option {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
     }
 
     /* 5. Password Reveal / Toggle Button */
