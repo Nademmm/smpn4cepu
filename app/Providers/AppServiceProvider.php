@@ -29,14 +29,18 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('super_admin') ? true : null;
         });
 
-        // 1. Bagikan SchoolSetting ke seluruh tampilan publik Blade
-        view()->composer('*', function ($view) {
-            try {
-                if (Schema::hasTable('school_settings')) {
-                    $view->with('schoolSetting', \App\Models\SchoolSetting::current());
+        // 1. Bagikan SchoolSetting ke tampilan publik Blade dengan memoization (hanya 1x query)
+        view()->composer(['pages.*', 'components.layouts.*', 'components.*'], function ($view) {
+            static $cachedSetting = null;
+            if ($cachedSetting === null) {
+                try {
+                    $cachedSetting = \App\Models\SchoolSetting::current();
+                } catch (\Throwable $e) {
+                    $cachedSetting = false;
                 }
-            } catch (\Throwable $e) {
-                // Abaikan jika migrasi belum berjalan
+            }
+            if ($cachedSetting) {
+                $view->with('schoolSetting', $cachedSetting);
             }
         });
 
