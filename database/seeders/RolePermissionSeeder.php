@@ -20,17 +20,56 @@ class RolePermissionSeeder extends Seeder
         $stafPerpusRole = Role::firstOrCreate(['name' => 'staf_perpus']);
         $panitiaPilketosRole = Role::firstOrCreate(['name' => 'panitia_pilketos']);
 
-        // 2. Generate Shield Permissions untuk Semua Entity Filament jika belum lengkap
-        try {
-            \Illuminate\Support\Facades\Artisan::call('shield:generate', [
-                '--all' => true,
-                '--option' => 'permissions',
-                '--ignore-existing-policies' => true,
-                '--panel' => 'admin',
-                '-n' => true,
-            ]);
-        } catch (\Throwable $e) {
-            // Lanjutkan jika artisan shield sudah selesai
+        // 2. Buat Shield Permissions untuk Semua Entity Filament & Widget secara langsung (bebas hang CLI)
+        $entities = [
+            'Achievement',
+            'BookReservation',
+            'ContactMessage',
+            'ElectionCandidate',
+            'Extracurricular',
+            'GalleryPhoto',
+            'LearningMaterial',
+            'LibraryBook',
+            'Post',
+            'QuestionBank',
+            'Role',
+            'SchoolDocument',
+            'SchoolFacility',
+            'SchoolSetting',
+            'StaffMember',
+            'StudentStatistic',
+            'Subject',
+        ];
+
+        $actions = [
+            'ViewAny',
+            'View',
+            'Create',
+            'Update',
+            'Delete',
+            'DeleteAny',
+            'Restore',
+            'RestoreAny',
+            'ForceDelete',
+            'ForceDeleteAny',
+            'Replicate',
+            'Reorder',
+        ];
+
+        foreach ($entities as $entity) {
+            foreach ($actions as $action) {
+                Permission::firstOrCreate(['name' => "{$action}:{$entity}"]);
+            }
+        }
+
+        // Permissions untuk Widget Dashboard
+        $widgetPermissions = [
+            'View:PilketosLiveChartWidget',
+            'View:SchoolOverviewWidget',
+        ];
+
+        foreach ($widgetPermissions as $widgetPermission) {
+            Permission::firstOrCreate(['name' => $widgetPermission]);
         }
 
         // 3. Buat General/Legacy Permissions

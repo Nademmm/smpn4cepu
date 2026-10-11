@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // 2. Otomatisasi migrasi dan seeder saat aplikasi pertama kali aktif di PaaS
+        // 3. Otomatisasi migrasi dan seeder saat aplikasi pertama kali aktif di PaaS (fallback jika tanpa entrypoint)
         if (config('app.env') === 'production' && !app()->runningInConsole()) {
             try {
                 if (!Schema::hasTable('users')) {
