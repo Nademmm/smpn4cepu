@@ -20,7 +20,32 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Profil & Informasi';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Berita & Artikel';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Berita';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Berita & Artikel';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 2;
+    }
 
     public static function form(Schema $schema): Schema
     {

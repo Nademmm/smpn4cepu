@@ -18,7 +18,32 @@ class QuestionBankResource extends Resource
 {
     protected static ?string $model = QuestionBank::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Akademik & Pembelajaran';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Bank Soal & Ujian';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Bank Soal';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Bank Soal & Ujian';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 3;
+    }
 
     public static function form(Schema $schema): Schema
     {

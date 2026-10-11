@@ -18,7 +18,32 @@ class SchoolFacilityResource extends Resource
 {
     protected static ?string $model = SchoolFacility::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Profil & Informasi';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Fasilitas Sekolah';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Fasilitas';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Fasilitas Sekolah';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 3;
+    }
 
     public static function form(Schema $schema): Schema
     {

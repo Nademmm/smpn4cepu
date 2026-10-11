@@ -18,7 +18,32 @@ class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Akademik & Pembelajaran';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Mata Pelajaran';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Mata Pelajaran';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Mata Pelajaran';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 1;
+    }
 
     public static function form(Schema $schema): Schema
     {

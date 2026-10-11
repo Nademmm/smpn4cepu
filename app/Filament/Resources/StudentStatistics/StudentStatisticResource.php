@@ -18,7 +18,32 @@ class StudentStatisticResource extends Resource
 {
     protected static ?string $model = StudentStatistic::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Profil & Informasi';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Statistik Siswa';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Statistik Siswa';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Statistik Siswa';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 4;
+    }
 
     public static function form(Schema $schema): Schema
     {

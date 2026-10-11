@@ -18,7 +18,32 @@ class ElectionCandidateResource extends Resource
 {
     protected static ?string $model = ElectionCandidate::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedIdentification;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Kesiswaan & Organisasi';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Kandidat Pilketos';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Kandidat';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Kandidat Pilketos';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 1;
+    }
 
     public static function form(Schema $schema): Schema
     {

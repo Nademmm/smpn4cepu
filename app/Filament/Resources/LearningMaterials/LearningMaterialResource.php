@@ -20,7 +20,32 @@ class LearningMaterialResource extends Resource
 {
     protected static ?string $model = LearningMaterial::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentArrowDown;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Akademik & Pembelajaran';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Materi Pelajaran';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Materi Pelajaran';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Materi Pembelajaran';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 2;
+    }
 
     public static function form(Schema $schema): Schema
     {

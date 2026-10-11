@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('SMP Negeri 4 Cepu')
             ->favicon(asset('images/logo.png'))
             ->spa()
+            ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
             ])

@@ -20,7 +20,32 @@ class LibraryBookResource extends Resource
 {
     protected static ?string $model = LibraryBook::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Akademik & Pembelajaran';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Buku Perpustakaan';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Buku Perpustakaan';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Katalog Buku Perpustakaan';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 4;
+    }
 
     public static function form(Schema $schema): Schema
     {

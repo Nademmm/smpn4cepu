@@ -18,7 +18,32 @@ class StaffMemberResource extends Resource
 {
     protected static ?string $model = StaffMember::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Profil & Informasi';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Guru & Staf';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Guru / Staf';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Data Guru & Staf';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 1;
+    }
 
     public static function form(Schema $schema): Schema
     {
