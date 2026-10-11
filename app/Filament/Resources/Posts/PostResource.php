@@ -20,6 +20,21 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug', 'excerpt'];
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Kategori' => $record->category?->getLabel() ?? '-',
+            'Status' => $record->is_published ? 'Diterbitkan' : 'Draf',
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
     public static function getNavigationGroup(): ?string

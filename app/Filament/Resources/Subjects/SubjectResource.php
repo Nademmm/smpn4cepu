@@ -18,6 +18,20 @@ class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'code'];
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Kode Mapel' => $record->code ?? '-',
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
     public static function getNavigationGroup(): ?string

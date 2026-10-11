@@ -18,6 +18,25 @@ class ElectionCandidateResource extends Resource
 {
     protected static ?string $model = ElectionCandidate::class;
 
+    protected static ?string $recordTitleAttribute = 'candidate_name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['candidate_name', 'vice_candidate_name', 'candidate_number'];
+    }
+
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        return "Paslon #{$record->candidate_number}: {$record->candidate_name}";
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Wakil' => $record->vice_candidate_name ?? '-',
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedIdentification;
 
     public static function getNavigationGroup(): ?string

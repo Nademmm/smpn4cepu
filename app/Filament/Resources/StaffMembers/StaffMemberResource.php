@@ -18,6 +18,21 @@ class StaffMemberResource extends Resource
 {
     protected static ?string $model = StaffMember::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'nip', 'position'];
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Jabatan' => $record->position ?? '-',
+            'NIP' => $record->nip ?? '-',
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     public static function getNavigationGroup(): ?string

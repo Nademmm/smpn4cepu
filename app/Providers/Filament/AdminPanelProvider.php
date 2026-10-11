@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\GlobalSearch\SmartGlobalSearchProvider;
 use Filament\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -33,6 +34,10 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/logo.png'))
             ->spa()
             ->sidebarCollapsibleOnDesktop()
+            ->globalSearch(SmartGlobalSearchProvider::class)
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->globalSearchFieldSuffix('Ctrl+K')
+            ->globalSearchDebounce('300ms')
             ->colors([
                 'primary' => Color::Amber,
             ])

@@ -20,6 +20,21 @@ class LibraryBookResource extends Resource
 {
     protected static ?string $model = LibraryBook::class;
 
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'author', 'isbn', 'publisher', 'category'];
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Penulis' => $record->author ?? '-',
+            'Kategori' => $record->category ?? '-',
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
     public static function getNavigationGroup(): ?string

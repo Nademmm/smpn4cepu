@@ -18,6 +18,20 @@ class SchoolFacilityResource extends Resource
 {
     protected static ?string $model = SchoolFacility::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'description'];
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Deskripsi' => \Illuminate\Support\Str::limit($record->description ?? '-', 50),
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     public static function getNavigationGroup(): ?string

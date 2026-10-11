@@ -20,6 +20,21 @@ class LearningMaterialResource extends Resource
 {
     protected static ?string $model = LearningMaterial::class;
 
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'summary', 'subject.name'];
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Mapel' => $record->subject?->name ?? '-',
+            'Kelas' => 'Kelas ' . ($record->grade_level ?? '-'),
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentArrowDown;
 
     public static function getNavigationGroup(): ?string

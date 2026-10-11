@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Berikan akses penuh secara implisit kepada super_admin untuk semua Gate & Policy
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('super_admin') ? true : null;
+        });
+
         // 1. Paksa penggunaan HTTPS di lingkungan produksi / PaaS
         if (config('app.env') === 'production' && !app()->runningInConsole()) {
             URL::forceScheme('https');

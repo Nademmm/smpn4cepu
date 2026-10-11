@@ -18,6 +18,25 @@ class StudentStatisticResource extends Resource
 {
     protected static ?string $model = StudentStatistic::class;
 
+    protected static ?string $recordTitleAttribute = 'academic_year';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['academic_year', 'class_name'];
+    }
+
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        return "Statistik TA {$record->academic_year}" . ($record->class_name ? " ({$record->class_name})" : '');
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Total Siswa' => number_format($record->total_count ?? 0) . ' Siswa',
+        ];
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     public static function getNavigationGroup(): ?string

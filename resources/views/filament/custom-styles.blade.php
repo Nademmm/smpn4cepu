@@ -605,6 +605,99 @@
         background-color: #1e293b !important;
     }
 
+    /* 9b. Global Search & Tombol Silang (Cancel Button) UX */
+    .fi-global-search-ctn {
+        max-width: 480px !important;
+        width: 100% !important;
+    }
+
+    .fi-global-search-field .fi-input-wrp {
+        border-radius: 9999px !important;
+        min-height: 38px !important;
+        height: 38px !important;
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+
+    .fi-global-search-field input[type="search"] {
+        min-height: 36px !important;
+        font-size: 0.8125rem !important;
+        padding-top: 0.35rem !important;
+        padding-bottom: 0.35rem !important;
+    }
+
+    /* Perbesar ukuran dan UX tombol silang (Clear Search Button) */
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        height: 20px !important;
+        width: 20px !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2394a3b8'><path fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z' clip-rule='evenodd'/></svg>") !important;
+        background-size: 20px 20px !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        cursor: pointer !important;
+        margin-inline-end: 0.35rem !important;
+        transition: transform 0.15s ease-in-out !important;
+    }
+
+    input[type="search"]::-webkit-search-cancel-button:hover {
+        transform: scale(1.18) !important;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ef4444'><path fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z' clip-rule='evenodd'/></svg>") !important;
+    }
+
+    /* Modal Hasil Pencarian Global Search */
+    .fi-global-search-results-ctn {
+        border-radius: 1rem !important;
+        margin-top: 0.5rem !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    html:not(.dark) .fi-global-search-results-ctn {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    html.dark .fi-global-search-results-ctn {
+        background-color: #0f172a !important;
+        border: 1px solid #1e293b !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .fi-global-search-result-group-header {
+        font-size: 0.6875rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        padding: 0.6rem 0.85rem !important;
+    }
+
+    html:not(.dark) .fi-global-search-result-group-header {
+        background-color: #f8fafc !important;
+        color: #64748b !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+    }
+
+    html.dark .fi-global-search-result-group-header {
+        background-color: #1e293b !important;
+        color: #94a3b8 !important;
+        border-bottom: 1px solid #334155 !important;
+    }
+
+    .fi-global-search-result {
+        transition: background-color 0.15s ease-in-out !important;
+    }
+
+    html:not(.dark) .fi-global-search-result:hover {
+        background-color: #f1f5f9 !important;
+    }
+
+    html.dark .fi-global-search-result:hover {
+        background-color: #1e293b !important;
+    }
+
     /* 10. Sidebar Admin (Light & Dark Ready) */
     aside.fi-sidebar {
         transition: background-color 0.2s, border-color 0.2s !important;
