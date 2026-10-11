@@ -36,11 +36,6 @@
                                 <span class="text-[11px] font-bold text-ink-mute uppercase tracking-wider">
                                     {{ strtoupper($doc->file_extension ?: 'PDF') }} · {{ $doc->file_size ?: 'Dokumen Resmi' }}
                                 </span>
-                                @if ($doc->download_count > 0)
-                                    <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                                        Diunduh {{ number_format($doc->download_count) }} kali
-                                    </span>
-                                @endif
                             </div>
                             <h2 class="font-extrabold text-navy text-base leading-snug group-hover:text-brand transition-colors">
                                 {{ $doc->title }}

@@ -43,22 +43,16 @@
                 >
                     <x-card class="p-0 overflow-hidden flex flex-col h-full hover:border-brand transition-colors group">
                         @if ($extra->photo_url)
-                            <div class="w-full h-48 overflow-hidden bg-cream relative">
+                            <div class="w-full h-48 overflow-hidden bg-cream">
                                 <img
                                     src="{{ $extra->photo_url }}"
                                     alt="{{ $extra->name }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 >
-                                <span class="absolute top-3 left-3 bg-navy/85 backdrop-blur-xs text-sun text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                                    {{ $extra->category }}
-                                </span>
                             </div>
                         @else
-                            <div class="w-full h-48 bg-sky-soft flex flex-col items-center justify-center text-brand relative">
+                            <div class="w-full h-48 bg-sky-soft flex items-center justify-center text-brand">
                                 <x-app-icon name="sparkles" class="w-12 h-12" />
-                                <span class="absolute top-3 left-3 bg-navy/85 text-sun text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                                    {{ $extra->category }}
-                                </span>
                             </div>
                         @endif
 

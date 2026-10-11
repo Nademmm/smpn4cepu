@@ -71,9 +71,6 @@
                                     class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
                                     loading="lazy"
                                 >
-                                <span class="absolute top-3.5 left-3.5 bg-navy/85 backdrop-blur-xs text-white text-[11px] font-extrabold px-3 py-1 rounded-full border border-white/20">
-                                    {{ $p->tag }}
-                                </span>
                                 <div class="absolute inset-0 bg-navy/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                                     <span class="bg-white/90 text-navy text-xs font-black px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
                                         <x-app-icon name="photo" class="w-3.5 h-3.5 text-brand" />
