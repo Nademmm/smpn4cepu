@@ -23,11 +23,7 @@ class QuestionBankForm
 
                 Select::make('grade_level')
                     ->label('Tingkat Kelas')
-                    ->options([
-                        7 => 'Kelas VII (Tujuh)',
-                        8 => 'Kelas VIII (Delapan)',
-                        9 => 'Kelas IX (Sembilan)',
-                    ])
+                    ->options(\App\Enums\GradeLevel::class)
                     ->required(),
 
                 TextInput::make('title')

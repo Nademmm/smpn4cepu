@@ -125,7 +125,7 @@
                                 </a>
                                 <a href="{{ route('facilities') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('facilities') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
                                     <x-app-icon name="facility" class="w-[18px] h-[18px] text-brand shrink-0" />
-                                    <span>11 Fasilitas Sekolah</span>
+                                    <span>Fasilitas Sekolah</span>
                                 </a>
                                 <a href="{{ route('staff') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('staff') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
                                     <x-app-icon name="users" class="w-[18px] h-[18px] text-brand shrink-0" />
@@ -308,7 +308,7 @@
                     </a>
                     <a href="{{ route('facilities') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('facilities') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
                         <x-app-icon name="facility" class="w-4 h-4 text-brand shrink-0" />
-                        <span>11 Fasilitas Sekolah</span>
+                        <span>Fasilitas Sekolah</span>
                     </a>
                     <a href="{{ route('staff') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('staff') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
                         <x-app-icon name="users" class="w-4 h-4 text-brand shrink-0" />
@@ -470,7 +470,7 @@
                     <a href="{{ route('home') }}" class="hover:text-sun transition-colors">Beranda</a>
                     <a href="{{ route('profile') }}" class="hover:text-sun transition-colors">Profil Sekolah</a>
                     <a href="{{ route('achievements') }}" class="hover:text-sun transition-colors">Prestasi Siswa</a>
-                    <a href="{{ route('facilities') }}" class="hover:text-sun transition-colors">11 Fasilitas</a>
+                    <a href="{{ route('facilities') }}" class="hover:text-sun transition-colors">Fasilitas Sekolah</a>
                     <a href="{{ route('staff') }}" class="hover:text-sun transition-colors">Guru & Tendik</a>
                     <a href="{{ route('materials') }}" class="hover:text-sun transition-colors">Ruang Belajar</a>
                     <a href="{{ route('extracurriculars') }}" class="hover:text-sun transition-colors">Ekstrakurikuler</a>

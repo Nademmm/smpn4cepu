@@ -316,14 +316,3 @@ Route::get('/kontak', function () {
     return view('pages.contact');
 })->name('contact');
 
-// 17. Data Sekolah
-Route::get('/data-sekolah', function () {
-    $stats = [
-        'total_students' => Student::count(),
-        'total_teachers' => Teacher::count(),
-        'total_staff' => Staff::count(),
-        'total_subjects' => Subject::count(),
-    ];
-    return view('pages.school-data', compact('stats'));
-})->name('school-data');
-
