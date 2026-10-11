@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandName('SMP Negeri 4 Cepu')
             ->favicon(asset('images/logo.png'))
+            ->spa()
             ->colors([
                 'primary' => Color::Amber,
             ])

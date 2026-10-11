@@ -8,8 +8,8 @@ use Filament\Widgets\ChartWidget;
 class PilketosLiveChartWidget extends ChartWidget
 {
     protected static ?int $sort = 2;
-    protected ?string $heading = 'Perolehan Suara Pilketos (Realtime Polling 5s)';
-    protected ?string $pollingInterval = '5s';
+    protected ?string $heading = 'Perolehan Suara Pilketos';
+    protected ?string $pollingInterval = '30s';
     protected ?string $maxHeight = '300px';
 
     protected function getData(): array
