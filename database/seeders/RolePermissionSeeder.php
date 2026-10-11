@@ -14,14 +14,27 @@ class RolePermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Buat Roles
+        // 1. Buat Roles Resmi
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
         $guruRole = Role::firstOrCreate(['name' => 'guru']);
         $stafPerpusRole = Role::firstOrCreate(['name' => 'staf_perpus']);
         $panitiaPilketosRole = Role::firstOrCreate(['name' => 'panitia_pilketos']);
 
-        // 2. Buat Default Permissions
-        $permissions = [
+        // 2. Generate Shield Permissions untuk Semua Entity Filament jika belum lengkap
+        try {
+            \Illuminate\Support\Facades\Artisan::call('shield:generate', [
+                '--all' => true,
+                '--option' => 'permissions',
+                '--ignore-existing-policies' => true,
+                '--panel' => 'admin',
+                '-n' => true,
+            ]);
+        } catch (\Throwable $e) {
+            // Lanjutkan jika artisan shield sudah selesai
+        }
+
+        // 3. Buat General/Legacy Permissions
+        $generalPermissions = [
             'view_admin_panel',
             'manage_posts',
             'manage_staff',
@@ -30,29 +43,46 @@ class RolePermissionSeeder extends Seeder
             'manage_pilketos',
         ];
 
-        foreach ($permissions as $permission) {
+        foreach ($generalPermissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // 3. Assign Permissions ke Roles
+        // 4. Assign Permissions ke Roles Sesuai Peran & Tanggung Jawab
+
+        // A. Super Admin: Seluruh Hak Akses Penuh
         $superAdminRole->syncPermissions(Permission::all());
 
-        // Guru: Posts, Learning Materials, Question Banks, Subjects
+        // B. Guru: Materi Pembelajaran, Bank Soal/Kuis, Mata Pelajaran, Berita & Artikel
         $guruPermissions = Permission::where(function ($q) {
-            $q->where('name', 'like', '%post%')
-              ->orWhere('name', 'like', '%learning_material%')
-              ->orWhere('name', 'like', '%question_bank%')
-              ->orWhere('name', 'like', '%subject%');
+            $q->where('name', 'like', '%Post%')
+              ->orWhere('name', 'like', '%LearningMaterial%')
+              ->orWhere('name', 'like', '%QuestionBank%')
+              ->orWhere('name', 'like', '%Subject%')
+              ->orWhere('name', 'like', '%post%')
+              ->orWhere('name', 'like', '%academic%')
+              ->orWhere('name', 'view_admin_panel')
+              ->orWhere('name', 'View:SchoolOverviewWidget');
         })->get();
         $guruRole->syncPermissions($guruPermissions);
 
-        // Staf Perpus: Library Books
-        $perpusPermissions = Permission::where('name', 'like', '%library_book%')->get();
-        $stafPerpusRole->syncPermissions($perpusPermissions);
+        // C. Staf Perpustakaan: Khusus Buku & Katalog Perpustakaan
+        $stafPerpusPermissions = Permission::where(function ($q) {
+            $q->where('name', 'like', '%LibraryBook%')
+              ->orWhere('name', 'like', '%library%')
+              ->orWhere('name', 'view_admin_panel')
+              ->orWhere('name', 'View:SchoolOverviewWidget');
+        })->get();
+        $stafPerpusRole->syncPermissions($stafPerpusPermissions);
 
-        // Panitia Pilketos: Election Candidates
-        $pilketosPermissions = Permission::where('name', 'like', '%election_candidate%')->get();
-        $panitiaPilketosRole->syncPermissions($pilketosPermissions);
+        // D. Panitia Pilketos: Khusus Kandidat Pilketos & Live Chart Suara
+        $panitiaPilketosPermissions = Permission::where(function ($q) {
+            $q->where('name', 'like', '%ElectionCandidate%')
+              ->orWhere('name', 'like', '%pilketos%')
+              ->orWhere('name', 'view_admin_panel')
+              ->orWhere('name', 'View:PilketosLiveChartWidget')
+              ->orWhere('name', 'View:SchoolOverviewWidget');
+        })->get();
+        $panitiaPilketosRole->syncPermissions($panitiaPilketosPermissions);
 
         // 4. Akun Default Super Admin
         $admin = User::firstOrCreate(
