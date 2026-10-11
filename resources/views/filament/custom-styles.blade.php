@@ -181,6 +181,10 @@
         background-color: #ffffff !important;
     }
 
+    html:not(.dark) .fi-input-wrp:hover:not(:focus-within) {
+        border-color: #94a3b8 !important;
+    }
+
     html:not(.dark) .fi-input-wrp:focus-within {
         border-color: #d97706 !important;
         background-color: #ffffff !important;
@@ -192,26 +196,34 @@
         background-color: #1e293b !important;
     }
 
+    html.dark .fi-input-wrp:hover:not(:focus-within) {
+        border-color: #475569 !important;
+    }
+
     html.dark .fi-input-wrp:focus-within {
         border-color: #f59e0b !important;
         background-color: #0f172a !important;
         box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
     }
 
+    /* Wadah Isi Input: Block Lebar Penuh agar Seluruh Child Mengisi Penuh Box */
     .fi-input-wrp-content-ctn {
-        display: flex !important;
+        display: block !important;
         flex: 1 1 0% !important;
         width: 100% !important;
         min-width: 0 !important;
         height: auto !important;
-        align-items: center !important;
+        position: relative !important;
+        box-sizing: border-box !important;
     }
 
-    /* Single-line Text Input */
+    /* Single-line Text Input: 100% Mengisi Seluruh Box Tanpa Terpotong */
     .fi-input-wrp input,
     input.fi-input {
         display: block !important;
         width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
         min-height: 40px !important;
         height: auto !important;
         line-height: 1.5 !important;
@@ -236,6 +248,7 @@
         min-height: 110px !important;
         height: auto !important;
         align-items: stretch !important;
+        width: 100% !important;
     }
 
     .fi-fo-textarea textarea,
@@ -243,6 +256,8 @@
     textarea.fi-input {
         display: block !important;
         width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
         min-height: 110px !important;
         height: auto !important;
         line-height: 1.6 !important;
@@ -291,16 +306,166 @@
         font-weight: 400 !important;
     }
 
-    /* Select Input & Options */
+    /* 4b. Custom Select & Dropdown Options (Full Width, Lega, Tidak Patah Dua Baris) */
+    .fi-fo-select,
     .fi-select-input,
-    select.fi-input {
+    .fi-select-input-ctn,
+    .fi-select-input div[x-ref="select"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        position: relative !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Tombol Trigger Select (Combobox): Mengisi Seluruh Box Penuh */
+    button.fi-select-input-btn,
+    .fi-select-input-btn {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
         min-height: 40px !important;
-        padding: 0.55rem 0.875rem !important;
+        height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0.55rem 2.25rem 0.55rem 0.875rem !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+        text-align: start !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        box-sizing: border-box !important;
+    }
+
+    html:not(.dark) .fi-select-input-btn {
+        color: #0f172a !important;
+    }
+
+    html.dark .fi-select-input-btn {
+        color: #f8fafc !important;
+    }
+
+    .fi-select-input-value-ctn {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        text-align: start !important;
+    }
+
+    .fi-select-input-value-label {
+        display: inline-block !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* Dropdown Popover List Menu: Full-Width Mengikuti Trigger, Rapi & Elegan */
+    .fi-select-input .fi-dropdown-panel,
+    .fi-select-input-ctn .fi-dropdown-panel,
+    .fi-dropdown-panel:has(.fi-select-input-option) {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 0.75rem !important;
+        margin-top: 4px !important;
+        padding: 0.35rem 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        z-index: 50 !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html:not(.dark) .fi-select-input .fi-dropdown-panel,
+    html:not(.dark) .fi-select-input-ctn .fi-dropdown-panel,
+    html:not(.dark) .fi-dropdown-panel:has(.fi-select-input-option) {
+        background-color: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+    }
+
+    html.dark .fi-select-input .fi-dropdown-panel,
+    html.dark .fi-select-input-ctn .fi-dropdown-panel,
+    html.dark .fi-dropdown-panel:has(.fi-select-input-option) {
+        background-color: #0f172a !important;
+        border: 1.5px solid #334155 !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    /* Item Opsi Dropdown: Rapi, Lega, 1 Baris Penuh (Dilarang Patah Dua Baris Seperti 'PENGUMUM AN') */
+    .fi-select-input-option,
+    .fi-dropdown-list-item.fi-select-input-option {
+        width: 100% !important;
+        min-width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0.65rem 1rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        white-space: nowrap !important;
+        cursor: pointer !important;
+        box-sizing: border-box !important;
+        transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out !important;
+    }
+
+    .fi-select-input-option span,
+    .fi-dropdown-list-item span {
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+    }
+
+    html:not(.dark) .fi-select-input-option,
+    html:not(.dark) .fi-dropdown-list-item.fi-select-input-option {
+        color: #0f172a !important;
+    }
+
+    html.dark .fi-select-input-option,
+    html.dark .fi-dropdown-list-item.fi-select-input-option {
+        color: #f8fafc !important;
+    }
+
+    html:not(.dark) .fi-select-input-option:hover,
+    html:not(.dark) .fi-select-input-option.fi-selected {
+        background-color: #fef3c7 !important;
+        color: #b45309 !important;
+    }
+
+    html.dark .fi-select-input-option:hover,
+    html.dark .fi-select-input-option.fi-selected {
+        background-color: #312e81 !important;
+        color: #fbbf24 !important;
+    }
+
+    /* Native Select (<select>) */
+    select.fi-select-input,
+    select.fi-input {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        min-height: 40px !important;
+        height: auto !important;
+        padding: 0.55rem 2rem 0.55rem 0.875rem !important;
         font-size: 0.875rem !important;
         font-weight: 500 !important;
         background: transparent !important;
         border: none !important;
         outline: none !important;
+        cursor: pointer !important;
+        box-sizing: border-box !important;
     }
 
     html:not(.dark) select.fi-input option {
@@ -311,6 +476,31 @@
     html.dark select.fi-input option {
         background-color: #1e293b !important;
         color: #f8fafc !important;
+    }
+
+    /* Search Box di Dalam Select Searchable Dropdown */
+    .fi-select-input-search-ctn {
+        width: 100% !important;
+        padding: 0.5rem !important;
+        box-sizing: border-box !important;
+    }
+
+    .fi-select-input-search-ctn input.fi-input {
+        width: 100% !important;
+        min-height: 36px !important;
+        border-radius: 0.5rem !important;
+        padding: 0.4rem 0.75rem !important;
+        box-sizing: border-box !important;
+    }
+
+    html:not(.dark) .fi-select-input-search-ctn input.fi-input {
+        background-color: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    html.dark .fi-select-input-search-ctn input.fi-input {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
     }
 
     /* 5. Password Reveal / Toggle Button */
