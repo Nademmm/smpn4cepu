@@ -1,20 +1,36 @@
 <style>
     /* 1. Global Font & Panel Base */
     body.fi-body {
-        background-color: #f8fafc !important;
         font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         -webkit-font-smoothing: antialiased !important;
+    }
+
+    html:not(.dark) body.fi-body {
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
+    }
+
+    html.dark body.fi-body {
+        background-color: #090d16 !important;
+        color: #f8fafc !important;
     }
 
     /* 2. Login Page Container & Modern Card ala Skomda */
     .fi-simple-layout {
         min-height: 100vh !important;
-        background: radial-gradient(circle at 50% 10%, #f1f5f9 0%, #f8fafc 100%) !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         padding: 2rem 1rem !important;
+    }
+
+    html:not(.dark) .fi-simple-layout {
+        background: radial-gradient(circle at 50% 10%, #f1f5f9 0%, #f8fafc 100%) !important;
+    }
+
+    html.dark .fi-simple-layout {
+        background: radial-gradient(circle at 50% 10%, #0f172a 0%, #020617 100%) !important;
     }
 
     .fi-simple-main-ctn {
@@ -24,11 +40,21 @@
     }
 
     .fi-simple-main {
-        background: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
         border-radius: 1.5rem !important; /* 24px */
         padding: 2.25rem 2rem !important;
+        transition: background-color 0.2s, border-color 0.2s !important;
+    }
+
+    html:not(.dark) .fi-simple-main {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
         box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03) !important;
+    }
+
+    html.dark .fi-simple-main {
+        background: #0f172a !important;
+        border: 1px solid #1e293b !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
     }
 
     /* Sembunyikan default header sederhana Filament agar tidak dobel/tumpang-tindih */
@@ -52,9 +78,20 @@
         font-weight: 800 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.04em !important;
-        color: #475569 !important;
         margin-bottom: 0.35rem !important;
         display: block !important;
+    }
+
+    html:not(.dark) .fi-fo-field-label,
+    html:not(.dark) .fi-fo-field-label-content,
+    html:not(.dark) .fi-fo-field-wrp-label label {
+        color: #475569 !important;
+    }
+
+    html.dark .fi-fo-field-label,
+    html.dark .fi-fo-field-label-content,
+    html.dark .fi-fo-field-wrp-label label {
+        color: #cbd5e1 !important;
     }
 
     .fi-fo-field-label-required-mark {
@@ -63,7 +100,7 @@
         font-weight: 900 !important;
     }
 
-    /* 4. Input Wrapper & Field Reset */
+    /* 4. Input Wrapper & Field Reset (Light & Dark Ready) */
     .fi-input-wrp {
         display: flex !important;
         align-items: center !important;
@@ -72,18 +109,32 @@
         min-height: 46px !important;
         height: 46px !important;
         border-radius: 0.75rem !important; /* 12px */
-        border: 1.5px solid #e2e8f0 !important;
-        background-color: #f8fafc !important;
         transition: all 0.15s ease-in-out !important;
         box-shadow: none !important;
         overflow: hidden !important;
         box-sizing: border-box !important;
     }
 
-    .fi-input-wrp:focus-within {
+    html:not(.dark) .fi-input-wrp {
+        border: 1.5px solid #e2e8f0 !important;
+        background-color: #f8fafc !important;
+    }
+
+    html:not(.dark) .fi-input-wrp:focus-within {
         border-color: #d97706 !important;
         background-color: #ffffff !important;
         box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15) !important;
+    }
+
+    html.dark .fi-input-wrp {
+        border: 1.5px solid #334155 !important;
+        background-color: #1e293b !important;
+    }
+
+    html.dark .fi-input-wrp:focus-within {
+        border-color: #f59e0b !important;
+        background-color: #0f172a !important;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
     }
 
     .fi-input-wrp-content-ctn {
@@ -94,7 +145,6 @@
         align-items: center !important;
     }
 
-    /* Reset mutlak untuk tag input agar tidak bertumpuk atau keluar batas */
     .fi-input-wrp input,
     input.fi-input {
         display: block !important;
@@ -109,15 +159,30 @@
         padding: 0.65rem 1rem !important;
         font-size: 0.875rem !important;
         font-weight: 600 !important;
-        color: #0f172a !important;
         box-sizing: border-box !important;
         -webkit-appearance: none !important;
         appearance: none !important;
     }
 
-    .fi-input-wrp input::placeholder,
-    input.fi-input::placeholder {
+    html:not(.dark) .fi-input-wrp input,
+    html:not(.dark) input.fi-input {
+        color: #0f172a !important;
+    }
+
+    html.dark .fi-input-wrp input,
+    html.dark input.fi-input {
+        color: #f8fafc !important;
+    }
+
+    html:not(.dark) .fi-input-wrp input::placeholder,
+    html:not(.dark) input.fi-input::placeholder {
         color: #94a3b8 !important;
+        font-weight: 500 !important;
+    }
+
+    html.dark .fi-input-wrp input::placeholder,
+    html.dark input.fi-input::placeholder {
+        color: #64748b !important;
         font-weight: 500 !important;
     }
 
@@ -141,7 +206,6 @@
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
-        color: #94a3b8 !important;
         cursor: pointer !important;
         display: inline-flex;
         align-items: center;
@@ -151,17 +215,34 @@
         transition: color 0.15s, background-color 0.15s !important;
     }
 
-    /* Pastikan tombol mata yang di-hide Alpine / x-show benar-benar tersembunyi */
+    html:not(.dark) .fi-input-wrp-actions button,
+    html:not(.dark) .fi-ac-icon-btn-action,
+    html:not(.dark) .fi-icon-btn {
+        color: #94a3b8 !important;
+    }
+
+    html.dark .fi-input-wrp-actions button,
+    html.dark .fi-ac-icon-btn-action,
+    html.dark .fi-icon-btn {
+        color: #94a3b8 !important;
+    }
+
     .fi-input-wrp-actions button[x-cloak],
     .fi-input-wrp-actions button[style*="display: none"],
     .fi-input-wrp-actions button.hidden {
         display: none !important;
     }
 
-    .fi-input-wrp-actions button:hover,
-    .fi-icon-btn:hover {
+    html:not(.dark) .fi-input-wrp-actions button:hover,
+    html:not(.dark) .fi-icon-btn:hover {
         color: #475569 !important;
         background-color: #f1f5f9 !important;
+    }
+
+    html.dark .fi-input-wrp-actions button:hover,
+    html.dark .fi-icon-btn:hover {
+        color: #e2e8f0 !important;
+        background-color: #334155 !important;
     }
 
     .fi-input-wrp-actions button svg,
@@ -189,17 +270,34 @@
         min-width: 18px !important;
         min-height: 18px !important;
         border-radius: 0.35rem !important;
-        border: 1.5px solid #cbd5e1 !important;
-        background-color: #ffffff !important;
         cursor: pointer !important;
         accent-color: #d97706 !important;
         margin: 0 !important;
         vertical-align: middle !important;
     }
 
+    html:not(.dark) input[type="checkbox"].fi-checkbox-input,
+    html:not(.dark) #form\.remember {
+        border: 1.5px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+    }
+
+    html.dark input[type="checkbox"].fi-checkbox-input,
+    html.dark #form\.remember {
+        border: 1.5px solid #475569 !important;
+        background-color: #1e293b !important;
+    }
+
+    html:not(.dark) label[for="form.remember"] .fi-fo-field-label-content {
+        color: #475569 !important;
+    }
+
+    html.dark label[for="form.remember"] .fi-fo-field-label-content {
+        color: #cbd5e1 !important;
+    }
+
     label[for="form.remember"] .fi-fo-field-label-content {
         font-size: 0.8125rem !important;
-        color: #475569 !important;
         font-weight: 600 !important;
         text-transform: none !important;
         letter-spacing: normal !important;
@@ -273,7 +371,6 @@
         align-items: center !important;
     }
 
-    /* Sembunyikan ikon-button duplikat dari AccountWidget */
     .fi-account-widget-logout-form .fi-icon-btn {
         display: none !important;
     }
@@ -286,20 +383,35 @@
         min-height: 36px !important;
         height: 36px !important;
         padding: 0.4rem 0.85rem !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
         border-radius: 0.5rem !important;
-        color: #64748b !important;
         font-size: 0.8125rem !important;
         font-weight: 600 !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
         transition: all 0.15s ease-in-out !important;
     }
 
-    .fi-account-widget-logout-form .fi-btn:hover {
+    html:not(.dark) .fi-account-widget-logout-form .fi-btn {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #64748b !important;
+    }
+
+    html.dark .fi-account-widget-logout-form .fi-btn {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        color: #cbd5e1 !important;
+    }
+
+    html:not(.dark) .fi-account-widget-logout-form .fi-btn:hover {
         background-color: #fef2f2 !important;
         border-color: #fecaca !important;
         color: #dc2626 !important;
+    }
+
+    html.dark .fi-account-widget-logout-form .fi-btn:hover {
+        background-color: #450a0a !important;
+        border-color: #7f1d1d !important;
+        color: #fca5a5 !important;
     }
 
     .fi-account-widget-logout-form .fi-btn svg {
@@ -308,17 +420,37 @@
         color: currentColor !important;
     }
 
-    /* 9. Topbar & Header Admin */
+    /* 9. Topbar & Header Admin (Light & Dark Ready) */
     .fi-topbar {
+        transition: background-color 0.2s, border-color 0.2s !important;
+    }
+
+    html:not(.dark) .fi-topbar {
         background-color: #ffffff !important;
         border-bottom: 1px solid #e2e8f0 !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
     }
 
-    /* 9. Sidebar Admin */
+    html.dark .fi-topbar {
+        background-color: #0f172a !important;
+        border-bottom: 1px solid #1e293b !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* 10. Sidebar Admin (Light & Dark Ready) */
     aside.fi-sidebar {
+        transition: background-color 0.2s, border-color 0.2s !important;
+    }
+
+    html:not(.dark) aside.fi-sidebar {
         background-color: #ffffff !important;
         border-right: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
+    }
+
+    html.dark aside.fi-sidebar {
+        background-color: #0f172a !important;
+        border-right: 1px solid #1e293b !important;
         box-shadow: none !important;
     }
 
@@ -328,8 +460,12 @@
         transition: all 0.15s ease-in-out !important;
     }
 
-    .fi-sidebar-item-btn:hover {
+    html:not(.dark) .fi-sidebar-item-btn:hover {
         background-color: #f1f5f9 !important;
+    }
+
+    html.dark .fi-sidebar-item-btn:hover {
+        background-color: #1e293b !important;
     }
 
     .fi-sidebar-group-label {
@@ -337,16 +473,88 @@
         text-transform: uppercase !important;
         letter-spacing: 0.06em !important;
         font-weight: 800 !important;
+    }
+
+    html:not(.dark) .fi-sidebar-group-label {
         color: #94a3b8 !important;
     }
 
-    /* 10. Kartu Dashboard & Widget */
+    html.dark .fi-sidebar-group-label {
+        color: #64748b !important;
+    }
+
+    /* 11. Kartu Dashboard, Widget & Tabel Data (Light & Dark Ready) */
     .fi-section,
     .fi-wi-stats-overview-stat,
     .fi-ta-ctn {
         border-radius: 1.25rem !important;
+        transition: background-color 0.2s, border-color 0.2s !important;
+    }
+
+    html:not(.dark) .fi-section,
+    html:not(.dark) .fi-wi-stats-overview-stat,
+    html:not(.dark) .fi-ta-ctn {
         border: 1px solid #e2e8f0 !important;
         background-color: #ffffff !important;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02) !important;
+    }
+
+    html.dark .fi-section,
+    html.dark .fi-wi-stats-overview-stat,
+    html.dark .fi-ta-ctn {
+        border: 1px solid #1e293b !important;
+        background-color: #0f172a !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* 12. Helper Styling untuk Elemen Login Kustom */
+    html:not(.dark) .fi-login-title {
+        color: #0f172a !important;
+    }
+
+    html.dark .fi-login-title {
+        color: #f8fafc !important;
+    }
+
+    html:not(.dark) .fi-login-subtitle {
+        color: #64748b !important;
+    }
+
+    html.dark .fi-login-subtitle {
+        color: #94a3b8 !important;
+    }
+
+    html:not(.dark) .fi-login-back-btn {
+        color: #64748b !important;
+    }
+
+    html.dark .fi-login-back-btn {
+        color: #94a3b8 !important;
+    }
+
+    html:not(.dark) .fi-login-back-btn:hover {
+        color: #0f172a !important;
+    }
+
+    html.dark .fi-login-back-btn:hover {
+        color: #f8fafc !important;
+    }
+
+    html:not(.dark) .fi-login-badge {
+        background-color: #f1f5f9 !important;
+        color: #475569 !important;
+    }
+
+    html.dark .fi-login-badge {
+        background-color: #1e293b !important;
+        color: #94a3b8 !important;
+    }
+
+    html:not(.dark) .fi-login-divider {
+        border-color: #f1f5f9 !important;
+    }
+
+    html.dark .fi-login-divider {
+        border-color: #1e293b !important;
     }
 </style>
