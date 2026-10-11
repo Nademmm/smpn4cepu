@@ -64,6 +64,7 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts --classmap-authorita
 
 # Salin konfigurasi Caddyfile & script entrypoint
 COPY docker/Caddyfile /etc/caddy/Caddyfile
+COPY docker/Caddyfile /etc/frankenphp/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Normalisasi baris baru LF (mencegah error CRLF dari Windows) dan beri izin eksekusi
