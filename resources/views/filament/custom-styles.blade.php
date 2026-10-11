@@ -206,19 +206,18 @@
         margin: 0 !important;
     }
 
-    /* 7. Action Button: Tombol Masuk Biasa & Sederhana (Tanpa Animasi Berlebihan) */
-    .fi-sc-actions,
-    #content\.form-actions,
-    .fi-ac.fi-width-full {
+    /* 7. Action Button: Tombol Masuk Khusus Halaman Login */
+    .fi-simple-layout .fi-sc-actions,
+    .fi-simple-main .fi-sc-actions,
+    .fi-simple-layout #content\.form-actions,
+    .fi-simple-layout .fi-ac.fi-width-full {
         width: 100% !important;
         margin-top: 1.25rem !important;
         display: block !important;
     }
 
-    form button[type="submit"],
-    .fi-ac-btn-action,
-    .fi-btn.fi-color-primary,
-    .fi-btn-primary {
+    .fi-simple-layout form button[type="submit"],
+    .fi-simple-main form button[type="submit"] {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -234,40 +233,82 @@
         border: none !important;
         cursor: pointer !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-        transition: background-color 0.15s ease !important; /* Transisi warna wajar tanpa loncat */
+        transition: background-color 0.15s ease !important;
         transform: none !important;
         box-sizing: border-box !important;
     }
 
-    form button[type="submit"]:hover,
-    .fi-ac-btn-action:hover {
-        background-color: #b45309 !important; /* Sedikit lebih gelap saat di-hover */
+    .fi-simple-layout form button[type="submit"]:hover,
+    .fi-simple-main form button[type="submit"]:hover {
+        background-color: #b45309 !important;
         transform: none !important;
         filter: none !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
     }
 
-    form button[type="submit"]:active,
-    .fi-ac-btn-action:active {
+    .fi-simple-layout form button[type="submit"]:active,
+    .fi-simple-main form button[type="submit"]:active {
         background-color: #92400e !important;
         transform: none !important;
     }
 
-    form button[type="submit"] span,
-    .fi-ac-btn-action span {
+    .fi-simple-layout form button[type="submit"] span,
+    .fi-simple-main form button[type="submit"] span {
         color: #ffffff !important;
         font-weight: 700 !important;
         font-size: 0.9375rem !important;
         display: inline-block !important;
     }
 
-    form button[type="submit"] svg {
+    .fi-simple-layout form button[type="submit"] svg,
+    .fi-simple-main form button[type="submit"] svg {
         color: #ffffff !important;
         width: 20px !important;
         height: 20px !important;
     }
 
-    /* 8. Topbar & Header Admin */
+    /* 8. Fix Tombol Logout di Dashboard Panel (AccountWidget) agar Tidak Dobel */
+    .fi-account-widget-logout-form {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Sembunyikan ikon-button duplikat dari AccountWidget */
+    .fi-account-widget-logout-form .fi-icon-btn {
+        display: none !important;
+    }
+
+    .fi-account-widget-logout-form .fi-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.35rem !important;
+        width: auto !important;
+        min-height: 36px !important;
+        height: 36px !important;
+        padding: 0.4rem 0.85rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 0.5rem !important;
+        color: #64748b !important;
+        font-size: 0.8125rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
+        transition: all 0.15s ease-in-out !important;
+    }
+
+    .fi-account-widget-logout-form .fi-btn:hover {
+        background-color: #fef2f2 !important;
+        border-color: #fecaca !important;
+        color: #dc2626 !important;
+    }
+
+    .fi-account-widget-logout-form .fi-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+        color: currentColor !important;
+    }
+
+    /* 9. Topbar & Header Admin */
     .fi-topbar {
         background-color: #ffffff !important;
         border-bottom: 1px solid #e2e8f0 !important;
