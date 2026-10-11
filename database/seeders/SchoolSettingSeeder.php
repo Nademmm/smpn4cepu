@@ -24,8 +24,8 @@ class SchoolSettingSeeder extends Seeder
                 'youtube_url' => 'https://youtube.com/@smpnegeri4cepu',
                 'facebook_url' => 'https://facebook.com/smpnegeri4cepu',
                 'whatsapp_contact' => '081234567890',
-                'announcement_bar_active' => true,
-                'announcement_bar_text' => 'Selamat Datang di Portal Resmi SMP Negeri 4 Cepu! Pantau Terus Informasi Terbaru & Prestasi Sekolah.',
+                'announcement_bar_active' => false,
+                'announcement_bar_text' => null,
                 'announcement_bar_link' => null,
             ]
         );
