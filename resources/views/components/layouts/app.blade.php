@@ -6,6 +6,41 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}</title>
     <meta name="description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
+
+    {{-- Open Graph / Facebook & WhatsApp Share Card --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="SMP Negeri 4 Cepu">
+    <meta property="og:title" content="{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}">
+    <meta property="og:description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
+    <meta property="og:image" content="{{ $metaImage ?? asset('images/logo.png') }}">
+
+    {{-- Twitter Cards --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}">
+    <meta name="twitter:description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
+    <meta name="twitter:image" content="{{ $metaImage ?? asset('images/logo.png') }}">
+
+    @stack('meta')
+
+    {{-- Schema.org JSON-LD untuk Entitas Sekolah Formal --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "SMP Negeri 4 Cepu",
+        "alternateName": "SMPN 4 Cepu",
+        "identifier": "20314928",
+        "url": "{{ url('/') }}",
+        "logo": "{{ asset('images/logo.png') }}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Cepu",
+            "addressRegion": "Jawa Tengah",
+            "addressCountry": "ID"
+        }
+    }
+    </script>
     
     {{-- Favicon / Icon Tab Browser --}}
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
@@ -20,6 +55,27 @@
     @livewireStyles
 </head>
 <body class="bg-cream text-navy font-sans antialiased flex flex-col min-h-screen">
+
+    {{-- Banner Pengumuman Kilat (Marquee / Alert Beranda) --}}
+    @if (!empty($schoolSetting?->announcement_bar_active) && !empty($schoolSetting?->announcement_bar_text))
+        <div class="bg-gradient-to-r from-brand-dark via-brand to-brand-dark text-white text-xs sm:text-sm py-2 px-4 border-b border-sun/30 font-bold">
+            <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2 overflow-hidden">
+                    <span class="inline-flex items-center justify-center bg-sun text-navy font-black text-[10px] px-2 py-0.5 rounded-full uppercase shrink-0">
+                        Info
+                    </span>
+                    <span class="truncate">
+                        {{ $schoolSetting->announcement_bar_text }}
+                    </span>
+                </div>
+                @if (!empty($schoolSetting->announcement_bar_link))
+                    <a href="{{ $schoolSetting->announcement_bar_link }}" class="underline text-sun hover:text-white shrink-0 text-xs font-black">
+                        Lihat Selengkapnya &rarr;
+                    </a>
+                @endif
+            </div>
+        </div>
+    @endif
 
     {{-- Sticky Main Navbar (Sesuai Desain Figma) --}}
     <nav class="sticky top-0 z-40 bg-white border-b-2 border-sun-soft shadow-xs" x-data="{ mobileMenuOpen: false }">
@@ -47,7 +103,7 @@
 
                     {{-- 2. Dropdown Profil --}}
                     <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->routeIs('profile') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->routeIs('profile') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Profil</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -64,11 +120,11 @@
                         >
                             <div class="bg-white rounded-2xl shadow-xl border-2 border-sun-soft p-2 space-y-1">
                                 <a href="{{ route('profile') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('profile') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
-                                    <x-app-icon name="building" class="w-[18px] h-[18px] text-brand shrink-0" />
+                                    <x-app-icon name="flag" class="w-[18px] h-[18px] text-brand shrink-0" />
                                     <span>Sejarah & Visi Misi</span>
                                 </a>
                                 <a href="{{ route('facilities') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('facilities') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
-                                    <x-app-icon name="check" class="w-[18px] h-[18px] text-brand shrink-0" />
+                                    <x-app-icon name="facility" class="w-[18px] h-[18px] text-brand shrink-0" />
                                     <span>11 Fasilitas Sekolah</span>
                                 </a>
                                 <a href="{{ route('staff') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('staff') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
@@ -78,6 +134,10 @@
                                 <a href="{{ route('student-stats') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('student-stats') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
                                     <x-app-icon name="chart" class="w-[18px] h-[18px] text-brand shrink-0" />
                                     <span>Statistik Rombel Siswa</span>
+                                </a>
+                                <a href="{{ route('achievements') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('achievements') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
+                                    <x-app-icon name="trophy" class="w-[18px] h-[18px] text-brand shrink-0" />
+                                    <span>Prestasi Siswa & Sekolah</span>
                                 </a>
                             </div>
                         </div>
@@ -119,7 +179,7 @@
 
                     {{-- 4. Dropdown Kesiswaan --}}
                     <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('pilketos*') || request()->routeIs('gallery') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Kesiswaan</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -135,6 +195,10 @@
                             class="absolute left-0 top-full pt-1.5 w-72 z-50"
                         >
                             <div class="bg-white rounded-2xl shadow-xl border-2 border-sun-soft p-2 space-y-1">
+                                <a href="{{ route('extracurriculars') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('extracurriculars') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
+                                    <x-app-icon name="sparkles" class="w-[18px] h-[18px] text-brand shrink-0" />
+                                    <span>Ekstrakurikuler & Bakat</span>
+                                </a>
                                 <a href="{{ route('pilketos') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-colors {{ request()->routeIs('pilketos') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream hover:text-brand' }}">
                                     <x-app-icon name="vote" class="w-[18px] h-[18px] text-brand shrink-0" />
                                     <span>Bilik Suara E-Voting</span>
@@ -207,7 +271,7 @@
             x-show="mobileMenuOpen"
             x-cloak
             x-data="{
-                activeSection: '{{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') ? 'profil' : (request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'belajar' : (request()->is('pilketos*') || request()->routeIs('gallery') ? 'kesiswaan' : (request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'informasi' : ''))) }}'
+                activeSection: '{{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'profil' : (request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'belajar' : (request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'kesiswaan' : (request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'informasi' : ''))) }}'
             }"
             class="lg:hidden border-t-2 border-sun-soft bg-white px-4 py-4 space-y-2 shadow-xl max-h-[85vh] overflow-y-auto"
         >
@@ -218,7 +282,7 @@
             </a>
 
             {{-- 2. Profil Sekolah (Accordion) --}}
-            <div class="rounded-2xl border-2 {{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+            <div class="rounded-2xl border-2 {{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'profil' ? '' : 'profil')"
@@ -239,16 +303,24 @@
                     class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
                 >
                     <a href="{{ route('profile') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('profile') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="flag" class="w-4 h-4 text-brand shrink-0" />
                         <span>Sejarah & Visi Misi</span>
                     </a>
                     <a href="{{ route('facilities') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('facilities') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="facility" class="w-4 h-4 text-brand shrink-0" />
                         <span>11 Fasilitas Sekolah</span>
                     </a>
                     <a href="{{ route('staff') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('staff') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="users" class="w-4 h-4 text-brand shrink-0" />
                         <span>Guru & Tenaga Kependidikan</span>
                     </a>
                     <a href="{{ route('student-stats') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('student-stats') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="chart" class="w-4 h-4 text-brand shrink-0" />
                         <span>Statistik Rombel Siswa</span>
+                    </a>
+                    <a href="{{ route('achievements') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('achievements') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="trophy" class="w-4 h-4 text-brand shrink-0" />
+                        <span>Prestasi Siswa & Sekolah</span>
                     </a>
                 </div>
             </div>
@@ -287,7 +359,7 @@
             </div>
 
             {{-- 4. Kesiswaan (Accordion) --}}
-            <div class="rounded-2xl border-2 {{ request()->is('pilketos*') || request()->routeIs('gallery') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+            <div class="rounded-2xl border-2 {{ request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'kesiswaan' ? '' : 'kesiswaan')"
@@ -307,6 +379,10 @@
                     x-transition:enter-end="opacity-100 translate-y-0"
                     class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
                 >
+                    <a href="{{ route('extracurriculars') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('extracurriculars') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="sparkles" class="w-4 h-4 text-brand shrink-0" />
+                        <span>Ekstrakurikuler & Bakat</span>
+                    </a>
                     <a href="{{ route('pilketos') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('pilketos') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
                         <span>Bilik Suara E-Voting</span>
                     </a>
@@ -393,10 +469,11 @@
                 <div class="grid grid-cols-2 gap-2 text-sm text-slate-200 font-semibold">
                     <a href="{{ route('home') }}" class="hover:text-sun transition-colors">Beranda</a>
                     <a href="{{ route('profile') }}" class="hover:text-sun transition-colors">Profil Sekolah</a>
-                    <a href="{{ route('posts') }}" class="hover:text-sun transition-colors">Berita</a>
+                    <a href="{{ route('achievements') }}" class="hover:text-sun transition-colors">Prestasi Siswa</a>
                     <a href="{{ route('facilities') }}" class="hover:text-sun transition-colors">11 Fasilitas</a>
                     <a href="{{ route('staff') }}" class="hover:text-sun transition-colors">Guru & Tendik</a>
                     <a href="{{ route('materials') }}" class="hover:text-sun transition-colors">Ruang Belajar</a>
+                    <a href="{{ route('extracurriculars') }}" class="hover:text-sun transition-colors">Ekstrakurikuler</a>
                     <a href="{{ route('library') }}" class="hover:text-sun transition-colors">Perpustakaan</a>
                     <a href="{{ route('pilketos') }}" class="hover:text-sun transition-colors">Pilketos</a>
                     <a href="{{ route('downloads') }}" class="hover:text-sun transition-colors">Pusat Unduhan</a>
@@ -404,21 +481,21 @@
                 </div>
             </div>
 
-            {{-- Kolom 3: Kontak Resmi --}}
+            {{-- Kolom 3: Kontak Resmi Dinamis --}}
             <div>
                 <div class="font-extrabold text-sm text-sun mb-3 uppercase tracking-wider">Kontak Sekolah</div>
-                <div class="text-sm text-slate-300 space-y-2 leading-relaxed">
+                <div class="text-sm text-slate-300 space-y-2.5 leading-relaxed">
                     <div class="flex items-start gap-2">
                         <x-app-icon name="pin" class="w-4 h-4 text-sun shrink-0 mt-1" />
-                        <span>Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315</span>
+                        <span>{{ $schoolSetting->school_address ?? 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315' }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <x-app-icon name="phone" class="w-4 h-4 text-sun shrink-0" />
-                        <span>(0296) 421631</span>
+                        <span>{{ $schoolSetting->school_phone ?? '(0296) 421631' }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <x-app-icon name="mail" class="w-4 h-4 text-sun shrink-0" />
-                        <span>smpn4cepu@smpn4cepu.sch.id</span>
+                        <span>{{ $schoolSetting->school_email ?? 'smpn4cepu@smpn4cepu.sch.id' }}</span>
                     </div>
                 </div>
             </div>

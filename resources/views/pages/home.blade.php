@@ -57,11 +57,11 @@
                 <div class="text-xs sm:text-sm font-bold text-white/90 mt-1">Tahun Berdiri</div>
             </div>
             <div class="bg-white/10 backdrop-blur-xs border border-white/20 rounded-2xl p-4 sm:p-5">
-                <div class="text-3xl sm:text-4xl font-black text-sun">33</div>
+                <div class="text-3xl sm:text-4xl font-black text-sun">{{ $totalStaff }}</div>
                 <div class="text-xs sm:text-sm font-bold text-white/90 mt-1">Tenaga Pendidik & Staf</div>
             </div>
             <div class="bg-white/10 backdrop-blur-xs border border-white/20 rounded-2xl p-4 sm:p-5">
-                <div class="text-3xl sm:text-4xl font-black text-sun">11</div>
+                <div class="text-3xl sm:text-4xl font-black text-sun">{{ $totalFacilities }}</div>
                 <div class="text-xs sm:text-sm font-bold text-white/90 mt-1">Fasilitas Utama</div>
             </div>
             <div class="bg-white/10 backdrop-blur-xs border border-white/20 rounded-2xl p-4 sm:p-5">
@@ -122,22 +122,32 @@
         </div>
     </section>
 
-    {{-- Sambutan Kepala Sekolah --}}
+    {{-- Sambutan Kepala Sekolah Dinamis --}}
     <section class="bg-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-sun-soft/40">
         <div class="max-w-4xl mx-auto">
             <x-card class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start p-6 sm:p-8">
-                <div class="w-24 h-24 rounded-2xl bg-brand text-white flex items-center justify-center shrink-0 shadow-md">
-                    <x-app-icon name="users" class="w-12 h-12 text-sun" />
-                </div>
+                @if (!empty($schoolSetting?->principal_photo_url))
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shrink-0 shadow-md border-2 border-sun">
+                        <img
+                            src="{{ $schoolSetting->principal_photo_url }}"
+                            alt="{{ $schoolSetting->principal_name }}"
+                            class="w-full h-full object-cover"
+                        >
+                    </div>
+                @else
+                    <div class="w-24 h-24 rounded-2xl bg-brand text-white flex items-center justify-center shrink-0 shadow-md">
+                        <x-app-icon name="users" class="w-12 h-12 text-sun" />
+                    </div>
+                @endif
                 <div class="flex-1 text-center sm:text-left">
                     <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-1">
-                        Sambutan Kepala Sekolah
+                        {{ $schoolSetting->principal_title ?? 'Sambutan Kepala Sekolah' }}
                     </span>
                     <h3 class="text-xl sm:text-2xl font-extrabold text-navy mb-3">
-                        Drs. Suharto Widodo, M.Pd.
+                        {{ $schoolSetting->principal_name ?? 'Drs. Suharto Widodo, M.Pd.' }}
                     </h3>
                     <p class="text-sm text-ink-soft leading-relaxed font-medium">
-                        "Selamat datang di portal resmi SMP Negeri 4 Cepu. Kami berkomitmen memberikan pendidikan terbaik yang tidak hanya berfokus pada prestasi akademik, melainkan juga membentuk karakter siswa yang berintegritas, mandiri, dan berbudaya lingkungan hidup. Mari bersama mewujudkan ekosistem belajar digital yang inklusif dan berkualitas."
+                        "{{ $schoolSetting->principal_welcome_message ?? 'Selamat datang di portal resmi SMP Negeri 4 Cepu. Kami berkomitmen memberikan pendidikan terbaik yang tidak hanya berfokus pada prestasi akademik, melainkan juga membentuk karakter siswa yang berintegritas, mandiri, dan berbudaya lingkungan hidup.' }}"
                     </p>
                 </div>
             </x-card>
@@ -212,7 +222,6 @@
                                     {{ $agenda->title }}
                                 </a>
                             </div>
-                            <x-badge type="blue">Agenda</x-badge>
                         </div>
                     @endforeach
                 </div>
@@ -220,8 +229,59 @@
         </section>
     @endif
 
+    {{-- Prestasi Sekolah Terkini --}}
+    @if ($featuredAchievements->isNotEmpty())
+        <section class="bg-white py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center justify-between gap-4 mb-7">
+                    <div>
+                        <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-0.5">Kebanggaan Sekolah</span>
+                        <h2 class="text-2xl font-extrabold text-navy">Prestasi & Kejuaraan</h2>
+                    </div>
+                    <a href="{{ route('achievements') }}" class="btn-ghost text-xs">
+                        Lihat Semua Prestasi
+                        <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    @foreach ($featuredAchievements as $ach)
+                        <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
+                            @if ($ach->photo_url)
+                                <div class="w-full h-40 overflow-hidden bg-cream relative">
+                                    <img src="{{ $ach->photo_url }}" alt="{{ $ach->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <span class="absolute top-3 left-3 bg-sun text-navy font-black text-xs px-2.5 py-0.5 rounded-full uppercase shadow-xs">
+                                        {{ $ach->rank }}
+                                    </span>
+                                </div>
+                            @else
+                                <div class="w-full h-40 bg-gradient-to-br from-amber-50 to-amber-100/60 flex items-center justify-center text-amber-600 relative">
+                                    <x-app-icon name="trophy" class="w-12 h-12" />
+                                    <span class="absolute top-3 left-3 bg-sun text-navy font-black text-xs px-2.5 py-0.5 rounded-full uppercase shadow-xs">
+                                        {{ $ach->rank }}
+                                    </span>
+                                </div>
+                            @endif
+                            <div class="p-5 flex flex-col grow">
+                                <span class="text-[11px] font-black uppercase tracking-wider text-brand mb-1">
+                                    Tingkat {{ $ach->level }}
+                                </span>
+                                <h3 class="font-extrabold text-navy text-sm leading-snug mb-2 line-clamp-2">
+                                    {{ $ach->title }}
+                                </h3>
+                                <p class="text-xs text-ink-soft font-semibold mt-auto">
+                                    Peraih: <span class="text-navy">{{ $ach->winner_name }}</span>
+                                </p>
+                            </div>
+                        </x-card>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- Fasilitas Sekolah --}}
-    <section class="bg-white py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
+    <section class="bg-sky-soft/40 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between gap-4 mb-7">
                 <div>

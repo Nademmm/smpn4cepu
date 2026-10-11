@@ -29,7 +29,18 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('super_admin') ? true : null;
         });
 
-        // 1. Paksa penggunaan HTTPS di lingkungan produksi / PaaS
+        // 1. Bagikan SchoolSetting ke seluruh tampilan publik Blade
+        view()->composer('*', function ($view) {
+            try {
+                if (Schema::hasTable('school_settings')) {
+                    $view->with('schoolSetting', \App\Models\SchoolSetting::current());
+                }
+            } catch (\Throwable $e) {
+                // Abaikan jika migrasi belum berjalan
+            }
+        });
+
+        // 2. Paksa penggunaan HTTPS di lingkungan produksi / PaaS
         if (config('app.env') === 'production' && !app()->runningInConsole()) {
             URL::forceScheme('https');
         }

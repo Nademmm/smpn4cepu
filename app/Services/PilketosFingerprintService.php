@@ -16,20 +16,19 @@ class PilketosFingerprintService
     private const COOKIE_NAME = 'pilketos_voter_token';
 
     /**
-     * Hitung sidik jari gabungan perangkat: Cookie HttpOnly + Hardware Fingerprint Hash + IP Subnet (/24) + User Agent Hash.
+     * Hitung sidik jari gabungan perangkat: Hardware Fingerprint Hash + IP Subnet (/24) + User Agent Hash.
+     * Dibuat konsisten sebelum dan sesudah proses pemungutan suara.
      */
     public function generateFingerprint(Request $request, string $clientHardwareHash): string
     {
-        $existingCookieToken = $request->cookie(self::COOKIE_NAME);
         $userAgent = $request->userAgent() ?? 'UNKNOWN_UA';
         $ip = $request->ip() ?? '127.0.0.1';
 
         $ipSubnet = $this->calculateSubnet($ip);
 
-        // Raw composite string
+        // Raw composite string konsisten (hardware + network signature)
         $composite = implode('|', [
-            $existingCookieToken ?: 'NO_COOKIE',
-            $clientHardwareHash,
+            $clientHardwareHash ?: 'NO_HW_HASH',
             $ipSubnet,
             hash('sha256', $userAgent),
         ]);
@@ -38,11 +37,22 @@ class PilketosFingerprintService
     }
 
     /**
-     * Periksa apakah perangkat ini sudah memberikan suara.
+     * Periksa apakah perangkat ini sudah memberikan suara berdasarkan fingerprint atau token cookie.
      */
-    public function hasAlreadyVoted(string $fingerprint): bool
+    public function hasAlreadyVoted(Request $request, ?string $fingerprint = null): bool
     {
-        return ElectionDevice::where('device_fingerprint', $fingerprint)->exists();
+        // 1. Periksa cookie token pemilih
+        $cookieToken = $request->cookie(self::COOKIE_NAME);
+        if (!empty($cookieToken)) {
+            return true;
+        }
+
+        // 2. Periksa device fingerprint di basis data jika disediakan
+        if ($fingerprint !== null && ElectionDevice::where('device_fingerprint', $fingerprint)->exists()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -52,7 +62,7 @@ class PilketosFingerprintService
     {
         $fingerprint = $this->generateFingerprint($request, $clientHardwareHash);
 
-        if ($this->hasAlreadyVoted($fingerprint)) {
+        if ($this->hasAlreadyVoted($request, $fingerprint)) {
             throw new RuntimeException('Perangkat ini terdeteksi telah memberikan suara pada Pilketos.');
         }
 

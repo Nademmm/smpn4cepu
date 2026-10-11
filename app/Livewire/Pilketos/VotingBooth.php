@@ -16,7 +16,28 @@ class VotingBooth extends Component
 
     public function mount(Request $request, PilketosFingerprintService $fingerprintService): void
     {
-        // Placeholder check saat bilik suara diakses
+        // Jika kotak suara kosong (misal baru saja direset oleh panitia), bersihkan status penanda cookie lama
+        if (\App\Models\ElectionDevice::count() === 0) {
+            \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('pilketos_voter_token'));
+            $this->hasVoted = false;
+            return;
+        }
+
+        if ($fingerprintService->hasAlreadyVoted($request)) {
+            $this->hasVoted = true;
+        }
+    }
+
+    public function updatedClientHardwareHash(string $value, PilketosFingerprintService $fingerprintService, Request $request): void
+    {
+        if ($this->hasVoted) {
+            return;
+        }
+
+        $fingerprint = $fingerprintService->generateFingerprint($request, $value);
+        if ($fingerprintService->hasAlreadyVoted($request, $fingerprint)) {
+            $this->hasVoted = true;
+        }
     }
 
     public function submitVote(PilketosFingerprintService $fingerprintService, Request $request): void

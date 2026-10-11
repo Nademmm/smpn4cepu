@@ -65,9 +65,10 @@ class RolePermissionSeeder extends Seeder
         })->get();
         $guruRole->syncPermissions($guruPermissions);
 
-        // C. Staf Perpustakaan: Khusus Buku & Katalog Perpustakaan
+        // C. Staf Perpustakaan: Khusus Buku & Katalog Perpustakaan serta Reservasi
         $stafPerpusPermissions = Permission::where(function ($q) {
             $q->where('name', 'like', '%LibraryBook%')
+              ->orWhere('name', 'like', '%BookReservation%')
               ->orWhere('name', 'like', '%library%')
               ->orWhere('name', 'view_admin_panel')
               ->orWhere('name', 'View:SchoolOverviewWidget');

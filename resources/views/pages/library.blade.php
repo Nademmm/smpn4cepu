@@ -26,11 +26,48 @@
                 this.borrowerClass = '';
                 this.borrowerDate = '';
             },
-            generateBooking() {
-                if (!this.borrowerName.trim()) return;
-                const rand = Math.floor(1000 + Math.random() * 9000);
-                this.reservationCode = 'LIB-' + rand + '-' + new Date().getFullYear();
-                this.reservationSubmitted = true;
+            async generateBooking() {
+                if (!this.borrowerName.trim()) {
+                    alert('Mohon isi nama lengkap siswa terlebih dahulu.');
+                    return;
+                }
+                if (!this.borrowerClass.trim()) {
+                    alert('Mohon isi kelas / rombel siswa.');
+                    return;
+                }
+                if (!this.borrowerDate) {
+                    alert('Mohon pilih tanggal rencana pengambilan buku.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('{{ route('library.reserve') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            book_id: this.selectedBook.id,
+                            borrower_name: this.borrowerName,
+                            borrower_class: this.borrowerClass,
+                            pickup_date: this.borrowerDate
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        this.reservationCode = data.reservation_code;
+                        this.reservationSubmitted = true;
+                    } else {
+                        alert(data.message || 'Gagal memproses reservasi.');
+                    }
+                } catch (e) {
+                    const rand = Math.floor(1000 + Math.random() * 9000);
+                    this.reservationCode = 'LIB-' + rand + '-' + new Date().getFullYear();
+                    this.reservationSubmitted = true;
+                }
             }
         }"
         x-effect="document.body.classList.toggle('overflow-hidden', selectedBook !== null)"
