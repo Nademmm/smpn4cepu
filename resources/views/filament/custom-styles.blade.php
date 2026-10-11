@@ -218,8 +218,8 @@
     }
 
     /* Single-line Text Input: 100% Mengisi Seluruh Box Tanpa Terpotong */
-    .fi-input-wrp input,
-    input.fi-input {
+    .fi-input-wrp input:not(.fi-fo-date-time-picker-year-input):not(.fi-fo-date-time-picker-time-inputs input),
+    input.fi-input:not(.fi-fo-date-time-picker-year-input):not(.fi-fo-date-time-picker-time-inputs input) {
         display: block !important;
         width: 100% !important;
         min-width: 100% !important;
@@ -501,6 +501,212 @@
     html.dark .fi-select-input-search-ctn input.fi-input {
         background-color: #1e293b !important;
         border: 1px solid #334155 !important;
+    }
+
+    /* 4c. Date & Time Picker Popup Panel (Tahun, Kalender & Waktu Rapi Simetris di Dalam Box) */
+    .fi-fo-date-time-picker {
+        width: 100% !important;
+        position: relative !important;
+    }
+
+    button.fi-fo-date-time-picker-trigger,
+    .fi-fo-date-time-picker-trigger {
+        width: 100% !important;
+        min-width: 100% !important;
+        display: block !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+        text-align: start !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    input.fi-fo-date-time-picker-display-text-input {
+        width: 100% !important;
+        min-width: 100% !important;
+        min-height: 40px !important;
+        cursor: pointer !important;
+        padding: 0.55rem 0.875rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        border: none !important;
+        background: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Popup Panel Kalender & Waktu */
+    .fi-fo-date-time-picker-panel {
+        box-sizing: border-box !important;
+        max-width: 320px !important;
+        width: 320px !important;
+        padding: 1.15rem 1rem !important;
+        border-radius: 1rem !important;
+        margin-top: 4px !important;
+        z-index: 50 !important;
+    }
+
+    html:not(.dark) .fi-fo-date-time-picker-panel {
+        background-color: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html.dark .fi-fo-date-time-picker-panel {
+        background-color: #0f172a !important;
+        border: 1.5px solid #334155 !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    /* Header Bulan & Tahun */
+    .fi-fo-date-time-picker-panel-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        margin-bottom: 0.75rem !important;
+        gap: 0.5rem !important;
+    }
+
+    .fi-fo-date-time-picker-month-select {
+        flex: 1 1 auto !important;
+        cursor: pointer !important;
+        border: none !important;
+        background: transparent !important;
+        font-weight: 700 !important;
+        font-size: 0.9375rem !important;
+        padding: 0.25rem 0.5rem !important;
+        outline: none !important;
+    }
+
+    html:not(.dark) .fi-fo-date-time-picker-month-select {
+        color: #0f172a !important;
+    }
+
+    html.dark .fi-fo-date-time-picker-month-select {
+        color: #f8fafc !important;
+    }
+
+    /* Input Tahun: Di kanan header, ukuran pas 64px, tidak melar keluar */
+    input.fi-fo-date-time-picker-year-input,
+    .fi-input-wrp input.fi-fo-date-time-picker-year-input {
+        display: inline-block !important;
+        width: 64px !important;
+        min-width: 64px !important;
+        max-width: 64px !important;
+        min-height: 32px !important;
+        height: 32px !important;
+        border: 1px solid transparent !important;
+        border-radius: 0.375rem !important;
+        padding: 0.2rem 0.4rem !important;
+        text-align: right !important;
+        font-size: 0.9375rem !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+        flex: 0 0 64px !important;
+    }
+
+    html:not(.dark) input.fi-fo-date-time-picker-year-input {
+        color: #0f172a !important;
+    }
+
+    html.dark input.fi-fo-date-time-picker-year-input {
+        color: #f8fafc !important;
+    }
+
+    html:not(.dark) input.fi-fo-date-time-picker-year-input:focus {
+        background-color: #f1f5f9 !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    html.dark input.fi-fo-date-time-picker-year-input:focus {
+        background-color: #1e293b !important;
+        border-color: #475569 !important;
+    }
+
+    /* Kontainer Input Waktu (Jam : Menit : Detik) */
+    .fi-fo-date-time-picker-time-inputs {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin-top: 0.85rem !important;
+        padding-top: 0.85rem !important;
+        gap: 0.35rem !important;
+        border-top: 1px solid #e2e8f0 !important;
+    }
+
+    html.dark .fi-fo-date-time-picker-time-inputs {
+        border-top-color: #334155 !important;
+    }
+
+    /* Input Jam, Menit, Detik: Rapi Simetris di Tengah Popover Kalender */
+    .fi-fo-date-time-picker-time-inputs input,
+    .fi-input-wrp .fi-fo-date-time-picker-time-inputs input {
+        display: inline-block !important;
+        width: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+        min-height: 36px !important;
+        height: 36px !important;
+        padding: 0.25rem 0.2rem !important;
+        text-align: center !important;
+        font-size: 0.9375rem !important;
+        font-weight: 700 !important;
+        border-radius: 0.5rem !important;
+        border: 1.5px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        outline: none !important;
+        flex: 0 0 44px !important;
+        -moz-appearance: textfield !important;
+    }
+
+    /* Sembunyikan spinner arrow pada input angka waktu */
+    .fi-fo-date-time-picker-time-inputs input::-webkit-outer-spin-button,
+    .fi-fo-date-time-picker-time-inputs input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+    }
+
+    html:not(.dark) .fi-fo-date-time-picker-time-inputs input {
+        color: #0f172a !important;
+        border-color: #cbd5e1 !important;
+        background-color: #f8fafc !important;
+    }
+
+    html:not(.dark) .fi-fo-date-time-picker-time-inputs input:focus {
+        border-color: #d97706 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.15) !important;
+    }
+
+    html.dark .fi-fo-date-time-picker-time-inputs input {
+        color: #f8fafc !important;
+        border-color: #334155 !important;
+        background-color: #1e293b !important;
+    }
+
+    html.dark .fi-fo-date-time-picker-time-inputs input:focus {
+        border-color: #f59e0b !important;
+        background-color: #0f172a !important;
+        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+    }
+
+    .fi-fo-date-time-picker-time-input-separator {
+        font-size: 1rem !important;
+        font-weight: 800 !important;
+        color: #94a3b8 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        user-select: none !important;
     }
 
     /* 5. Password Reveal / Toggle Button */
