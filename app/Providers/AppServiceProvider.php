@@ -45,24 +45,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // 2. Paksa penggunaan HTTPS di lingkungan produksi / PaaS
-        if (config('app.env') === 'production' && !app()->runningInConsole()) {
+        if (config('app.env') === 'production' || request()->header('x-forwarded-proto') === 'https') {
             URL::forceScheme('https');
-        }
-
-        // 3. Otomatisasi migrasi dan seeder saat aplikasi pertama kali aktif di PaaS (fallback jika tanpa entrypoint)
-        if (config('app.env') === 'production' && !app()->runningInConsole()) {
-            try {
-                if (!Schema::hasTable('users')) {
-                    Artisan::call('migrate', ['--force' => true]);
-                    Artisan::call('storage:link');
-
-                    if (env('RUN_SEEDER', false)) {
-                        Artisan::call('db:seed', ['--force' => true]);
-                    }
-                }
-            } catch (\Throwable $e) {
-                Log::warning('PaaS bootstrap auto-migration skipped: ' . $e->getMessage());
-            }
         }
     }
 }

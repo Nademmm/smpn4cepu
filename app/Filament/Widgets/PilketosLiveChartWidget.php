@@ -9,18 +9,30 @@ class PilketosLiveChartWidget extends ChartWidget
 {
     protected static ?int $sort = 2;
     protected ?string $heading = 'Perolehan Suara Pilketos';
-    protected ?string $pollingInterval = '30s';
+    protected ?string $pollingInterval = null;
     protected ?string $maxHeight = '300px';
+
+    public static function canView(): bool
+    {
+        return auth()->user()?->hasAnyRole(['super_admin', 'panitia_pilketos']) ?? false;
+    }
 
     protected function getData(): array
     {
-        $candidates = ElectionCandidate::orderBy('candidate_number')->get();
+        $candidateData = \Illuminate\Support\Facades\Cache::remember('pilketos_live_chart_data', 30, function () {
+            $candidates = ElectionCandidate::orderBy('candidate_number')->get();
 
-        $labels = $candidates->map(function ($c) {
-            return "No. {$c->candidate_number}: {$c->candidate_name}";
-        })->toArray();
+            $labels = $candidates->map(function ($c) {
+                return "No. {$c->candidate_number}: {$c->candidate_name}";
+            })->toArray();
 
-        $data = $candidates->pluck('total_votes_cached')->toArray();
+            $data = $candidates->pluck('total_votes_cached')->toArray();
+
+            return ['labels' => $labels, 'data' => $data];
+        });
+
+        $labels = $candidateData['labels'];
+        $data = $candidateData['data'];
 
         return [
             'datasets' => [

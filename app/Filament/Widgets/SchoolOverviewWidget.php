@@ -8,6 +8,7 @@ use App\Models\StaffMember;
 use App\Models\StudentStatistic;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Cache;
 
 class SchoolOverviewWidget extends StatsOverviewWidget
 {
@@ -15,10 +16,19 @@ class SchoolOverviewWidget extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $totalStudents = StudentStatistic::sum('total_count');
-        $totalStaff = StaffMember::count();
-        $totalBooks = LibraryBook::sum('available_stock');
-        $totalVotes = ElectionVote::count();
+        $stats = Cache::remember('admin_school_overview_stats', 60, function () {
+            return [
+                'totalStudents' => StudentStatistic::sum('total_count'),
+                'totalStaff' => StaffMember::count(),
+                'totalBooks' => LibraryBook::sum('available_stock'),
+                'totalVotes' => ElectionVote::count(),
+            ];
+        });
+
+        $totalStudents = $stats['totalStudents'];
+        $totalStaff = $stats['totalStaff'];
+        $totalBooks = $stats['totalBooks'];
+        $totalVotes = $stats['totalVotes'];
 
         return [
             Stat::make('Total Siswa Terdata', number_format($totalStudents))

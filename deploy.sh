@@ -10,11 +10,13 @@ composer install --no-dev --optimize-autoloader --no-interaction
 echo "==> [2/6] Menjalankan migrasi basis data..."
 php artisan migrate --force
 
-echo "==> [3/6] Mengoptimalkan caching konfigurasi, route, dan view..."
+echo "==> [3/6] Mengoptimalkan caching konfigurasi, route, view, dan komponen..."
+php artisan filament:assets || true
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
+php artisan icons:cache || true
 php artisan filament:cache-components || true
 
 echo "==> [4/6] Memperbarui tautan storage (Symlink)..."

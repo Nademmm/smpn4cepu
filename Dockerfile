@@ -62,9 +62,13 @@ COPY --from=frontend-builder /app/public/build ./public/build
 # Optimasi autoloader Composer (--no-scripts mencegah artisan filament:upgrade dijalankan saat build tanpa DB)
 RUN composer dump-autoload --optimize --no-dev --no-scripts --classmap-authoritative
 
-# Salin konfigurasi Caddyfile & script entrypoint
+# Publikasikan aset statis Filament (CSS, JS, Fonts) ke public/ agar selalu tersedia di image Docker
+RUN php artisan filament:assets --ansi
+
+# Salin konfigurasi Caddyfile, OPcache, & script entrypoint
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/Caddyfile /etc/frankenphp/Caddyfile
+COPY docker/opcache.ini $PHP_INI_DIR/conf.d/opcache.ini
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Normalisasi baris baru LF (mencegah error CRLF dari Windows) dan beri izin eksekusi

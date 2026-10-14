@@ -37,11 +37,13 @@ fi
 php artisan storage:link || true
 
 # 4. Optimalkan caching Laravel & Filament untuk performa produksi
-echo "==> [4/6] Mengoptimalkan cache konfigurasi, route, view, dan komponen..."
+echo "==> [4/6] Mengoptimalkan cache konfigurasi, route, view, ikon, dan komponen..."
+php artisan filament:assets || true
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 php artisan event:cache || true
+php artisan icons:cache || true
 php artisan filament:cache-components || true
 
 # 5. Pastikan kepemilikan dan hak akses direktori storage & bootstrap/cache
