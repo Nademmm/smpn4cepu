@@ -46,7 +46,7 @@
                             <div>
                                 <span class="text-xs font-bold text-ink-mute uppercase block">Surat Elektronik</span>
                                 <p class="font-extrabold text-navy leading-snug">
-                                    {{ $schoolSetting->school_email ?? 'smpn4cepu@smpn4cepu.sch.id' }}
+                                    {{ $schoolSetting->school_email ?? 'smpn4cepu@gmail.com' }}
                                 </p>
                             </div>
                         </div>

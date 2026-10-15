@@ -45,7 +45,8 @@ class QuizAssessmentService
         int $bankId,
         string $participantIdentifier,
         array $answers,
-        Carbon $startedAt
+        Carbon $startedAt,
+        ?int $userId = null
     ): QuizAttempt {
         $bank = QuestionBank::with('questions.options')->findOrFail($bankId);
 
@@ -53,7 +54,7 @@ class QuizAssessmentService
             throw new InvalidArgumentException('Bank soal tidak memiliki butir pertanyaan.');
         }
 
-        return DB::transaction(function () use ($bank, $participantIdentifier, $answers, $startedAt) {
+        return DB::transaction(function () use ($bank, $participantIdentifier, $answers, $startedAt, $userId) {
             $totalQuestions = $bank->questions->count();
             $correctAnswersCount = 0;
             $totalEarnedPoints = 0;
@@ -91,6 +92,7 @@ class QuizAssessmentService
             // Simpan data Attempt
             $attempt = QuizAttempt::create([
                 'bank_id' => $bank->id,
+                'user_id' => $userId,
                 'participant_identifier' => $participantIdentifier,
                 'total_questions' => $totalQuestions,
                 'correct_answers' => $correctAnswersCount,

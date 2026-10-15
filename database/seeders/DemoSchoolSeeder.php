@@ -96,36 +96,28 @@ class DemoSchoolSeeder extends Seeder
                 'display_order' => 4,
             ],
             [
-                'nip' => '197207072005012016',
-                'name' => 'Ellies Erina, S.S.',
-                'position' => 'Guru Madya',
-                'employment_status' => EmploymentStatus::PNS,
-                'photo_path' => null,
-                'display_order' => 5,
-            ],
-            [
                 'nip' => '197911142005012025',
                 'name' => 'HUSNUL KHOTIMAH, S.S.',
-                'position' => 'Guru Madya',
+                'position' => 'Waka Kurikulum',
                 'employment_status' => EmploymentStatus::PNS,
                 'photo_path' => 'staff/husnul-khotimah.jpeg',
-                'display_order' => 6,
+                'display_order' => 2,
             ],
             [
-                'nip' => '196902151998012001',
-                'name' => 'Dra. Setyorini',
-                'position' => 'Guru Muda',
+                'nip' => '197207072005012016',
+                'name' => 'Ellies Erina, S.S.',
+                'position' => 'Waka Sarana Prasarana',
                 'employment_status' => EmploymentStatus::PNS,
-                'photo_path' => 'staff/setyorini.jpeg',
-                'display_order' => 7,
+                'photo_path' => null,
+                'display_order' => 4,
             ],
             [
                 'nip' => '196906302008011005',
                 'name' => 'Muhamad Sjafei, S.Pd.',
-                'position' => 'Guru Madya',
+                'position' => 'Waka Humas',
                 'employment_status' => EmploymentStatus::PNS,
                 'photo_path' => null,
-                'display_order' => 8,
+                'display_order' => 5,
             ],
             [
                 'nip' => '197101132008012003',
@@ -210,10 +202,10 @@ class DemoSchoolSeeder extends Seeder
             [
                 'nip' => '198705092017081001',
                 'name' => 'Sampurno, S.Pd., Gr.',
-                'position' => 'Guru Pertama',
+                'position' => 'Waka Kesiswaan',
                 'employment_status' => EmploymentStatus::PNS,
                 'photo_path' => null,
-                'display_order' => 19,
+                'display_order' => 3,
             ],
             [
                 'nip' => '196708292014062002',
@@ -373,13 +365,13 @@ class DemoSchoolSeeder extends Seeder
             ['name' => 'Laboratorium IPA', 'description' => 'Peralatan praktikum sains fisika dan biologi terstandar.', 'photo_path' => null],
             ['name' => 'Laboratorium Komputer Multimedia', 'description' => '40 PC modern berkecepatan tinggi untuk TIK dan ujian digital.', 'photo_path' => null],
             ['name' => 'Perpustakaan Sekolah', 'description' => 'Pusat literasi dengan ribuan koleksi buku bacaan dan buku paket.', 'photo_path' => null],
-            ['name' => 'Lapangan Olahraga', 'description' => 'Lapangan multifungsi untuk bola voli, basket, dan futsal.', 'photo_path' => null],
+            ['name' => 'Lapangan Olahraga', 'description' => 'Lapangan multifungsi untuk bola voli, basket, dan futsal.', 'photo_path' => 'images/facilities/UPACARA2.JPG'],
             ['name' => 'Gedung Indoor / Aula Serbaguna', 'description' => 'Gedung pertemuan siswa, latihan bulu tangkis, dan pentas seni.', 'photo_path' => 'images/assets/IMG_6522.JPG'],
-            ['name' => 'Lapangan Upacara', 'description' => 'Area luas dan asri untuk upacara bendera serta apel kedisiplinan.', 'photo_path' => 'images/assets/IMG_6518.JPG'],
-            ['name' => 'Mushala Sekolah', 'description' => 'Sarana ibadah sholat dhuhur berjamaah dan Baca Tulis Alquran.', 'photo_path' => null],
+            ['name' => 'Lapangan Upacara', 'description' => 'Area luas dan asri untuk upacara bendera serta apel kedisiplinan.', 'photo_path' => 'images/facilities/UPACARA1.JPG'],
+            ['name' => 'Mushala Sekolah', 'description' => 'Sarana ibadah sholat dhuhur berjamaah dan Baca Tulis Alquran.', 'photo_path' => 'images/facilities/MUSHOLA3.jpeg'],
             ['name' => 'Ruang Guru', 'description' => 'Ruang kerja kolaboratif pendidik yang representatif.', 'photo_path' => null],
             ['name' => 'Ruang Tata Usaha', 'description' => 'Pusat pelayanan administrasi dan kearsipan persuratan sekolah.', 'photo_path' => null],
-            ['name' => 'Ruang Kesenian', 'description' => 'Studio berekspresi seni tari, kriya, dan musik gamelan.', 'photo_path' => null],
+            ['name' => 'Ruang Kesenian', 'description' => 'Studio berekspresi seni tari, kriya, dan musik gamelan.', 'photo_path' => 'images/assets/IMG_8383.JPG'],
         ];
 
         foreach ($facilities as $idx => $fac) {
@@ -439,6 +431,42 @@ class DemoSchoolSeeder extends Seeder
 
         foreach ($books as $b) {
             LibraryBook::firstOrCreate(['isbn' => $b['isbn']], $b);
+        }
+
+        // 5b. Rincian 20 Rombongan Belajar (Rombel) Resmi
+        $rombelData = [
+            ['grade' => 7, 'class' => '7A', 'l' => 15, 'p' => 16, 'total' => 31],
+            ['grade' => 7, 'class' => '7B', 'l' => 15, 'p' => 16, 'total' => 31],
+            ['grade' => 7, 'class' => '7C', 'l' => 17, 'p' => 15, 'total' => 32],
+            ['grade' => 7, 'class' => '7D', 'l' => 16, 'p' => 15, 'total' => 31],
+            ['grade' => 7, 'class' => '7E', 'l' => 16, 'p' => 15, 'total' => 31],
+            ['grade' => 7, 'class' => '7F', 'l' => 16, 'p' => 16, 'total' => 32],
+            ['grade' => 7, 'class' => '7G', 'l' => 16, 'p' => 15, 'total' => 31],
+            ['grade' => 8, 'class' => '8A', 'l' => 16, 'p' => 13, 'total' => 29],
+            ['grade' => 8, 'class' => '8B', 'l' => 18, 'p' => 12, 'total' => 30],
+            ['grade' => 8, 'class' => '8C', 'l' => 15, 'p' => 13, 'total' => 28],
+            ['grade' => 8, 'class' => '8D', 'l' => 17, 'p' => 11, 'total' => 28],
+            ['grade' => 8, 'class' => '8E', 'l' => 18, 'p' => 12, 'total' => 30],
+            ['grade' => 8, 'class' => '8F', 'l' => 16, 'p' => 12, 'total' => 28],
+            ['grade' => 8, 'class' => '8G', 'l' => 16, 'p' => 13, 'total' => 29],
+            ['grade' => 9, 'class' => '9A', 'l' => 15, 'p' => 16, 'total' => 31],
+            ['grade' => 9, 'class' => '9B', 'l' => 14, 'p' => 18, 'total' => 32],
+            ['grade' => 9, 'class' => '9C', 'l' => 17, 'p' => 15, 'total' => 32],
+            ['grade' => 9, 'class' => '9D', 'l' => 13, 'p' => 16, 'total' => 29],
+            ['grade' => 9, 'class' => '9E', 'l' => 14, 'p' => 18, 'total' => 32],
+            ['grade' => 9, 'class' => '9F', 'l' => 16, 'p' => 15, 'total' => 31],
+        ];
+
+        foreach ($rombelData as $r) {
+            \App\Models\StudentStatistic::updateOrCreate(
+                ['academic_year' => '2025/2026', 'class_name' => $r['class']],
+                [
+                    'grade_level' => $r['grade'],
+                    'male_count' => $r['l'],
+                    'female_count' => $r['p'],
+                    'total_count' => $r['total'],
+                ]
+            );
         }
 
         // 6. Kandidat Pilketos Resmi

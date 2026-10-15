@@ -11,6 +11,7 @@ class QuizAttempt extends Model
 {
     protected $fillable = [
         'bank_id',
+        'user_id',
         'participant_identifier',
         'total_questions',
         'correct_answers',
@@ -30,6 +31,11 @@ class QuizAttempt extends Model
             'started_at' => 'datetime',
             'completed_at' => 'datetime',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function bank(): BelongsTo

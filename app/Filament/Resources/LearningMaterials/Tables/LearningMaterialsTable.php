@@ -40,6 +40,9 @@ class LearningMaterialsTable
                     ->boolean()
                     ->trueIcon('heroicon-o-paper-clip')
                     ->falseIcon('heroicon-o-minus'),
+                IconColumn::make('is_active')
+                    ->label('Status Aktif')
+                    ->boolean(),
                 TextColumn::make('author.name')
                     ->label('Penyusun')
                     ->searchable()

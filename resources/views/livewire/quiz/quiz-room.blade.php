@@ -1,6 +1,6 @@
 <div class="max-w-3xl mx-auto py-8 sm:py-12 pb-16 px-4 sm:px-6">
     @if (! $hasStarted && ! $isFinished)
-        {{-- Kartu Konfirmasi Identitas Peserta Didik Sebelum Mulai Kuis --}}
+        {{-- Kartu Asesmen Mandiri & Autentikasi Peserta Didik --}}
         <x-card class="space-y-6 p-6 sm:p-8 shadow-xs">
             <div class="border-b-2 border-sun-soft pb-4">
                 <div class="flex items-center gap-2 mb-2">
@@ -11,7 +11,7 @@
                     {{ $bank?->title ?? 'Simulasi Asesmen Mandiri' }}
                 </h1>
                 <p class="text-xs sm:text-sm text-ink-soft mt-1.5 font-medium">
-                    Silakan isi identitas Anda dengan benar sebelum memulai pengerjaan latihan soal.
+                    Asesmen mandiri berbasis digital untuk mengukur pemahaman materi ajar secara komprehensif.
                 </p>
             </div>
 
@@ -31,45 +31,97 @@
                 </div>
             </div>
 
-            <form wire:submit="startQuiz" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-navy mb-1.5">Nama Lengkap Siswa <span class="text-rose-500">*</span></label>
-                    <input
-                        type="text"
-                        wire:model="studentName"
-                        placeholder="Contoh: Budi Pratama"
-                        class="field @error('studentName') !border-rose-400 !bg-rose-50/30 @enderror"
-                        required
-                    >
-                    @error('studentName')
-                        <span class="text-[11px] font-bold text-rose-600 block mt-1">{{ $message }}</span>
-                    @enderror
+            {{-- Pesan Notifikasi Sukses / Error --}}
+            @if ($authSuccessMessage)
+                <div class="p-3.5 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2">
+                    <x-app-icon name="check-circle" class="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{{ $authSuccessMessage }}</span>
+                </div>
+            @endif
+
+            @if ($authErrorMessage)
+                <div class="p-3.5 bg-rose-50 border border-rose-300 rounded-xl text-xs font-bold text-rose-800 flex items-center gap-2">
+                    <x-app-icon name="x" class="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>{{ $authErrorMessage }}</span>
+                </div>
+            @endif
+
+            {{-- Profil Peserta Didik yang Sedang Aktif --}}
+            <div class="bg-sky-soft/80 border border-brand/30 rounded-2xl p-5 space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-brand/20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-black text-sm">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                        <div>
+                            <span class="text-[11px] font-bold text-ink-mute uppercase block">Peserta Latihan Mandiri</span>
+                            <h3 class="font-black text-navy text-base leading-snug">{{ Auth::user()->name }}</h3>
+                            <p class="text-xs text-ink-soft">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="px-3 py-1.5 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors border border-rose-200"
+                        >
+                            Ganti Akun
+                        </button>
+                    </form>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-navy mb-1.5">Kelas / Rombel <span class="text-rose-500">*</span></label>
-                    <input
-                        type="text"
-                        wire:model="studentClass"
-                        placeholder="Contoh: Kelas 8A"
-                        class="field @error('studentClass') !border-rose-400 !bg-rose-50/30 @enderror"
-                        required
-                    >
-                    @error('studentClass')
-                        <span class="text-[11px] font-bold text-rose-600 block mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
+                <form wire:submit="startQuiz" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-navy mb-1.5">Pilih / Konfirmasi Kelas Anda <span class="text-rose-500">*</span></label>
+                        <select
+                            wire:model="studentClass"
+                            class="field text-sm font-bold @error('studentClass') !border-rose-400 !bg-rose-50/30 @enderror"
+                            required
+                        >
+                            <option value="">Pilih Rombongan Belajar (Kelas)...</option>
+                            <optgroup label="Tingkat Kelas VII">
+                                <option value="7A">Kelas 7A</option>
+                                <option value="7B">Kelas 7B</option>
+                                <option value="7C">Kelas 7C</option>
+                                <option value="7D">Kelas 7D</option>
+                                <option value="7E">Kelas 7E</option>
+                                <option value="7F">Kelas 7F</option>
+                                <option value="7G">Kelas 7G</option>
+                            </optgroup>
+                            <optgroup label="Tingkat Kelas VIII">
+                                <option value="8A">Kelas 8A</option>
+                                <option value="8B">Kelas 8B</option>
+                                <option value="8C">Kelas 8C</option>
+                                <option value="8D">Kelas 8D</option>
+                                <option value="8E">Kelas 8E</option>
+                                <option value="8F">Kelas 8F</option>
+                                <option value="8G">Kelas 8G</option>
+                            </optgroup>
+                            <optgroup label="Tingkat Kelas IX">
+                                <option value="9A">Kelas 9A</option>
+                                <option value="9B">Kelas 9B</option>
+                                <option value="9C">Kelas 9C</option>
+                                <option value="9D">Kelas 9D</option>
+                                <option value="9E">Kelas 9E</option>
+                                <option value="9F">Kelas 9F</option>
+                            </optgroup>
+                        </select>
+                        @error('studentClass')
+                            <span class="text-[11px] font-bold text-rose-600 block mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <div class="pt-2">
-                    <button
-                        type="submit"
-                        class="btn-primary w-full !min-h-[44px] text-sm font-extrabold shadow-xs flex items-center justify-center gap-2"
-                    >
-                        <span>Mulai Simulasi Kuis Sekarang</span>
-                        <x-app-icon name="arrow-right" class="w-4 h-4" />
-                    </button>
+                        <div class="pt-2">
+                            <button
+                                type="submit"
+                                class="btn-primary w-full !min-h-[44px] text-sm font-extrabold shadow-xs flex items-center justify-center gap-2"
+                            >
+                                <span>Mulai Simulasi Kuis Sekarang</span>
+                                <x-app-icon name="arrow-right" class="w-4 h-4" />
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
         </x-card>
     @elseif (! $isFinished)
         @php
@@ -307,7 +359,12 @@
                 @endif
             </div>
 
-            <div class="pt-6 border-t-2 border-sun-soft flex justify-center gap-3">
+            <div class="p-3 bg-sky-soft/60 rounded-xl border border-brand/20 text-xs font-bold text-navy flex items-center justify-center gap-2">
+                <x-app-icon name="check-circle" class="w-4 h-4 text-brand shrink-0" />
+                <span>Hasil latihan ini telah tersimpan secara permanen pada portofolio akun belajar Anda.</span>
+            </div>
+
+            <div class="pt-4 border-t-2 border-sun-soft flex justify-center gap-3">
                 <a href="{{ route('quizzes') }}" class="btn-primary text-xs">
                     Pilih Latihan Lain
                 </a>

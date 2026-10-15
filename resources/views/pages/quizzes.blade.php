@@ -17,10 +17,59 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-8">
         {{-- Header Info Latihan --}}
-        <div>
-            <h2 class="text-2xl font-extrabold text-navy mb-1">Daftar Paket Latihan Soal</h2>
-            <p class="text-sm text-ink-soft">Pilih paket soal sesuai mata pelajaran dan tingkat kelas untuk memulai simulasi mandiri.</p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-extrabold text-navy mb-1">Daftar Paket Latihan Soal</h2>
+                <p class="text-sm text-ink-soft">Pilih paket soal sesuai mata pelajaran dan tingkat kelas untuk memulai simulasi mandiri.</p>
+            </div>
+            @auth
+                <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 text-xs font-bold">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                    <span>Masuk sebagai: {{ auth()->user()->name }}</span>
+                </div>
+            @else
+                <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+                    <span>* Login siswa dilakukan saat membuka paket soal untuk menyimpan riwayat nilai.</span>
+                </div>
+            @endauth
         </div>
+
+        @auth
+            @if(isset($myAttempts) && $myAttempts->isNotEmpty())
+                <div class="p-5 sm:p-6 rounded-2xl bg-white border border-sand/80 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-sand/50 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <x-app-icon name="chart-bar" class="w-5 h-5 text-brand" />
+                            <h3 class="font-extrabold text-navy text-base">Riwayat Latihan Saya</h3>
+                        </div>
+                        <span class="text-xs text-ink-soft font-semibold">{{ $myAttempts->count() }} Percobaan Terakhir</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                        @foreach($myAttempts as $attempt)
+                            <div class="p-3.5 rounded-xl border {{ $attempt->passed ? 'border-teal-200 bg-teal-50/40' : 'border-rose-200 bg-rose-50/40' }} flex items-center justify-between gap-3">
+                                <div>
+                                    <div class="text-xs font-black text-navy line-clamp-1 mb-0.5">
+                                        {{ $attempt->bank?->title ?? 'Latihan Soal' }}
+                                    </div>
+                                    <div class="text-[11px] text-ink-soft font-medium">
+                                        {{ $attempt->created_at->translatedFormat('d M Y, H:i') }}
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <div class="text-lg font-black {{ $attempt->passed ? 'text-teal-700' : 'text-rose-700' }}">
+                                        {{ number_format($attempt->score, 0) }}
+                                    </div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider {{ $attempt->passed ? 'text-teal-600' : 'text-rose-600' }}">
+                                        {{ $attempt->passed ? 'Lulus KKM' : 'Remedial' }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        @endauth
 
         {{-- Grid Paket Soal --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

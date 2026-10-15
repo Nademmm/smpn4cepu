@@ -42,6 +42,10 @@ class SchoolFacility extends Model
             return asset('images/assets/' . $this->photo_path);
         }
 
+        if (file_exists(public_path('images/facilities/' . $this->photo_path))) {
+            return asset('images/facilities/' . $this->photo_path);
+        }
+
         return asset('storage/' . $this->photo_path);
     }
 }

@@ -8,6 +8,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -79,6 +80,10 @@ class LearningMaterialForm
                     ->placeholder('https://youtube.com/watch?v=... atau https://drive.google.com/...')
                     ->helperText('Masukkan link jika materi berupa video pembelajaran atau Google Drive publik.')
                     ->columnSpanFull(),
+
+                Toggle::make('is_active')
+                    ->label('Publikasikan & Aktifkan Materi Ini')
+                    ->default(true),
 
                 Hidden::make('created_by')
                     ->default(fn () => auth()->id()),

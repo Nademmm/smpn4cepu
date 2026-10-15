@@ -29,12 +29,28 @@ class QuestionBankPolicy
 
     public function update(AuthUser $authUser, QuestionBank $questionBank): bool
     {
-        return $authUser->can('Update:QuestionBank');
+        if (!$authUser->can('Update:QuestionBank')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+
+        return (int) $questionBank->created_by === (int) $authUser->id;
     }
 
     public function delete(AuthUser $authUser, QuestionBank $questionBank): bool
     {
-        return $authUser->can('Delete:QuestionBank');
+        if (!$authUser->can('Delete:QuestionBank')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+
+        return (int) $questionBank->created_by === (int) $authUser->id;
     }
 
     public function deleteAny(AuthUser $authUser): bool

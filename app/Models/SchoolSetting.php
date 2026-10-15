@@ -19,6 +19,7 @@ class SchoolSetting extends Model
         'instagram_url',
         'youtube_url',
         'facebook_url',
+        'tiktok_url',
         'whatsapp_contact',
         'announcement_bar_active',
         'announcement_bar_text',
@@ -53,7 +54,7 @@ class SchoolSetting extends Model
                 'principal_title' => 'Kepala SMP Negeri 4 Cepu',
                 'principal_welcome_message' => 'Selamat datang di portal resmi SMP Negeri 4 Cepu. Kami berkomitmen memberikan pendidikan terbaik yang tidak hanya berfokus pada prestasi akademik, melainkan juga membentuk karakter siswa yang berintegritas, mandiri, dan berbudaya lingkungan hidup. Mari bersama mewujudkan ekosistem belajar digital yang inklusif dan berkualitas.',
                 'school_phone' => '(0296) 421631',
-                'school_email' => 'smpn4cepu@smpn4cepu.sch.id',
+                'school_email' => 'smpn4cepu@gmail.com',
                 'school_address' => 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315',
                 'postal_code' => '58315',
                 'announcement_bar_active' => false,
@@ -79,6 +80,10 @@ class SchoolSetting extends Model
 
         if (file_exists(public_path($this->principal_photo_path))) {
             return asset($this->principal_photo_path);
+        }
+
+        if (file_exists(public_path('images/principal/' . $this->principal_photo_path))) {
+            return asset('images/principal/' . $this->principal_photo_path);
         }
 
         return asset('storage/' . $this->principal_photo_path);

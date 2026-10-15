@@ -30,9 +30,15 @@ fi
 
 # 3. Pastikan symlink storage terhubung dan salin aset staf jika belum ada
 echo "==> [3/6] Memastikan symlink storage publik..."
-mkdir -p /app/storage/app/public/staff
+mkdir -p /app/storage/app/public/staff /app/storage/app/public/facilities /app/storage/app/public/principal
 if [ -d "/app/public/images/staff" ]; then
     cp -rn /app/public/images/staff/* /app/storage/app/public/staff/ 2>/dev/null || true
+fi
+if [ -d "/app/public/images/facilities" ]; then
+    cp -rn /app/public/images/facilities/* /app/storage/app/public/facilities/ 2>/dev/null || true
+fi
+if [ -d "/app/public/images/principal" ]; then
+    cp -rn /app/public/images/principal/* /app/storage/app/public/principal/ 2>/dev/null || true
 fi
 php artisan storage:link || true
 

@@ -13,7 +13,7 @@ class PublicRoutesTest extends TestCase
 {
     public function test_all_public_sitemap_routes_return_successful_response(): void
     {
-        $routes = [
+        $publicRoutes = [
             '/',
             '/profil',
             '/profil/prestasi',
@@ -24,28 +24,47 @@ class PublicRoutesTest extends TestCase
             '/pilketos',
             '/pilketos/live-count',
             '/perpustakaan',
-            '/materi',
-            '/latihan-soal',
             '/berita',
             '/galeri',
             '/unduhan',
             '/kontak',
+            '/login',
         ];
 
-        foreach ($routes as $route) {
+        foreach ($publicRoutes as $route) {
             $response = $this->get($route);
             $response->assertStatus(200);
         }
     }
 
-    public function test_quiz_room_page_loads_successfully(): void
+    public function test_materials_and_quizzes_redirect_guest_to_login(): void
     {
+        $this->get('/materi')->assertRedirect('/login');
+        $this->get('/latihan-soal')->assertRedirect('/login');
+
         $bank = QuestionBank::first();
         if ($bank) {
-            $response = $this->get('/latihan-soal/' . $bank->id);
-            $response->assertStatus(200);
-        } else {
-            $this->assertTrue(true);
+            $this->get('/latihan-soal/' . $bank->id)->assertRedirect('/login');
+        }
+    }
+
+    public function test_authenticated_student_can_access_materials_and_quizzes(): void
+    {
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => 'siswa.test@smpn4cepu.sch.id'],
+            [
+                'name' => 'Siswa Test',
+                'password' => bcrypt('password123'),
+            ]
+        );
+        $user->assignRole('siswa');
+
+        $this->actingAs($user)->get('/materi')->assertStatus(200);
+        $this->actingAs($user)->get('/latihan-soal')->assertStatus(200);
+
+        $bank = QuestionBank::first();
+        if ($bank) {
+            $this->actingAs($user)->get('/latihan-soal/' . $bank->id)->assertStatus(200);
         }
     }
 
@@ -87,5 +106,27 @@ class PublicRoutesTest extends TestCase
         $response->assertStatus(404);
         $response->assertSee('Halaman Tidak Ditemukan');
         $response->assertSee('Kembali ke Beranda');
+    }
+
+    public function test_student_can_login_using_nisn_and_is_redirected(): void
+    {
+        $student = \App\Models\User::firstOrCreate(
+            ['nisn' => '0089991111'],
+            [
+                'name' => 'Siswa Coba NISN',
+                'email' => 'siswa.nisn@smpn4cepu.sch.id',
+                'student_class' => '7A',
+                'password' => bcrypt('password123'),
+            ]
+        );
+        $student->assignRole('siswa');
+
+        $response = $this->post('/login', [
+            'login_id' => '0089991111',
+            'password' => 'password123',
+        ]);
+
+        $response->assertRedirect('/latihan-soal');
+        $this->assertAuthenticatedAs($student);
     }
 }

@@ -21,12 +21,14 @@ class LearningMaterial extends Model
         'attachment_path',
         'external_url',
         'created_by',
+        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
             'grade_level' => 'integer',
+            'is_active' => 'boolean',
         ];
     }
 

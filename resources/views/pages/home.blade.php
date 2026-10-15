@@ -144,10 +144,10 @@
                         {{ $schoolSetting->principal_title ?? 'Sambutan Kepala Sekolah' }}
                     </span>
                     <h3 class="text-xl sm:text-2xl font-extrabold text-navy mb-3">
-                        {{ $schoolSetting->principal_name ?? 'Drs. Suharto Widodo, M.Pd.' }}
+                        {{ $schoolSetting->principal_name ?? 'Prasetyo Cahyo Nugroho, S.Pd., M.M.' }}
                     </h3>
                     <p class="text-sm text-ink-soft leading-relaxed font-medium">
-                        "{{ $schoolSetting->principal_welcome_message ?? 'Selamat datang di portal resmi SMP Negeri 4 Cepu. Kami berkomitmen memberikan pendidikan terbaik yang tidak hanya berfokus pada prestasi akademik, melainkan juga membentuk karakter siswa yang berintegritas, mandiri, dan berbudaya lingkungan hidup.' }}"
+                        "{{ $schoolSetting->principal_welcome_message ?? 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat.' }}"
                     </p>
                 </div>
             </x-card>

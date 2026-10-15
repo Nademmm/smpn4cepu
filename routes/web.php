@@ -9,9 +9,15 @@ use App\Models\Post;
 use App\Models\QuestionBank;
 use App\Models\SchoolFacility;
 use App\Models\StaffMember;
+use App\Http\Controllers\Auth\LoginController;
 use App\Models\StudentStatistic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Rute Autentikasi Masuk Portal Terpadu (Untuk Siswa, Guru, dan Admin)
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // 1. Beranda
 Route::get('/', function () {
@@ -191,28 +197,38 @@ Route::post('/perpustakaan/reservasi', function (Request $request) {
     ]);
 })->name('library.reserve');
 
-// 9. Ruang Belajar Mandiri: Materi
-Route::get('/materi', function () {
-    $materials = LearningMaterial::with(['subject', 'author'])
-        ->where('is_active', true)
-        ->orderBy('grade_level')
-        ->get();
-    return view('pages.materials', compact('materials'));
-})->name('materials');
+// 9, 10, 11: Ruang Belajar Mandiri (Wajib Masuk Akun Terlebih Dahulu)
+Route::middleware('auth')->group(function () {
+    // 9. Materi Pelajaran
+    Route::get('/materi', function () {
+        $materials = LearningMaterial::with(['subject', 'author'])
+            ->where('is_active', true)
+            ->orderBy('grade_level')
+            ->get();
+        return view('pages.materials', compact('materials'));
+    })->name('materials');
 
-// 10. Ruang Belajar Mandiri: Daftar Kuis Bank Soal
-Route::get('/latihan-soal', function () {
-    $questionBanks = QuestionBank::with('subject')
-        ->where('is_active', true)
-        ->get();
-    return view('pages.quizzes', compact('questionBanks'));
-})->name('quizzes');
+    // 10. Daftar Kuis Bank Soal
+    Route::get('/latihan-soal', function () {
+        $questionBanks = QuestionBank::with('subject')
+            ->where('is_active', true)
+            ->get();
 
-// 11. Ruang Belajar Mandiri: Pengerjaan Kuis
-Route::get('/latihan-soal/{id}', function (int $id) {
-    $bank = QuestionBank::with('subject')->findOrFail($id);
-    return view('pages.quiz-play', compact('bank'));
-})->name('quiz.play');
+        $myAttempts = \App\Models\QuizAttempt::with('bank.subject')
+            ->where('user_id', auth()->id())
+            ->orderByDesc('created_at')
+            ->limit(6)
+            ->get();
+
+        return view('pages.quizzes', compact('questionBanks', 'myAttempts'));
+    })->name('quizzes');
+
+    // 11. Pengerjaan Kuis
+    Route::get('/latihan-soal/{id}', function (int $id) {
+        $bank = QuestionBank::with('subject')->findOrFail($id);
+        return view('pages.quiz-play', compact('bank'));
+    })->name('quiz.play');
+});
 
 // 12. Berita & Informasi
 Route::get('/berita', function (Request $request) {

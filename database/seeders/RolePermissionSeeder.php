@@ -39,6 +39,7 @@ class RolePermissionSeeder extends Seeder
             'StaffMember',
             'StudentStatistic',
             'Subject',
+            'User',
         ];
 
         $actions = [

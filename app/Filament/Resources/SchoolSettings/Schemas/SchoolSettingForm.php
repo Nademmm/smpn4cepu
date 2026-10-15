@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\SchoolSettings\Schemas;
 
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class SchoolSettingForm
@@ -77,7 +77,7 @@ class SchoolSettingForm
                 Section::make('Media Sosial Resmi Sekolah')
                     ->description('Tautan resmi kanal komunikasi dan informasi sekolah')
                     ->schema([
-                        Grid::make(3)->schema([
+                        Grid::make(2)->schema([
                             TextInput::make('instagram_url')
                                 ->label('Instagram URL')
                                 ->placeholder('https://instagram.com/smpn4cepu_official'),
@@ -87,6 +87,9 @@ class SchoolSettingForm
                             TextInput::make('facebook_url')
                                 ->label('Facebook URL')
                                 ->placeholder('https://facebook.com/smpnegeri4cepu'),
+                            TextInput::make('tiktok_url')
+                                ->label('TikTok URL')
+                                ->placeholder('https://www.tiktok.com/@smpn4cepu'),
                         ]),
                     ]),
 

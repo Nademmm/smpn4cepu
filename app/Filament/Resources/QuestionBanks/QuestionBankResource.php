@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class QuestionBankResource extends Resource
 {
@@ -75,6 +76,18 @@ class QuestionBankResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        if ($user && $user->hasRole('guru') && !$user->hasRole('super_admin')) {
+            $query->where('created_by', $user->id);
+        }
+
+        return $query;
     }
 
     public static function getPages(): array

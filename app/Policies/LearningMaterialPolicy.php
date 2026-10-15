@@ -29,12 +29,28 @@ class LearningMaterialPolicy
 
     public function update(AuthUser $authUser, LearningMaterial $learningMaterial): bool
     {
-        return $authUser->can('Update:LearningMaterial');
+        if (!$authUser->can('Update:LearningMaterial')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+
+        return (int) $learningMaterial->created_by === (int) $authUser->id;
     }
 
     public function delete(AuthUser $authUser, LearningMaterial $learningMaterial): bool
     {
-        return $authUser->can('Delete:LearningMaterial');
+        if (!$authUser->can('Delete:LearningMaterial')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+
+        return (int) $learningMaterial->created_by === (int) $authUser->id;
     }
 
     public function deleteAny(AuthUser $authUser): bool
