@@ -37,6 +37,7 @@ php artisan storage:link || true
 
 # 4. Optimalkan caching Laravel & Filament untuk performa produksi
 echo "==> [4/6] Mengoptimalkan cache konfigurasi, route, view, ikon, dan komponen..."
+php artisan cache:clear || true
 php artisan filament:assets || true
 php artisan config:cache || true
 php artisan route:cache || true

@@ -126,10 +126,19 @@
     <section class="bg-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-sun-soft/40">
         <div class="max-w-4xl mx-auto">
             @php
-                $ksPhoto = $schoolSetting?->principal_photo_url ?: asset('images/principal/FOTO_KS_1.jpg');
-                $ksName = $schoolSetting?->principal_name ?: 'Prasetyo Cahyo Nugroho, S.Pd., M.M.';
+                $ksPhoto = (!empty($schoolSetting?->principal_photo_url) && !str_contains($schoolSetting->principal_photo_url, 'users'))
+                    ? $schoolSetting->principal_photo_url
+                    : asset('images/principal/FOTO_KS_1.jpg');
+
+                $ksName = ($schoolSetting?->principal_name && $schoolSetting->principal_name !== 'Drs. Suharto Widodo, M.Pd.')
+                    ? $schoolSetting->principal_name
+                    : 'Prasetyo Cahyo Nugroho, S.Pd., M.M.';
+
                 $ksTitle = $schoolSetting?->principal_title ?: 'Kepala SMP Negeri 4 Cepu';
-                $ksMessage = $schoolSetting?->principal_welcome_message ?: 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.';
+
+                $ksMessage = ($schoolSetting?->principal_welcome_message && !str_contains($schoolSetting->principal_welcome_message, 'Selamat datang di portal resmi'))
+                    ? $schoolSetting->principal_welcome_message
+                    : 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.';
             @endphp
             <x-card class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start p-6 sm:p-8 shadow-xs border-2 border-sun-soft/80">
                 <div class="relative shrink-0">
