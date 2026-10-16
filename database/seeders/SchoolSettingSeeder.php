@@ -9,7 +9,7 @@ class SchoolSettingSeeder extends Seeder
 {
     public function run(): void
     {
-        SchoolSetting::firstOrCreate(
+        SchoolSetting::updateOrCreate(
             ['id' => 1],
             [
                 'principal_name' => 'Prasetyo Cahyo Nugroho, S.Pd., M.M.',

@@ -9,23 +9,16 @@ echo "=========================================================="
 echo "==> [1/6] Menemukan paket Laravel & Filament..."
 php artisan package:discover --ansi || true
 
-# 2. Tunggu dan jalankan migrasi basis data jika koneksi DB telah dikonfigurasi
-if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
-    echo "==> [2/6] Memeriksa koneksi basis data ke $DB_HOST:$DB_PORT..."
-    
-    # Jalankan migrasi basis data
-    echo "==> Menjalankan migrasi basis data..."
-    php artisan migrate --force || {
-        echo "⚠️ Peringatan: Migrasi basis data gagal atau basis data belum siap."
-    }
+# 2. Jalankan migrasi basis data
+echo "==> [2/6] Memeriksa dan menjalankan migrasi basis data..."
+php artisan migrate --force || {
+    echo "⚠️ Peringatan: Migrasi basis data gagal atau basis data belum siap."
+}
 
-    # Jika RUN_SEEDER=true di env PaaS, jalankan seeding akun dan master data resmi
-    if [ "$RUN_SEEDER" = "true" ]; then
-        echo "==> Inisialisasi RUN_SEEDER terdeteksi: Menjalankan DatabaseSeeder..."
-        php artisan db:seed --force || echo "⚠️ Seeder dilewati atau sudah terisi."
-    fi
-else
-    echo "==> [2/6] DB_HOST belum diatur ke remote host. Melewati migrasi otomatis saat booting."
+# Jika RUN_SEEDER=true di env PaaS, jalankan seeding akun dan master data resmi
+if [ "$RUN_SEEDER" = "true" ]; then
+    echo "==> Inisialisasi RUN_SEEDER terdeteksi: Menjalankan DatabaseSeeder..."
+    php artisan db:seed --force || echo "⚠️ Seeder dilewati atau sudah terisi."
 fi
 
 # 3. Pastikan symlink storage terhubung dan salin aset staf jika belum ada

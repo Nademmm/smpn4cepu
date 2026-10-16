@@ -125,29 +125,34 @@
     {{-- Sambutan Kepala Sekolah Dinamis --}}
     <section class="bg-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-sun-soft/40">
         <div class="max-w-4xl mx-auto">
-            <x-card class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start p-6 sm:p-8">
-                @if (!empty($schoolSetting?->principal_photo_url))
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shrink-0 shadow-md border-2 border-sun">
+            @php
+                $ksPhoto = $schoolSetting?->principal_photo_url ?: asset('images/principal/FOTO_KS_1.jpg');
+                $ksName = $schoolSetting?->principal_name ?: 'Prasetyo Cahyo Nugroho, S.Pd., M.M.';
+                $ksTitle = $schoolSetting?->principal_title ?: 'Kepala SMP Negeri 4 Cepu';
+                $ksMessage = $schoolSetting?->principal_welcome_message ?: 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.';
+            @endphp
+            <x-card class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start p-6 sm:p-8 shadow-xs border-2 border-sun-soft/80">
+                <div class="relative shrink-0">
+                    <div class="w-28 h-36 sm:w-32 sm:h-40 rounded-2xl overflow-hidden shadow-md border-2 border-sun bg-sky-soft">
                         <img
-                            src="{{ $schoolSetting->principal_photo_url }}"
-                            alt="{{ $schoolSetting->principal_name }}"
-                            class="w-full h-full object-cover"
+                            src="{{ $ksPhoto }}"
+                            alt="{{ $ksName }}"
+                            class="w-full h-full object-cover object-top"
                         >
                     </div>
-                @else
-                    <div class="w-24 h-24 rounded-2xl bg-brand text-white flex items-center justify-center shrink-0 shadow-md">
-                        <x-app-icon name="users" class="w-12 h-12 text-sun" />
+                    <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-brand text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs whitespace-nowrap">
+                        Kepala Sekolah
                     </div>
-                @endif
-                <div class="flex-1 text-center sm:text-left">
+                </div>
+                <div class="flex-1 text-center sm:text-left pt-2 sm:pt-0">
                     <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-1">
-                        {{ $schoolSetting->principal_title ?? 'Sambutan Kepala Sekolah' }}
+                        {{ $ksTitle }}
                     </span>
                     <h3 class="text-xl sm:text-2xl font-extrabold text-navy mb-3">
-                        {{ $schoolSetting->principal_name ?? 'Prasetyo Cahyo Nugroho, S.Pd., M.M.' }}
+                        {{ $ksName }}
                     </h3>
                     <p class="text-sm text-ink-soft leading-relaxed font-medium">
-                        "{{ $schoolSetting->principal_welcome_message ?? 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat.' }}"
+                        "{{ $ksMessage }}"
                     </p>
                 </div>
             </x-card>

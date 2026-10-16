@@ -50,9 +50,10 @@ class SchoolSetting extends Model
     {
         return \Illuminate\Support\Facades\Cache::rememberForever('school_setting_singleton', function () {
             return static::firstOrCreate([], [
-                'principal_name' => 'Drs. Suharto Widodo, M.Pd.',
+                'principal_name' => 'Prasetyo Cahyo Nugroho, S.Pd., M.M.',
                 'principal_title' => 'Kepala SMP Negeri 4 Cepu',
-                'principal_welcome_message' => 'Selamat datang di portal resmi SMP Negeri 4 Cepu. Kami berkomitmen memberikan pendidikan terbaik yang tidak hanya berfokus pada prestasi akademik, melainkan juga membentuk karakter siswa yang berintegritas, mandiri, dan berbudaya lingkungan hidup. Mari bersama mewujudkan ekosistem belajar digital yang inklusif dan berkualitas.',
+                'principal_photo_path' => 'images/principal/FOTO_KS_1.jpg',
+                'principal_welcome_message' => 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.',
                 'school_phone' => '(0296) 421631',
                 'school_email' => 'smpn4cepu@gmail.com',
                 'school_address' => 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315',
