@@ -25,14 +25,21 @@ class QuestionBankForm
                     ->required(),
 
                 Select::make('grade_level')
-                    ->label('Tingkat Kelas')
+                    ->label('Tingkat Angkatan Kelas')
                     ->options(\App\Enums\GradeLevel::class)
+                    ->helperText('Pilih tingkat angkatan peserta didik (Kelas VII, VIII, atau IX).')
                     ->required(),
 
                 TextInput::make('title')
-                    ->label('Judul Paket Ujian / Kuis')
+                    ->label('Judul Paket Ujian / Latihan Soal')
                     ->required()
                     ->placeholder('Contoh: Penilaian Harian Bab 1 - Bilangan Bulat')
+                    ->columnSpanFull(),
+
+                Textarea::make('description')
+                    ->label('Deskripsi / Kisi-Kisi Singkat')
+                    ->rows(2)
+                    ->placeholder('Contoh: Evaluasi pemahaman materi konsep dasar dan penerapan rumus pada tingkat kelas terkait.')
                     ->columnSpanFull(),
 
                 TextInput::make('duration_minutes')
@@ -53,9 +60,17 @@ class QuestionBankForm
                     ->default(75)
                     ->suffix('Poin'),
 
+                TextInput::make('access_code')
+                    ->label('Password / Token Masuk Soal')
+                    ->required()
+                    ->maxLength(50)
+                    ->default(fn () => 'SOAL-' . rand(100, 999))
+                    ->placeholder('Contoh: MTK8-2026')
+                    ->helperText('Wajib diisi siswa sebelum mulai mengerjakan soal agar tidak sembarang peserta masuk tanpa izin guru.'),
+
                 Toggle::make('is_active')
                     ->label('Status Aktif')
-                    ->helperText('Jika diaktifkan, kuis/soal ini dapat diakses oleh siswa.')
+                    ->helperText('Jika diaktifkan, paket soal ini tampil di halaman Latihan Soal.')
                     ->default(true),
 
                 Hidden::make('created_by')
@@ -123,4 +138,3 @@ class QuestionBankForm
             ]);
     }
 }
-

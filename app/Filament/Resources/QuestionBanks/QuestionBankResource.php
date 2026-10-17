@@ -79,7 +79,7 @@ class QuestionBankResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            \App\Filament\Resources\QuestionBanks\RelationManagers\AttemptsRelationManager::class,
         ];
     }
 

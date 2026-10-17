@@ -1,33 +1,43 @@
 <div class="max-w-3xl mx-auto py-8 sm:py-12 pb-16 px-4 sm:px-6">
     @if (! $hasStarted && ! $isFinished)
-        {{-- Kartu Asesmen Mandiri & Autentikasi Peserta Didik --}}
+        {{-- Kartu Asesmen Mandiri, Verifikasi Angkatan & Password Soal --}}
         <x-card class="space-y-6 p-6 sm:p-8 shadow-xs">
             <div class="border-b-2 border-sun-soft pb-4">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="chip-active text-xs !py-1 !px-3 font-extrabold">{{ $bank?->subject?->name ?? 'Mata Pelajaran' }}</span>
-                    <span class="text-xs font-bold text-ink-mute">Kelas {{ $bank?->grade_level ?? 'VII' }}</span>
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                    <div class="flex items-center gap-2">
+                        <span class="chip-active text-xs !py-1 !px-3 font-extrabold">{{ $bank?->subject?->name ?? $subjectName }}</span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-sky-soft text-brand border border-brand/20">
+                            Angkatan Kelas {{ $bank?->grade_level ?? $gradeLevel }}
+                        </span>
+                    </div>
+                    @if ($requiresPassword)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                            <x-app-icon name="shield" class="w-3.5 h-3.5 text-amber-700" />
+                            <span>Terkunci Password Soal</span>
+                        </span>
+                    @endif
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-black text-navy leading-tight">
-                    {{ $bank?->title ?? 'Simulasi Asesmen Mandiri' }}
+                    {{ $bank?->title ?? $bankTitle }}
                 </h1>
-                <p class="text-xs sm:text-sm text-ink-soft mt-1.5 font-medium">
-                    Asesmen mandiri berbasis digital untuk mengukur pemahaman materi ajar secara komprehensif.
+                <p class="text-xs sm:text-sm text-ink-soft mt-1.5 font-medium leading-relaxed">
+                    {{ $bank?->description ?? 'Asesmen mandiri berbasis digital untuk mengukur pemahaman materi ajar sesuai tingkat angkatan kelas.' }}
                 </p>
             </div>
 
             {{-- Ringkasan Parameter Ujian --}}
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-sky-soft/60 p-4 rounded-2xl border border-brand/20 text-center">
+            <div class="grid grid-cols-3 gap-3 bg-sky-soft/60 p-4 rounded-2xl border border-brand/20 text-center">
                 <div class="p-2">
                     <span class="text-[11px] font-bold text-ink-mute uppercase block">Jumlah Soal</span>
-                    <strong class="text-base font-black text-navy">{{ count($questions) }} Butir</strong>
+                    <strong class="text-base font-black text-navy">{{ $questionsCount }} Butir</strong>
                 </div>
-                <div class="p-2">
+                <div class="p-2 border-x border-brand/15">
                     <span class="text-[11px] font-bold text-ink-mute uppercase block">Alokasi Waktu</span>
                     <strong class="text-base font-black text-navy">{{ round($durationSeconds / 60) }} Menit</strong>
                 </div>
-                <div class="p-2 col-span-2 sm:col-span-1">
+                <div class="p-2">
                     <span class="text-[11px] font-bold text-ink-mute uppercase block">KKM Kelulusan</span>
-                    <strong class="text-base font-black text-navy">{{ $bank?->passing_grade ?? 75 }} Poin</strong>
+                    <strong class="text-base font-black text-navy">{{ $bank?->passing_grade ?? $passingGrade }} Poin</strong>
                 </div>
             </div>
 
@@ -46,83 +56,127 @@
                 </div>
             @endif
 
-            {{-- Profil Peserta Didik yang Sedang Aktif --}}
-            <div class="bg-sky-soft/80 border border-brand/30 rounded-2xl p-5 space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-brand/20">
+            {{-- Profil Peserta Didik & Form Verifikasi Masuk Kuis --}}
+            <div class="bg-sky-soft/80 border border-brand/30 rounded-2xl p-5 sm:p-6 space-y-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-brand/20">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-black text-sm">
+                        <div class="w-11 h-11 rounded-full bg-brand text-white flex items-center justify-center font-black text-base shadow-2xs">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
                         <div>
-                            <span class="text-[11px] font-bold text-ink-mute uppercase block">Peserta Latihan Mandiri</span>
+                            <span class="text-[11px] font-bold text-ink-mute uppercase block">Peserta Latihan Terverifikasi</span>
                             <h3 class="font-black text-navy text-base leading-snug">{{ Auth::user()->name }}</h3>
-                            <p class="text-xs text-ink-soft">{{ Auth::user()->email }}</p>
+                            <p class="text-xs text-ink-soft font-medium">
+                                {{ Auth::user()->nisn ? 'NISN: ' . Auth::user()->nisn . ' · ' : '' }}{{ Auth::user()->email }}
+                            </p>
                         </div>
                     </div>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button
                             type="submit"
-                            class="px-3 py-1.5 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors border border-rose-200"
+                            class="px-3.5 py-2 min-h-[40px] text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors border border-rose-200 inline-flex items-center gap-1.5"
                         >
-                            Ganti Akun
+                            <x-app-icon name="logout" class="w-3.5 h-3.5" />
+                            <span>Ganti Akun</span>
                         </button>
                     </form>
                 </div>
 
-                <form wire:submit="startQuiz" class="space-y-4">
+                <form wire:submit="startQuiz" class="space-y-5">
+                    {{-- Pilihan Tingkat Angkatan (Kelas 7, 8, 9 - Tanpa Pecah Sub-Kelas) --}}
                     <div>
-                        <label for="studentClassSelect" class="block text-xs font-bold text-navy mb-1.5">Pilih / Konfirmasi Kelas Anda <span class="text-rose-500">*</span></label>
-                        <select
-                            id="studentClassSelect"
-                            wire:model="studentClass"
-                            class="field text-sm font-bold @error('studentClass') !border-rose-400 !bg-rose-50/30 @enderror"
-                            required
-                        >
-                            <option value="">Pilih Rombongan Belajar (Kelas)...</option>
-                            <optgroup label="Tingkat Kelas VII">
-                                <option value="7A">Kelas 7A</option>
-                                <option value="7B">Kelas 7B</option>
-                                <option value="7C">Kelas 7C</option>
-                                <option value="7D">Kelas 7D</option>
-                                <option value="7E">Kelas 7E</option>
-                                <option value="7F">Kelas 7F</option>
-                                <option value="7G">Kelas 7G</option>
-                            </optgroup>
-                            <optgroup label="Tingkat Kelas VIII">
-                                <option value="8A">Kelas 8A</option>
-                                <option value="8B">Kelas 8B</option>
-                                <option value="8C">Kelas 8C</option>
-                                <option value="8D">Kelas 8D</option>
-                                <option value="8E">Kelas 8E</option>
-                                <option value="8F">Kelas 8F</option>
-                                <option value="8G">Kelas 8G</option>
-                            </optgroup>
-                            <optgroup label="Tingkat Kelas IX">
-                                <option value="9A">Kelas 9A</option>
-                                <option value="9B">Kelas 9B</option>
-                                <option value="9C">Kelas 9C</option>
-                                <option value="9D">Kelas 9D</option>
-                                <option value="9E">Kelas 9E</option>
-                                <option value="9F">Kelas 9F</option>
-                            </optgroup>
-                        </select>
+                        <label class="block text-xs font-extrabold text-navy mb-2 uppercase tracking-wider">
+                            1. Pilih Tingkat Angkatan Kelas Anda <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            @foreach ([
+                                'Kelas 7' => ['roman' => 'Kelas VII', 'sub' => 'Angkatan 7'],
+                                'Kelas 8' => ['roman' => 'Kelas VIII', 'sub' => 'Angkatan 8'],
+                                'Kelas 9' => ['roman' => 'Kelas IX', 'sub' => 'Angkatan 9'],
+                            ] as $cohortValue => $cohortMeta)
+                                <label
+                                    class="relative flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 cursor-pointer transition-all text-center min-h-[68px] focus-within:ring-2 focus-within:ring-brand {{ $studentClass === $cohortValue ? 'bg-brand text-white border-brand shadow-sm' : 'bg-white text-navy border-sun-soft hover:border-brand' }}"
+                                >
+                                    <input
+                                        type="radio"
+                                        name="studentClass"
+                                        value="{{ $cohortValue }}"
+                                        wire:model.live="studentClass"
+                                        class="sr-only"
+                                    >
+                                    <span class="text-sm sm:text-base font-black leading-tight">{{ $cohortMeta['roman'] }}</span>
+                                    <span class="text-[11px] font-bold mt-0.5 {{ $studentClass === $cohortValue ? 'text-sun-soft' : 'text-ink-mute' }}">
+                                        {{ $cohortMeta['sub'] }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
                         @error('studentClass')
-                            <span class="text-[11px] font-bold text-rose-600 block mt-1">{{ $message }}</span>
+                            <span class="text-xs font-bold text-rose-600 block mt-1.5">{{ $message }}</span>
                         @enderror
                     </div>
 
-                        <div class="pt-2">
-                            <button
-                                type="submit"
-                                class="btn-primary w-full !min-h-[44px] text-sm font-extrabold shadow-xs flex items-center justify-center gap-2"
-                            >
-                                <span>Mulai Simulasi Kuis Sekarang</span>
-                                <x-app-icon name="arrow-right" class="w-4 h-4" />
-                            </button>
+                    {{-- Input Password / Token Soal --}}
+                    @if ($requiresPassword)
+                        <div x-data="{ showToken: false }" class="p-4 rounded-2xl bg-white border-2 border-amber-300/90 space-y-2.5 shadow-2xs">
+                            <div class="flex items-center justify-between gap-2">
+                                <label for="quizPasswordInput" class="block text-xs font-extrabold text-navy uppercase tracking-wider">
+                                    2. Masukkan Password / Token Soal <span class="text-rose-500">*</span>
+                                </label>
+                                <span class="text-[11px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                                    Wajib Diisi
+                                </span>
+                            </div>
+                            <p class="text-xs text-ink-soft leading-relaxed font-medium">
+                                Soal ini dilindungi password agar hanya peserta yang mendapat izin guru pengampu yang dapat mengerjakan.
+                            </p>
+                            <div class="relative">
+                                <input
+                                    id="quizPasswordInput"
+                                    :type="showToken ? 'text' : 'password'"
+                                    wire:model="quizPassword"
+                                    placeholder="Masukkan password / token soal dari guru (contoh: MTK8-2026)..."
+                                    autocomplete="off"
+                                    class="field pr-24 font-mono font-extrabold tracking-wider uppercase text-sm @error('quizPassword') !border-rose-400 !bg-rose-50/40 @enderror"
+                                    required
+                                >
+                                <button
+                                    type="button"
+                                    @click="showToken = !showToken"
+                                    class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg text-xs font-bold text-brand hover:bg-sky-soft transition-colors"
+                                    :aria-label="showToken ? 'Sembunyikan token' : 'Tampilkan token'"
+                                >
+                                    <span x-text="showToken ? 'Sembunyikan' : 'Lihat Token'"></span>
+                                </button>
+                            </div>
+                            @error('quizPassword')
+                                <div class="flex items-center gap-1.5 text-xs font-bold text-rose-600 pt-0.5">
+                                    <x-app-icon name="x-circle" class="w-4 h-4 shrink-0" />
+                                    <span>{{ $message }}</span>
+                                </div>
+                            @enderror
                         </div>
-                    </form>
-                </div>
+                    @endif
+
+                    <div class="pt-1 flex flex-col sm:flex-row items-center gap-3">
+                        <a href="{{ route('quizzes') }}" class="btn-ghost w-full sm:w-auto text-xs justify-center">
+                            <x-app-icon name="arrow-left" class="w-3.5 h-3.5" />
+                            <span>Kembali ke Daftar Soal</span>
+                        </a>
+                        <button
+                            type="submit"
+                            wire:loading.attr="disabled"
+                            class="btn-primary w-full sm:flex-1 !min-h-[46px] text-sm font-extrabold shadow-xs flex items-center justify-center gap-2"
+                        >
+                            <x-app-icon name="shield" class="w-4 h-4" />
+                            <span wire:loading.remove target="startQuiz">Buka Kunci & Mulai Kerjakan Soal</span>
+                            <span wire:loading target="startQuiz">Memverifikasi Akses Soal...</span>
+                            <x-app-icon name="arrow-right" class="w-4 h-4" />
+                        </button>
+                    </div>
+                </form>
+            </div>
         </x-card>
     @elseif (! $isFinished)
         @php
@@ -173,7 +227,7 @@
                         </span>
                     </div>
 
-                    {{-- Track Kuning Muda & Bar Biru Figma --}}
+                    {{-- Track Kuning Muda & Bar Biru --}}
                     <div class="h-2.5 w-full bg-sun-soft rounded-full overflow-hidden">
                         <div
                             class="h-full bg-brand rounded-full transition-all duration-300"
@@ -193,7 +247,7 @@
                             {{ $qIndex + 1 }}. {{ $question['question_text'] ?? ($question['text'] ?? '') }}
                         </h2>
 
-                        {{-- Opsi Jawaban Radio Card Figma --}}
+                        {{-- Opsi Jawaban Radio Card --}}
                         <div class="grid gap-3">
                             @foreach ($question['options'] as $optIndex => $option)
                                 @php
@@ -221,7 +275,7 @@
                     </div>
                 @endforeach
 
-                {{-- Tombol Navigasi Bawah Figma --}}
+                {{-- Tombol Navigasi Bawah --}}
                 <div class="flex items-center justify-between pt-4 border-t-2 border-sun-soft">
                     <button
                         type="button"
@@ -259,7 +313,7 @@
                 </div>
             </x-card>
 
-            {{-- Grid Navigasi Nomor Soal Figma --}}
+            {{-- Grid Navigasi Nomor Soal --}}
             <x-card class="p-5">
                 <span class="text-xs font-bold text-ink-mute uppercase tracking-wider block mb-3">
                     Navigasi Cepat Soal:
@@ -325,12 +379,16 @@
             </template>
         </div>
     @else
-        {{-- Layar Hasil / Skor Figma --}}
+        {{-- Layar Hasil / Skor --}}
         @php
             $score = round($resultSummary['final_score'] ?? $resultSummary['score'] ?? 0);
             $isPassed = $resultSummary['is_passed'] ?? false;
             $correctCount = $resultSummary['correct_answers'] ?? $resultSummary['correct_count'] ?? collect($resultSummary['reviews'] ?? [])->where('is_correct', true)->count();
             $totalCount = $resultSummary['total_questions'] ?? count($resultSummary['reviews'] ?? $questions);
+            $spentSeconds = (int) ($resultSummary['duration_spent_seconds'] ?? 0);
+            $spentFormatted = $spentSeconds >= 60
+                ? floor($spentSeconds / 60) . ' menit ' . ($spentSeconds % 60) . ' detik'
+                : $spentSeconds . ' detik';
         @endphp
 
         <div class="space-y-8">
@@ -345,23 +403,30 @@
                     Peserta: {{ $participantIdentifier }}
                 </div>
 
-                {{-- Angka Skor Besar Figma --}}
+                {{-- Angka Skor Besar --}}
                 <div class="text-6xl sm:text-7xl font-extrabold {{ $isPassed ? 'text-emerald-600' : 'text-red-600' }} leading-none">
                     {{ $score }}<span class="text-2xl text-ink-mute font-bold">/100</span>
                 </div>
 
-                <p class="text-sm font-bold text-ink-soft">
-                    Jawaban benar: {{ $correctCount }} dari {{ $totalCount }} butir soal
-                </p>
+                <div class="space-y-1">
+                    <p class="text-sm font-bold text-ink-soft">
+                        Jawaban benar: {{ $correctCount }} dari {{ $totalCount }} butir soal
+                    </p>
+                    @if ($spentSeconds > 0)
+                        <p class="text-xs font-semibold text-ink-mute">
+                            Diselesaikan dalam waktu {{ $spentFormatted }}
+                        </p>
+                    @endif
+                </div>
 
                 <div class="pt-1">
                     @if ($isPassed)
                         <span class="inline-block rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-extrabold text-emerald-800">
-                            ✓ Tuntas · Memenuhi KKM
+                            ✓ Tuntas · Memenuhi KKM ({{ $passingGrade }})
                         </span>
                     @else
                         <span class="inline-block rounded-full bg-red-100 px-4 py-1.5 text-xs font-extrabold text-red-800">
-                            Belum Tuntas · Tetap Semangat Belajar
+                            Belum Tuntas · KKM {{ $passingGrade }} · Tetap Semangat Belajar
                         </span>
                     @endif
                 </div>

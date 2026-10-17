@@ -71,6 +71,16 @@ Seluruh akun telah diisi melalui `DatabaseSeeder` dengan hak akses peran terveri
 | **Panitia Pilketos** | `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pengelolaan kandidat paslon dan pemantauan suara di `/admin` |
 | **Siswa** | `ahmad.fauzi@siswa.smpn4cepu.sch.id` (NISN: `0081234567`) | `password123` | Portal belajar siswa (`/login`), latihan soal CBT, Pilketos, dan reservasi buku |
 
+### 🔑 Token / Password Default Latihan Soal (Per Angkatan)
+
+Setiap paket soal dilindungi oleh **Password / Token Soal** yang dapat dikelola oleh Guru/Admin di `/admin/question-banks`:
+
+| Angkatan | Mata Pelajaran | Judul Paket Soal | Password / Token Soal |
+| :--- | :--- | :--- | :--- |
+| **Kelas VII (7)** | Ilmu Pengetahuan Alam (IPA) | Evaluasi Klasifikasi Makhluk Hidup & Ekosistem - Kelas 7 | `IPA7-2026` |
+| **Kelas VIII (8)** | Matematika | Latihan Soal Aljabar & Teorema Pythagoras - Kelas 8 | `MTK8-2026` |
+| **Kelas IX (9)** | Bahasa Indonesia | Asesmen Teks Laporan Percobaan & Pidato Persuasif - Kelas 9 | `BINDO9-2026` |
+
 ---
 
 ## 🛠️ Instalasi & Menjalankan di Lokal

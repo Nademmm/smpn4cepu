@@ -13,8 +13,10 @@ class QuestionBank extends Model
         'subject_id',
         'grade_level',
         'title',
+        'description',
         'duration_minutes',
         'passing_grade',
+        'access_code',
         'is_active',
         'created_by',
     ];
@@ -27,6 +29,23 @@ class QuestionBank extends Model
             'passing_grade' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function requiresPassword(): bool
+    {
+        return filled(trim((string) $this->access_code));
+    }
+
+    public function verifyPassword(string $input): bool
+    {
+        if (! $this->requiresPassword()) {
+            return true;
+        }
+
+        return hash_equals(
+            strtoupper(trim((string) $this->access_code)),
+            strtoupper(trim($input))
+        );
     }
 
     public function subject(): BelongsTo

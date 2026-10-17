@@ -253,6 +253,7 @@ Route::middleware('auth')->group(function () {
         $questionBanks = QuestionBank::with('subject')
             ->withCount('questions')
             ->where('is_active', true)
+            ->orderBy('grade_level')
             ->get();
 
         $myAttempts = \App\Models\QuizAttempt::with('bank.subject')

@@ -523,26 +523,92 @@ class DemoSchoolSeeder extends Seeder
             );
         }
 
-        // 8. Bank Soal & Soal Latihan Demo
+        // 8. Bank Soal & Materi Latihan Per Angkatan (Kelas 7, Kelas 8, Kelas 9)
+        $authorId = $guru ? $guru->id : ($admin ? $admin->id : 1);
+        $ipa = Subject::where('code', 'IPA-SMP')->first();
         $matematika = Subject::where('code', 'MAT-SMP')->first();
+        $bindo = Subject::where('code', 'BIN-SMP')->first();
 
+        // 8a. Paket Soal Angkatan Kelas 7 (IPA)
+        if ($ipa) {
+            \App\Models\LearningMaterial::updateOrCreate(
+                ['slug' => 'modul-klasifikasi-makhluk-hidup-dan-ekosistem-kelas-7'],
+                [
+                    'subject_id' => $ipa->id,
+                    'grade_level' => 7,
+                    'title' => 'Modul Klasifikasi Makhluk Hidup & Ekosistem - Kelas 7',
+                    'summary' => 'Panduan lengkap ciri-ciri makhluk hidup, taksonomi lima kingdom, dan interaksi komponen biotik-abiotik.',
+                    'content' => "BAB 1: KLASIFIKASI MAKHLUK HIDUP\n\n1. Ciri-Ciri Makhluk Hidup:\n- Bernapas (respirasi)\n- Memerlukan nutrisi\n- Bergerak dan peka terhadap rangsang (iritabilitas)\n- Tumbuh dan berkembang\n\n2. Urutan Takson:\nKingdom - Filum/Divisi - Kelas - Ordo - Famili - Genus - Spesies.\n\n3. Komponen Ekosistem:\n- Komponen Biotik: Produsen, Konsumen, Dekomposer.\n- Komponen Abiotik: Cahaya matahari, air, tanah, udara, suhu.",
+                    'is_active' => true,
+                    'created_by' => $authorId,
+                ]
+            );
+
+            $bank7 = QuestionBank::updateOrCreate(
+                ['title' => 'Evaluasi Klasifikasi Makhluk Hidup & Ekosistem - Kelas 7'],
+                [
+                    'subject_id' => $ipa->id,
+                    'grade_level' => 7,
+                    'description' => 'Evaluasi pemahaman ciri-ciri makhluk hidup, urutan taksonomi, dan interaksi dalam ekosistem untuk siswa angkatan Kelas VII.',
+                    'duration_minutes' => 30,
+                    'passing_grade' => 75,
+                    'access_code' => 'IPA7-2026',
+                    'is_active' => true,
+                    'created_by' => $authorId,
+                ]
+            );
+
+            $q7_1 = Question::firstOrCreate(
+                ['bank_id' => $bank7->id, 'question_text' => 'Kemampuan makhluk hidup untuk menanggapi rangsangan dari luar disebut...'],
+                ['explanation' => 'Iritabilitas adalah kemampuan makhluk hidup untuk peka dan menanggapi rangsang dari lingkungannya.', 'points' => 50, 'order_index' => 1]
+            );
+            QuestionOption::firstOrCreate(['question_id' => $q7_1->id, 'option_text' => 'Adaptasi', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q7_1->id, 'option_text' => 'Iritabilitas', 'is_correct' => true]);
+            QuestionOption::firstOrCreate(['question_id' => $q7_1->id, 'option_text' => 'Respirasi', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q7_1->id, 'option_text' => 'Ekskresi', 'is_correct' => false]);
+
+            $q7_2 = Question::firstOrCreate(
+                ['bank_id' => $bank7->id, 'question_text' => 'Organisme yang berperan menguraikan sisa-sisa makhluk hidup yang telah mati menjadi zat anorganik disebut...'],
+                ['explanation' => 'Dekomposer (pengurai) seperti bakteri dan jamur menguraikan bahan organik menjadi zat anorganik yang menyuburkan tanah.', 'points' => 50, 'order_index' => 2]
+            );
+            QuestionOption::firstOrCreate(['question_id' => $q7_2->id, 'option_text' => 'Produsen', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q7_2->id, 'option_text' => 'Konsumen Puncak', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q7_2->id, 'option_text' => 'Dekomposer', 'is_correct' => true]);
+            QuestionOption::firstOrCreate(['question_id' => $q7_2->id, 'option_text' => 'Herbivora', 'is_correct' => false]);
+        }
+
+        // 8b. Paket Soal Angkatan Kelas 8 (Matematika)
         if ($matematika) {
-            $bank = QuestionBank::firstOrCreate(
+            \App\Models\LearningMaterial::updateOrCreate(
+                ['slug' => 'modul-aljabar-dan-teorema-pythagoras-kelas-8'],
+                [
+                    'subject_id' => $matematika->id,
+                    'grade_level' => 8,
+                    'title' => 'Modul Bentuk Aljabar & Teorema Pythagoras - Kelas 8',
+                    'summary' => 'Ringkasan rumus operasi bentuk aljabar linier serta penerapan Teorema Pythagoras pada bangun datar.',
+                    'content' => "RINGKASAN MATERI MATEMATIKA KELAS VIII\n\n1. Operasi Bentuk Aljabar:\n- Sifat Distributif: a(b + c) = ab + ac\n- Penjumlahan dan pengurangan hanya dapat dilakukan pada suku-suku sejenis.\n\n2. Teorema Pythagoras:\nPada segitiga siku-siku dengan sisi siku-siku a dan b serta sisi miring (hipotenusa) c, berlaku:\nc² = a² + b²\n\nContoh Tripel Pythagoras: (3, 4, 5), (6, 8, 10), (5, 12, 13), (8, 15, 17).",
+                    'is_active' => true,
+                    'created_by' => $authorId,
+                ]
+            );
+
+            $bank = QuestionBank::updateOrCreate(
                 ['title' => 'Latihan Soal Aljabar & Teorema Pythagoras - Kelas 8'],
                 [
                     'subject_id' => $matematika->id,
                     'grade_level' => 8,
+                    'description' => 'Simulasi asesmen mandiri materi operasi bentuk aljabar dan penerapan Teorema Pythagoras untuk angkatan Kelas VIII.',
                     'duration_minutes' => 45,
                     'passing_grade' => 75,
+                    'access_code' => 'MTK8-2026',
                     'is_active' => true,
-                    'created_by' => $guru ? $guru->id : ($admin ? $admin->id : 1),
+                    'created_by' => $authorId,
                 ]
             );
 
-            // Pertanyaan 1
             $q1 = Question::firstOrCreate(
                 ['bank_id' => $bank->id, 'question_text' => 'Panjang hipotenusa segitiga siku-siku dengan panjang sisi tegak 6 cm dan 8 cm adalah...'],
-                ['explanation' => 'Gunakan Teorema Pythagoras: c = √(6² + 8²) = √(36 + 64) = √100 = 10 cm.', 'points' => 50]
+                ['explanation' => 'Gunakan Teorema Pythagoras: c = √(6² + 8²) = √(36 + 64) = √100 = 10 cm.', 'points' => 50, 'order_index' => 1]
             );
 
             QuestionOption::firstOrCreate(['question_id' => $q1->id, 'option_text' => '9 cm', 'is_correct' => false]);
@@ -550,16 +616,63 @@ class DemoSchoolSeeder extends Seeder
             QuestionOption::firstOrCreate(['question_id' => $q1->id, 'option_text' => '12 cm', 'is_correct' => false]);
             QuestionOption::firstOrCreate(['question_id' => $q1->id, 'option_text' => '14 cm', 'is_correct' => false]);
 
-            // Pertanyaan 2
             $q2 = Question::firstOrCreate(
                 ['bank_id' => $bank->id, 'question_text' => 'Sederhanakan bentuk aljabar berikut: 3(2x - 4) + 5x.'],
-                ['explanation' => 'Distribusikan 3 ke dalam kurung: 6x - 12 + 5x = (6x + 5x) - 12 = 11x - 12.', 'points' => 50]
+                ['explanation' => 'Distribusikan 3 ke dalam kurung: 6x - 12 + 5x = (6x + 5x) - 12 = 11x - 12.', 'points' => 50, 'order_index' => 2]
             );
 
             QuestionOption::firstOrCreate(['question_id' => $q2->id, 'option_text' => '11x - 4', 'is_correct' => false]);
             QuestionOption::firstOrCreate(['question_id' => $q2->id, 'option_text' => '11x - 12', 'is_correct' => true]);
             QuestionOption::firstOrCreate(['question_id' => $q2->id, 'option_text' => '6x - 12', 'is_correct' => false]);
             QuestionOption::firstOrCreate(['question_id' => $q2->id, 'option_text' => '10x - 12', 'is_correct' => false]);
+        }
+
+        // 8c. Paket Soal Angkatan Kelas 9 (Bahasa Indonesia)
+        if ($bindo) {
+            \App\Models\LearningMaterial::updateOrCreate(
+                ['slug' => 'modul-teks-laporan-percobaan-dan-pidato-persuasif-kelas-9'],
+                [
+                    'subject_id' => $bindo->id,
+                    'grade_level' => 9,
+                    'title' => 'Modul Teks Laporan Percobaan & Pidato Persuasif - Kelas 9',
+                    'summary' => 'Struktur kebahasaan teks laporan percobaan ilmiah serta teknik menyusun pidato persuasif yang efektif.',
+                    'content' => "MATERI BAHASA INDONESIA KELAS IX\n\n1. Struktur Teks Laporan Percobaan:\n- Tujuan percobaan\n- Alat dan bahan\n- Langkah-langkah kerja\n- Hasil percobaan\n- Simpulan\n\n2. Struktur Pidato Persuasif:\n- Pembuka (Salam, sapaan, ucapan syukur)\n- Isi Pidato (Pernyataan posisi, rangkaian argumen logis, penguatan pernyataan)\n- Penutup (Simpulan, ajakan/harapan, permohonan maaf, salam penutup).",
+                    'is_active' => true,
+                    'created_by' => $authorId,
+                ]
+            );
+
+            $bank9 = QuestionBank::updateOrCreate(
+                ['title' => 'Asesmen Teks Laporan Percobaan & Pidato Persuasif - Kelas 9'],
+                [
+                    'subject_id' => $bindo->id,
+                    'grade_level' => 9,
+                    'description' => 'Latihan persiapan ujian akhir mengenai struktur teks laporan percobaan dan kaidah kebahasaan pidato persuasif untuk angkatan Kelas IX.',
+                    'duration_minutes' => 40,
+                    'passing_grade' => 75,
+                    'access_code' => 'BINDO9-2026',
+                    'is_active' => true,
+                    'created_by' => $authorId,
+                ]
+            );
+
+            $q9_1 = Question::firstOrCreate(
+                ['bank_id' => $bank9->id, 'question_text' => 'Bagian dalam pidato persuasif yang berisi rangkuman argumen logis disertai bukti untuk meyakinkan pendengar adalah...'],
+                ['explanation' => 'Tahap argumen dalam isi pidato persuasif berfungsi menyajikan alasan logis dan data pendukung agar pendengar yakin terhadap gagasan pembicara.', 'points' => 50, 'order_index' => 1]
+            );
+            QuestionOption::firstOrCreate(['question_id' => $q9_1->id, 'option_text' => 'Salam Pembuka', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q9_1->id, 'option_text' => 'Rangkaian Argumen', 'is_correct' => true]);
+            QuestionOption::firstOrCreate(['question_id' => $q9_1->id, 'option_text' => 'Sapaan Kehormatan', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q9_1->id, 'option_text' => 'Ucapan Terima Kasih', 'is_correct' => false]);
+
+            $q9_2 = Question::firstOrCreate(
+                ['bank_id' => $bank9->id, 'question_text' => 'Urutan struktur teks laporan hasil percobaan yang tepat adalah...'],
+                ['explanation' => 'Struktur baku laporan percobaan dimulai dari Tujuan, Alat dan Bahan, Langkah-langkah, Hasil Percobaan, lalu ditutup dengan Simpulan.', 'points' => 50, 'order_index' => 2]
+            );
+            QuestionOption::firstOrCreate(['question_id' => $q9_2->id, 'option_text' => 'Tujuan - Alat & Bahan - Langkah Kerja - Hasil - Simpulan', 'is_correct' => true]);
+            QuestionOption::firstOrCreate(['question_id' => $q9_2->id, 'option_text' => 'Simpulan - Tujuan - Langkah Kerja - Alat & Bahan - Hasil', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q9_2->id, 'option_text' => 'Orientasi - Komplikasi - Resolusi - Koda', 'is_correct' => false]);
+            QuestionOption::firstOrCreate(['question_id' => $q9_2->id, 'option_text' => 'Tesis - Argumentasi - Penegasan Ulang', 'is_correct' => false]);
         }
     }
 }

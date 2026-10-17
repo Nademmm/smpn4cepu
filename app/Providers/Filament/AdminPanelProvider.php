@@ -9,6 +9,8 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
+use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -30,10 +32,23 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->homeUrl('/')
             ->brandName('SMP Negeri 4 Cepu')
             ->favicon(secure_asset('images/logo.png'))
             ->spa()
             ->sidebarCollapsibleOnDesktop()
+            ->navigationItems([
+                NavigationItem::make('Lihat Website')
+                    ->url('/', shouldOpenInNewTab: false)
+                    ->icon('heroicon-o-globe-alt')
+                    ->sort(-1),
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Lihat Website Utama')
+                    ->url('/')
+                    ->icon('heroicon-o-globe-alt'),
+            ])
             ->globalSearch(SmartGlobalSearchProvider::class)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->globalSearchFieldSuffix('Ctrl+K')
@@ -71,6 +86,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
                 fn () => view('filament.login-header'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+                fn () => view('filament.topbar-home-button'),
             )
             ->authMiddleware([
                 Authenticate::class,

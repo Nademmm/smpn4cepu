@@ -128,4 +128,37 @@ class CoreServicesTest extends TestCase
         $this->assertNotNull($siswa);
         $this->assertTrue($siswa->hasRole('siswa'));
     }
+
+    public function test_quiz_room_requires_password_token_and_uses_grade_cohort(): void
+    {
+        $student = \App\Models\User::where('nisn', '0081234567')->first();
+        $this->assertNotNull($student);
+
+        $bank = QuestionBank::where('is_active', true)->whereNotNull('access_code')->first();
+        $this->assertNotNull($bank);
+
+        // 1. Saat baru dibuka (mount), daftar pertanyaan belum dimuat ke client (Zero Pre-Start Leakage)
+        $component = \Livewire\Livewire::actingAs($student)
+            ->test(\App\Livewire\Quiz\QuizRoom::class, ['bankId' => $bank->id])
+            ->assertSet('hasStarted', false)
+            ->assertSet('questions', []);
+
+        // 2. Mencoba mulai dengan password/token salah harus ditolak
+        $component->set('studentClass', 'Kelas 8')
+            ->set('quizPassword', 'TOKEN-SALAH')
+            ->call('startQuiz')
+            ->assertHasErrors(['quizPassword'])
+            ->assertSet('hasStarted', false)
+            ->assertSet('questions', []);
+
+        // 3. Memasukkan password/token yang benar membuka soal dan mencatat angkatan (Kelas 8)
+        $component->set('studentClass', 'Kelas 8')
+            ->set('quizPassword', strtolower($bank->access_code))
+            ->call('startQuiz')
+            ->assertHasNoErrors()
+            ->assertSet('hasStarted', true)
+            ->assertSet('participantIdentifier', $student->name . ' (Kelas 8)');
+
+        $this->assertNotEmpty($component->get('questions'));
+    }
 }

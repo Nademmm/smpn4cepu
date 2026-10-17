@@ -1059,6 +1059,59 @@
         background-color: #1e293b !important;
     }
 
+    /* Tombol Navigasi Kembali ke Website Utama di Topbar */
+    .fi-topbar-home-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.45rem !important;
+        padding: 0.4rem 0.85rem !important;
+        border-radius: 0.625rem !important;
+        font-size: 0.8125rem !important;
+        font-weight: 800 !important;
+        text-decoration: none !important;
+        transition: all 0.15s ease-in-out !important;
+        cursor: pointer !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        margin-inline-end: 0.5rem !important;
+    }
+
+    html:not(.dark) .fi-topbar-home-btn {
+        background-color: #fef3c7 !important;
+        color: #92400e !important;
+        border: 1.5px solid #fde68a !important;
+        box-shadow: 0 1px 2px rgba(217, 119, 6, 0.08) !important;
+    }
+
+    html:not(.dark) .fi-topbar-home-btn:hover {
+        background-color: #fde68a !important;
+        color: #78350f !important;
+        border-color: #f59e0b !important;
+        box-shadow: 0 2px 4px rgba(217, 119, 6, 0.18) !important;
+    }
+
+    html.dark .fi-topbar-home-btn {
+        background-color: rgba(217, 119, 6, 0.2) !important;
+        color: #fcd34d !important;
+        border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
+    }
+
+    html.dark .fi-topbar-home-btn:hover {
+        background-color: rgba(217, 119, 6, 0.35) !important;
+        color: #ffffff !important;
+        border-color: #f59e0b !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    @media (max-width: 640px) {
+        .fi-topbar-home-btn span {
+            display: none !important;
+        }
+        .fi-topbar-home-btn {
+            padding: 0.45rem !important;
+        }
+    }
+
     /* 9b. Global Search & Tombol Silang (Cancel Button) UX */
     .fi-global-search-ctn {
         max-width: 480px !important;
