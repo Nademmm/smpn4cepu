@@ -794,21 +794,79 @@
         min-height: 18px !important;
         border-radius: 0.35rem !important;
         cursor: pointer !important;
-        accent-color: #d97706 !important;
         margin: 0 !important;
         vertical-align: middle !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        display: inline-block !important;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
     }
 
-    html:not(.dark) input[type="checkbox"].fi-checkbox-input,
-    html:not(.dark) #form\.remember {
+    /* Unchecked State */
+    html:not(.dark) input[type="checkbox"].fi-checkbox-input:not(:checked):not(:indeterminate),
+    html:not(.dark) #form\.remember:not(:checked):not(:indeterminate) {
         border: 1.5px solid #cbd5e1 !important;
         background-color: #ffffff !important;
+        background-image: none !important;
     }
 
-    html.dark input[type="checkbox"].fi-checkbox-input,
-    html.dark #form\.remember {
+    html.dark input[type="checkbox"].fi-checkbox-input:not(:checked):not(:indeterminate),
+    html.dark #form\.remember:not(:checked):not(:indeterminate) {
         border: 1.5px solid #475569 !important;
         background-color: #1e293b !important;
+        background-image: none !important;
+    }
+
+    /* Hover State (Unchecked) */
+    html:not(.dark) input[type="checkbox"].fi-checkbox-input:not(:checked):not(:indeterminate):hover,
+    html:not(.dark) #form\.remember:not(:checked):not(:indeterminate):hover {
+        border-color: #94a3b8 !important;
+    }
+
+    html.dark input[type="checkbox"].fi-checkbox-input:not(:checked):not(:indeterminate):hover,
+    html.dark #form\.remember:not(:checked):not(:indeterminate):hover {
+        border-color: #64748b !important;
+    }
+
+    /* Checked State: Warna Latar Tema Amber & Ikon Centang Putih Yang Jelas */
+    input[type="checkbox"].fi-checkbox-input:checked,
+    #form\.remember:checked {
+        border: 1.5px solid #d97706 !important;
+        background-color: #d97706 !important;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%23fff' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z'/%3E%3C/svg%3E") !important;
+        background-size: 100% 100% !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+    }
+
+    html.dark input[type="checkbox"].fi-checkbox-input:checked,
+    html.dark #form\.remember:checked {
+        border-color: #f59e0b !important;
+        background-color: #f59e0b !important;
+    }
+
+    /* Indeterminate State (Garis Horizontal Ketika Sebagian Data Dipilih) */
+    input[type="checkbox"].fi-checkbox-input:indeterminate,
+    #form\.remember:indeterminate {
+        border: 1.5px solid #d97706 !important;
+        background-color: #d97706 !important;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%23fff' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.5 6.75a1.25 1.25 0 0 0 0 2.5h7a1.25 1.25 0 0 0 0-2.5h-7z'/%3E%3C/svg%3E") !important;
+        background-size: 100% 100% !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+    }
+
+    html.dark input[type="checkbox"].fi-checkbox-input:indeterminate,
+    html.dark #form\.remember:indeterminate {
+        border-color: #f59e0b !important;
+        background-color: #f59e0b !important;
+    }
+
+    /* Focus State */
+    input[type="checkbox"].fi-checkbox-input:focus,
+    #form\.remember:focus {
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25) !important;
     }
 
     html:not(.dark) label[for="form.remember"] .fi-fo-field-label-content {
