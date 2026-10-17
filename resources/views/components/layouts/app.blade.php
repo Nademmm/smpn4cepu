@@ -369,12 +369,15 @@
                     class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
                 >
                     <a href="{{ route('materials') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('materials') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="book" class="w-4 h-4 text-brand shrink-0" />
                         <span>Materi Pelajaran</span>
                     </a>
                     <a href="{{ route('quizzes') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('quizzes') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="quiz" class="w-4 h-4 text-brand shrink-0" />
                         <span>Latihan Soal Mandiri</span>
                     </a>
                     <a href="{{ route('library') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('library') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="book" class="w-4 h-4 text-brand shrink-0" />
                         <span>Perpustakaan Digital</span>
                     </a>
                 </div>
@@ -406,12 +409,15 @@
                         <span>Ekstrakurikuler & Bakat</span>
                     </a>
                     <a href="{{ route('pilketos') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('pilketos') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="vote" class="w-4 h-4 text-brand shrink-0" />
                         <span>Bilik Suara E-Voting</span>
                     </a>
                     <a href="{{ route('pilketos.live') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('pilketos.live') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="chart" class="w-4 h-4 text-brand shrink-0" />
                         <span>Quick Count Suara Real-Time</span>
                     </a>
                     <a href="{{ route('gallery') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('gallery') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="photo" class="w-4 h-4 text-brand shrink-0" />
                         <span>Galeri Foto Kegiatan</span>
                     </a>
                 </div>
@@ -439,12 +445,15 @@
                     class="px-3 pb-2.5 pt-1 space-y-1 border-t border-sun-soft/40 bg-white"
                 >
                     <a href="{{ route('posts') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('posts*') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="news" class="w-4 h-4 text-brand shrink-0" />
                         <span>Berita & Pengumuman</span>
                     </a>
                     <a href="{{ route('downloads') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('downloads') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="download" class="w-4 h-4 text-brand shrink-0" />
                         <span>Pusat Unduhan Berkas</span>
                     </a>
                     <a href="{{ route('contact') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold transition-colors {{ request()->routeIs('contact') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:bg-cream' }}">
+                        <x-app-icon name="phone" class="w-4 h-4 text-brand shrink-0" />
                         <span>Kontak & Lokasi</span>
                     </a>
                 </div>
