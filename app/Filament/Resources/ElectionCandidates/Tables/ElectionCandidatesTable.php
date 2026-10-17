@@ -25,8 +25,7 @@ class ElectionCandidatesTable
                 ImageColumn::make('photo_path')
                     ->label('Foto Paslon')
                     ->circular()
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => $record->photo_url),
+                    ->getStateUsing(fn ($record) => $record->photo_url),
                 TextColumn::make('candidate_name')
                     ->label('Calon Ketua OSIS')
                     ->searchable()

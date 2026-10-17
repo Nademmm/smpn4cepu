@@ -34,6 +34,8 @@ class PostForm
                     ->searchable()
                     ->preload()
                     ->default(fn () => auth()->id())
+                    ->disabled(fn () => !auth()->user()?->hasRole('super_admin'))
+                    ->dehydrated()
                     ->required(),
 
                 TextInput::make('title')

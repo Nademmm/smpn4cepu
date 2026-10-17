@@ -150,12 +150,18 @@ Pastikan file `public/.htaccess` memuat konfigurasi bypass caching untuk Filamen
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# Bypass LiteSpeed Cache untuk Filament Admin dan Livewire requests
+# Bypass LiteSpeed Cache untuk rute dinamis (Admin, Livewire, Pilketos, Auth, Materi, Kuis, Reservasi)
 <IfModule LiteSpeed>
     CacheLookup on
-    RewriteCond %{REQUEST_URI} ^/admin [OR]
-    RewriteCond %{REQUEST_URI} ^/livewire
+    RewriteCond %{REQUEST_URI} ^/(admin|livewire|pilketos|login|logout|materi|latihan-soal|perpustakaan/reservasi)
     RewriteRule .* - [E=Cache-Control:no-cache]
+</IfModule>
+
+# Header Keamanan HTTP Standar
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 ```
 
@@ -175,17 +181,22 @@ Isi dari `deploy.sh`:
 #!/bin/bash
 set -e
 
-echo "==> [1/6] Memasang dependensi Composer..."
+echo "==> [1/6] Memasang dependensi Composer & membangun aset Frontend..."
 composer install --no-dev --optimize-autoloader --no-interaction
+if command -v npm >/dev/null 2>&1; then
+    npm ci --no-audit && npm run build
+fi
 
 echo "==> [2/6] Menjalankan migrasi basis data..."
 php artisan migrate --force
 
-echo "==> [3/6] Mengoptimalkan caching konfigurasi, route, dan view..."
+echo "==> [3/6] Mengoptimalkan caching konfigurasi, route, view, dan komponen..."
+php artisan filament:assets || true
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
+php artisan icons:cache || true
 php artisan filament:cache-components || true
 
 echo "==> [4/6] Memperbarui tautan storage (Symlink)..."

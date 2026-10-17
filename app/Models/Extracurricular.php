@@ -29,9 +29,18 @@ class Extracurricular extends Model
 
     protected static function booted(): void
     {
-        static::creating(function ($model) {
+        static::saving(function ($model) {
             if (empty($model->slug)) {
                 $model->slug = Str::slug($model->name);
+            }
+
+            $baseSlug = $model->slug;
+            $counter = 1;
+
+            while (static::where('slug', $model->slug)
+                ->when($model->exists, fn ($q) => $q->where('id', '!=', $model->id))
+                ->exists()) {
+                $model->slug = $baseSlug . '-' . $counter++;
             }
         });
     }

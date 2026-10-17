@@ -22,8 +22,8 @@
             @foreach ($levels as $lvl)
                 <button
                     type="button"
-                    @click="activeLevel = '{{ $lvl }}'"
-                    :class="activeLevel === '{{ $lvl }}' ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
+                    @click="activeLevel = @js($lvl)"
+                    :class="activeLevel === @js($lvl) ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
                     class="px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all"
                 >
                     Tingkat {{ $lvl }}
@@ -35,7 +35,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($achievements as $ach)
                 <div
-                    x-show="activeLevel === 'Semua' || activeLevel === '{{ $ach->level }}'"
+                    x-show="activeLevel === 'Semua' || activeLevel === @js($ach->level)"
                     x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 scale-95"
                     x-transition:enter-end="opacity-100 scale-100"
@@ -47,6 +47,8 @@
                                 <img
                                     src="{{ $ach->photo_url }}"
                                     alt="{{ $ach->title }}"
+                                    loading="lazy"
+                                    decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 >
                                 <span class="absolute top-3 left-3 bg-sun text-navy font-black text-xs px-3 py-1 rounded-full uppercase shadow-xs">

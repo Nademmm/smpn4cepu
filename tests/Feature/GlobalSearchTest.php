@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Filament\GlobalSearch\SmartGlobalSearchProvider;
-use App\Models\Post;
 use App\Models\StaffMember;
 use App\Models\User;
 use Filament\Facades\Filament;
@@ -17,8 +16,12 @@ class GlobalSearchTest extends TestCase
         Filament::setCurrentPanel(Filament::getPanel('admin'));
     }
 
-    public function test_smart_global_search_finds_navigation_pages(): void
+    public function test_smart_global_search_finds_navigation_pages_for_authorized_user(): void
     {
+        $admin = User::where('email', 'admin@smpn4cepu.sch.id')->first();
+        $this->assertNotNull($admin);
+        $this->actingAs($admin);
+
         $provider = new SmartGlobalSearchProvider();
 
         $results = $provider->getResults('guru');
@@ -34,8 +37,8 @@ class GlobalSearchTest extends TestCase
         $admin = User::where('email', 'admin@smpn4cepu.sch.id')->first();
         $this->assertNotNull($admin);
 
-        $staff = StaffMember::firstOrCreate(
-            ['nip' => '198501012010011001'],
+        StaffMember::firstOrCreate(
+            ['nip' => '198501012010011099'],
             [
                 'name' => 'Budi Santoso S.Pd',
                 'position' => 'Guru Matematika',
@@ -48,7 +51,6 @@ class GlobalSearchTest extends TestCase
 
         $provider = new SmartGlobalSearchProvider();
 
-        // Search record 'Budi'
         $staffResults = $provider->getResults('Budi');
         $this->assertNotNull($staffResults);
         $this->assertTrue($staffResults->getCategories()->has('Data Guru & Staf'));

@@ -53,7 +53,7 @@ Dokumentasi lengkap dan spesifikasi teknis mendalam tersedia pada direktori [`do
 - **Skor Otomatis & Pembahasan**: Penilaian instan skala 100 dengan indikator kelulusan (*passing grade*) serta lembar pembahasan reflektif.
 
 ### 5. Panel Administrasi Terpusat (Filament PHP v3 + Filament Shield)
-- Single Back-Office di `/admin` dengan 9 resource CRUD (Berita, GTK, Fasilitas, Statistik Siswa, Buku, Mapel, Materi, Bank Soal, dan Paslon Pilketos).
+- Single Back-Office di `/admin` dengan 18 resource CRUD (Berita, Pengumuman, Agenda, Prestasi, Ekstrakurikuler, Galeri, GTK, Fasilitas, Statistik Siswa, Buku, Peminjaman Buku, Mapel, Materi, Bank Soal, Sesi Ujian, Paslon Pilketos, Pemilih/Perangkat, dan Manajemen Pengguna/Peran).
 - Dashboard Widget pemantau metrik sekolah dan grafik perolehan suara Pilketos live polling.
 - Role-Based Access Control (RBAC) granular membedakan hak akses Admin, Guru, Pustakawan, dan Panitia Pilketos.
 
@@ -63,19 +63,20 @@ Dokumentasi lengkap dan spesifikasi teknis mendalam tersedia pada direktori [`do
 
 Seluruh akun telah diisi melalui `DatabaseSeeder` dengan hak akses peran terverifikasi:
 
-| Peran (Role) | Alamat Email | Kata Sandi | Akses Panel `/admin` |
+| Peran (Role) | Alamat Email / NISN | Kata Sandi | Akses Panel / Portal |
 | :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@smpn4cepu.sch.id` | `AdminCepu2026!` | Hak penuh atas seluruh modul dan manajemen role |
-| **Guru** | `guru@smpn4cepu.sch.id` | `GuruCepu2026!` | Pengelolaan materi ajar, bank soal, dan posting berita |
-| **Staf Perpus** | `perpus@smpn4cepu.sch.id` | `PerpusCepu2026!` | Pengelolaan katalog dan stok buku perpustakaan |
-| **Panitia Pilketos** | `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pengelolaan kandidat paslon dan pemantauan suara |
+| **Super Admin** | `admin@smpn4cepu.sch.id` | `AdminCepu2026!` | Hak penuh atas seluruh modul dan manajemen role di `/admin` |
+| **Guru** | `guru@smpn4cepu.sch.id` | `GuruCepu2026!` | Pengelolaan materi ajar, bank soal, dan posting berita di `/admin` |
+| **Staf Perpus** | `perpus@smpn4cepu.sch.id` | `PerpusCepu2026!` | Pengelolaan katalog, peminjaman, dan stok buku perpustakaan di `/admin` |
+| **Panitia Pilketos** | `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pengelolaan kandidat paslon dan pemantauan suara di `/admin` |
+| **Siswa** | `ahmad.fauzi@siswa.smpn4cepu.sch.id` (NISN: `0081234567`) | `password123` | Portal belajar siswa (`/login`), latihan soal CBT, Pilketos, dan reservasi buku |
 
 ---
 
 ## 🛠️ Instalasi & Menjalankan di Lokal
 
 ### Prasyarat
-- PHP 8.2 atau lebih baru (Ekstensi aktif: `pdo_mysql`, `intl`, `mbstring`, `fileinfo`, `curl`)
+- PHP 8.2 atau lebih baru (Ekstensi aktif: `pdo_mysql`, `pdo_sqlite`, `intl`, `mbstring`, `fileinfo`, `curl`, `gd`, `exif`)
 - Composer 2.x
 - Node.js 18+ & NPM
 
@@ -92,11 +93,29 @@ npm install
 cp .env.example .env
 php artisan key:generate
 
-# 4. Jalankan migrasi basis data dan seeding data resmi
+# 4. Jalankan migrasi basis data, seeding data resmi, dan tautkan storage publik
 php artisan migrate:fresh --seed
+php artisan storage:link
 
 # 5. Kompilasi aset frontend (Tailwind CSS & Chart.js)
 npm run build
 
 # 6. Jalankan server lokal
 php artisan serve
+```
+
+---
+
+## 🧪 Pengujian Otomatis (Automated Testing)
+
+Proyek ini dilengkapi dengan suite pengujian otomatis menggunakan **PHPUnit** untuk memastikan keandalan fitur portal publik, autentikasi siswa, keamanan kuis CBT (*Zero Client Leakage*), reservasi perpustakaan, serta pemungutan suara Pilketos:
+
+```bash
+# Menjalankan seluruh pengujian otomatis
+composer test
+# atau langsung melalui Artisan
+php artisan test
+
+# Memeriksa standar format kode (Laravel Pint)
+composer lint
+```

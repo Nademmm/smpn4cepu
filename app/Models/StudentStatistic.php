@@ -26,6 +26,13 @@ class StudentStatistic extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $model) {
+            $model->total_count = (int) $model->male_count + (int) $model->female_count;
+        });
+    }
+
     public function scopeYear(Builder $query, string $year): Builder
     {
         return $query->where('academic_year', $year);

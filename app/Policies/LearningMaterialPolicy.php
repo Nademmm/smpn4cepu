@@ -60,12 +60,28 @@ class LearningMaterialPolicy
 
     public function restore(AuthUser $authUser, LearningMaterial $learningMaterial): bool
     {
-        return $authUser->can('Restore:LearningMaterial');
+        if (!$authUser->can('Restore:LearningMaterial')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $learningMaterial->created_by === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, LearningMaterial $learningMaterial): bool
     {
-        return $authUser->can('ForceDelete:LearningMaterial');
+        if (!$authUser->can('ForceDelete:LearningMaterial')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $learningMaterial->created_by === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
@@ -80,7 +96,15 @@ class LearningMaterialPolicy
 
     public function replicate(AuthUser $authUser, LearningMaterial $learningMaterial): bool
     {
-        return $authUser->can('Replicate:LearningMaterial');
+        if (!$authUser->can('Replicate:LearningMaterial')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $learningMaterial->created_by === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function reorder(AuthUser $authUser): bool

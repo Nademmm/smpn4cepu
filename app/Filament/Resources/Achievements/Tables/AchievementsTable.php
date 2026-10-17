@@ -19,8 +19,7 @@ class AchievementsTable
             ->columns([
                 ImageColumn::make('photo_path')
                     ->label('Foto Piala')
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => $record->photo_url),
+                    ->getStateUsing(fn ($record) => $record->photo_url),
                 TextColumn::make('title')
                     ->label('Nama Prestasi')
                     ->searchable()

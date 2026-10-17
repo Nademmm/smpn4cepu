@@ -54,6 +54,10 @@
         @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full bg-sun px-6 py-2.5 font-extrabold text-navy transition-all hover:bg-sun-hover active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-ink-mute;
     }
 
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full bg-brand px-6 py-2.5 font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-brand-dark active:scale-[0.98];
+    }
+
     .btn-outline {
         @apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-extrabold text-white transition-colors hover:bg-white/10;
     }
@@ -104,5 +108,31 @@
 
     .section-title {
         @apply text-2xl font-extrabold text-navy;
+    }
+}
+
+@layer utilities {
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.25s ease-out forwards;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

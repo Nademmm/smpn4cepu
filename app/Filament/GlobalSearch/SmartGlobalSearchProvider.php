@@ -59,126 +59,151 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
 
     protected function searchNavigation(string $query): \Illuminate\Support\Collection
     {
+        $user = auth()->user();
+
         $routes = [
             [
                 'title' => 'Dashboard Utama',
                 'group' => 'Panel Utama',
                 'keywords' => ['dashboard', 'beranda', 'home', 'ringkasan', 'statistik', 'utama'],
                 'routeName' => 'filament.admin.pages.dashboard',
+                'permission' => null,
             ],
             [
                 'title' => 'Berita & Artikel',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['berita', 'artikel', 'post', 'informasi', 'kegiatan', 'pengumuman', 'warta'],
                 'routeName' => 'filament.admin.resources.posts.index',
+                'permission' => 'ViewAny:Post',
             ],
             [
                 'title' => 'Tulis Berita Baru',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['buat berita', 'tambah berita', 'tulis berita', 'buat artikel', 'tambah artikel', 'post baru'],
                 'routeName' => 'filament.admin.resources.posts.create',
+                'permission' => 'Create:Post',
             ],
             [
                 'title' => 'Data Guru & Staf',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['guru', 'staf', 'staff', 'tenaga pendidik', 'karyawan', 'pegawai', 'pengajar', 'wali kelas'],
                 'routeName' => 'filament.admin.resources.staff-members.index',
+                'permission' => 'ViewAny:StaffMember',
             ],
             [
                 'title' => 'Tambah Guru / Staf',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['tambah guru', 'tambah staf', 'input guru', 'tambah pengajar', 'daftar guru'],
                 'routeName' => 'filament.admin.resources.staff-members.create',
+                'permission' => 'Create:StaffMember',
             ],
             [
                 'title' => 'Fasilitas Sekolah',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['fasilitas', 'sarana', 'prasarana', 'gedung', 'laboratorium', 'ruang', 'lapangan', 'kelas', 'lab'],
                 'routeName' => 'filament.admin.resources.school-facilities.index',
+                'permission' => 'ViewAny:SchoolFacility',
             ],
             [
                 'title' => 'Tambah Fasilitas',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['tambah fasilitas', 'tambah sarana', 'input gedung', 'tambah lab'],
                 'routeName' => 'filament.admin.resources.school-facilities.create',
+                'permission' => 'Create:SchoolFacility',
             ],
             [
                 'title' => 'Materi Pembelajaran',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['materi', 'modul', 'bahan ajar', 'pembelajaran', 'e-learning', 'dokumen materi', 'materi ajar'],
                 'routeName' => 'filament.admin.resources.learning-materials.index',
+                'permission' => 'ViewAny:LearningMaterial',
             ],
             [
                 'title' => 'Unggah Materi Baru',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['tambah materi', 'unggah materi', 'upload materi', 'buat modul', 'input materi'],
                 'routeName' => 'filament.admin.resources.learning-materials.create',
+                'permission' => 'Create:LearningMaterial',
             ],
             [
                 'title' => 'Katalog Buku Perpustakaan',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['buku', 'perpustakaan', 'katalog', 'pustaka', 'literasi', 'bacaan', 'novel', 'pelajaran'],
                 'routeName' => 'filament.admin.resources.library-books.index',
+                'permission' => 'ViewAny:LibraryBook',
             ],
             [
                 'title' => 'Tambah Buku Perpustakaan',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['tambah buku', 'input buku', 'katalog baru', 'buku baru'],
                 'routeName' => 'filament.admin.resources.library-books.create',
+                'permission' => 'Create:LibraryBook',
             ],
             [
                 'title' => 'Bank Soal & Ujian',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['soal', 'bank soal', 'ujian', 'cbt', 'asesmen', 'tes', 'evaluasi', 'kuis'],
                 'routeName' => 'filament.admin.resources.question-banks.index',
+                'permission' => 'ViewAny:QuestionBank',
             ],
             [
                 'title' => 'Buat Bank Soal Baru',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['tambah soal', 'buat soal', 'tambah ujian', 'buat ujian', 'input soal'],
                 'routeName' => 'filament.admin.resources.question-banks.create',
+                'permission' => 'Create:QuestionBank',
             ],
             [
                 'title' => 'Mata Pelajaran',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['mapel', 'mata pelajaran', 'kurikulum', 'pelajaran', 'bidang studi'],
                 'routeName' => 'filament.admin.resources.subjects.index',
+                'permission' => 'ViewAny:Subject',
             ],
             [
                 'title' => 'Tambah Mata Pelajaran',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['tambah mapel', 'tambah mata pelajaran', 'input mapel'],
                 'routeName' => 'filament.admin.resources.subjects.create',
+                'permission' => 'Create:Subject',
             ],
             [
                 'title' => 'Kandidat Paslon Pilketos',
                 'group' => 'Kesiswaan & Pilketos',
                 'keywords' => ['pilketos', 'osis', 'paslon', 'kandidat', 'pemilihan', 'ketua osis', 'suara'],
                 'routeName' => 'filament.admin.resources.election-candidates.index',
+                'permission' => 'ViewAny:ElectionCandidate',
             ],
             [
                 'title' => 'Tambah Paslon Pilketos',
                 'group' => 'Kesiswaan & Pilketos',
                 'keywords' => ['tambah paslon', 'tambah kandidat', 'daftar paslon', 'calon ketua'],
                 'routeName' => 'filament.admin.resources.election-candidates.create',
+                'permission' => 'Create:ElectionCandidate',
             ],
             [
                 'title' => 'Statistik Siswa',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['statistik', 'siswa', 'demografi', 'data siswa', 'grafik siswa', 'rekap siswa', 'jumlah siswa'],
                 'routeName' => 'filament.admin.resources.student-statistics.index',
+                'permission' => 'ViewAny:StudentStatistic',
             ],
             [
                 'title' => 'Kelola Data Statistik Siswa',
                 'group' => 'Profil & Informasi',
                 'keywords' => ['tambah statistik', 'input siswa', 'tambah data siswa'],
                 'routeName' => 'filament.admin.resources.student-statistics.create',
+                'permission' => 'Create:StudentStatistic',
             ],
         ];
 
         $results = collect();
 
         foreach ($routes as $route) {
+            if (!empty($route['permission']) && (!$user || !$user->can($route['permission']))) {
+                continue;
+            }
+
             $titleMatch = Str::contains(Str::lower($route['title']), $query);
             $groupMatch = Str::contains(Str::lower($route['group']), $query);
             $keywordMatch = false;

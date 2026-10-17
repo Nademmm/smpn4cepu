@@ -34,8 +34,8 @@
                 @foreach ($tags as $tag)
                     <button
                         type="button"
-                        @click="selectedTag = '{{ $tag }}'"
-                        :class="selectedTag === '{{ $tag }}' ? 'bg-brand text-white border-brand shadow-xs' : 'bg-white text-navy hover:bg-sky-soft border-sun-soft'"
+                        @click="selectedTag = @js($tag)"
+                        :class="selectedTag === @js($tag) ? 'bg-brand text-white border-brand shadow-xs' : 'bg-white text-navy hover:bg-sky-soft border-sun-soft'"
                         class="text-xs font-extrabold px-4 py-2 rounded-full border transition-all shrink-0 cursor-pointer"
                     >
                         {{ $tag }}
@@ -58,10 +58,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($photos as $p)
                     <div
-                        x-show="selectedTag === 'Semua' || selectedTag === '{{ $p->tag }}'"
+                        x-show="selectedTag === 'Semua' || selectedTag === @js($p->tag)"
                         x-transition
-                        class="card p-0 overflow-hidden flex flex-col justify-between hover:border-brand transition-all group cursor-pointer shadow-xs"
-                        @click="openPreview('{{ $p->photo_url }}', '{{ addslashes($p->title) }}', '{{ addslashes($p->caption ?? '') }}')"
+                        tabindex="0"
+                        role="button"
+                        aria-label="Lihat foto {{ $p->title }}"
+                        class="card p-0 overflow-hidden flex flex-col justify-between hover:border-brand focus:outline-none focus:ring-2 focus:ring-brand transition-all group cursor-pointer shadow-xs"
+                        @click="openPreview(@js($p->photo_url), @js($p->title), @js($p->caption ?? ''))"
+                        @keydown.enter.prevent="openPreview(@js($p->photo_url), @js($p->title), @js($p->caption ?? ''))"
+                        @keydown.space.prevent="openPreview(@js($p->photo_url), @js($p->title), @js($p->caption ?? ''))"
                     >
                         <div>
                             <div class="relative overflow-hidden">
@@ -70,6 +75,7 @@
                                     alt="{{ $p->title }}"
                                     class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
                                     loading="lazy"
+                                    decoding="async"
                                 >
                                 <div class="absolute inset-0 bg-navy/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                                     <span class="bg-white/90 text-navy text-xs font-black px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
@@ -99,6 +105,9 @@
             <div
                 x-show="activeImage !== null"
                 x-cloak
+                role="dialog"
+                aria-modal="true"
+                :aria-label="activeTitle || 'Pratinjau foto'"
                 @keydown.escape.window="activeImage = null"
                 class="fixed inset-0 z-[100] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm overflow-y-auto"
             >
@@ -108,7 +117,7 @@
                 >
                     <div class="flex items-center justify-between pb-2 border-b-2 border-sun-soft">
                         <h3 class="font-extrabold text-navy text-base" x-text="activeTitle"></h3>
-                        <button type="button" @click="activeImage = null" class="p-1 rounded-lg text-ink-mute hover:text-navy">
+                        <button type="button" @click="activeImage = null" aria-label="Tutup pratinjau foto" class="p-2 rounded-lg text-ink-mute hover:text-navy">
                             <x-app-icon name="x" class="w-5 h-5" />
                         </button>
                     </div>

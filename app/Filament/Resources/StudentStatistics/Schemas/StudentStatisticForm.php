@@ -26,6 +26,7 @@ class StudentStatisticForm
                 TextInput::make('class_name')
                     ->label('Nama Rombel / Kelas')
                     ->required()
+                    ->unique(ignoreRecord: true, modifyRuleUsing: fn (\Illuminate\Validation\Rules\Unique $rule, $get) => $rule->where('academic_year', $get('academic_year')))
                     ->placeholder('Contoh: VII-A, VIII-B, IX-C'),
 
                 TextInput::make('male_count')
@@ -57,6 +58,7 @@ class StudentStatisticForm
                     ->required()
                     ->numeric()
                     ->default(0)
+                    ->readOnly()
                     ->helperText('Dihitung otomatis dari penjumlahan siswa laki-laki dan perempuan.'),
             ]);
     }

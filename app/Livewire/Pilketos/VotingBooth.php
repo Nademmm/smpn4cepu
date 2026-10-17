@@ -42,7 +42,7 @@ class VotingBooth extends Component
 
     public function submitVote(PilketosFingerprintService $fingerprintService, Request $request): void
     {
-        if (!$this->selectedCandidateId) {
+        if (!$this->selectedCandidateId || !ElectionCandidate::whereKey($this->selectedCandidateId)->exists()) {
             $this->errorMessage = 'Silakan pilih salah satu kandidat terlebih dahulu.';
             return;
         }
@@ -50,8 +50,13 @@ class VotingBooth extends Component
         try {
             $fingerprintService->recordVote($request, $this->selectedCandidateId, $this->clientHardwareHash);
             $this->hasVoted = true;
-        } catch (\Exception $e) {
+        } catch (\RuntimeException $e) {
             $this->errorMessage = $e->getMessage();
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pilketos vote submission error: ' . $e->getMessage(), [
+                'candidate_id' => $this->selectedCandidateId,
+            ]);
+            $this->errorMessage = 'Terjadi kendala teknis saat menyimpan suara. Silakan coba kembali.';
         }
     }
 

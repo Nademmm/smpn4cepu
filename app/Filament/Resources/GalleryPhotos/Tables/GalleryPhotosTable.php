@@ -19,7 +19,7 @@ class GalleryPhotosTable
             ->columns([
                 ImageColumn::make('photo_path')
                     ->label('Foto')
-                    ->defaultImageUrl(fn ($record) => $record->photo_url)
+                    ->getStateUsing(fn ($record) => $record->photo_url)
                     ->square(),
 
                 TextColumn::make('title')

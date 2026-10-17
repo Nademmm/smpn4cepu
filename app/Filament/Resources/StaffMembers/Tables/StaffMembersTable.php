@@ -20,8 +20,7 @@ class StaffMembersTable
                 ImageColumn::make('photo_path')
                     ->label('Foto')
                     ->circular()
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => $record->photo_url),
+                    ->getStateUsing(fn ($record) => $record->photo_url),
                 TextColumn::make('name')
                     ->label('Nama Pendidik / Tendik')
                     ->searchable()

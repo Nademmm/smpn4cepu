@@ -51,6 +51,7 @@ class SchoolDocumentForm
                     ->directory('documents')
                     ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                     ->maxSize(15360) // Maksimal 15 MB
+                    ->required()
                     ->columnSpanFull(),
 
                 TextInput::make('file_size')

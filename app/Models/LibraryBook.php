@@ -28,6 +28,8 @@ class LibraryBook extends Model
         'digital_file_path',
     ];
 
+    protected $appends = ['cover_url', 'digital_file_url'];
+
     protected function casts(): array
     {
         return [

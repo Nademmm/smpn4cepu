@@ -8,21 +8,55 @@ use App\Services\QuizAssessmentService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 
 class QuizRoom extends Component
 {
+    #[Locked]
     public int $bankId;
+
     public ?QuestionBank $bank = null;
+
+    #[Locked]
+    public string $bankTitle = '';
+
+    #[Locked]
+    public string $subjectName = '';
+
+    #[Locked]
+    public int $durationMinutes = 30;
+
+    #[Locked]
+    public int $passingGrade = 75;
+
     public string $studentName = '';
     public string $studentClass = '';
+
+    #[Locked]
     public bool $hasStarted = false;
+
+    #[Locked]
     public string $participantIdentifier = '';
+
+    #[Locked]
     public array $questions = [];
+
     public array $answers = []; // [question_id => selected_option_id]
+
+    #[Locked]
     public int $durationSeconds = 1800; // Default 30 menit
+
+    #[Locked]
     public ?Carbon $startedAt = null;
+
+    #[Locked]
     public bool $isFinished = false;
+
+    #[Locked]
     public ?array $resultSummary = null;
 
     // Autentikasi Siswa
@@ -39,10 +73,20 @@ class QuizRoom extends Component
     public function mount(int $bankId, QuizAssessmentService $assessmentService): void
     {
         $this->bankId = $bankId;
+        $this->bank = QuestionBank::with('subject')->where('is_active', true)->find($bankId);
+
+        if (!$this->bank) {
+            abort(404);
+        }
+
+        $this->bankTitle = (string) $this->bank->title;
+        $this->subjectName = (string) ($this->bank->subject?->name ?? 'Mata Pelajaran');
+        $this->durationMinutes = (int) ($this->bank->duration_minutes ?: 30);
+        $this->passingGrade = (int) ($this->bank->passing_grade ?? 75);
+
         $this->questions = $assessmentService->getQuestionsForQuiz($bankId)->toArray();
 
-        $this->bank = QuestionBank::with('subject')->find($bankId);
-        if ($this->bank && $this->bank->duration_minutes > 0) {
+        if ($this->bank->duration_minutes > 0) {
             $this->durationSeconds = $this->bank->duration_minutes * 60;
         }
 
@@ -66,6 +110,12 @@ class QuizRoom extends Component
         $this->authErrorMessage = '';
         $this->authSuccessMessage = '';
 
+        $throttleKey = 'quiz-login:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $this->authErrorMessage = 'Terlalu banyak percobaan masuk. Silakan coba lagi dalam ' . RateLimiter::availableIn($throttleKey) . ' detik.';
+            return;
+        }
+
         $this->validate([
             'loginEmail' => 'required|string',
             'loginPassword' => 'required|string',
@@ -74,17 +124,23 @@ class QuizRoom extends Component
             'loginPassword.required' => 'Kata sandi wajib diisi.',
         ]);
 
-        $credentials = ['email' => trim($this->loginEmail), 'password' => $this->loginPassword];
+        $input = trim($this->loginEmail);
+        $user = User::where('email', $input)->orWhere('nisn', $input)->first();
 
-        if (Auth::attempt($credentials, true)) {
+        if ($user && Auth::attempt(['email' => $user->email, 'password' => $this->loginPassword], true)) {
+            RateLimiter::clear($throttleKey);
             session()->regenerate();
             $this->studentName = Auth::user()->name;
+            if (!empty(Auth::user()->student_class)) {
+                $this->studentClass = Auth::user()->student_class;
+            }
             $this->authSuccessMessage = 'Berhasil masuk sebagai ' . Auth::user()->name . '.';
             $this->loginEmail = '';
             $this->loginPassword = '';
             return;
         }
 
+        RateLimiter::hit($throttleKey, 60);
         $this->authErrorMessage = 'Email / NISN atau kata sandi tidak cocok. Silakan periksa kembali.';
     }
 
@@ -92,6 +148,12 @@ class QuizRoom extends Component
     {
         $this->authErrorMessage = '';
         $this->authSuccessMessage = '';
+
+        $throttleKey = 'quiz-register:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $this->authErrorMessage = 'Terlalu banyak percobaan pendaftaran. Silakan coba lagi dalam ' . RateLimiter::availableIn($throttleKey) . ' detik.';
+            return;
+        }
 
         $this->validate([
             'regName' => 'required|string|min:3|max:100',
@@ -108,12 +170,16 @@ class QuizRoom extends Component
             'regPassword.min' => 'Kata sandi minimal 6 karakter.',
         ]);
 
+        RateLimiter::hit($throttleKey, 300);
+
         $user = User::create([
             'name' => trim($this->regName),
             'email' => strtolower(trim($this->regEmail)),
+            'student_class' => trim($this->regClass),
             'password' => Hash::make($this->regPassword),
         ]);
 
+        Role::firstOrCreate(['name' => 'siswa']);
         $user->assignRole('siswa');
         Auth::login($user, true);
         session()->regenerate();
@@ -155,18 +221,30 @@ class QuizRoom extends Component
 
     public function submitQuiz(QuizAssessmentService $assessmentService): void
     {
+        if (!Auth::check() || !$this->hasStarted || $this->isFinished) {
+            return;
+        }
+
         $userId = Auth::id();
 
-        $attempt = $assessmentService->submitAttempt(
-            $this->bankId,
-            $this->participantIdentifier ?: ($this->studentName . ' (' . $this->studentClass . ')'),
-            $this->answers,
-            $this->startedAt ?? now(),
-            $userId
-        );
+        try {
+            $attempt = $assessmentService->submitAttempt(
+                $this->bankId,
+                $this->participantIdentifier ?: ($this->studentName . ' (' . $this->studentClass . ')'),
+                $this->answers,
+                $this->startedAt ?? now(),
+                $userId
+            );
 
-        $this->resultSummary = $assessmentService->getReviewDetails($attempt->id);
-        $this->isFinished = true;
+            $this->resultSummary = $assessmentService->getReviewDetails($attempt->id);
+            $this->isFinished = true;
+        } catch (\Throwable $e) {
+            Log::error('Gagal menyimpan hasil kuis: ' . $e->getMessage(), [
+                'bank_id' => $this->bankId,
+                'user_id' => $userId,
+            ]);
+            $this->authErrorMessage = 'Terjadi kendala saat memproses hasil kuis. Silakan coba lagi.';
+        }
     }
 
     public function render()

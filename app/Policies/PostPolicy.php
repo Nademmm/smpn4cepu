@@ -29,12 +29,28 @@ class PostPolicy
 
     public function update(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Update:Post');
+        if (!$authUser->can('Update:Post')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $post->author_id === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function delete(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Delete:Post');
+        if (!$authUser->can('Delete:Post')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $post->author_id === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function deleteAny(AuthUser $authUser): bool
@@ -44,12 +60,28 @@ class PostPolicy
 
     public function restore(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Restore:Post');
+        if (!$authUser->can('Restore:Post')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $post->author_id === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('ForceDelete:Post');
+        if (!$authUser->can('ForceDelete:Post')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $post->author_id === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
@@ -64,7 +96,15 @@ class PostPolicy
 
     public function replicate(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Replicate:Post');
+        if (!$authUser->can('Replicate:Post')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $post->author_id === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function reorder(AuthUser $authUser): bool

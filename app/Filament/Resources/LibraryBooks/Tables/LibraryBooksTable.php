@@ -21,8 +21,7 @@ class LibraryBooksTable
             ->columns([
                 ImageColumn::make('cover_image')
                     ->label('Sampul')
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => $record->cover_url),
+                    ->getStateUsing(fn ($record) => $record->cover_url),
                 TextColumn::make('title')
                     ->label('Judul Buku')
                     ->description(fn ($record) => $record->author . ' · ' . $record->publisher)

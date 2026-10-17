@@ -19,6 +19,7 @@ class RolePermissionSeeder extends Seeder
         $guruRole = Role::firstOrCreate(['name' => 'guru']);
         $stafPerpusRole = Role::firstOrCreate(['name' => 'staf_perpus']);
         $panitiaPilketosRole = Role::firstOrCreate(['name' => 'panitia_pilketos']);
+        $siswaRole = Role::firstOrCreate(['name' => 'siswa']);
 
         // 2. Buat Shield Permissions untuk Semua Entity Filament & Widget secara langsung (bebas hang CLI)
         $entities = [
@@ -92,12 +93,12 @@ class RolePermissionSeeder extends Seeder
         // A. Super Admin: Seluruh Hak Akses Penuh
         $superAdminRole->syncPermissions(Permission::all());
 
-        // B. Guru: Materi Pembelajaran, Bank Soal/Kuis, Mata Pelajaran, Berita & Artikel
+        // B. Guru: Materi Pembelajaran, Bank Soal/Kuis, Mata Pelajaran (ViewAny & View), Berita & Artikel
         $guruPermissions = Permission::where(function ($q) {
             $q->where('name', 'like', '%Post%')
               ->orWhere('name', 'like', '%LearningMaterial%')
               ->orWhere('name', 'like', '%QuestionBank%')
-              ->orWhere('name', 'like', '%Subject%')
+              ->orWhereIn('name', ['ViewAny:Subject', 'View:Subject'])
               ->orWhere('name', 'like', '%post%')
               ->orWhere('name', 'like', '%academic%')
               ->orWhere('name', 'view_admin_panel')

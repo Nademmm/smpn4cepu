@@ -75,7 +75,7 @@
                     <h2 class="font-extrabold text-navy text-base">Rincian Per Rombongan Belajar</h2>
                     <p class="text-xs text-ink-soft">Data persebaran peserta didik berdasarkan tahun ajaran aktif.</p>
                 </div>
-                <x-badge type="blue">Tahun Ajaran 2026/2027</x-badge>
+                <x-badge type="blue">Tahun Ajaran {{ $stats->first()?->academic_year ?? '2026/2027' }}</x-badge>
             </div>
 
             <div class="overflow-x-auto">
@@ -113,11 +113,30 @@
         </x-card>
 
         {{-- Statistik Resmi Guru & Tenaga Kependidikan (GTK) --}}
+        @php
+            $guruTotal = $staffStats['guru_total'] ?? 29;
+            $guruPns = $staffStats['guru_pns'] ?? 20;
+            $guruPppk = $staffStats['guru_pppk'] ?? 8;
+            $guruHonorer = $staffStats['guru_honorer'] ?? 1;
+
+            $tendikTotal = $staffStats['tendik_total'] ?? 4;
+            $tendikPns = $staffStats['tendik_pns'] ?? 0;
+            $tendikPppk = $staffStats['tendik_pppk'] ?? 4;
+            $tendikHonorer = $staffStats['tendik_honorer'] ?? 0;
+
+            $totalActiveStaff = $staffStats['total'] ?? ($guruTotal + $tendikTotal);
+        @endphp
         <div class="space-y-6 pt-4">
-            <div>
-                <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-1">Data Pokok Pendidikan</span>
-                <h2 class="text-xl sm:text-2xl font-extrabold text-navy">Rekapitulasi Tenaga Pendidik & Kependidikan</h2>
-                <p class="text-xs sm:text-sm text-ink-soft">Kondisi ketenagaan resmi SMP Negeri 4 Cepu per data pokok kelembagaan.</p>
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-1">Data Pokok Pendidikan</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-navy">Rekapitulasi Tenaga Pendidik & Kependidikan</h2>
+                    <p class="text-xs sm:text-sm text-ink-soft">Kondisi ketenagaan aktif SMP Negeri 4 Cepu ({{ $totalActiveStaff }} Personel Terdaftar).</p>
+                </div>
+                <a href="{{ route('staff') }}" class="btn-ghost text-xs">
+                    <span>Lihat Direktori Lengkap</span>
+                    <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
+                </a>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -126,55 +145,47 @@
                     <div class="p-4 sm:p-5 bg-sky-soft border-b-2 border-sun-soft flex items-center justify-between">
                         <div>
                             <h3 class="font-extrabold text-navy text-base">Rekapitulasi Tenaga Pendidik (Guru)</h3>
-                            <p class="text-xs text-ink-soft">Total 29 Pendidik Aktif</p>
+                            <p class="text-xs text-ink-soft">Total {{ $guruTotal }} Pendidik Aktif</p>
                         </div>
                         <span class="text-xs font-black text-brand bg-white px-3 py-1 rounded-full border border-sun-soft">
-                            29 Guru
+                            {{ $guruTotal }} Guru
                         </span>
                     </div>
 
                     <div class="p-5 space-y-4 text-xs sm:text-sm">
                         <div class="grid grid-cols-3 gap-3 text-center">
                             <div class="bg-cream/40 p-3 rounded-xl border border-sun-soft">
-                                <span class="text-ink-mute text-[11px] font-bold block">Laki-Laki</span>
-                                <strong class="text-xl font-black text-navy">8</strong>
+                                <span class="text-ink-mute text-[11px] font-bold block">PNS</span>
+                                <strong class="text-xl font-black text-navy">{{ $guruPns }}</strong>
                             </div>
                             <div class="bg-cream/40 p-3 rounded-xl border border-sun-soft">
-                                <span class="text-ink-mute text-[11px] font-bold block">Perempuan</span>
-                                <strong class="text-xl font-black text-navy">21</strong>
+                                <span class="text-ink-mute text-[11px] font-bold block">PPPK</span>
+                                <strong class="text-xl font-black text-navy">{{ $guruPppk }}</strong>
                             </div>
                             <div class="bg-sky-soft p-3 rounded-xl border border-brand/20">
                                 <span class="text-brand text-[11px] font-black block">Jumlah Total</span>
-                                <strong class="text-xl font-black text-brand">29</strong>
+                                <strong class="text-xl font-black text-brand">{{ $guruTotal }}</strong>
                             </div>
                         </div>
 
                         <div class="border-t border-sun-soft pt-3 space-y-2">
-                            <span class="text-[11px] font-extrabold text-ink-mute uppercase tracking-wider block">Status Kepegawaian & Kualifikasi</span>
+                            <span class="text-[11px] font-extrabold text-ink-mute uppercase tracking-wider block">Rincian Status Kepegawaian & Kualifikasi</span>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                                 <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
                                     <span class="text-ink-mute text-[11px] block">PNS:</span>
-                                    <strong class="text-navy font-black text-sm">20 Orang</strong>
+                                    <strong class="text-navy font-black text-sm">{{ $guruPns }} Orang</strong>
                                 </div>
                                 <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
                                     <span class="text-ink-mute text-[11px] block">PPPK:</span>
-                                    <strong class="text-navy font-black text-sm">8 Orang</strong>
+                                    <strong class="text-navy font-black text-sm">{{ $guruPppk }} Orang</strong>
                                 </div>
                                 <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
-                                    <span class="text-ink-mute text-[11px] block">PPPK PW:</span>
-                                    <strong class="text-navy font-black text-sm">1 Orang</strong>
+                                    <span class="text-ink-mute text-[11px] block">Honorer / GTT:</span>
+                                    <strong class="text-navy font-black text-sm">{{ $guruHonorer }} Orang</strong>
                                 </div>
-                                <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
-                                    <span class="text-ink-mute text-[11px] block">Pendidikan S1:</span>
-                                    <strong class="text-navy font-black text-sm">28 Orang</strong>
-                                </div>
-                                <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
-                                    <span class="text-ink-mute text-[11px] block">Pendidikan S2:</span>
-                                    <strong class="text-navy font-black text-sm">1 Orang</strong>
-                                </div>
-                                <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-300 text-emerald-800">
-                                    <span class="text-[11px] block">Kualifikasi:</span>
-                                    <strong class="font-black text-xs">100% S1 / S2</strong>
+                                <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-300 text-emerald-800 col-span-2 sm:col-span-3 flex items-center justify-between">
+                                    <span class="text-[11px] font-bold">Kualifikasi Akademik Pendidik:</span>
+                                    <strong class="font-black text-xs">100% Sarjana (S1 / S2)</strong>
                                 </div>
                             </div>
                         </div>
@@ -186,55 +197,47 @@
                     <div class="p-4 sm:p-5 bg-amber-50 border-b-2 border-sun-soft flex items-center justify-between">
                         <div>
                             <h3 class="font-extrabold text-navy text-base">Rekapitulasi Tenaga Kependidikan</h3>
-                            <p class="text-xs text-ink-soft">Total 9 Tenaga Administrasi & Perpustakaan</p>
+                            <p class="text-xs text-ink-soft">Total {{ $tendikTotal }} Tenaga Administrasi & Perpustakaan</p>
                         </div>
                         <span class="text-xs font-black text-amber-800 bg-white px-3 py-1 rounded-full border border-sun-soft">
-                            9 Tendik
+                            {{ $tendikTotal }} Tendik
                         </span>
                     </div>
 
                     <div class="p-5 space-y-4 text-xs sm:text-sm">
                         <div class="grid grid-cols-3 gap-3 text-center">
                             <div class="bg-cream/40 p-3 rounded-xl border border-sun-soft">
-                                <span class="text-ink-mute text-[11px] font-bold block">Laki-Laki</span>
-                                <strong class="text-xl font-black text-navy">5</strong>
+                                <span class="text-ink-mute text-[11px] font-bold block">PNS</span>
+                                <strong class="text-xl font-black text-navy">{{ $tendikPns }}</strong>
                             </div>
                             <div class="bg-cream/40 p-3 rounded-xl border border-sun-soft">
-                                <span class="text-ink-mute text-[11px] font-bold block">Perempuan</span>
-                                <strong class="text-xl font-black text-navy">4</strong>
+                                <span class="text-ink-mute text-[11px] font-bold block">PPPK</span>
+                                <strong class="text-xl font-black text-navy">{{ $tendikPppk }}</strong>
                             </div>
                             <div class="bg-amber-100/60 p-3 rounded-xl border border-amber-300">
                                 <span class="text-amber-900 text-[11px] font-black block">Jumlah Total</span>
-                                <strong class="text-xl font-black text-amber-900">9</strong>
+                                <strong class="text-xl font-black text-amber-900">{{ $tendikTotal }}</strong>
                             </div>
                         </div>
 
                         <div class="border-t border-sun-soft pt-3 space-y-2">
-                            <span class="text-[11px] font-extrabold text-ink-mute uppercase tracking-wider block">Sebaran Jenjang Pendidikan Terakhir</span>
-                            <div class="grid grid-cols-3 gap-2 text-xs">
-                                <div class="bg-white p-2 rounded-lg border border-sun-soft text-center">
-                                    <span class="text-ink-mute text-[11px] block">SD:</span>
-                                    <strong class="text-navy font-black">1</strong>
+                            <span class="text-[11px] font-extrabold text-ink-mute uppercase tracking-wider block">Rincian Status & Unit Tugas</span>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                                <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
+                                    <span class="text-ink-mute text-[11px] block">PNS:</span>
+                                    <strong class="text-navy font-black text-sm">{{ $tendikPns }} Orang</strong>
                                 </div>
-                                <div class="bg-white p-2 rounded-lg border border-sun-soft text-center">
-                                    <span class="text-ink-mute text-[11px] block">SMP:</span>
-                                    <strong class="text-navy font-black">1</strong>
+                                <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
+                                    <span class="text-ink-mute text-[11px] block">PPPK:</span>
+                                    <strong class="text-navy font-black text-sm">{{ $tendikPppk }} Orang</strong>
                                 </div>
-                                <div class="bg-white p-2 rounded-lg border border-sun-soft text-center">
-                                    <span class="text-ink-mute text-[11px] block">SMA:</span>
-                                    <strong class="text-navy font-black">5</strong>
+                                <div class="bg-white p-2.5 rounded-lg border border-sun-soft">
+                                    <span class="text-ink-mute text-[11px] block">Honorer / PTT:</span>
+                                    <strong class="text-navy font-black text-sm">{{ $tendikHonorer }} Orang</strong>
                                 </div>
-                                <div class="bg-white p-2 rounded-lg border border-sun-soft text-center">
-                                    <span class="text-ink-mute text-[11px] block">Diploma 2:</span>
-                                    <strong class="text-navy font-black">1</strong>
-                                </div>
-                                <div class="bg-white p-2 rounded-lg border border-sun-soft text-center">
-                                    <span class="text-ink-mute text-[11px] block">Sarjana S1:</span>
-                                    <strong class="text-navy font-black">1</strong>
-                                </div>
-                                <div class="bg-emerald-50 p-2 rounded-lg border border-emerald-300 text-emerald-800 text-center flex flex-col justify-center">
-                                    <span class="text-[10px] block font-bold">Pustakawan:</span>
-                                    <strong class="text-xs font-black">Tersedia</strong>
+                                <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-300 text-emerald-800 col-span-2 sm:col-span-3 flex items-center justify-between">
+                                    <span class="text-[11px] font-bold">Unit Layanan:</span>
+                                    <strong class="text-xs font-black">Tata Usaha & Teknis Perpustakaan</strong>
                                 </div>
                             </div>
                         </div>

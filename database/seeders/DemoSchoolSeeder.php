@@ -44,39 +44,24 @@ class DemoSchoolSeeder extends Seeder
             Subject::firstOrCreate(['code' => $sub['code']], ['name' => $sub['name']]);
         }
 
-        // 2. Statistik Siswa & Rombel Resmi
-        $rombelData = [
-            ['academic_year' => '2025/2026', 'grade_level' => 7, 'class_name' => '7A', 'male_count' => 16, 'female_count' => 16, 'total_count' => 32],
-            ['academic_year' => '2025/2026', 'grade_level' => 7, 'class_name' => '7B', 'male_count' => 15, 'female_count' => 17, 'total_count' => 32],
-            ['academic_year' => '2025/2026', 'grade_level' => 8, 'class_name' => '8A', 'male_count' => 14, 'female_count' => 18, 'total_count' => 32],
-            ['academic_year' => '2025/2026', 'grade_level' => 8, 'class_name' => '8B', 'male_count' => 16, 'female_count' => 16, 'total_count' => 32],
-            ['academic_year' => '2025/2026', 'grade_level' => 9, 'class_name' => '9A', 'male_count' => 15, 'female_count' => 17, 'total_count' => 32],
-            ['academic_year' => '2025/2026', 'grade_level' => 9, 'class_name' => '9B', 'male_count' => 14, 'female_count' => 18, 'total_count' => 32],
-        ];
+        // 2. Staf Pengajar & Tenaga Kependidikan Resmi (Data Primer Sekolah Beserta Foto Riil)
+        StaffMember::where('name', 'Drs. H. Hartono, M.Pd.')->delete();
 
-        foreach ($rombelData as $r) {
-            StudentStatistic::firstOrCreate(
-                ['academic_year' => $r['academic_year'], 'class_name' => $r['class_name']],
-                $r
-            );
-        }
-
-        // 3. Staf Pengajar & Tenaga Kependidikan Resmi (Data Primer Sekolah Beserta Foto Riil)
         $staffData = [
-            [
-                'nip' => '197508121999031004',
-                'name' => 'Drs. H. Hartono, M.Pd.',
-                'position' => 'Kepala Sekolah',
-                'employment_status' => EmploymentStatus::PNS,
-                'photo_path' => null,
-                'display_order' => 1,
-            ],
             [
                 'nip' => '196807181994121001',
                 'name' => 'Prasetyo Cahyo Nugroho, S.Pd., M.M.',
-                'position' => 'Guru Madya Tk. I / Kurikulum',
+                'position' => 'Kepala Sekolah',
                 'employment_status' => EmploymentStatus::PNS,
-                'photo_path' => null,
+                'photo_path' => 'images/principal/FOTO_KS_1.jpg',
+                'display_order' => 1,
+            ],
+            [
+                'nip' => '197911142005012025',
+                'name' => 'HUSNUL KHOTIMAH, S.S.',
+                'position' => 'Waka Kurikulum',
+                'employment_status' => EmploymentStatus::PNS,
+                'photo_path' => 'staff/husnul-khotimah.jpeg',
                 'display_order' => 2,
             ],
             [
@@ -96,12 +81,12 @@ class DemoSchoolSeeder extends Seeder
                 'display_order' => 4,
             ],
             [
-                'nip' => '197911142005012025',
-                'name' => 'HUSNUL KHOTIMAH, S.S.',
-                'position' => 'Waka Kurikulum',
+                'nip' => '19690215 199801 2 001',
+                'name' => 'Dra. Setyorini',
+                'position' => 'Guru Madya',
                 'employment_status' => EmploymentStatus::PNS,
-                'photo_path' => 'staff/husnul-khotimah.jpeg',
-                'display_order' => 2,
+                'photo_path' => 'images/staff/setyorini.jpeg',
+                'display_order' => 6,
             ],
             [
                 'nip' => '197207072005012016',

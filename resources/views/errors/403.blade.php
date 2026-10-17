@@ -2,8 +2,8 @@
     <div class="min-h-[70vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-xl w-full text-center space-y-6">
             {{-- Visual Angka 403 --}}
-            <div class="relative inline-block select-none">
-                <span class="text-8xl sm:text-9xl font-black text-rose-100/90 tracking-tighter block leading-none">
+            <div class="relative inline-block select-none" aria-hidden="true">
+                <span class="text-8xl sm:text-9xl font-black text-rose-200 tracking-tighter block leading-none">
                     403
                 </span>
             </div>
@@ -24,9 +24,9 @@
                     <x-app-icon name="home" class="w-4 h-4" />
                     <span>Kembali ke Beranda</span>
                 </a>
-                <a href="{{ url('/admin/login') }}" class="btn-ghost !min-h-[44px] px-4 text-sm flex items-center gap-2">
+                <a href="{{ route('login') }}" class="btn-ghost !min-h-[44px] px-4 text-sm flex items-center gap-2">
                     <x-app-icon name="shield" class="w-4 h-4" />
-                    <span>Panel Masuk Admin</span>
+                    <span>Portal Masuk Terpadu</span>
                 </a>
             </div>
         </div>

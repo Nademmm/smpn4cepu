@@ -22,8 +22,8 @@
             @foreach ($categories as $cat)
                 <button
                     type="button"
-                    @click="activeCategory = '{{ $cat }}'"
-                    :class="activeCategory === '{{ $cat }}' ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
+                    @click="activeCategory = @js($cat)"
+                    :class="activeCategory === @js($cat) ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
                     class="px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all"
                 >
                     {{ $cat }}
@@ -35,7 +35,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($extracurriculars as $extra)
                 <div
-                    x-show="activeCategory === 'Semua' || activeCategory === '{{ $extra->category }}'"
+                    x-show="activeCategory === 'Semua' || activeCategory === @js($extra->category)"
                     x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 scale-95"
                     x-transition:enter-end="opacity-100 scale-100"
@@ -47,6 +47,8 @@
                                 <img
                                     src="{{ $extra->photo_url }}"
                                     alt="{{ $extra->name }}"
+                                    loading="lazy"
+                                    decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 >
                             </div>

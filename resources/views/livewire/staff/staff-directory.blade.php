@@ -32,9 +32,10 @@
             </div>
 
             <div class="w-full md:w-72">
-                <span class="text-xs font-bold uppercase tracking-wider text-ink-mute block mb-2">CARI GURU / TENDIK</span>
+                <label for="staff-search" class="text-xs font-bold uppercase tracking-wider text-ink-mute block mb-2">CARI GURU / TENDIK</label>
                 <div class="relative">
                     <input
+                        id="staff-search"
                         type="text"
                         wire:model.live.debounce.300ms="search"
                         placeholder="Nama, NIP, atau mata pelajaran..."
@@ -54,6 +55,8 @@
                             <img
                                 src="{{ $staff->photo_url }}"
                                 alt="{{ $staff->name }}"
+                                loading="lazy"
+                                decoding="async"
                                 class="w-20 h-20 rounded-2xl object-cover border-2 border-sun-soft mb-3.5 group-hover:scale-105 transition-transform duration-200 shadow-2xs"
                             >
                         @else

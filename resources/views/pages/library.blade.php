@@ -14,6 +14,7 @@
             viewMode: 'grid',
             reservationSubmitted: false,
             reservationCode: '',
+            errorMessage: '',
             borrowerName: '',
             borrowerClass: '',
             borrowerDate: '',
@@ -22,21 +23,23 @@
                 this.detailTab = tab;
                 this.reservationSubmitted = false;
                 this.reservationCode = '';
+                this.errorMessage = '';
                 this.borrowerName = '';
                 this.borrowerClass = '';
                 this.borrowerDate = '';
             },
             async generateBooking() {
+                this.errorMessage = '';
                 if (!this.borrowerName.trim()) {
-                    alert('Mohon isi nama lengkap siswa terlebih dahulu.');
+                    this.errorMessage = 'Mohon isi nama lengkap siswa terlebih dahulu.';
                     return;
                 }
                 if (!this.borrowerClass.trim()) {
-                    alert('Mohon isi kelas / rombel siswa.');
+                    this.errorMessage = 'Mohon isi kelas atau rombel siswa.';
                     return;
                 }
                 if (!this.borrowerDate) {
-                    alert('Mohon pilih tanggal rencana pengambilan buku.');
+                    this.errorMessage = 'Mohon pilih tanggal rencana pengambilan buku.';
                     return;
                 }
 
@@ -57,16 +60,15 @@
                     });
 
                     const data = await response.json();
-                    if (data.success) {
+                    if (response.ok && data.success) {
                         this.reservationCode = data.reservation_code;
                         this.reservationSubmitted = true;
                     } else {
-                        alert(data.message || 'Gagal memproses reservasi.');
+                        const firstValidationErr = data.errors ? Object.values(data.errors)[0]?.[0] : null;
+                        this.errorMessage = firstValidationErr || data.message || 'Gagal membuat tiket reservasi. Periksa kembali data Anda.';
                     }
                 } catch (e) {
-                    const rand = Math.floor(1000 + Math.random() * 9000);
-                    this.reservationCode = 'LIB-' + rand + '-' + new Date().getFullYear();
-                    this.reservationSubmitted = true;
+                    this.errorMessage = 'Gagal membuat tiket reservasi. Periksa kembali koneksi atau data Anda.';
                 }
             }
         }"
@@ -148,12 +150,13 @@
         <div class="card p-5 sm:p-6 bg-white space-y-4 shadow-xs">
             <form method="GET" action="{{ route('library') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
                 {{-- Input Pencarian Utama --}}
-                <div class="lg:col-span-6 relative">
+                <div class="lg:col-span-4 relative">
                     <input
                         type="text"
                         name="q"
                         value="{{ request('q') }}"
-                        placeholder="Cari judul buku, nama pengarang, penerbit, nomor panggil, atau ISBN..."
+                        aria-label="Cari koleksi buku perpustakaan"
+                        placeholder="Cari judul buku, pengarang, penerbit, atau ISBN..."
                         class="field pl-11 !py-2.5"
                     >
                     <x-app-icon name="search" class="w-5 h-5 text-ink-mute absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -161,7 +164,7 @@
 
                 {{-- Filter Kategori --}}
                 <div class="lg:col-span-3">
-                    <select name="category" onchange="this.form.submit()" class="field !py-2.5 text-xs font-bold">
+                    <select name="category" onchange="this.form.submit()" aria-label="Filter kategori koleksi" class="field !py-2.5 text-xs font-bold">
                         <option value="">Semua Kategori Koleksi</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>
@@ -171,19 +174,30 @@
                     </select>
                 </div>
 
-                {{-- Filter Ketersediaan & Urutan --}}
-                <div class="lg:col-span-3 flex gap-2">
-                    <select name="stock" onchange="this.form.submit()" class="field !py-2.5 text-xs font-bold grow">
+                {{-- Filter Ketersediaan --}}
+                <div class="lg:col-span-2">
+                    <select name="stock" onchange="this.form.submit()" aria-label="Filter status ketersediaan" class="field !py-2.5 text-xs font-bold">
                         <option value="">Semua Status</option>
                         <option value="available" {{ request('stock') === 'available' ? 'selected' : '' }}>Tersedia di Rak</option>
                         <option value="digital" {{ request('stock') === 'digital' ? 'selected' : '' }}>Ada E-Book</option>
                     </select>
+                </div>
 
-                    <button type="submit" class="btn-primary !min-h-[42px] px-4 shrink-0 text-xs shadow-2xs">
+                {{-- Urutan & Tombol Cari --}}
+                <div class="lg:col-span-3 flex gap-2">
+                    <select name="sort" onchange="this.form.submit()" aria-label="Urutkan koleksi buku" class="field !py-2.5 text-xs font-bold grow">
+                        <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="title_asc" {{ request('sort') === 'title_asc' ? 'selected' : '' }}>Judul (A - Z)</option>
+                        <option value="title_desc" {{ request('sort') === 'title_desc' ? 'selected' : '' }}>Judul (Z - A)</option>
+                        <option value="year_desc" {{ request('sort') === 'year_desc' ? 'selected' : '' }}>Tahun Terbit</option>
+                        <option value="stock_desc" {{ request('sort') === 'stock_desc' ? 'selected' : '' }}>Stok Terbanyak</option>
+                    </select>
+
+                    <button type="submit" class="btn-primary px-4 shrink-0 text-xs shadow-2xs">
                         Cari
                     </button>
                     @if (request()->hasAny(['q', 'category', 'stock', 'sort']))
-                        <a href="{{ route('library') }}" class="btn-ghost !min-h-[42px] px-3 shrink-0 text-xs" title="Reset Pencarian">
+                        <a href="{{ route('library') }}" class="btn-ghost px-3 shrink-0 text-xs" title="Reset Pencarian" aria-label="Reset Pencarian">
                             <x-app-icon name="x" class="w-4 h-4" />
                         </a>
                     @endif
@@ -196,12 +210,12 @@
                     <span class="text-ink-mute font-bold mr-1">Kategori:</span>
                     <a
                         href="{{ route('library', request()->except('category')) }}"
-                        class="chip {{ !request('category') ? 'chip-active' : '' }} !min-h-[32px] !py-1 !text-xs"
+                        class="chip {{ !request('category') ? 'chip-active' : '' }} !text-xs"
                     >Semua</a>
                     @foreach ($categories->take(5) as $cat)
                         <a
                             href="{{ route('library', array_merge(request()->except('category'), ['category' => $cat])) }}"
-                            class="chip {{ request('category') === $cat ? 'chip-active' : '' }} !min-h-[32px] !py-1 !text-xs"
+                            class="chip {{ request('category') === $cat ? 'chip-active' : '' }} !text-xs"
                         >{{ $cat }}</a>
                     @endforeach
                 </div>
@@ -212,7 +226,7 @@
                         type="button"
                         @click="viewMode = 'grid'"
                         :class="viewMode === 'grid' ? 'bg-white text-brand shadow-2xs' : 'text-ink-mute hover:text-navy'"
-                        class="px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all"
+                        class="px-3 py-2 min-h-[40px] rounded-lg flex items-center gap-1.5 transition-all"
                     >
                         <x-app-icon name="photo" class="w-3.5 h-3.5" />
                         <span>Grid</span>
@@ -221,7 +235,7 @@
                         type="button"
                         @click="viewMode = 'list'"
                         :class="viewMode === 'list' ? 'bg-white text-brand shadow-2xs' : 'text-ink-mute hover:text-navy'"
-                        class="px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all"
+                        class="px-3 py-2 min-h-[40px] rounded-lg flex items-center gap-1.5 transition-all"
                     >
                         <x-app-icon name="document" class="w-3.5 h-3.5" />
                         <span>Katalog OPAC</span>
@@ -233,6 +247,12 @@
         {{-- Tampilan Koleksi Buku: Mode Grid --}}
         <div x-show="viewMode === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             @forelse ($books as $book)
+                @php
+                    $bookPayload = array_merge($book->toArray(), [
+                        'cover_url' => $book->cover_url,
+                        'digital_file_url' => $book->digital_file_url,
+                    ]);
+                @endphp
                 <x-card class="flex flex-col justify-between hover:border-brand transition-all p-5 group shadow-xs">
                     <div>
                         {{-- Cover Area Proporsional (Format Buku 3:4) --}}
@@ -241,6 +261,8 @@
                                 <img
                                     src="{{ $book->cover_url }}"
                                     alt="{{ $book->title }}"
+                                    loading="lazy"
+                                    decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 >
                             @else
@@ -284,8 +306,8 @@
                     <div class="space-y-2 pt-2 border-t border-sun-soft/40">
                         <button
                             type="button"
-                            @click="openDetail({{ json_encode($book) }}, 'info')"
-                            class="btn-primary w-full text-xs !min-h-[38px] shadow-2xs"
+                            @click="openDetail(@js($bookPayload), 'info')"
+                            class="btn-primary w-full text-xs shadow-2xs"
                         >
                             Detail Bibliografi & Rak
                         </button>
@@ -293,8 +315,8 @@
                         @if ($book->available_stock > 0)
                             <button
                                 type="button"
-                                @click="openDetail({{ json_encode($book) }}, 'reserve')"
-                                class="btn-ghost w-full text-xs !min-h-[36px] hover:bg-sky-soft"
+                                @click="openDetail(@js($bookPayload), 'reserve')"
+                                class="btn-ghost w-full text-xs hover:bg-sky-soft"
                             >
                                 <x-app-icon name="check-circle" class="w-3.5 h-3.5 text-brand" />
                                 <span>Reservasi Peminjaman</span>
@@ -338,11 +360,17 @@
                     </thead>
                     <tbody class="divide-y divide-sun-soft font-semibold text-navy">
                         @forelse ($books as $book)
+                            @php
+                                $bookListPayload = array_merge($book->toArray(), [
+                                    'cover_url' => $book->cover_url,
+                                    'digital_file_url' => $book->digital_file_url,
+                                ]);
+                            @endphp
                             <tr class="hover:bg-sky-soft/40 transition-colors">
                                 <td class="p-4">
                                     <div class="w-12 h-16 rounded-lg bg-sky-soft overflow-hidden border border-sun-soft/60 shrink-0 flex items-center justify-center">
-                                        @if ($book->cover_image && file_exists(public_path('storage/' . $book->cover_image)))
-                                            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+                                        @if ($book->cover_url)
+                                            <img src="{{ $book->cover_url }}" alt="{{ $book->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                         @else
                                             <x-app-icon name="book" class="w-6 h-6 text-brand" />
                                         @endif
@@ -380,16 +408,16 @@
                                     <div class="flex items-center justify-end gap-2">
                                         <button
                                             type="button"
-                                            @click="openDetail({{ json_encode($book) }}, 'info')"
-                                            class="btn-ghost !min-h-[34px] !py-1 text-xs"
+                                            @click="openDetail(@js($bookListPayload), 'info')"
+                                            class="btn-ghost text-xs"
                                         >
                                             Detail
                                         </button>
                                         @if ($book->available_stock > 0)
                                             <button
                                                 type="button"
-                                                @click="openDetail({{ json_encode($book) }}, 'reserve')"
-                                                class="btn-primary !min-h-[34px] !py-1 text-xs"
+                                                @click="openDetail(@js($bookListPayload), 'reserve')"
+                                                class="btn-primary text-xs"
                                             >
                                                 Pinjam
                                             </button>
@@ -437,6 +465,9 @@
             <div
                 x-show="selectedBook !== null"
                 x-cloak
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="library-modal-title"
                 @keydown.escape.window="selectedBook = null"
                 class="fixed inset-0 z-[100] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm overflow-y-auto"
             >
@@ -452,12 +483,13 @@
                             <span class="text-ink-mute">·</span>
                             <span class="text-xs text-ink-mute font-bold" x-text="'Tahun ' + (selectedBook?.publication_year || '-')"></span>
                         </div>
-                        <h2 class="text-lg sm:text-xl font-extrabold text-navy leading-snug" x-text="selectedBook?.title"></h2>
+                        <h2 id="library-modal-title" class="text-lg sm:text-xl font-extrabold text-navy leading-snug" x-text="selectedBook?.title"></h2>
                     </div>
                     <button
                         type="button"
                         @click="selectedBook = null"
-                        class="p-1.5 rounded-xl text-ink-mute hover:text-navy hover:bg-white transition-colors"
+                        aria-label="Tutup modal"
+                        class="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-ink-mute hover:text-navy hover:bg-white transition-colors"
                     >
                         <x-app-icon name="x" class="w-5 h-5" />
                     </button>
@@ -469,7 +501,7 @@
                         type="button"
                         @click="detailTab = 'info'"
                         :class="detailTab === 'info' ? 'border-b-2 border-brand text-brand bg-white rounded-t-xl py-2.5 px-4' : 'text-ink-mute hover:text-navy py-2.5 px-4'"
-                        class="transition-all"
+                        class="transition-all min-h-[44px]"
                     >
                         Informasi Bibliografi & Rak
                     </button>
@@ -477,7 +509,7 @@
                         type="button"
                         @click="detailTab = 'reserve'"
                         :class="detailTab === 'reserve' ? 'border-b-2 border-brand text-brand bg-white rounded-t-xl py-2.5 px-4' : 'text-ink-mute hover:text-navy py-2.5 px-4'"
-                        class="transition-all flex items-center gap-1.5"
+                        class="transition-all flex items-center gap-1.5 min-h-[44px]"
                     >
                         <x-app-icon name="check-circle" class="w-3.5 h-3.5" />
                         <span>Form Reservasi Peminjaman</span>
@@ -491,10 +523,10 @@
                         <div class="flex flex-col sm:flex-row gap-5 items-start">
                             {{-- Cover Buku --}}
                             <div class="w-28 sm:w-36 h-40 sm:h-48 rounded-xl bg-sky-soft overflow-hidden border border-sun-soft shrink-0 flex items-center justify-center shadow-xs">
-                                <template x-if="selectedBook?.cover_image">
-                                    <img :src="'{{ asset('storage') }}/' + selectedBook?.cover_image" :alt="selectedBook?.title" class="w-full h-full object-cover">
+                                <template x-if="selectedBook?.cover_url">
+                                    <img :src="selectedBook?.cover_url" :alt="selectedBook?.title" class="w-full h-full object-cover">
                                 </template>
-                                <template x-if="!selectedBook?.cover_image">
+                                <template x-if="!selectedBook?.cover_url">
                                     <div class="text-center p-3 text-brand">
                                         <x-app-icon name="book" class="w-10 h-10 mx-auto mb-1" />
                                         <span class="text-[10px] font-extrabold block text-ink-mute">Koleksi Buku</span>
@@ -550,11 +582,12 @@
                                 ></span>
                             </div>
 
-                            <template x-if="selectedBook?.digital_file_path">
+                            <template x-if="selectedBook?.digital_file_url">
                                 <a
-                                    :href="'{{ asset('storage') }}/' + selectedBook?.digital_file_path"
+                                    :href="selectedBook?.digital_file_url"
                                     target="_blank"
-                                    class="btn-primary !min-h-[36px] text-xs px-4 flex items-center gap-1.5 shadow-2xs"
+                                    rel="noopener noreferrer"
+                                    class="btn-primary text-xs px-4 flex items-center gap-1.5 shadow-2xs"
                                 >
                                     <x-app-icon name="download" class="w-3.5 h-3.5" />
                                     <span>Buka Versi E-Book PDF</span>
@@ -574,13 +607,21 @@
                                     </div>
                                 </div>
 
+                                <template x-if="errorMessage">
+                                    <div role="alert" class="p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-bold flex items-center gap-2">
+                                        <x-app-icon name="x-circle" class="w-4 h-4 text-rose-600 shrink-0" />
+                                        <span x-text="errorMessage"></span>
+                                    </div>
+                                </template>
+
                                 <div class="space-y-3">
                                     <div>
-                                        <label class="block text-xs font-bold text-navy mb-1.5">Nama Lengkap Siswa</label>
+                                        <label for="borrowerNameInput" class="block text-xs font-bold text-navy mb-1.5">Nama Lengkap Siswa</label>
                                         <input
+                                            id="borrowerNameInput"
                                             type="text"
                                             x-model="borrowerName"
-                                            placeholder="Contoh: Rian Anggara"
+                                            placeholder="Masukkan nama lengkap siswa..."
                                             class="field"
                                             required
                                         >
@@ -588,8 +629,9 @@
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <div>
-                                            <label class="block text-xs font-bold text-navy mb-1.5">Kelas / Rombel</label>
+                                            <label for="borrowerClassInput" class="block text-xs font-bold text-navy mb-1.5">Kelas / Rombel</label>
                                             <input
+                                                id="borrowerClassInput"
                                                 type="text"
                                                 x-model="borrowerClass"
                                                 placeholder="Contoh: Kelas 8A"
@@ -598,9 +640,11 @@
                                             >
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-navy mb-1.5">Tanggal Rencana Ambil</label>
+                                            <label for="borrowerDateInput" class="block text-xs font-bold text-navy mb-1.5">Tanggal Rencana Ambil</label>
                                             <input
+                                                id="borrowerDateInput"
                                                 type="date"
+                                                min="{{ date('Y-m-d') }}"
                                                 x-model="borrowerDate"
                                                 class="field"
                                                 required
@@ -613,7 +657,7 @@
                                     <button
                                         type="button"
                                         @click="generateBooking()"
-                                        class="btn-primary text-xs !min-h-[40px] px-6 shadow-xs"
+                                        class="btn-primary text-xs px-6 shadow-xs"
                                     >
                                         Buat Tiket Reservasi Sekarang
                                     </button>
@@ -677,7 +721,7 @@
                     <button
                         type="button"
                         @click="selectedBook = null"
-                        class="btn-ghost text-xs !min-h-[34px] !py-1"
+                        class="btn-ghost text-xs"
                     >
                         Tutup
                     </button>

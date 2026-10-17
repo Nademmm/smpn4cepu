@@ -4,8 +4,11 @@
 # ========================================================
 set -e
 
-echo "==> [1/6] Memasang dependensi Composer..."
+echo "==> [1/6] Memasang dependensi Composer & membangun aset Frontend..."
 composer install --no-dev --optimize-autoloader --no-interaction
+if command -v npm >/dev/null 2>&1; then
+    npm ci --no-audit && npm run build
+fi
 
 echo "==> [2/6] Menjalankan migrasi basis data..."
 php artisan migrate --force
@@ -23,13 +26,14 @@ echo "==> [4/6] Memperbarui tautan storage (Symlink)..."
 php artisan storage:link || true
 
 echo "==> [5/6] Memastikan direktori public_html terhubung..."
-if [ ! -L "/home/$USER/public_html" ]; then
+if [ ! -L "../public_html" ]; then
     echo "Symlink public_html belum ada, membuat symlink baru..."
-    rm -rf "/home/$USER/public_html"
-    ln -s "/home/$USER/laravel_app/public" "/home/$USER/public_html"
+    rm -rf "../public_html"
+    ln -s "$(pwd)/public" "../public_html"
 fi
 
 echo "==> [6/6] Membersihkan cache LiteSpeed Web Server..."
-touch /home/$USER/laravel_app/storage/framework/cache/.litespeed_purge || true
+touch storage/framework/cache/.litespeed_purge || true
 
 echo "==> Selesai! Proyek SMP Negeri 4 Cepu siap digunakan."
+

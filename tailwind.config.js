@@ -34,6 +34,20 @@ export default {
                     soft: '#EEF3FB',
                 },
                 grape: '#7C3AED',
+                sand: '#E6DEC8',
+            },
+            spacing: {
+                '88': '22rem',
+            },
+            boxShadow: {
+                'xs': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+                '2xs': '0 1px 1px 0 rgb(0 0 0 / 0.03)',
+            },
+            backdropBlur: {
+                'xs': '2px',
+            },
+            dropShadow: {
+                'xs': '0 1px 1px rgb(0 0 0 / 0.05)',
             },
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],

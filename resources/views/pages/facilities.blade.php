@@ -1,7 +1,7 @@
 <x-layouts.app title="Fasilitas Sarana Prasarana">
     <x-page-header
         title="Fasilitas Sekolah"
-        subtitle="11 sarana dan prasarana pendukung pembelajaran yang representatif dan berwawasan lingkungan."
+        subtitle="{{ $facilities->count() }} sarana dan prasarana pendukung pembelajaran yang representatif dan berwawasan lingkungan."
         crumb="Fasilitas"
     />
 
@@ -14,6 +14,8 @@
                             <img
                                 src="{{ $facility->photo_url }}"
                                 alt="{{ $facility->name }}"
+                                loading="lazy"
+                                decoding="async"
                                 class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
                             >
                         </div>

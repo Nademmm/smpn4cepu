@@ -2,8 +2,8 @@
     <div class="min-h-[70vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-xl w-full text-center space-y-6">
             {{-- Visual Angka 500 --}}
-            <div class="relative inline-block select-none">
-                <span class="text-8xl sm:text-9xl font-black text-amber-100/90 tracking-tighter block leading-none">
+            <div class="relative inline-block select-none" aria-hidden="true">
+                <span class="text-8xl sm:text-9xl font-black text-amber-200 tracking-tighter block leading-none">
                     500
                 </span>
             </div>

@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "smpn4cepu/portal-sekolah",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Sistem Informasi Terpadu dan Layanan Digital Resmi SMP Negeri 4 Cepu",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
@@ -34,6 +34,8 @@
         }
     },
     "scripts": {
+        "test": "@php artisan test",
+        "lint": "./vendor/bin/pint --test",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",

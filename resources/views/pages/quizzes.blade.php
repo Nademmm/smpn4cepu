@@ -47,7 +47,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                         @foreach($myAttempts as $attempt)
-                            <div class="p-3.5 rounded-xl border {{ $attempt->passed ? 'border-teal-200 bg-teal-50/40' : 'border-rose-200 bg-rose-50/40' }} flex items-center justify-between gap-3">
+                            <div class="p-3.5 rounded-xl border {{ $attempt->is_passed ? 'border-teal-200 bg-teal-50/40' : 'border-rose-200 bg-rose-50/40' }} flex items-center justify-between gap-3">
                                 <div>
                                     <div class="text-xs font-black text-navy line-clamp-1 mb-0.5">
                                         {{ $attempt->bank?->title ?? 'Latihan Soal' }}
@@ -57,11 +57,11 @@
                                     </div>
                                 </div>
                                 <div class="text-right flex-shrink-0">
-                                    <div class="text-lg font-black {{ $attempt->passed ? 'text-teal-700' : 'text-rose-700' }}">
-                                        {{ number_format($attempt->score, 0) }}
+                                    <div class="text-lg font-black {{ $attempt->is_passed ? 'text-teal-700' : 'text-rose-700' }}">
+                                        {{ number_format($attempt->final_score, 0) }}
                                     </div>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider {{ $attempt->passed ? 'text-teal-600' : 'text-rose-600' }}">
-                                        {{ $attempt->passed ? 'Lulus KKM' : 'Remedial' }}
+                                    <span class="text-[10px] font-bold uppercase tracking-wider {{ $attempt->is_passed ? 'text-teal-600' : 'text-rose-600' }}">
+                                        {{ $attempt->is_passed ? 'Lulus KKM' : 'Remedial' }}
                                     </span>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                         <div class="flex items-center justify-between gap-2 py-3 px-3.5 rounded-xl bg-cream/70 border border-sun-soft text-xs mb-5 font-semibold text-navy">
                             <div class="flex items-center gap-1.5">
                                 <x-app-icon name="quiz" class="w-4 h-4 text-brand" />
-                                <span>{{ $bank->questions_count ?? $bank->questions()->count() }} Soal</span>
+                                <span>{{ $bank->questions_count ?? 0 }} Soal</span>
                             </div>
                             <span class="text-ink-mute">·</span>
                             <div>
@@ -102,12 +102,12 @@
                             </div>
                             <span class="text-ink-mute">·</span>
                             <div class="text-brand font-black">
-                                <span>KKM {{ $bank->passing_score ?? 75 }}</span>
+                                <span>KKM {{ $bank->passing_grade ?? 75 }}</span>
                             </div>
                         </div>
                     </div>
 
-                    <a href="{{ route('quiz.play', $bank->id) }}" class="btn-primary w-full text-center text-xs !min-h-[40px] shadow-2xs">
+                    <a href="{{ route('quiz.play', $bank->id) }}" class="btn-primary w-full text-center text-xs shadow-2xs">
                         Mulai Latihan Soal
                     </a>
                 </x-card>

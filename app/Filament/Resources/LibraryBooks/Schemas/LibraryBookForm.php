@@ -26,6 +26,8 @@ class LibraryBookForm
                 TextInput::make('isbn')
                     ->label('Nomor ISBN / Barcode')
                     ->placeholder('978-602-xxx-xxx-x')
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(20)
                     ->helperText('Klik tombol kaca pembesar untuk menarik otomatis data buku dari Perpusnas / Katalog ISBN.')
                     ->suffixAction(
                         Action::make('lookupIsbn')
@@ -130,12 +132,14 @@ class LibraryBookForm
                     ->label('Total Eksemplar Fisik')
                     ->required()
                     ->numeric()
+                    ->minValue(0)
                     ->default(1),
 
                 TextInput::make('available_stock')
                     ->label('Eksemplar Siap Pinjam')
                     ->required()
                     ->numeric()
+                    ->minValue(0)
                     ->default(1),
 
                 FileUpload::make('cover_image')

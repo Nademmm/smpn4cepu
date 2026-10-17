@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class LoginController extends Controller
@@ -21,7 +23,7 @@ class LoginController extends Controller
             if ($user->hasRole('siswa')) {
                 return redirect()->intended(route('quizzes'));
             }
-            if ($user->hasRole(['guru', 'super_admin', 'admin'])) {
+            if ($user->hasRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos'])) {
                 return redirect()->intended(route('filament.admin.pages.dashboard'));
             }
             return redirect()->intended(route('home'));
@@ -35,6 +37,10 @@ class LoginController extends Controller
      */
     public function login(Request $request): RedirectResponse
     {
+        if (!$request->filled('login_id') && $request->filled('login')) {
+            $request->merge(['login_id' => $request->input('login')]);
+        }
+
         $validated = $request->validate([
             'login_id' => 'required|string',
             'password' => 'required|string',
@@ -47,13 +53,25 @@ class LoginController extends Controller
         $password = $validated['password'];
         $remember = $request->boolean('remember');
 
-        // Cari user berdasarkan email, NISN, atau nama akun
+        $throttleKey = Str::lower($loginInput) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withInput($request->only('login_id', 'login', 'remember'))
+                ->withErrors([
+                    'login_id' => 'Terlalu banyak percobaan masuk. Silakan coba lagi dalam ' . $seconds . ' detik.',
+                    'login' => 'Terlalu banyak percobaan masuk. Silakan coba lagi dalam ' . $seconds . ' detik.',
+                ]);
+        }
+
+        // Cari user berdasarkan identifier unik terlebih dahulu (email, NISN, NIP), lalu fallback ke nama akun
         $user = User::where('email', $loginInput)
             ->orWhere('nisn', $loginInput)
-            ->orWhere('name', $loginInput)
-            ->first();
+            ->orWhere('nip', $loginInput)
+            ->first() ?? User::where('name', $loginInput)->first();
 
         if ($user && Auth::attempt(['email' => $user->email, 'password' => $password], $remember)) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
             if ($user->hasRole('siswa')) {
@@ -61,7 +79,7 @@ class LoginController extends Controller
                     ->with('status', 'Selamat datang, ' . $user->name . '! Anda berhasil masuk ke portal belajar.');
             }
 
-            if ($user->hasRole(['guru', 'super_admin', 'admin'])) {
+            if ($user->hasRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos'])) {
                 return redirect()->intended(route('filament.admin.pages.dashboard'))
                     ->with('status', 'Selamat datang kembali, ' . $user->name . '.');
             }
@@ -69,7 +87,9 @@ class LoginController extends Controller
             return redirect()->intended(route('home'));
         }
 
-        return back()->withInput($request->only('login_id', 'remember'))
+        RateLimiter::hit($throttleKey, 60);
+
+        return back()->withInput($request->only('login_id', 'login', 'remember'))
             ->withErrors([
                 'login_id' => 'Akun atau kata sandi yang Anda masukkan tidak sesuai. Silakan periksa kembali atau hubungi pengelola sekolah.',
             ]);

@@ -13,6 +13,7 @@ class Question extends Model
         'question_text',
         'explanation',
         'points',
+        'order_index',
     ];
 
     protected function casts(): array

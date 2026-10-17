@@ -3,7 +3,8 @@
 namespace Tests\Feature;
 
 use App\Livewire\Public\ContactForm;
-use App\Models\ContactMessage;
+use App\Models\LibraryBook;
+use App\Models\Post;
 use App\Models\QuestionBank;
 use App\Models\SchoolDocument;
 use Livewire\Livewire;
@@ -29,6 +30,7 @@ class PublicRoutesTest extends TestCase
             '/unduhan',
             '/kontak',
             '/login',
+            '/sitemap.xml',
         ];
 
         foreach ($publicRoutes as $route) {
@@ -42,7 +44,7 @@ class PublicRoutesTest extends TestCase
         $this->get('/materi')->assertRedirect('/login');
         $this->get('/latihan-soal')->assertRedirect('/login');
 
-        $bank = QuestionBank::first();
+        $bank = QuestionBank::where('is_active', true)->first();
         if ($bank) {
             $this->get('/latihan-soal/' . $bank->id)->assertRedirect('/login');
         }
@@ -62,13 +64,50 @@ class PublicRoutesTest extends TestCase
         $this->actingAs($user)->get('/materi')->assertStatus(200);
         $this->actingAs($user)->get('/latihan-soal')->assertStatus(200);
 
-        $bank = QuestionBank::first();
+        $bank = QuestionBank::where('is_active', true)->first();
         if ($bank) {
             $this->actingAs($user)->get('/latihan-soal/' . $bank->id)->assertStatus(200);
         }
     }
 
-    public function test_contact_form_submits_message_to_database(): void
+    public function test_library_book_reservation_validates_and_creates_ticket(): void
+    {
+        $book = LibraryBook::where('available_stock', '>', 0)->first();
+        $this->assertNotNull($book);
+
+        $response = $this->postJson('/perpustakaan/reservasi', [
+            'book_id' => $book->id,
+            'borrower_name' => 'Ahmad Fauzi',
+            'borrower_class' => '8A',
+            'pickup_date' => now()->addDay()->toDateString(),
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJsonStructure(['success', 'reservation_code', 'message']);
+    }
+
+    public function test_post_detail_and_scheduled_post_visibility(): void
+    {
+        $publishedPost = Post::published()->first();
+        $this->assertNotNull($publishedPost);
+        $this->get('/berita/' . $publishedPost->slug)->assertStatus(200);
+
+        $futurePost = Post::create([
+            'author_id' => $publishedPost->author_id,
+            'title' => 'Berita Terjadwal Minggu Depan',
+            'slug' => 'berita-terjadwal-minggu-depan',
+            'category' => \App\Enums\PostCategory::BERITA,
+            'excerpt' => 'Ringkasan berita terjadwal',
+            'content' => 'Konten berita terjadwal',
+            'is_published' => true,
+            'published_at' => now()->addDays(7),
+        ]);
+
+        $this->get('/berita/' . $futurePost->slug)->assertStatus(404);
+    }
+
+    public function test_contact_form_submits_message_and_blocks_honeypot(): void
     {
         Livewire::test(ContactForm::class)
             ->set('name', 'Ratna Sari')
@@ -83,6 +122,19 @@ class PublicRoutesTest extends TestCase
             'email_or_phone' => '081234567890',
             'subject' => 'Pertanyaan Pendaftaran Ekstrakurikuler',
             'is_read' => false,
+        ]);
+
+        Livewire::test(ContactForm::class)
+            ->set('honey', 'bot-spam-value')
+            ->set('name', 'Spam Bot')
+            ->set('email_or_phone', 'spam@bot.com')
+            ->set('subject', 'Spam Subject')
+            ->set('message', 'Spam message body')
+            ->call('submitMessage')
+            ->assertSet('submitted', true);
+
+        $this->assertDatabaseMissing('contact_messages', [
+            'name' => 'Spam Bot',
         ]);
     }
 

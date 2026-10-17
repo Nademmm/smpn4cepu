@@ -1,7 +1,7 @@
 <x-layouts.app :title="$bank->title . ' - Latihan Mandiri'">
     <x-page-header
         :title="$bank->title"
-        :subtitle="($bank->subject?->name ?? 'Mata Pelajaran') . ' · Kelas ' . $bank->grade_level . ' · Durasi: ' . $bank->duration_minutes . ' Menit · KKM: ' . ($bank->passing_score ?? 75)"
+        :subtitle="($bank->subject?->name ?? 'Mata Pelajaran') . ' · Kelas ' . $bank->grade_level . ' · Durasi: ' . $bank->duration_minutes . ' Menit · KKM: ' . ($bank->passing_grade ?? 75)"
         crumb="Simulasi Latihan Soal"
         variant="violet"
     />

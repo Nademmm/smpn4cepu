@@ -23,6 +23,8 @@
 
     @stack('meta')
 
+    <link rel="canonical" href="{{ url()->current() }}">
+
     {{-- Schema.org JSON-LD untuk Entitas Sekolah Formal --}}
     <script type="application/ld+json">
     {
@@ -33,10 +35,14 @@
         "identifier": "20314928",
         "url": "{{ url('/') }}",
         "logo": "{{ asset('images/logo.png') }}",
+        "telephone": @js($schoolSetting->school_phone ?? '(0296) 421631'),
+        "email": @js($schoolSetting->school_email ?? 'smpn4cepu@gmail.com'),
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": @js($schoolSetting->school_address ?? 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315'),
             "addressLocality": "Cepu",
             "addressRegion": "Jawa Tengah",
+            "postalCode": "58315",
             "addressCountry": "ID"
         }
     }
@@ -55,10 +61,21 @@
     @livewireStyles
 </head>
 <body class="bg-cream text-navy font-sans antialiased flex flex-col min-h-screen">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2.5 focus:text-sm focus:font-bold focus:text-white focus:shadow-lg">
+        Lewati ke konten utama
+    </a>
+
+    @php
+        try {
+            $currentUser = auth()->user();
+        } catch (\Throwable $e) {
+            $currentUser = null;
+        }
+    @endphp
 
     {{-- Banner Pengumuman Kilat (Marquee / Alert Beranda) --}}
     @if (!empty($schoolSetting?->announcement_bar_active) && !empty($schoolSetting?->announcement_bar_text))
-        <div class="bg-gradient-to-r from-brand-dark via-brand to-brand-dark text-white text-xs sm:text-sm py-2 px-4 border-b border-sun/30 font-bold">
+        <div class="bg-brand-dark text-white text-xs sm:text-sm py-2 px-4 border-b border-sun/30 font-bold">
             <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
                 <div class="flex items-center gap-2 overflow-hidden">
                     <span class="inline-flex items-center justify-center bg-sun text-navy font-black text-[10px] px-2 py-0.5 rounded-full uppercase shrink-0">
@@ -69,7 +86,7 @@
                     </span>
                 </div>
                 @if (!empty($schoolSetting->announcement_bar_link))
-                    <a href="{{ $schoolSetting->announcement_bar_link }}" class="underline text-sun hover:text-white shrink-0 text-xs font-black">
+                    <a href="{{ $schoolSetting->announcement_bar_link }}" class="underline text-sun-soft hover:text-white shrink-0 text-xs font-black">
                         Lihat Selengkapnya &rarr;
                     </a>
                 @endif
@@ -78,7 +95,7 @@
     @endif
 
     {{-- Sticky Main Navbar (Sesuai Desain Figma) --}}
-    <nav class="sticky top-0 z-40 bg-white border-b-2 border-sun-soft shadow-xs" x-data="{ mobileMenuOpen: false }">
+    <nav class="sticky top-0 z-40 bg-white border-b-2 border-sun-soft shadow-xs" x-data="{ mobileMenuOpen: false }" @keydown.escape.window="mobileMenuOpen = false">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-[70px] gap-4">
                 {{-- Logo & Brand: Minimalis, Sejajar & Profesional --}}
@@ -102,8 +119,8 @@
                     </a>
 
                     {{-- 2. Dropdown Profil --}}
-                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->routeIs('profile') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false" @keydown.escape.window="open = false">
+                        <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="true" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->routeIs('profile') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Profil</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -144,8 +161,8 @@
                     </div>
 
                     {{-- 3. Dropdown Belajar --}}
-                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false" @keydown.escape.window="open = false">
+                        <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="true" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Belajar</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -178,8 +195,8 @@
                     </div>
 
                     {{-- 4. Dropdown Kesiswaan --}}
-                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false" @keydown.escape.window="open = false">
+                        <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="true" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Kesiswaan</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -216,8 +233,8 @@
                     </div>
 
                     {{-- 5. Dropdown Informasi --}}
-                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                    <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false" @keydown.escape.window="open = false">
+                        <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="true" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Informasi</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -252,7 +269,7 @@
 
                 {{-- Aksi Kanan (Masuk Portal / Profil Akun) --}}
                 <div class="flex items-center gap-2.5">
-                    @guest
+                    @if (!$currentUser)
                         <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-sun hover:bg-sun-hover active:scale-95 text-navy font-black text-sm tracking-wide shadow-xs hover:shadow-md transition-all">
                             <x-app-icon name="user" class="w-4 h-4 text-navy shrink-0" />
                             <span>Masuk Portal</span>
@@ -261,26 +278,26 @@
                         <div class="hidden sm:flex items-center gap-2.5 bg-cream/80 border border-sun-soft/80 px-3 py-1.5 rounded-full">
                             <div class="flex items-center gap-2">
                                 <div class="w-7 h-7 rounded-full bg-brand text-white text-xs font-black flex items-center justify-center shrink-0">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    {{ strtoupper(substr($currentUser->name, 0, 1)) }}
                                 </div>
-                                <span class="text-xs font-black text-navy max-w-[120px] truncate">{{ auth()->user()->name }}</span>
+                                <span class="text-xs font-black text-navy max-w-[120px] truncate">{{ $currentUser->name }}</span>
                             </div>
-                            @if(auth()->user()->hasRole(['super_admin', 'admin', 'guru']))
+                            @if($currentUser->hasRole(['super_admin', 'admin', 'guru']))
                                 <a href="{{ url('/admin') }}" class="px-2.5 py-1 text-[11px] font-extrabold bg-brand text-white rounded-full hover:bg-brand-dark transition-colors">
                                     Admin
                                 </a>
                             @endif
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
-                                <button type="submit" title="Keluar dari akun" class="p-1 rounded-full text-ink-mute hover:text-rose-600 hover:bg-rose-50 transition-colors">
+                                <button type="submit" title="Keluar dari akun" aria-label="Keluar dari akun" class="p-1 rounded-full text-ink-mute hover:text-rose-600 hover:bg-rose-50 transition-colors">
                                     <x-app-icon name="logout" class="w-4 h-4" />
                                 </button>
                             </form>
                         </div>
-                    @endguest
+                    @endif
 
                     {{-- Hamburger Mobile Button --}}
-                    <button type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="p-2.5 rounded-2xl text-navy hover:bg-cream lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors" aria-label="Buka menu navigasi">
+                    <button type="button" @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen.toString()" class="p-2.5 rounded-2xl text-navy hover:bg-cream lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors" aria-label="Buka menu navigasi">
                         <x-app-icon name="menu" class="w-6 h-6" x-show="!mobileMenuOpen" />
                         <x-app-icon name="x" class="w-6 h-6" x-show="mobileMenuOpen" x-cloak />
                     </button>
@@ -308,6 +325,7 @@
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'profil' ? '' : 'profil')"
+                    :aria-expanded="(activeSection === 'profil').toString()"
                     class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
                 >
                     <div class="flex items-center gap-3">
@@ -352,6 +370,7 @@
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'belajar' ? '' : 'belajar')"
+                    :aria-expanded="(activeSection === 'belajar').toString()"
                     class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
                 >
                     <div class="flex items-center gap-3">
@@ -388,6 +407,7 @@
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'kesiswaan' ? '' : 'kesiswaan')"
+                    :aria-expanded="(activeSection === 'kesiswaan').toString()"
                     class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
                 >
                     <div class="flex items-center gap-3">
@@ -428,6 +448,7 @@
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'informasi' ? '' : 'informasi')"
+                    :aria-expanded="(activeSection === 'informasi').toString()"
                     class="w-full flex items-center justify-between px-4 py-3 text-[15px] font-extrabold text-navy text-left select-none transition-colors hover:bg-cream"
                 >
                     <div class="flex items-center gap-3">
@@ -461,7 +482,7 @@
 
             {{-- Tombol Masuk / Profil Akun Mobile --}}
             <div class="pt-3 border-t-2 border-sun-soft">
-                @guest
+                @if (!$currentUser)
                     <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-sun text-navy font-black text-sm text-center shadow-xs hover:bg-sun-hover active:scale-95 transition-all">
                         <x-app-icon name="user" class="w-4 h-4 text-navy" />
                         <span>Masuk Portal Sekolah</span>
@@ -470,15 +491,15 @@
                     <div class="p-3.5 rounded-2xl bg-sky-soft/60 border border-brand/20 space-y-3">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-full bg-brand text-white text-xs font-black flex items-center justify-center shrink-0">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                {{ strtoupper(substr($currentUser->name, 0, 1)) }}
                             </div>
                             <div>
                                 <span class="text-xs font-bold text-ink-mute uppercase block">Akun Aktif</span>
-                                <h4 class="text-sm font-black text-navy leading-tight">{{ auth()->user()->name }}</h4>
+                                <h4 class="text-sm font-black text-navy leading-tight">{{ $currentUser->name }}</h4>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 pt-1 border-t border-brand/10">
-                            @if(auth()->user()->hasRole(['super_admin', 'admin', 'guru']))
+                            @if($currentUser->hasRole(['super_admin', 'admin', 'guru']))
                                 <a href="{{ url('/admin') }}" class="flex-1 py-2 text-center text-xs font-extrabold bg-brand text-white rounded-xl hover:bg-brand-dark transition-colors">
                                     Panel Admin
                                 </a>
@@ -489,19 +510,20 @@
                             @endif
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
-                                <button type="submit" class="px-3 py-2 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors border border-rose-200">
-                                    Keluar
+                                <button type="submit" class="px-3 py-2 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors border border-rose-200 inline-flex items-center gap-1.5">
+                                    <x-app-icon name="logout" class="w-3.5 h-3.5 text-rose-600" />
+                                    <span>Keluar</span>
                                 </button>
                             </form>
                         </div>
                     </div>
-                @endguest
+                @endif
             </div>
         </div>
     </nav>
 
     {{-- Main Slot --}}
-    <main class="grow">
+    <main id="main-content" class="grow">
         {{ $slot }}
     </main>
 
@@ -570,7 +592,7 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="TikTok Resmi SMPN 4 Cepu"
-                                class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
+                                class="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
                             >
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43c.8-.8 1.34-1.84 1.54-2.97V9.08a8.27 8.27 0 0 0 4.19 1.12V6.75a4.8 4.8 0 0 1-.0-.06z"/></svg>
                             </a>
@@ -581,7 +603,7 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="YouTube Resmi SMPN 4 Cepu"
-                                class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
+                                class="w-10 h-10 rounded-full bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
                             >
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                             </a>
@@ -592,7 +614,7 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Facebook Resmi SMPN 4 Cepu"
-                                class="w-8 h-8 rounded-full bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
+                                class="w-10 h-10 rounded-full bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
                             >
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                             </a>
@@ -603,7 +625,7 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Instagram Resmi SMPN 4 Cepu"
-                                class="w-8 h-8 rounded-full bg-slate-800 hover:bg-pink-600 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
+                                class="w-10 h-10 rounded-full bg-slate-800 hover:bg-pink-600 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 shadow-xs"
                             >
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                             </a>

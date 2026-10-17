@@ -48,32 +48,33 @@ class SchoolSetting extends Model
      */
     public static function current(): self
     {
-        $latestWelcome = 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.';
+        $createOrGet = function (): self {
+            $latestWelcome = 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.';
 
-        $setting = static::first();
+            $setting = static::first();
 
-        if (!$setting) {
-            $setting = static::create([
-                'principal_name' => 'Prasetyo Cahyo Nugroho, S.Pd., M.M.',
-                'principal_title' => 'Kepala SMP Negeri 4 Cepu',
-                'principal_photo_path' => 'images/principal/FOTO_KS_1.jpg',
-                'principal_welcome_message' => $latestWelcome,
-                'school_phone' => '(0296) 421631',
-                'school_email' => 'smpn4cepu@gmail.com',
-                'school_address' => 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315',
-                'postal_code' => '58315',
-                'announcement_bar_active' => false,
-            ]);
-        } elseif ($setting->principal_name === 'Drs. Suharto Widodo, M.Pd.' || empty($setting->principal_photo_path) || str_contains($setting->principal_welcome_message ?? '', 'Selamat datang di portal resmi')) {
-            $setting->update([
-                'principal_name' => 'Prasetyo Cahyo Nugroho, S.Pd., M.M.',
-                'principal_title' => 'Kepala SMP Negeri 4 Cepu',
-                'principal_photo_path' => 'images/principal/FOTO_KS_1.jpg',
-                'principal_welcome_message' => $latestWelcome,
-            ]);
+            if (!$setting) {
+                $setting = static::create([
+                    'principal_name' => 'Prasetyo Cahyo Nugroho, S.Pd., M.M.',
+                    'principal_title' => 'Kepala SMP Negeri 4 Cepu',
+                    'principal_photo_path' => 'images/principal/FOTO_KS_1.jpg',
+                    'principal_welcome_message' => $latestWelcome,
+                    'school_phone' => '(0296) 421631',
+                    'school_email' => 'smpn4cepu@gmail.com',
+                    'school_address' => 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315',
+                    'postal_code' => '58315',
+                    'announcement_bar_active' => false,
+                ]);
+            }
+
+            return $setting;
+        };
+
+        try {
+            return \Illuminate\Support\Facades\Cache::rememberForever('school_setting_singleton', $createOrGet);
+        } catch (\Throwable $e) {
+            return $createOrGet();
         }
-
-        return $setting;
     }
 
     public function getPrincipalPhotoUrlAttribute(): ?string

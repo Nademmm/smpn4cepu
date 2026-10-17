@@ -6,6 +6,7 @@ use App\Models\ElectionCandidate;
 use App\Models\ElectionDevice;
 use App\Models\ElectionVote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -69,7 +70,11 @@ class PilketosFingerprintService
         $ipSubnet = $this->calculateSubnet($request->ip() ?? '127.0.0.1');
         $uaHash = hash('sha256', $request->userAgent() ?? 'UNKNOWN_UA');
 
-        return DB::transaction(function () use ($candidateId, $fingerprint, $ipSubnet, $uaHash) {
+        $result = DB::transaction(function () use ($candidateId, $fingerprint, $ipSubnet, $uaHash) {
+            if (ElectionDevice::where('device_fingerprint', $fingerprint)->lockForUpdate()->exists()) {
+                throw new RuntimeException('Perangkat Anda sudah terdaftar memberikan suara.');
+            }
+
             // 1. Simpan metadata perangkat
             $device = ElectionDevice::create([
                 'device_fingerprint' => $fingerprint,
@@ -94,6 +99,11 @@ class PilketosFingerprintService
 
             return true;
         });
+
+        Cache::forget('pilketos_live_chart_data');
+        Cache::forget('admin_school_overview_stats');
+
+        return $result;
     }
 
     /**

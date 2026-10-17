@@ -18,6 +18,8 @@ class ElectionCandidateForm
                     ->required()
                     ->numeric()
                     ->minValue(1)
+                    ->maxValue(255)
+                    ->unique(ignoreRecord: true)
                     ->placeholder('Contoh: 1, 2, atau 3'),
 
                 TextInput::make('candidate_name')

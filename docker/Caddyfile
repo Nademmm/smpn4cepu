@@ -6,9 +6,16 @@
 }
 
 :{$PORT:80} {
-    bind 0.0.0.0
     root * /app/public
     encode zstd gzip
+
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+        -X-Powered-By
+    }
 
     # Layani aplikasi PHP (Laravel)
     php_server
@@ -20,3 +27,4 @@
     }
     respond @forbidden 404
 }
+

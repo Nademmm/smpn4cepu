@@ -27,6 +27,11 @@ class LearningMaterialResource extends Resource
         return ['title', 'summary', 'subject.name'];
     }
 
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with('subject');
+    }
+
     public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
     {
         return [

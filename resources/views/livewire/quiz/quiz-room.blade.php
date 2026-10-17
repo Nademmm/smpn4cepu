@@ -72,8 +72,9 @@
 
                 <form wire:submit="startQuiz" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-navy mb-1.5">Pilih / Konfirmasi Kelas Anda <span class="text-rose-500">*</span></label>
+                        <label for="studentClassSelect" class="block text-xs font-bold text-navy mb-1.5">Pilih / Konfirmasi Kelas Anda <span class="text-rose-500">*</span></label>
                         <select
+                            id="studentClassSelect"
                             wire:model="studentClass"
                             class="field text-sm font-bold @error('studentClass') !border-rose-400 !bg-rose-50/30 @enderror"
                             required
@@ -163,7 +164,7 @@
                                 class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black transition-colors"
                                 :class="timeLeft < 180 ? 'bg-rose-100 text-rose-700 animate-pulse' : 'bg-amber-100 text-amber-900 border border-amber-300'"
                             >
-                                <span>⏱️</span>
+                                <x-app-icon name="clock" class="w-3.5 h-3.5" />
                                 <span x-text="formatTime(timeLeft)"></span>
                             </span>
                         </div>
@@ -199,7 +200,7 @@
                                     $optLetter = chr(65 + $optIndex);
                                 @endphp
                                 <label
-                                    class="flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border-2 cursor-pointer transition-all {{ ($answers[$question['id']] ?? null) == $option['id'] ? 'bg-sky-soft border-brand text-brand font-extrabold' : 'border-sun-soft bg-white text-navy hover:border-brand font-bold' }}"
+                                    class="flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border-2 cursor-pointer transition-all focus-within:ring-2 focus-within:ring-brand {{ ($answers[$question['id']] ?? null) == $option['id'] ? 'bg-sky-soft border-brand text-brand font-extrabold' : 'border-sun-soft bg-white text-navy hover:border-brand font-bold' }}"
                                 >
                                     <input
                                         type="radio"
@@ -226,7 +227,7 @@
                         type="button"
                         @click="currentIndex = Math.max(0, currentIndex - 1)"
                         :disabled="currentIndex === 0"
-                        class="btn-ghost text-xs !min-h-[38px] disabled:opacity-40 disabled:cursor-not-allowed"
+                        class="btn-ghost text-xs disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                         <x-app-icon name="arrow-left" class="w-3.5 h-3.5" />
                         Soal Sebelumnya
@@ -238,7 +239,7 @@
                             type="button"
                             x-show="currentIndex < total - 1"
                             @click="currentIndex = Math.min(total - 1, currentIndex + 1)"
-                            class="btn-secondary text-xs !min-h-[38px]"
+                            class="btn-secondary text-xs"
                         >
                             Selanjutnya
                             <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
@@ -249,7 +250,7 @@
                             type="button"
                             x-show="currentIndex === total - 1"
                             @click="confirmFinish = true"
-                            class="btn-primary text-xs !min-h-[38px]"
+                            class="btn-primary text-xs"
                         >
                             <x-app-icon name="check-circle" class="w-4 h-4" />
                             Selesai & Kumpulkan
@@ -268,7 +269,8 @@
                         <button
                             type="button"
                             @click="currentIndex = {{ $qIndex }}"
-                            class="w-9 h-9 rounded-xl text-xs font-black transition-all flex items-center justify-center border-2 {{ isset($answers[$question['id']]) ? 'bg-sky-soft text-brand border-brand' : 'bg-white text-ink-mute border-sun-soft hover:border-brand' }}"
+                            aria-label="Soal nomor {{ $qIndex + 1 }}"
+                            class="w-10 h-10 min-h-[40px] rounded-xl text-xs font-black transition-all flex items-center justify-center border-2 {{ isset($answers[$question['id']]) ? 'bg-sky-soft text-brand border-brand' : 'bg-white text-ink-mute border-sun-soft hover:border-brand' }}"
                             :class="currentIndex === {{ $qIndex }} ? 'ring-2 ring-brand ring-offset-2' : ''"
                         >
                             {{ $qIndex + 1 }}
@@ -282,6 +284,9 @@
                 <div
                     x-show="confirmFinish"
                     x-cloak
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="confirm-finish-title"
                     @keydown.escape.window="confirmFinish = false"
                     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/70 backdrop-blur-xs"
                 >
@@ -292,7 +297,7 @@
                         <div class="w-12 h-12 rounded-full bg-brand/10 text-brand flex items-center justify-center mx-auto">
                             <x-app-icon name="check-circle" class="w-6 h-6" />
                         </div>
-                        <h3 class="text-lg font-black text-navy">Kumpulkan Jawaban?</h3>
+                        <h3 id="confirm-finish-title" class="text-lg font-black text-navy">Kumpulkan Jawaban?</h3>
                         <p class="text-xs text-ink-soft leading-relaxed font-medium">
                             Pastikan semua soal telah terjawab dengan teliti sebelum mengirimkan hasil simulasi ini.
                         </p>
@@ -306,6 +311,7 @@
                             </button>
                             <button
                                 type="button"
+                                @click="clearInterval(timer)"
                                 wire:click="submitQuiz"
                                 wire:loading.attr="disabled"
                                 class="btn-primary text-xs"
@@ -321,54 +327,108 @@
     @else
         {{-- Layar Hasil / Skor Figma --}}
         @php
-            $score = $resultSummary['score'] ?? 0;
+            $score = round($resultSummary['final_score'] ?? $resultSummary['score'] ?? 0);
             $isPassed = $resultSummary['is_passed'] ?? false;
-            $correctCount = $resultSummary['correct_count'] ?? 0;
-            $totalCount = $resultSummary['total_questions'] ?? count($questions);
+            $correctCount = $resultSummary['correct_answers'] ?? $resultSummary['correct_count'] ?? collect($resultSummary['reviews'] ?? [])->where('is_correct', true)->count();
+            $totalCount = $resultSummary['total_questions'] ?? count($resultSummary['reviews'] ?? $questions);
         @endphp
 
-        <x-card class="max-w-xl mx-auto text-center p-8 sm:p-10 space-y-5 shadow-xs">
-            <span class="inline-block text-xs font-extrabold uppercase tracking-wider text-brand">
-                LATIHAN SELESAI
-            </span>
+        <div class="space-y-8">
+            <x-card class="max-w-xl mx-auto text-center p-8 sm:p-10 space-y-5 shadow-xs">
+                <span class="inline-block text-xs font-extrabold uppercase tracking-wider text-brand">
+                    LATIHAN SELESAI
+                </span>
 
-            <h2 class="text-2xl font-extrabold text-navy">Hasil Simulasi Mandiri</h2>
+                <h2 class="text-2xl font-extrabold text-navy">Hasil Simulasi Mandiri</h2>
 
-            <div class="inline-block bg-sky-soft text-brand font-black text-xs px-4 py-1.5 rounded-full border border-brand/20">
-                Peserta: {{ $participantIdentifier }}
-            </div>
+                <div class="inline-block bg-sky-soft text-brand font-black text-xs px-4 py-1.5 rounded-full border border-brand/20">
+                    Peserta: {{ $participantIdentifier }}
+                </div>
 
-            {{-- Angka Skor Besar Figma --}}
-            <div class="text-6xl sm:text-7xl font-extrabold {{ $isPassed ? 'text-emerald-600' : 'text-red-600' }} leading-none">
-                {{ $score }}<span class="text-2xl text-ink-mute font-bold">/100</span>
-            </div>
+                {{-- Angka Skor Besar Figma --}}
+                <div class="text-6xl sm:text-7xl font-extrabold {{ $isPassed ? 'text-emerald-600' : 'text-red-600' }} leading-none">
+                    {{ $score }}<span class="text-2xl text-ink-mute font-bold">/100</span>
+                </div>
 
-            <p class="text-sm font-bold text-ink-soft">
-                Jawaban benar: {{ $correctCount }} dari {{ $totalCount }} butir soal
-            </p>
+                <p class="text-sm font-bold text-ink-soft">
+                    Jawaban benar: {{ $correctCount }} dari {{ $totalCount }} butir soal
+                </p>
 
-            <div class="pt-1">
-                @if ($isPassed)
-                    <span class="inline-block rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-extrabold text-emerald-800">
-                        ✓ Tuntas · Memenuhi KKM
-                    </span>
-                @else
-                    <span class="inline-block rounded-full bg-red-100 px-4 py-1.5 text-xs font-extrabold text-red-800">
-                        Belum Tuntas · Tetap Semangat Belajar
-                    </span>
-                @endif
-            </div>
+                <div class="pt-1">
+                    @if ($isPassed)
+                        <span class="inline-block rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-extrabold text-emerald-800">
+                            ✓ Tuntas · Memenuhi KKM
+                        </span>
+                    @else
+                        <span class="inline-block rounded-full bg-red-100 px-4 py-1.5 text-xs font-extrabold text-red-800">
+                            Belum Tuntas · Tetap Semangat Belajar
+                        </span>
+                    @endif
+                </div>
 
-            <div class="p-3 bg-sky-soft/60 rounded-xl border border-brand/20 text-xs font-bold text-navy flex items-center justify-center gap-2">
-                <x-app-icon name="check-circle" class="w-4 h-4 text-brand shrink-0" />
-                <span>Hasil latihan ini telah tersimpan secara permanen pada portofolio akun belajar Anda.</span>
-            </div>
+                <div class="p-3 bg-sky-soft/60 rounded-xl border border-brand/20 text-xs font-bold text-navy flex items-center justify-center gap-2">
+                    <x-app-icon name="check-circle" class="w-4 h-4 text-brand shrink-0" />
+                    <span>Hasil latihan ini telah tersimpan secara permanen pada portofolio akun belajar Anda.</span>
+                </div>
 
-            <div class="pt-4 border-t-2 border-sun-soft flex justify-center gap-3">
-                <a href="{{ route('quizzes') }}" class="btn-primary text-xs">
-                    Pilih Latihan Lain
-                </a>
-            </div>
-        </x-card>
+                <div class="pt-4 border-t-2 border-sun-soft flex justify-center gap-3">
+                    <a href="{{ route('quizzes') }}" class="btn-primary text-xs">
+                        Pilih Latihan Lain
+                    </a>
+                </div>
+            </x-card>
+
+            {{-- Pembahasan & Review Jawaban Butir Soal --}}
+            @if (!empty($resultSummary['reviews']))
+                <x-card class="space-y-5 p-6 sm:p-8 shadow-xs">
+                    <div class="border-b-2 border-sun-soft pb-4 flex items-center justify-between gap-3">
+                        <div>
+                            <span class="text-xs font-bold text-brand uppercase tracking-wider block">Evaluasi Mandiri</span>
+                            <h3 class="text-lg sm:text-xl font-extrabold text-navy">Pembahasan & Kunci Jawaban</h3>
+                        </div>
+                        <span class="text-xs font-bold text-ink-mute bg-cream px-3 py-1 rounded-full border border-sun-soft">
+                            {{ count($resultSummary['reviews']) }} Butir Soal
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        @foreach ($resultSummary['reviews'] as $rIndex => $review)
+                            <div class="p-4 sm:p-5 rounded-2xl border-2 {{ !empty($review['is_correct']) ? 'border-emerald-200 bg-emerald-50/30' : 'border-rose-200 bg-rose-50/30' }} space-y-3">
+                                <div class="flex items-start justify-between gap-3">
+                                    <h4 class="text-sm sm:text-base font-extrabold text-navy leading-snug">
+                                        {{ $rIndex + 1 }}. {{ $review['question_text'] ?? '' }}
+                                    </h4>
+                                    <span class="shrink-0 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase {{ !empty($review['is_correct']) ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
+                                        {{ !empty($review['is_correct']) ? 'Benar' : 'Kurang Tepat' }}
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                                    <div class="p-3 rounded-xl bg-white border {{ !empty($review['is_correct']) ? 'border-emerald-200' : 'border-rose-200' }}">
+                                        <span class="text-[11px] font-bold text-ink-mute block mb-0.5">Jawaban Anda:</span>
+                                        <strong class="font-extrabold {{ !empty($review['is_correct']) ? 'text-emerald-800' : 'text-rose-800' }}">
+                                            {{ $review['user_selected'] ?? 'Tidak Menjawab' }}
+                                        </strong>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-white border border-emerald-200">
+                                        <span class="text-[11px] font-bold text-ink-mute block mb-0.5">Kunci Jawaban Benar:</span>
+                                        <strong class="font-extrabold text-emerald-800">
+                                            {{ $review['correct_answer'] ?? '-' }}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                @if (!empty($review['explanation']))
+                                    <div class="p-3 rounded-xl bg-sky-soft/70 border border-brand/20 text-xs text-navy leading-relaxed font-medium">
+                                        <strong class="font-extrabold text-brand block mb-0.5">Pembahasan:</strong>
+                                        {{ $review['explanation'] }}
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </x-card>
+            @endif
+        </div>
     @endif
 </div>

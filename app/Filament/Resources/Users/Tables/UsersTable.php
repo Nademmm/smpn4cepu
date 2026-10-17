@@ -67,7 +67,8 @@ class UsersTable
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->hidden(fn ($record): bool => (int) $record->id === (int) auth()->id()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

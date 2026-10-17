@@ -74,7 +74,6 @@
                                 class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-ink-mute hover:text-brand transition-colors rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/40"
                                 :title="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
                                 :aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
-                                tabindex="-1"
                             >
                                 {{-- Ikon Mata Terbuka (Tampilkan) --}}
                                 <svg

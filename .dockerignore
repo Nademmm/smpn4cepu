@@ -25,3 +25,11 @@ storage/logs/*
 docs
 deploy.sh
 README.md
+database/*.sqlite*
+public/build
+public/hot
+public/storage
+public/css/filament
+public/js/filament
+public/fonts/filament
+

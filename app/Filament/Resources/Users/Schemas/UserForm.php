@@ -67,12 +67,14 @@ class UserForm
                 TextInput::make('nip')
                     ->label('NIP (Nomor Induk Pegawai)')
                     ->maxLength(25)
+                    ->unique(ignoreRecord: true)
                     ->placeholder('Contoh: 198501012010011001')
                     ->helperText('Isi jika akun ini merupakan guru atau staf sekolah.'),
 
                 Select::make('roles')
                     ->label('Peran / Hak Akses (Role)')
                     ->relationship('roles', 'name')
+                    ->multiple()
                     ->preload()
                     ->searchable()
                     ->helperText('Tentukan peran pengguna: siswa (akses portal materi & kuis), guru, atau administrator.'),
@@ -81,7 +83,7 @@ class UserForm
                     ->label('Kata Sandi')
                     ->password()
                     ->revealable()
-                    ->dehydrateStateUsing(fn ($state) => !empty($state) ? Hash::make($state) : null)
+                    ->minLength(6)
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->placeholder(fn (string $operation): string => $operation === 'create' ? 'Tentukan kata sandi akun...' : 'Kosongkan jika tidak ingin mengubah kata sandi'),

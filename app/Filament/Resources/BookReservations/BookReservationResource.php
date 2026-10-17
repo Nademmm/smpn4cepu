@@ -24,6 +24,11 @@ class BookReservationResource extends Resource
         return ['reservation_code', 'borrower_name', 'borrower_class'];
     }
 
+    public static function getGlobalSearchEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with('book');
+    }
+
     public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
     {
         return [

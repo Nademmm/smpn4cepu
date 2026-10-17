@@ -12,9 +12,9 @@
 
         {{-- Feedback Sukses --}}
         @if ($submitted)
-            <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-900 text-xs font-bold flex items-center justify-between gap-3 shadow-xs animate-fade-in">
+            <div role="status" class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-900 text-xs font-bold flex items-center justify-between gap-3 shadow-xs animate-fade-in">
                 <div class="flex items-center gap-2">
-                    <span class="text-base">✅</span>
+                    <x-app-icon name="check" class="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>Terima kasih! Pesan Anda telah berhasil tersimpan dan akan segera ditindaklanjuti oleh staf sekolah.</span>
                 </div>
                 <button type="button" wire:click="resetForm" class="text-emerald-700 hover:text-emerald-950 font-extrabold text-xs underline shrink-0">
@@ -31,8 +31,9 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                    <label class="block text-xs font-bold text-navy mb-1.5">Nama Lengkap <span class="text-rose-500">*</span></label>
+                    <label for="contact_name" class="block text-xs font-bold text-navy mb-1.5">Nama Lengkap <span class="text-rose-500">*</span></label>
                     <input
+                        id="contact_name"
                         type="text"
                         wire:model="name"
                         placeholder="Nama Anda..."
@@ -43,8 +44,9 @@
                     @enderror
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-navy mb-1.5">Email / No. Telepon WhatsApp <span class="text-rose-500">*</span></label>
+                    <label for="contact_email_or_phone" class="block text-xs font-bold text-navy mb-1.5">Email / No. Telepon WhatsApp <span class="text-rose-500">*</span></label>
                     <input
+                        id="contact_email_or_phone"
                         type="text"
                         wire:model="email_or_phone"
                         placeholder="kontak@example.com / 0812..."
@@ -57,8 +59,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-navy mb-1.5">Perihal / Topik <span class="text-rose-500">*</span></label>
+                <label for="contact_subject" class="block text-xs font-bold text-navy mb-1.5">Perihal / Topik <span class="text-rose-500">*</span></label>
                 <input
+                    id="contact_subject"
                     type="text"
                     wire:model="subject"
                     placeholder="Keperluan informasi, PPDB, legalisir ijazah, atau saran..."
@@ -70,8 +73,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-navy mb-1.5">Pesan Lengkap <span class="text-rose-500">*</span></label>
+                <label for="contact_message" class="block text-xs font-bold text-navy mb-1.5">Pesan Lengkap <span class="text-rose-500">*</span></label>
                 <textarea
+                    id="contact_message"
                     rows="4"
                     wire:model="message"
                     placeholder="Tuliskan isi pesan atau pertanyaan Anda secara lengkap dan jelas..."
@@ -90,11 +94,11 @@
                 <button
                     type="submit"
                     wire:loading.attr="disabled"
-                    class="btn-primary text-xs !min-h-[40px] px-6 shadow-2xs flex items-center gap-2"
+                    class="btn-primary text-xs !min-h-[44px] px-6 shadow-2xs flex items-center gap-2"
                 >
                     <span wire:loading.remove>Kirim Pesan Sekarang</span>
                     <span wire:loading class="flex items-center gap-2">
-                        <span class="animate-spin text-sm">⏳</span>
+                        <x-app-icon name="clock" class="w-3.5 h-3.5 animate-spin" />
                         Mengirim...
                     </span>
                     <x-app-icon name="arrow-right" class="w-3.5 h-3.5" wire:loading.remove />

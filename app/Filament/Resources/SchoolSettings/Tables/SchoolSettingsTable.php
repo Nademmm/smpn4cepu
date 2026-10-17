@@ -17,8 +17,7 @@ class SchoolSettingsTable
                 ImageColumn::make('principal_photo_path')
                     ->label('Foto Kepsek')
                     ->circular()
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => $record->principal_photo_url),
+                    ->getStateUsing(fn ($record) => $record->principal_photo_url),
                 TextColumn::make('principal_name')
                     ->label('Nama Kepala Sekolah')
                     ->weight('bold')

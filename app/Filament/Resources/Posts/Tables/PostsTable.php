@@ -22,8 +22,7 @@ class PostsTable
             ->columns([
                 ImageColumn::make('featured_image')
                     ->label('Foto Sampul')
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => $record->featured_image_url),
+                    ->getStateUsing(fn ($record) => $record->featured_image_url),
                 TextColumn::make('title')
                     ->label('Judul Berita')
                     ->searchable()

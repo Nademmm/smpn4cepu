@@ -21,7 +21,7 @@ class QuizAssessmentService
     {
         $bank = QuestionBank::with(['questions.options' => function ($query) {
             $query->select('id', 'question_id', 'option_text');
-        }])->findOrFail($bankId);
+        }])->where('is_active', true)->findOrFail($bankId);
 
         return $bank->questions->map(function (Question $question) {
             return [
@@ -37,6 +37,14 @@ class QuizAssessmentService
     }
 
     /**
+     * Alias kompatibilitas pengambilan daftar soal untuk klien.
+     */
+    public function getQuestionsForClient(int $questionBankId): Collection
+    {
+        return $this->getQuestionsForQuiz($questionBankId);
+    }
+
+    /**
      * Evaluasi otomatis jawaban siswa dan simpan rekaman attempt ke database.
      *
      * @param array<int, int> $answers Format: [question_id => selected_option_id]
@@ -48,7 +56,7 @@ class QuizAssessmentService
         Carbon $startedAt,
         ?int $userId = null
     ): QuizAttempt {
-        $bank = QuestionBank::with('questions.options')->findOrFail($bankId);
+        $bank = QuestionBank::with('questions.options')->where('is_active', true)->findOrFail($bankId);
 
         if ($bank->questions->isEmpty()) {
             throw new InvalidArgumentException('Bank soal tidak memiliki butir pertanyaan.');
@@ -131,7 +139,10 @@ class QuizAssessmentService
             'attempt_id' => $attempt->id,
             'subject' => $attempt->bank->subject->name,
             'title' => $attempt->bank->title,
+            'score' => $attempt->final_score,
             'final_score' => $attempt->final_score,
+            'correct_count' => $attempt->correct_answers,
+            'total_questions' => $attempt->total_questions,
             'is_passed' => $attempt->is_passed,
             'passing_grade' => $attempt->bank->passing_grade,
             'reviews' => $attempt->answers->map(function (QuizAttemptAnswer $answer) {

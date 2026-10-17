@@ -9,11 +9,21 @@ echo "=========================================================="
 echo "==> [1/6] Menemukan paket Laravel & Filament..."
 php artisan package:discover --ansi || true
 
-# 2. Jalankan migrasi basis data
+# 2. Jalankan migrasi basis data (dengan mekanisme retry hingga 5 percobaan)
 echo "==> [2/6] Memeriksa dan menjalankan migrasi basis data..."
-php artisan migrate --force || {
-    echo "⚠️ Peringatan: Migrasi basis data gagal atau basis data belum siap."
-}
+php artisan config:clear || true
+MIGRATE_OK=0
+for ATTEMPT in 1 2 3 4 5; do
+    if php artisan migrate --force; then
+        MIGRATE_OK=1
+        break
+    fi
+    echo "⚠️ Percobaan migrasi ke-$ATTEMPT gagal, menunggu 2 detik sebelum mencoba kembali..."
+    sleep 2
+done
+if [ "$MIGRATE_OK" -ne 1 ]; then
+    echo "⚠️ Peringatan: Migrasi basis data gagal setelah 5 percobaan."
+fi
 
 # Jika RUN_SEEDER=true di env PaaS, jalankan seeding akun dan master data resmi
 if [ "$RUN_SEEDER" = "true" ]; then
@@ -21,9 +31,9 @@ if [ "$RUN_SEEDER" = "true" ]; then
     php artisan db:seed --force || echo "⚠️ Seeder dilewati atau sudah terisi."
 fi
 
-# 3. Pastikan symlink storage terhubung dan salin aset staf jika belum ada
+# 3. Pastikan symlink storage terhubung dan salin aset bawaan jika belum ada
 echo "==> [3/6] Memastikan symlink storage publik..."
-mkdir -p /app/storage/app/public/staff /app/storage/app/public/facilities /app/storage/app/public/principal
+mkdir -p /app/storage/app/public/staff /app/storage/app/public/facilities /app/storage/app/public/principal /app/storage/app/public/assets
 if [ -d "/app/public/images/staff" ]; then
     cp -rn /app/public/images/staff/* /app/storage/app/public/staff/ 2>/dev/null || true
 fi
@@ -32,6 +42,9 @@ if [ -d "/app/public/images/facilities" ]; then
 fi
 if [ -d "/app/public/images/principal" ]; then
     cp -rn /app/public/images/principal/* /app/storage/app/public/principal/ 2>/dev/null || true
+fi
+if [ -d "/app/public/images/assets" ]; then
+    cp -rn /app/public/images/assets/* /app/storage/app/public/assets/ 2>/dev/null || true
 fi
 php artisan storage:link || true
 

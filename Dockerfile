@@ -12,8 +12,8 @@ WORKDIR /app
 
 # Salin package.json & lockfile
 COPY package*.json ./
-# Gunakan npm install agar dependensi biner Linux (seperti rollup/vite) terpasang dengan benar
-RUN npm install --prefer-offline --no-audit
+# Gunakan npm ci untuk instalasi deterministik sesuai package-lock.json
+RUN npm ci --no-audit
 
 # Salin sumber daya aset frontend dan file yang dipindai Tailwind
 COPY resources ./resources
@@ -36,6 +36,7 @@ ENV APP_ENV=production \
 # Pasang ekstensi PHP yang dibutuhkan Laravel, Livewire, dan Filament
 RUN install-php-extensions \
     pdo_mysql \
+    pdo_sqlite \
     intl \
     zip \
     bcmath \
@@ -67,7 +68,6 @@ RUN php artisan filament:assets --ansi
 
 # Salin konfigurasi Caddyfile, OPcache, & script entrypoint
 COPY docker/Caddyfile /etc/caddy/Caddyfile
-COPY docker/Caddyfile /etc/frankenphp/Caddyfile
 COPY docker/opcache.ini $PHP_INI_DIR/conf.d/opcache.ini
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 

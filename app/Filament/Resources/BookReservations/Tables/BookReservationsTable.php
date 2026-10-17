@@ -70,14 +70,26 @@ class BookReservationsTable
                     ->icon('heroicon-o-check')
                     ->color('success')
                     ->visible(fn ($record) => $record->status === 'menunggu')
-                    ->action(fn ($record) => $record->update(['status' => 'diambil'])),
+                    ->action(function ($record) {
+                        if ($record->status === 'menunggu') {
+                            $record->update(['status' => 'diambil']);
+                            if ($record->book && $record->book->available_stock > 0) {
+                                $record->book->decrement('available_stock');
+                            }
+                        }
+                    }),
 
                 Action::make('markAsReturned')
                     ->label('Buku Kembali')
                     ->icon('heroicon-o-arrow-path')
                     ->color('gray')
                     ->visible(fn ($record) => $record->status === 'diambil')
-                    ->action(fn ($record) => $record->update(['status' => 'selesai'])),
+                    ->action(function ($record) {
+                        if ($record->status === 'diambil') {
+                            $record->update(['status' => 'selesai']);
+                            $record->book?->increment('available_stock');
+                        }
+                    }),
 
                 EditAction::make(),
                 DeleteAction::make(),

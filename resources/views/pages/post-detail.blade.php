@@ -1,15 +1,8 @@
-<x-layouts.app :title="$post->title">
-    @push('meta')
-        <meta property="og:title" content="{{ $post->title }} - SMP Negeri 4 Cepu">
-        <meta property="og:description" content="{{ $post->excerpt }}">
-        @if ($post->featured_image_url)
-            <meta property="og:image" content="{{ $post->featured_image_url }}">
-            <meta name="twitter:image" content="{{ $post->featured_image_url }}">
-        @endif
-        <meta name="twitter:title" content="{{ $post->title }} - SMP Negeri 4 Cepu">
-        <meta name="twitter:description" content="{{ $post->excerpt }}">
-    @endpush
-
+<x-layouts.app
+    :title="$post->title . ' - ' . ($schoolSetting?->school_name ?? 'SMP Negeri 4 Cepu')"
+    :metaDescription="$post->excerpt"
+    :metaImage="$post->featured_image_url"
+>
     <x-page-header
         :title="$post->title"
         crumb="Detail Berita"
@@ -27,6 +20,8 @@
                     <img
                         src="{{ $post->featured_image_url }}"
                         alt="{{ $post->title }}"
+                        fetchpriority="high"
+                        decoding="async"
                         class="w-full h-72 sm:h-96 object-cover rounded-2xl mb-6 border-2 border-sun-soft"
                     >
                 @endif
@@ -58,26 +53,36 @@
                             href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - Baca selengkapnya di portal resmi SMPN 4 Cepu: ' . url()->current()) }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-extrabold hover:bg-emerald-100 transition-colors shadow-2xs"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-extrabold hover:bg-emerald-100 transition-colors shadow-2xs"
                         >
-                            <span>💬</span>
+                            <x-app-icon name="chat" class="w-3.5 h-3.5 text-emerald-700" />
                             <span>Bagikan ke WhatsApp</span>
                         </a>
 
                         <button
                             type="button"
                             @click="copyLink()"
-                            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-sky-soft text-brand border border-sun-soft text-xs font-extrabold hover:bg-white transition-colors cursor-pointer"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-full bg-sky-soft text-brand border border-sun-soft text-xs font-extrabold hover:bg-white transition-colors cursor-pointer"
                         >
-                            <span x-text="copied ? '✓ Tersalin!' : '🔗 Salin Tautan'"></span>
+                            <x-app-icon name="document" class="w-3.5 h-3.5 text-brand" />
+                            <span x-text="copied ? 'Tersalin!' : 'Salin Tautan'"></span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="prose max-w-none text-navy text-sm sm:text-base leading-relaxed whitespace-pre-line font-medium">
-                {{ $post->content }}
-            </div>
+            @php
+                $hasHtml = preg_match('/<(p|br|h[1-6]|ul|ol|li|strong|b|em|i|blockquote|a)\b/i', (string) $post->content) === 1;
+            @endphp
+            @if ($hasHtml)
+                <div class="prose max-w-none text-navy text-sm sm:text-base leading-relaxed font-medium">
+                    {!! strip_tags($post->content, '<p><br><strong><b><em><i><ul><ol><li><h2><h3><h4><blockquote><a>') !!}
+                </div>
+            @else
+                <div class="prose max-w-none text-navy text-sm sm:text-base leading-relaxed whitespace-pre-line font-medium">
+                    {{ $post->content }}
+                </div>
+            @endif
         </x-card>
     </div>
 </x-layouts.app>

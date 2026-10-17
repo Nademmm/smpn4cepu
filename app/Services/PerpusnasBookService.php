@@ -56,7 +56,7 @@ class PerpusnasBookService
                         'title' => $book['title'] ?? null,
                         'author' => implode(', ', array_filter($authors)),
                         'publisher' => implode(', ', array_filter($publishers)),
-                        'publish_year' => isset($book['publish_date']) ? (int) preg_replace('/[^0-9]/', '', $book['publish_date']) : null,
+                        'publish_year' => isset($book['publish_date']) && preg_match('/\b(19|20)\d{2}\b/', (string) $book['publish_date'], $m) ? (int) $m[0] : null,
                         'pages' => $book['number_of_pages'] ?? null,
                         'cover_url' => $book['cover']['large'] ?? $book['cover']['medium'] ?? null,
                     ];

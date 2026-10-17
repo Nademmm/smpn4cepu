@@ -11,6 +11,9 @@
 .env
 .env.backup
 .env.production
+.env.*
+!.env.example
+database/temp_empty.sqlite
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -21,3 +24,4 @@ yarn-error.log
 /.idea
 /.vscode
 /scratch
+

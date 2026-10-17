@@ -60,12 +60,28 @@ class QuestionBankPolicy
 
     public function restore(AuthUser $authUser, QuestionBank $questionBank): bool
     {
-        return $authUser->can('Restore:QuestionBank');
+        if (!$authUser->can('Restore:QuestionBank')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $questionBank->created_by === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, QuestionBank $questionBank): bool
     {
-        return $authUser->can('ForceDelete:QuestionBank');
+        if (!$authUser->can('ForceDelete:QuestionBank')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $questionBank->created_by === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
@@ -80,7 +96,15 @@ class QuestionBankPolicy
 
     public function replicate(AuthUser $authUser, QuestionBank $questionBank): bool
     {
-        return $authUser->can('Replicate:QuestionBank');
+        if (!$authUser->can('Replicate:QuestionBank')) {
+            return false;
+        }
+
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return (int) $questionBank->created_by === (int) $authUser->id;
+        }
+
+        return true;
     }
 
     public function reorder(AuthUser $authUser): bool

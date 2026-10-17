@@ -23,6 +23,8 @@ class StaffMemberForm
                 TextInput::make('nip')
                     ->label('NIP / NIPPPK (Opsional)')
                     ->placeholder('19xxxxxxxxxxxxxxxx')
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(25)
                     ->nullable(),
 
                 TextInput::make('position')

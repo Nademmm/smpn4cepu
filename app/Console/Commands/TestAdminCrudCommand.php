@@ -33,6 +33,11 @@ class TestAdminCrudCommand extends Command
 
     public function handle(): int
     {
+        if (app()->environment('production')) {
+            $this->error('❌ Perintah pengujian ini tidak diizinkan dijalankan di lingkungan produksi (production).');
+            return Command::FAILURE;
+        }
+
         $this->newLine();
         $this->info("==========================================================================================");
         $this->info("🧪 PENGUJIAN KOMPREHENSIF CRUD & OTORISASI AKSES PANEL SEKOLAH (SMPN 4 CEPU)");
@@ -205,7 +210,6 @@ class TestAdminCrudCommand extends Command
         $subject = Subject::create([
             'name' => 'Mata Pelajaran Uji Coba CRUD',
             'code' => $code,
-            'description' => 'Deskripsi mapel uji coba sistem',
         ]);
         $c = $subject->exists;
         $r = (bool) Subject::find($subject->id);
@@ -302,10 +306,8 @@ class TestAdminCrudCommand extends Command
 
     private function testSchoolFacilityCrud(): array
     {
-        $slug = 'fasilitas-uji-' . Str::random(6);
         $fac = SchoolFacility::create([
             'name' => 'Laboratorium Komputer Uji Coba',
-            'slug' => $slug,
             'description' => 'Fasilitas laboratorium komputer untuk simulasi ANBK dan kuis digital.',
             'display_order' => 99,
         ]);
@@ -346,9 +348,8 @@ class TestAdminCrudCommand extends Command
             'name' => 'Klub Robotik & Coding Uji Coba',
             'slug' => $slug,
             'category' => 'Teknologi',
-            'schedule_day' => 'Sabtu',
-            'schedule_time' => '14.00 - 16.00 WIB',
-            'coach_name' => 'Pembina Robotik',
+            'schedule_day' => 'Sabtu, 14.00 - 16.00 WIB',
+            'leader_name' => 'Pembina Robotik',
             'description' => 'Pengembangan minat bakat dalam dunia rekayasa teknologi dan pemrograman.',
             'is_active' => true,
             'display_order' => 99,
@@ -418,7 +419,6 @@ class TestAdminCrudCommand extends Command
 
     private function testSchoolDocumentCrud(): array
     {
-        $slug = 'dokumen-uji-' . Str::random(6);
         $doc = SchoolDocument::create([
             'title' => 'Panduan Asesmen Belajar Digital Uji Coba',
             'category' => 'Akademik',
@@ -543,6 +543,7 @@ class TestAdminCrudCommand extends Command
         $oldPhone = $setting->school_phone;
         $setting->update(['school_phone' => '(0296) 421631']);
         $u = $setting->school_phone === '(0296) 421631';
+        $setting->update(['school_phone' => $oldPhone]);
 
         // Setting adalah konfigurasi tunggal (singleton), dipelihara tanpa penghapusan
         return [17, 'Profil Sekolah & Sambutan (SchoolSetting)', 'OK', $r ? 'OK' : 'FAIL', $u ? 'OK' : 'FAIL', 'PROTECTED', '100% BERHASIL'];

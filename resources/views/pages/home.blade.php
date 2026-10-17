@@ -42,6 +42,8 @@
                     <img
                         src="{{ asset('images/logo.png') }}"
                         alt="Logo SMP Negeri 4 Cepu"
+                        fetchpriority="high"
+                        decoding="async"
                         class="w-72 sm:w-88 lg:w-[420px] xl:w-[460px] h-auto object-contain opacity-55 drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
                     >
                 </div>
@@ -146,6 +148,8 @@
                         <img
                             src="{{ $ksPhoto }}"
                             alt="{{ $ksName }}"
+                            loading="lazy"
+                            decoding="async"
                             class="w-full h-full object-cover object-top"
                         >
                     </div>
@@ -186,7 +190,7 @@
                 @forelse ($recentPosts as $post)
                     <x-card class="p-0 overflow-hidden flex flex-col h-full hover:border-brand transition-colors group">
                         @if ($post->featured_image_url)
-                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" loading="lazy" decoding="async" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="w-full h-44 bg-cream flex items-center justify-center text-brand">
                                 <x-app-icon name="news" class="w-10 h-10" />
@@ -263,7 +267,7 @@
                         <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
                             @if ($ach->photo_url)
                                 <div class="w-full h-40 overflow-hidden bg-cream relative">
-                                    <img src="{{ $ach->photo_url }}" alt="{{ $ach->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <img src="{{ $ach->photo_url }}" alt="{{ $ach->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                     <span class="absolute top-3 left-3 bg-sun text-navy font-black text-xs px-2.5 py-0.5 rounded-full uppercase shadow-xs">
                                         {{ $ach->rank }}
                                     </span>
@@ -294,6 +298,45 @@
         </section>
     @endif
 
+    {{-- Ekstrakurikuler & Pengembangan Bakat --}}
+    @if (isset($featuredExtracurriculars) && $featuredExtracurriculars->isNotEmpty())
+        <section class="bg-cream/60 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center justify-between gap-4 mb-7">
+                    <div>
+                        <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-0.5">Pengembangan Diri</span>
+                        <h2 class="text-2xl font-extrabold text-navy">Ekstrakurikuler Pilihan</h2>
+                    </div>
+                    <a href="{{ route('extracurriculars') }}" class="btn-ghost text-xs">
+                        Lihat Semua Ekstrakurikuler
+                        <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    @foreach ($featuredExtracurriculars as $extra)
+                        <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
+                            @if ($extra->photo_url)
+                                <img src="{{ $extra->photo_url }}" alt="{{ $extra->name }}" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                            @else
+                                <div class="w-full h-40 bg-sky-soft flex items-center justify-center text-brand">
+                                    <x-app-icon name="sparkles" class="w-8 h-8" />
+                                </div>
+                            @endif
+                            <div class="p-4 sm:p-5 flex flex-col grow">
+                                <span class="text-[11px] font-black uppercase tracking-wider text-brand mb-1">
+                                    {{ $extra->category ?? 'Kesiswaan' }}
+                                </span>
+                                <h3 class="font-extrabold text-navy text-base mb-1.5 leading-snug">{{ $extra->name }}</h3>
+                                <p class="text-xs text-ink-soft leading-relaxed line-clamp-2 font-medium">{{ $extra->description }}</p>
+                            </div>
+                        </x-card>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- Fasilitas Sekolah --}}
     <section class="bg-sky-soft/40 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
         <div class="max-w-7xl mx-auto">
@@ -303,7 +346,7 @@
                     <h2 class="text-2xl font-extrabold text-navy">Fasilitas Sekolah</h2>
                 </div>
                 <a href="{{ route('facilities') }}" class="btn-ghost text-xs">
-                    11 Fasilitas Lengkap
+                    {{ $totalFacilities }} Fasilitas Lengkap
                     <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
                 </a>
             </div>
@@ -312,7 +355,7 @@
                 @foreach ($featuredFacilities as $facility)
                     <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
                         @if ($facility->photo_url)
-                            <img src="{{ $facility->photo_url }}" alt="{{ $facility->name }}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="{{ $facility->photo_url }}" alt="{{ $facility->name }}" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="w-full h-40 bg-sky-soft flex items-center justify-center text-brand">
                                 <x-app-icon name="building" class="w-8 h-8" />

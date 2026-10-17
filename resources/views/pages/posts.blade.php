@@ -15,6 +15,7 @@
                         type="text"
                         name="q"
                         value="{{ request('q') }}"
+                        aria-label="Cari berita sekolah"
                         placeholder="Cari berita sekolah..."
                         class="field pl-11 !py-3 pr-24 shadow-2xs"
                     >
@@ -38,6 +39,8 @@
                                     <img
                                         src="{{ $post->featured_image_url }}"
                                         alt="{{ $post->title }}"
+                                        loading="lazy"
+                                        decoding="async"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     >
                                 </div>
@@ -89,7 +92,7 @@
 
                             @if (request('q'))
                                 <div class="flex items-center justify-center gap-3 pt-1">
-                                    <a href="{{ route('posts') }}" class="btn-primary !min-h-[40px] px-5 text-xs">
+                                    <a href="{{ route('posts') }}" class="btn-primary px-5 text-xs">
                                         <span>Tampilkan Semua Berita</span>
                                     </a>
                                 </div>
@@ -109,10 +112,12 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                                     @foreach ($suggestedPosts as $sPost)
                                         <a href="{{ route('post.detail', $sPost->slug) }}" class="card p-4 bg-white hover:border-brand transition-all group block shadow-2xs">
-                                            @if ($sPost->featured_image)
+                                            @if ($sPost->featured_image_url)
                                                 <img
-                                                    src="{{ asset('storage/' . $sPost->featured_image) }}"
+                                                    src="{{ $sPost->featured_image_url }}"
                                                     alt="{{ $sPost->title }}"
+                                                    loading="lazy"
+                                                    decoding="async"
                                                     class="w-full h-28 object-cover rounded-xl mb-2.5 group-hover:scale-105 transition-transform"
                                                 >
                                             @else

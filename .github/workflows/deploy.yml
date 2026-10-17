@@ -19,7 +19,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, intl, pdo_sqlite, fileinfo, curl, zip, bcmath
+          extensions: mbstring, intl, pdo_sqlite, fileinfo, curl, zip, bcmath, gd, exif
           coverage: none
 
       - name: Setup Node.js 20
@@ -39,9 +39,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Install NPM Dependencies & Build Assets
-        run: |
-          npm ci
-          npm run build
+        run: npm ci && npm run build
 
       - name: Prepare Laravel Environment
         run: |
@@ -59,12 +57,13 @@ jobs:
     needs: test-and-lint
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
 
     steps:
       - name: Trigger Webhook (Coolify / Railway / Render)
         if: env.DEPLOY_WEBHOOK_URL != ''
-        env:
-          DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
         run: |
           echo "Triggering deployment webhook..."
           curl -X POST -f "$DEPLOY_WEBHOOK_URL" || echo "Webhook trigger warning: Check URL secret."
+
