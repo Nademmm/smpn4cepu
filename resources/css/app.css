@@ -71,11 +71,11 @@
     }
 
     .chip {
-        @apply inline-flex items-center min-h-[44px] sm:min-h-[36px] rounded-full border-2 border-sun-soft bg-white px-4 py-1.5 text-[13px] font-bold text-navy transition-colors hover:border-brand;
+        @apply inline-flex items-center justify-center min-h-[44px] sm:min-h-[36px] rounded-full border-2 border-sun-soft bg-white px-4 py-1.5 text-[13px] font-bold text-navy transition-all duration-150 hover:border-brand cursor-pointer;
     }
 
     .chip-active {
-        @apply bg-navy text-white border-navy hover:border-navy font-black;
+        @apply inline-flex items-center justify-center min-h-[44px] sm:min-h-[36px] rounded-full border-2 border-brand bg-brand px-4 py-1.5 text-[13px] font-black text-white shadow-xs hover:bg-brand-dark hover:border-brand-dark cursor-pointer;
     }
 
     .badge-green {

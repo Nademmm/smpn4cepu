@@ -2,6 +2,7 @@
     x-data="{
         showModal: false,
         confirmCandidate: null,
+        candidateNumber: '',
         candidateName: '',
         init() {
             // Generate canvas-based hardware hash fingerprint
@@ -17,8 +18,9 @@
                 $wire.set('clientHardwareHash', 'HW-' + Math.random().toString(36).substring(2, 15));
             }
         },
-        openConfirm(id, name) {
+        openConfirm(id, number, name) {
             this.confirmCandidate = id;
+            this.candidateNumber = number;
             this.candidateName = name;
             this.showModal = true;
         },
@@ -29,23 +31,6 @@
         }
     }"
 >
-    {{-- Banner Resmi Pilketos --}}
-    <section class="bg-gradient-to-br from-brand to-brand-dark text-white py-12 px-4 sm:px-6 lg:px-8 text-center">
-        <div class="max-w-4xl mx-auto space-y-4">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-white">Pemilihan Ketua & Wakil OSIS</h1>
-            <p class="text-sm sm:text-base text-white/85 max-w-2xl mx-auto font-medium">
-                Gunakan hak suaramu secara cerdas, berintegritas, langsung, umum, bebas, rahasia, jujur, dan adil.
-            </p>
-
-            <div class="pt-2 flex justify-center gap-3">
-                <a href="{{ route('pilketos.live') }}" class="btn-primary text-xs !min-h-[38px] shadow-xs">
-                    Pantau Quick Count Suara
-                    <x-app-icon name="arrow-right" class="w-3.5 h-3.5" />
-                </a>
-            </div>
-        </div>
-    </section>
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-8">
         {{-- Pesan Error Validasi Jika Ada --}}
         @if ($errorMessage)
@@ -156,7 +141,7 @@
                             <div>
                                 <button
                                     type="button"
-                                    @click="openConfirm({{ $cand->id }}, '{{ addslashes($cand->candidate_name) }} & {{ addslashes($cand->vice_candidate_name) }}')"
+                                    @click="openConfirm({{ $cand->id }}, '{{ $cand->candidate_number }}', '{{ addslashes($cand->candidate_name) }} & {{ addslashes($cand->vice_candidate_name) }}')"
                                     class="btn-primary w-full text-sm"
                                 >
                                     Pilih Pasangan Ini
@@ -186,15 +171,18 @@
                         @click.away="showModal = false"
                         class="card max-w-sm w-full p-6 text-center space-y-4 bg-white shadow-2xl"
                     >
-                        <div class="w-12 h-12 rounded-full bg-sun text-navy flex items-center justify-center mx-auto font-black text-xl">
+                        <div class="w-12 h-12 rounded-full bg-sun text-navy flex items-center justify-center mx-auto font-black text-xl shadow-xs">
                             !
                         </div>
                         <h3 class="text-lg font-black text-navy">Konfirmasi Hak Suara</h3>
-                        <p class="text-xs text-ink-soft leading-relaxed font-medium">
-                            Anda akan memberikan hak suara kepada:
-                            <strong class="block text-navy text-sm mt-1" x-text="candidateName"></strong>
-                            Pilihan tidak dapat diubah setelah dikonfirmasi.
-                        </p>
+                        <div class="space-y-2 text-xs text-ink-soft leading-relaxed font-medium">
+                            <p>Anda akan memberikan hak suara Anda kepada:</p>
+                            <div class="p-3 rounded-xl bg-cream/70 border border-sun-soft">
+                                <span class="inline-block px-2.5 py-0.5 rounded-full bg-sun text-navy font-black text-xs mb-1" x-text="'Paslon Nomor Urut ' + candidateNumber"></span>
+                                <strong class="block text-navy text-sm font-black" x-text="candidateName"></strong>
+                            </div>
+                            <p class="text-[11px] text-ink-mute">Pastikan pilihan Anda sudah benar. Pilihan tidak dapat diubah kembali setelah suara tersimpan ke kotak suara digital.</p>
+                        </div>
                         <div class="flex justify-center gap-3 pt-2">
                             <button
                                 type="button"
@@ -208,7 +196,7 @@
                                 @click="executeVote()"
                                 class="btn-primary text-xs"
                             >
-                                Ya, Saya Yakin
+                                Ya, Simpan Suara Saya
                             </button>
                         </div>
                     </div>

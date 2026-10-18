@@ -14,6 +14,7 @@
             viewMode: 'grid',
             reservationSubmitted: false,
             reservationCode: '',
+            codeCopied: false,
             errorMessage: '',
             borrowerName: '',
             borrowerClass: '',
@@ -23,6 +24,7 @@
                 this.detailTab = tab;
                 this.reservationSubmitted = false;
                 this.reservationCode = '';
+                this.codeCopied = false;
                 this.errorMessage = '';
                 this.borrowerName = '';
                 this.borrowerClass = '';
@@ -679,8 +681,19 @@
 
                                 <div class="bg-white p-4 rounded-xl border border-emerald-300 max-w-sm mx-auto shadow-2xs space-y-2 text-left">
                                     <div class="flex justify-between items-center pb-2 border-b border-sun-soft">
-                                        <span class="text-[11px] text-ink-mute font-bold">KODE BOOKING</span>
-                                        <span class="text-base font-black text-brand tracking-wider" x-text="reservationCode"></span>
+                                        <div>
+                                            <span class="text-[11px] text-ink-mute font-bold block">KODE BOOKING</span>
+                                            <span class="text-lg font-black text-brand tracking-wider" x-text="reservationCode"></span>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            @click="navigator.clipboard.writeText(reservationCode); codeCopied = true; setTimeout(() => codeCopied = false, 2500)"
+                                            aria-label="Salin kode booking ke papan klip"
+                                            class="btn-ghost text-xs !py-1.5 !px-3 flex items-center gap-1.5 border border-sun-soft min-h-[36px]"
+                                        >
+                                            <x-app-icon name="check" class="w-3.5 h-3.5 text-emerald-600" />
+                                            <span x-text="codeCopied ? 'Tersalin!' : 'Salin Kode'"></span>
+                                        </button>
                                     </div>
                                     <div class="text-xs text-navy font-semibold">
                                         <div class="text-ink-mute text-[11px]">Judul Buku:</div>

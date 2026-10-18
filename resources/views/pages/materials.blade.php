@@ -17,57 +17,99 @@
 
     @php
         $gradeCounts = $materials->groupBy(fn ($m) => (string) $m->grade_level)->map->count();
+        $countAll = $materials->count();
+        $count7 = $gradeCounts['7'] ?? 0;
+        $count8 = $gradeCounts['8'] ?? 0;
+        $count9 = $gradeCounts['9'] ?? 0;
     @endphp
 
     <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-8"
         x-data="{
             selectedGrade: 'all',
+            searchQuery: '',
             activeMaterial: null,
-            gradeCounts: @js($gradeCounts),
+            materialsList: @js($materials->map(fn($m) => ['id' => $m->id, 'grade' => (string) $m->grade_level, 'title' => $m->title, 'subject' => $m->subject?->name ?? ''])),
             openMaterial(mat) {
                 this.activeMaterial = mat;
+            },
+            matches(grade, title, subject) {
+                const matchesGrade = this.selectedGrade === 'all' || this.selectedGrade === String(grade);
+                if (!matchesGrade) return false;
+                if (!this.searchQuery.trim()) return true;
+                const query = this.searchQuery.toLowerCase();
+                return (title && title.toLowerCase().includes(query)) || (subject && subject.toLowerCase().includes(query));
+            },
+            get filteredCount() {
+                return this.materialsList.filter(m => this.matches(m.grade, m.title, m.subject)).length;
             }
         }"
         x-effect="document.body.classList.toggle('overflow-hidden', activeMaterial !== null)"
     >
-        {{-- Filter Tingkat Kelas --}}
-        <div class="flex flex-wrap items-center justify-between gap-4">
+        {{-- Filter Tingkat Kelas & Pencarian Materi --}}
+        <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-end justify-between">
             <div>
                 <span class="text-xs font-bold uppercase tracking-wider text-ink-mute block mb-2">PILIH TINGKAT KELAS</span>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-wrap items-center gap-2" role="tablist" aria-label="Filter Tingkat Kelas">
                     <button
                         type="button"
                         @click="selectedGrade = 'all'"
                         :class="selectedGrade === 'all' ? 'chip-active' : ''"
-                        class="chip"
+                        class="chip transition-all"
                     >
-                        Semua Kelas
+                        <span>Semua Kelas</span>
+                        <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === 'all' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
+                            {{ $countAll }}
+                        </span>
                     </button>
                     <button
                         type="button"
                         @click="selectedGrade = '7'"
                         :class="selectedGrade === '7' ? 'chip-active' : ''"
-                        class="chip"
+                        class="chip transition-all"
                     >
-                        Kelas VII
+                        <span>Kelas VII (7)</span>
+                        <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === '7' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
+                            {{ $count7 }}
+                        </span>
                     </button>
                     <button
                         type="button"
                         @click="selectedGrade = '8'"
                         :class="selectedGrade === '8' ? 'chip-active' : ''"
-                        class="chip"
+                        class="chip transition-all"
                     >
-                        Kelas VIII
+                        <span>Kelas VIII (8)</span>
+                        <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === '8' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
+                            {{ $count8 }}
+                        </span>
                     </button>
                     <button
                         type="button"
                         @click="selectedGrade = '9'"
                         :class="selectedGrade === '9' ? 'chip-active' : ''"
-                        class="chip"
+                        class="chip transition-all"
                     >
-                        Kelas IX
+                        <span>Kelas IX (9)</span>
+                        <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === '9' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
+                            {{ $count9 }}
+                        </span>
                     </button>
+                </div>
+            </div>
+
+            <div class="w-full md:w-80">
+                <label for="material-search" class="text-xs font-bold uppercase tracking-wider text-ink-mute block mb-2">CARI MODUL / MAPEL</label>
+                <div class="relative">
+                    <input
+                        id="material-search"
+                        type="search"
+                        x-model="searchQuery"
+                        placeholder="Cari mata pelajaran atau judul materi..."
+                        aria-label="Cari materi pembelajaran"
+                        class="field !py-2.5 pl-9 pr-4 text-xs font-bold"
+                    >
+                    <x-app-icon name="search" class="w-4 h-4 text-ink-mute absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
             </div>
         </div>
@@ -87,7 +129,7 @@
                     ];
                 @endphp
                 <div
-                    x-show="selectedGrade === 'all' || selectedGrade === '{{ $mat->grade_level }}'"
+                    x-show="matches('{{ $mat->grade_level }}', @js($mat->title), @js($mat->subject?->name ?? ''))"
                     x-transition
                     class="h-full"
                 >
@@ -152,18 +194,22 @@
 
             @if ($materials->isNotEmpty())
                 <div
-                    x-show="selectedGrade !== 'all' && !(gradeCounts[selectedGrade] > 0)"
+                    x-show="filteredCount === 0"
                     x-cloak
                     class="col-span-full"
                 >
                     <x-card class="text-center py-10 space-y-3">
-                        <p class="text-base font-extrabold text-navy">Belum Ada Materi untuk Tingkat Kelas Ini</p>
+                        <p class="text-base font-extrabold text-navy">Tidak Ada Materi yang Sesuai</p>
                         <p class="mx-auto max-w-md text-sm text-ink-soft">
-                            Modul pembelajaran untuk tingkat kelas yang dipilih sedang dipersiapkan oleh guru pengampu. Silakan pilih tingkat kelas lainnya.
+                            Tidak ditemukan materi pembelajaran untuk kriteria pencarian atau tingkat kelas yang dipilih.
                         </p>
-                        <div class="pt-2">
-                            <button type="button" @click="selectedGrade = 'all'" class="btn-primary text-xs">
-                                Tampilkan Semua Kelas
+                        <div class="pt-2 flex justify-center gap-2">
+                            <button
+                                type="button"
+                                @click="selectedGrade = 'all'; searchQuery = ''"
+                                class="btn-primary text-xs"
+                            >
+                                Tampilkan Semua Materi
                             </button>
                         </div>
                     </x-card>

@@ -71,8 +71,8 @@
                 <button
                     type="button"
                     @click="selectedGrade = 'all'"
-                    :class="selectedGrade === 'all' ? 'chip-active' : 'chip'"
-                    class="transition-all"
+                    :class="selectedGrade === 'all' ? 'chip-active' : ''"
+                    class="chip transition-all"
                 >
                     <span>Semua Angkatan</span>
                     <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === 'all' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
@@ -82,8 +82,8 @@
                 <button
                     type="button"
                     @click="selectedGrade = '7'"
-                    :class="selectedGrade === '7' ? 'chip-active' : 'chip'"
-                    class="transition-all"
+                    :class="selectedGrade === '7' ? 'chip-active' : ''"
+                    class="chip transition-all"
                 >
                     <span>Kelas VII (7)</span>
                     <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === '7' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
@@ -93,8 +93,8 @@
                 <button
                     type="button"
                     @click="selectedGrade = '8'"
-                    :class="selectedGrade === '8' ? 'chip-active' : 'chip'"
-                    class="transition-all"
+                    :class="selectedGrade === '8' ? 'chip-active' : ''"
+                    class="chip transition-all"
                 >
                     <span>Kelas VIII (8)</span>
                     <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === '8' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
@@ -104,8 +104,8 @@
                 <button
                     type="button"
                     @click="selectedGrade = '9'"
-                    :class="selectedGrade === '9' ? 'chip-active' : 'chip'"
-                    class="transition-all"
+                    :class="selectedGrade === '9' ? 'chip-active' : ''"
+                    class="chip transition-all"
                 >
                     <span>Kelas IX (9)</span>
                     <span class="ml-1.5 px-2 py-0.5 rounded-full text-[11px] font-black" :class="selectedGrade === '9' ? 'bg-white/20 text-white' : 'bg-cream text-navy'">
