@@ -25,11 +25,35 @@ if [ "$MIGRATE_OK" -ne 1 ]; then
     echo "⚠️ Peringatan: Migrasi basis data gagal setelah 5 percobaan."
 fi
 
-# Jika RUN_SEEDER=true di env PaaS, jalankan seeding akun dan master data resmi
+# Jika RUN_SEEDER=true atau data utama masih kosong, jalankan seeding otomatis
+echo "==> Memeriksa kelengkapan master data dan akun..."
 if [ "$RUN_SEEDER" = "true" ]; then
-    echo "==> Inisialisasi RUN_SEEDER terdeteksi: Menjalankan DatabaseSeeder..."
-    php artisan db:seed --force || echo "⚠️ Seeder dilewati atau sudah terisi."
+    echo "==> Inisialisasi RUN_SEEDER=true: Menjalankan DatabaseSeeder..."
+    php artisan db:seed --force || echo "⚠️ Seeder selesai atau dilewati."
+else
+    php -r "
+        require 'vendor/autoload.php';
+        \$app = require_once 'bootstrap/app.php';
+        \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class);
+        \$kernel->bootstrap();
+        try {
+            if (\App\Models\StaffMember::count() === 0 || \App\Models\Post::count() === 0) {
+                exit(10);
+            }
+        } catch (\Throwable \$e) {
+            exit(0);
+        }
+        exit(0);
+    " 2>/dev/null && NEED_SEED=0 || NEED_SEED=1
+
+    if [ "$NEED_SEED" -eq 1 ]; then
+        echo "==> Basis data belum memiliki data lengkap. Menjalankan auto-seeder..."
+        php artisan db:seed --force || echo "⚠️ Seeder selesai atau dilewati."
+    else
+        echo "==> Master data sudah lengkap."
+    fi
 fi
+
 
 # 3. Pastikan symlink storage terhubung dan salin aset bawaan jika belum ada
 echo "==> [3/6] Memastikan symlink storage publik..."
