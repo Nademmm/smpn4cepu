@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // 1. Bagikan SchoolSetting ke tampilan publik Blade menggunakan cache singleton
-        view()->composer(['pages.*', 'components.layouts.*', 'components.*'], function ($view) {
+        view()->composer(['pages.*', 'components.layouts.*'], function ($view) {
             try {
                 $view->with('schoolSetting', \App\Models\SchoolSetting::current());
             } catch (\Throwable $e) {

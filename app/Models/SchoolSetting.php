@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolSetting extends Model
 {
+    /**
+     * Cache singleton in-memory untuk request saat ini agar tidak query ulang berulang kali.
+     */
+    protected static ?self $currentInstance = null;
+
     protected $fillable = [
         'principal_name',
         'principal_title',
@@ -36,9 +41,11 @@ class SchoolSetting extends Model
     protected static function booted(): void
     {
         static::saved(function () {
+            static::$currentInstance = null;
             \Illuminate\Support\Facades\Cache::forget('school_setting_singleton');
         });
         static::deleted(function () {
+            static::$currentInstance = null;
             \Illuminate\Support\Facades\Cache::forget('school_setting_singleton');
         });
     }
@@ -48,6 +55,10 @@ class SchoolSetting extends Model
      */
     public static function current(): self
     {
+        if (static::$currentInstance !== null) {
+            return static::$currentInstance;
+        }
+
         $createOrGet = function (): self {
             $latestWelcome = 'Puji Syukur kami panjatkan kehadirat Tuhan Yang Maha Esa, karena pada akhirnya SMP Negeri 4 Cepu dapat menyelesaikan dan menerbitkan website sekolah. Website sekolah ini terbit sebagai jawaban atas kebutuhan informasi yang berbasis pada teknologi yang merupakan sebuah tuntutan jaman yang tak terelakan untuk mendukung terwujudnya ekosistem belajar digital yang inklusif dan berkualitas serta pemenuhan layanan sumber referensi dan informasi yang dibutuhkan oleh masyarakat. Kami memahami bahwa kebutuhan informasi pendidikan bagi murid, orangtua/wali murid, alumni dan masyarakat pada umumnya merupakan sebuah kebutuhan yang penting, terlebih untuk memperoleh informasi pendidikan di sekolah. Oleh karena itu SMP Negeri 4 Cepu selalu berbenah untuk meningkatkan dan melengkapi sarana dan prasarana dalam pengelolaan sistem informasi sekolah. Semoga dengan terbitnya website sekolah ini mampu memenuhi kebutuhan informasi yang dibutuhkan oleh murid, orangtua/wali murid, alumni dan masyarakat. Amin.';
 
@@ -71,9 +82,9 @@ class SchoolSetting extends Model
         };
 
         try {
-            return \Illuminate\Support\Facades\Cache::rememberForever('school_setting_singleton', $createOrGet);
+            return static::$currentInstance = \Illuminate\Support\Facades\Cache::rememberForever('school_setting_singleton', $createOrGet);
         } catch (\Throwable $e) {
-            return $createOrGet();
+            return static::$currentInstance = $createOrGet();
         }
     }
 
