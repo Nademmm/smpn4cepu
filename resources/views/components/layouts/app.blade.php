@@ -645,8 +645,7 @@
                         class="text-[11px] font-bold text-sky-300 hover:text-sun transition-colors inline-flex items-center gap-1"
                         title="Buka rute navigasi di Google Maps"
                     >
-                        <span>Buka Maps</span>
-                        <x-app-icon name="arrow-right" class="w-3 h-3" />
+                    <x-app-icon name="arrow-right" class="w-3 h-3" />
                     </a>
                 </div>
 
@@ -663,9 +662,6 @@
                         class="w-full h-44"
                     ></iframe>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-2 font-medium leading-relaxed">
-                    Peta interaktif dapat digeser dan di-zoom langsung untuk petunjuk navigasi arah ke sekolah.
-                </p>
             </div>
         </div>
 
