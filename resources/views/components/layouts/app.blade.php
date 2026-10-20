@@ -121,8 +121,19 @@
     <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ \Illuminate\Support\Facades\Vite::asset('node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff2') }}">
     <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ \Illuminate\Support\Facades\Vite::asset('node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff2') }}">
 
+    {{-- Critical CSS: Menjamin First Contentful Paint instan tanpa layar putih kosong --}}
+    <style>
+        body{background-color:#F1EBDA;color:#1B2A4A;font-family:'Nunito',system-ui,-apple-system,sans-serif;margin:0}
+        .bg-cream{background-color:#F1EBDA}
+        .bg-brand{background-color:#1F5FBF}
+        .from-brand{--tw-gradient-from:#1F5FBF var(--tw-gradient-from-position)}
+        .to-brand-dark{--tw-gradient-to:#163D8A var(--tw-gradient-to-position)}
+        .bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gradient-stops))}
+    </style>
+
     @vite('resources/css/app.css')
     @livewireStyles
+
 
     {{-- Speculation Rules API: Prefetch instan saat kursor mengarah ke tautan internal --}}
     <script type="speculationrules">

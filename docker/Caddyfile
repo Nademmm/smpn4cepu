@@ -26,6 +26,7 @@
     header /css/* Cache-Control "public, max-age=2592000"
     header /js/* Cache-Control "public, max-age=2592000"
     header /favicon.ico Cache-Control "public, max-age=604800"
+    header /robots.txt Cache-Control "public, max-age=86400"
 
     # Layani aplikasi PHP (Laravel)
     php_server

@@ -1,7 +1,5 @@
-/* Font Nunito di-host sendiri (subset latin) agar tidak bergantung pada Google Fonts */
+/* Font Nunito di-host sendiri (subset latin) bobot 400 (normal) dan 800 (tebal) */
 @import '@fontsource/nunito/latin-400.css';
-@import '@fontsource/nunito/latin-600.css';
-@import '@fontsource/nunito/latin-700.css';
 @import '@fontsource/nunito/latin-800.css';
 
 @tailwind base;

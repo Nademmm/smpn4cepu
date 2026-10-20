@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin
+Disallow: /livewire
+Disallow: /logout
+Disallow: /materi
+Disallow: /latihan-soal
+Disallow: /unduhan/*/download
+Disallow: /*?q=
+
+Sitemap: https://smpn4cepu.up.railway.app/sitemap.xml
