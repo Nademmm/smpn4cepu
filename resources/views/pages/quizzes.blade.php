@@ -1,4 +1,4 @@
-<x-layouts.app title="Latihan Soal Mandiri - SMP Negeri 4 Cepu" metaDescription="Ukur pemahaman materi belajarmu secara mandiri melalui bank soal terpadu per angkatan Kelas VII, VIII, dan IX SMP Negeri 4 Cepu.">
+<x-layouts.app title="Latihan Soal Mandiri" :noindex="true" metaDescription="Ukur pemahaman materi belajarmu secara mandiri melalui bank soal terpadu per angkatan Kelas VII, VIII, dan IX SMP Negeri 4 Cepu.">
     <x-page-header
         title="Belajar"
         subtitle="Ukur pemahaman materi belajarmu secara mandiri melalui bank soal terpadu per tingkat angkatan."

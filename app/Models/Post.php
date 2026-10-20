@@ -55,28 +55,25 @@ class Post extends Model
         return $query->where('category', $value);
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
+            \Illuminate\Support\Facades\Cache::forget('public_sitemap_xml_v1');
+        });
+        static::deleted(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
+            \Illuminate\Support\Facades\Cache::forget('public_sitemap_xml_v1');
+        });
+    }
+
     public function getFeaturedImageUrlAttribute(): ?string
     {
-        if (!$this->featured_image) {
-            return null;
-        }
-
-        if (str_starts_with($this->featured_image, 'http://') || str_starts_with($this->featured_image, 'https://')) {
-            return $this->featured_image;
-        }
-
-        if (file_exists(public_path('storage/' . $this->featured_image))) {
-            return asset('storage/' . $this->featured_image);
-        }
-
-        if (file_exists(public_path($this->featured_image))) {
-            return asset($this->featured_image);
-        }
-
-        if (file_exists(public_path('images/assets/' . $this->featured_image))) {
-            return asset('images/assets/' . $this->featured_image);
-        }
-
-        return asset('storage/' . $this->featured_image);
+        return \App\Support\PublicAssetResolver::resolve(
+            $this->featured_image,
+            ['storage/', '', 'images/assets/']
+        );
     }
 }

@@ -32,28 +32,25 @@ class StaffMember extends Model
         return $query->where('is_active', true)->orderBy('display_order', 'asc');
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
+            \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+        });
+        static::deleted(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
+            \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+        });
+    }
+
     public function getPhotoUrlAttribute(): ?string
     {
-        if (!$this->photo_path) {
-            return null;
-        }
-
-        if (str_starts_with($this->photo_path, 'http://') || str_starts_with($this->photo_path, 'https://')) {
-            return $this->photo_path;
-        }
-
-        if (file_exists(public_path('storage/' . $this->photo_path))) {
-            return asset('storage/' . $this->photo_path);
-        }
-
-        if (file_exists(public_path($this->photo_path))) {
-            return asset($this->photo_path);
-        }
-
-        if (file_exists(public_path('images/' . $this->photo_path))) {
-            return asset('images/' . $this->photo_path);
-        }
-
-        return asset('storage/' . $this->photo_path);
+        return \App\Support\PublicAssetResolver::resolve(
+            $this->photo_path,
+            ['storage/', '', 'images/']
+        );
     }
 }

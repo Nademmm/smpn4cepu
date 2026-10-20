@@ -1,4 +1,4 @@
-<x-layouts.app title="Materi Pembelajaran">
+<x-layouts.app title="Materi Pembelajaran" :noindex="true">
     <x-page-header
         title="Belajar"
         subtitle="Baca materi, pelajari modul ajar, dan perluas wawasan belajarmu secara mandiri."

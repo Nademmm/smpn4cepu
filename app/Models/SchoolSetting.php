@@ -90,26 +90,9 @@ class SchoolSetting extends Model
 
     public function getPrincipalPhotoUrlAttribute(): ?string
     {
-        if (!$this->principal_photo_path) {
-            return null;
-        }
-
-        if (str_starts_with($this->principal_photo_path, 'http://') || str_starts_with($this->principal_photo_path, 'https://')) {
-            return $this->principal_photo_path;
-        }
-
-        if (file_exists(public_path('storage/' . $this->principal_photo_path))) {
-            return asset('storage/' . $this->principal_photo_path);
-        }
-
-        if (file_exists(public_path($this->principal_photo_path))) {
-            return asset($this->principal_photo_path);
-        }
-
-        if (file_exists(public_path('images/principal/' . $this->principal_photo_path))) {
-            return asset('images/principal/' . $this->principal_photo_path);
-        }
-
-        return asset('storage/' . $this->principal_photo_path);
+        return \App\Support\PublicAssetResolver::resolve(
+            $this->principal_photo_path,
+            ['storage/', '', 'images/principal/']
+        );
     }
 }

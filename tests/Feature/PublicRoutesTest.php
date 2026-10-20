@@ -181,4 +181,27 @@ class PublicRoutesTest extends TestCase
         $response->assertRedirect('/latihan-soal');
         $this->assertAuthenticatedAs($student);
     }
-}
+
+    public function test_seo_endpoints_and_meta_are_consistent(): void
+    {
+        $robots = $this->get('/robots.txt');
+        $robots->assertOk();
+        $this->assertStringContainsString('Sitemap: ' . url('/sitemap.xml'), $robots->getContent());
+        $this->assertStringContainsString('Disallow: /admin', $robots->getContent());
+
+        $sitemap = $this->get('/sitemap.xml');
+        $sitemap->assertOk();
+        $this->assertStringContainsString('<loc>' . route('posts') . '</loc>', $sitemap->getContent());
+        $this->assertStringNotContainsString('/pilketos', $sitemap->getContent());
+
+        $home = $this->get('/');
+        $home->assertOk();
+        $home->assertSee('<link rel="canonical" href="' . url('/') . '">', false);
+        $home->assertSee('content="index, follow, max-image-preview:large"', false);
+        $home->assertSee('"@type":"EducationalOrganization"', false);
+        $home->assertDontSee('fonts.googleapis.com', false);
+
+        $this->get('/login')->assertSee('content="noindex, follow"', false);
+        $this->get('/pilketos')->assertSee('content="noindex, follow"', false);
+        $this->get('/berita?q=lomba')->assertSee('content="noindex, follow"', false);
+    }}

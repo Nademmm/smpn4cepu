@@ -2,16 +2,23 @@
 @php
     $px = (int) $size;
     $font = max(11, (int) round($px * 0.38));
+    // Logo kecil (navbar/footer) memakai varian 96px agar tidak mengunduh PNG 300px untuk tampilan 40px
+    $base = $px <= 64 ? 'images/logo-96' : 'images/logo';
+    $hasLogo = \App\Support\PublicAssetResolver::exists($base . '.png');
 @endphp
-@if (file_exists(public_path('images/logo.png')))
-    <img
-        src="{{ asset('images/logo.png') }}"
-        alt="Logo SMP Negeri 4 Cepu"
-        width="{{ $px }}"
-        height="{{ $px }}"
-        {{ $attributes->merge(['class' => 'inline-block shrink-0 object-contain']) }}
-        style="width: {{ $px }}px; height: {{ $px }}px;"
-    />
+@if ($hasLogo)
+    <picture>
+        <source srcset="{{ asset($base . '.webp') }}" type="image/webp">
+        <img
+            src="{{ asset($base . '.png') }}"
+            alt="Logo SMP Negeri 4 Cepu"
+            width="{{ $px }}"
+            height="{{ $px }}"
+            decoding="async"
+            {{ $attributes->merge(['class' => 'inline-block shrink-0 object-contain']) }}
+            style="width: {{ $px }}px; height: {{ $px }}px;"
+        />
+    </picture>
 @else
     <span
         aria-hidden="true"

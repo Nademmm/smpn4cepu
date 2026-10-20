@@ -1,4 +1,4 @@
-<x-layouts.app title="Berita & Informasi">
+<x-layouts.app title="Berita & Informasi" metaDescription="Berita, pengumuman, dan agenda terbaru SMP Negeri 4 Cepu seputar kegiatan sekolah, prestasi siswa, dan informasi resmi untuk orang tua.">
     <x-page-header
         title="Berita Sekolah"
         subtitle="Informasi terkini seputar kegiatan dan prestasi SMP Negeri 4 Cepu"
@@ -39,6 +39,8 @@
                                     <img
                                         src="{{ $post->featured_image_url }}"
                                         alt="{{ $post->title }}"
+                                        width="224"
+                                        height="192"
                                         loading="lazy"
                                         decoding="async"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

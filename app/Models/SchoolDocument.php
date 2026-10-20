@@ -29,4 +29,14 @@ class SchoolDocument extends Model
             'display_order' => 'integer',
         ];
     }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('public_downloads_v1');
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('public_downloads_v1');
+        });
+    }
 }

@@ -1,4 +1,4 @@
-<x-layouts.app title="Masuk Portal Akun">
+<x-layouts.app title="Masuk Portal Akun" :noindex="true">
     <div class="min-h-[75vh] flex items-center justify-center py-10 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div class="w-full max-w-md space-y-6">
             {{-- Kartu Utama Login --}}

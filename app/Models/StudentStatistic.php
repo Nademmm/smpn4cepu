@@ -31,6 +31,13 @@ class StudentStatistic extends Model
         static::saving(function (self $model) {
             $model->total_count = (int) $model->male_count + (int) $model->female_count;
         });
+
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+        });
     }
 
     public function scopeYear(Builder $query, string $year): Builder

@@ -1,4 +1,4 @@
-<x-layouts.app :title="$bank->title . ' - Latihan Mandiri'">
+<x-layouts.app :title="$bank->title . ' - Latihan Mandiri'" :noindex="true">
     <x-page-header
         :title="$bank->title"
         :subtitle="($bank->subject?->name ?? 'Mata Pelajaran') . ' · Kelas ' . $bank->grade_level . ' · Durasi: ' . $bank->duration_minutes . ' Menit · KKM: ' . ($bank->passing_grade ?? 75)"

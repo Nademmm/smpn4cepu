@@ -7,9 +7,19 @@
     <div class="mx-auto max-w-7xl">
         @if ($crumb)
             <nav aria-label="Jejak halaman" class="mb-2 text-[13px] font-semibold text-white/85">
-                <a href="{{ route('home') }}" class="hover:underline">Beranda</a>
-                <span aria-hidden="true"> / </span>
-                <span>{{ $crumb }}</span>
+                <ol class="inline-flex items-center gap-1.5" itemscope itemtype="https://schema.org/BreadcrumbList">
+                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <a href="{{ route('home') }}" itemprop="item" class="hover:underline">
+                            <span itemprop="name">Beranda</span>
+                        </a>
+                        <meta itemprop="position" content="1" />
+                    </li>
+                    <li aria-hidden="true">/</li>
+                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+                        <span itemprop="name">{{ $crumb }}</span>
+                        <meta itemprop="position" content="2" />
+                    </li>
+                </ol>
             </nav>
         @endif
         <h1 class="text-3xl font-extrabold text-white sm:text-4xl">{{ $title }}</h1>

@@ -1,4 +1,4 @@
-<x-layouts.app title="Pusat Unduhan Berkas">
+<x-layouts.app title="Pusat Unduhan Berkas" metaDescription="Unduh dokumen resmi SMP Negeri 4 Cepu, mulai dari formulir hingga panduan dan berkas administrasi sekolah, dikelompokkan per kategori.">
     <x-page-header
         title="Pusat Unduhan Berkas"
         subtitle="Dokumen resmi, formulir administrasi kesiswaan, tata tertib, dan kalender akademik SMP Negeri 4 Cepu."

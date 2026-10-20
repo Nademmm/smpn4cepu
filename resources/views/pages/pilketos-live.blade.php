@@ -1,4 +1,4 @@
-<x-layouts.app title="Quick Count Real-Time Pilketos">
+<x-layouts.app title="Quick Count Real-Time Pilketos" :noindex="true" metaDescription="Perolehan suara Pilketos SMP Negeri 4 Cepu yang diperbarui langsung selama pemungutan suara berlangsung.">
     <x-page-header
         title="Pemilihan Ketua & Wakil OSIS"
         subtitle="Pantau perolehan suara pemilihan ketua dan wakil ketua OSIS secara real-time, jujur, dan terbuka."

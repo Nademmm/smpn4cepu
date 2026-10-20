@@ -1,4 +1,4 @@
-<x-layouts.app title="Ekstrakurikuler & Pengembangan Bakat">
+<x-layouts.app title="Ekstrakurikuler & Pengembangan Bakat" metaDescription="Pilihan ekstrakurikuler SMP Negeri 4 Cepu beserta pembina dan jadwal kegiatan untuk mengembangkan bakat, minat, dan kepemimpinan siswa.">
     <x-page-header
         title="Ekstrakurikuler Sekolah"
         subtitle="Wadah eksplorasi potensi, kreasi bakat, kepemimpinan, dan sportivitas peserta didik SMP Negeri 4 Cepu."
@@ -11,8 +11,8 @@
             <button
                 type="button"
                 @click="activeCategory = 'Semua'"
-                :class="activeCategory === 'Semua' ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
-                class="px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all"
+                :class="activeCategory === 'Semua' ? 'chip-active' : 'chip'"
+                class="chip"
             >
                 Semua Bidang
             </button>
@@ -23,8 +23,8 @@
                 <button
                     type="button"
                     @click="activeCategory = @js($cat)"
-                    :class="activeCategory === @js($cat) ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
-                    class="px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all"
+                    :class="activeCategory === @js($cat) ? 'chip-active' : 'chip'"
+                    class="chip"
                 >
                     {{ $cat }}
                 </button>
@@ -47,6 +47,8 @@
                                 <img
                                     src="{{ $extra->photo_url }}"
                                     alt="{{ $extra->name }}"
+                                    width="400"
+                                    height="192"
                                     loading="lazy"
                                     decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

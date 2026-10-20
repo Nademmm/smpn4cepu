@@ -1,4 +1,4 @@
-<x-layouts.app title="Prestasi Siswa & Satuan Pendidikan">
+<x-layouts.app title="Prestasi Siswa & Satuan Pendidikan" metaDescription="Daftar prestasi dan penghargaan yang diraih siswa dan SMP Negeri 4 Cepu di berbagai tingkat kejuaraan, lengkap dengan nama peraih dan peringkatnya.">
     <x-page-header
         title="Prestasi & Penghargaan Sekolah"
         subtitle="Rekapitulasi kejuaraan, medali, dan penghargaan yang diraih siswa dan keluarga besar SMP Negeri 4 Cepu."
@@ -11,8 +11,8 @@
             <button
                 type="button"
                 @click="activeLevel = 'Semua'"
-                :class="activeLevel === 'Semua' ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
-                class="px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all"
+                :class="activeLevel === 'Semua' ? 'chip-active' : 'chip'"
+                class="chip"
             >
                 Semua Tingkat
             </button>
@@ -23,8 +23,8 @@
                 <button
                     type="button"
                     @click="activeLevel = @js($lvl)"
-                    :class="activeLevel === @js($lvl) ? 'bg-brand text-white shadow-xs' : 'bg-white text-navy hover:bg-cream border border-sun-soft'"
-                    class="px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all"
+                    :class="activeLevel === @js($lvl) ? 'chip-active' : 'chip'"
+                    class="chip"
                 >
                     Tingkat {{ $lvl }}
                 </button>
@@ -47,6 +47,8 @@
                                 <img
                                     src="{{ $ach->photo_url }}"
                                     alt="{{ $ach->title }}"
+                                    width="400"
+                                    height="192"
                                     loading="lazy"
                                     decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

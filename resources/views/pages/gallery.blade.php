@@ -1,4 +1,4 @@
-<x-layouts.app title="Galeri Foto Kegiatan">
+<x-layouts.app title="Galeri Foto Kegiatan" metaDescription="Galeri foto kegiatan SMP Negeri 4 Cepu: pembelajaran, upacara, ekstrakurikuler, dan momen kebersamaan warga sekolah.">
     <x-page-header
         title="Galeri Kegiatan"
         subtitle="Dokumentasi aktivitas pembelajaran, ekstrakurikuler, dan momentum kebersamaan di SMP Negeri 4 Cepu."
@@ -76,8 +76,8 @@
                     <button
                         type="button"
                         @click="selectedTag = @js($tag)"
-                        :class="selectedTag === @js($tag) ? 'bg-brand text-white border-brand shadow-xs' : 'bg-white text-navy hover:bg-sky-soft border-sun-soft'"
-                        class="text-xs font-extrabold px-4 py-2 rounded-full border transition-all shrink-0 cursor-pointer min-h-[38px]"
+                        :class="selectedTag === @js($tag) ? 'chip-active' : 'chip'"
+                        class="chip shrink-0"
                     >
                         {{ $tag }}
                     </button>
@@ -114,6 +114,8 @@
                                 <img
                                     src="{{ $p->photo_url }}"
                                     alt="{{ $p->title }}"
+                                    width="400"
+                                    height="224"
                                     class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
                                     loading="lazy"
                                     decoding="async"

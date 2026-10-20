@@ -1,4 +1,4 @@
-<x-layouts.app title="Beranda">
+<x-layouts.app title="Beranda" metaDescription="Portal resmi SMP Negeri 4 Cepu, Blora: berita sekolah, profil, direktori guru, perpustakaan digital, dan materi belajar untuk siswa dan orang tua.">
     {{-- Hero Section dengan Logo SMPN 4 Cepu Lurus & Menyatu di Background --}}
     <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
         {{-- Lingkaran Cahaya Dekoratif Latar Belakang --}}
@@ -39,13 +39,18 @@
 
                 {{-- Logo Lurus Tegak dengan Opasitas Nyala Tetap Menyatu di Background --}}
                 <div class="relative">
-                    <img
-                        src="{{ asset('images/logo.png') }}"
-                        alt="Logo SMP Negeri 4 Cepu"
-                        fetchpriority="high"
-                        decoding="async"
-                        class="w-72 sm:w-88 lg:w-[420px] xl:w-[460px] h-auto object-contain opacity-55 drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
-                    >
+                    <picture>
+                        <source srcset="{{ asset('images/logo.webp') }}" type="image/webp">
+                        <img
+                            src="{{ asset('images/logo.png') }}"
+                            alt="Logo SMP Negeri 4 Cepu"
+                            width="300"
+                            height="300"
+                            fetchpriority="high"
+                            decoding="async"
+                            class="w-72 sm:w-88 lg:w-[420px] xl:w-[460px] h-auto object-contain opacity-55 drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
+                        >
+                    </picture>
                 </div>
             </div>
         </div>
@@ -148,6 +153,8 @@
                         <img
                             src="{{ $ksPhoto }}"
                             alt="{{ $ksName }}"
+                            width="128"
+                            height="160"
                             loading="lazy"
                             decoding="async"
                             class="w-full h-full object-cover object-top"
@@ -173,7 +180,7 @@
     </section>
 
     {{-- Berita Terkini --}}
-    <section class="bg-sky-soft py-14 px-4 sm:px-6 lg:px-8">
+    <section class="cv-auto bg-sky-soft py-14 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between gap-4 mb-7">
                 <div>
@@ -190,7 +197,7 @@
                 @forelse ($recentPosts as $post)
                     <x-card class="p-0 overflow-hidden flex flex-col h-full hover:border-brand transition-colors group">
                         @if ($post->featured_image_url)
-                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" loading="lazy" decoding="async" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" width="400" height="176" loading="lazy" decoding="async" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="w-full h-44 bg-cream flex items-center justify-center text-brand">
                                 <x-app-icon name="news" class="w-10 h-10" />
@@ -221,7 +228,7 @@
 
     {{-- Agenda Sekolah --}}
     @if ($agendas->isNotEmpty())
-        <section class="bg-cream py-12 px-4 sm:px-6 lg:px-8">
+        <section class="cv-auto bg-cream py-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <div class="mb-6">
                     <span class="text-xs font-bold text-brand uppercase tracking-wider block mb-0.5">Kalender Kegiatan</span>
@@ -249,7 +256,7 @@
 
     {{-- Prestasi Sekolah Terkini --}}
     @if ($featuredAchievements->isNotEmpty())
-        <section class="bg-white py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
+        <section class="cv-auto bg-white py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
             <div class="max-w-7xl mx-auto">
                 <div class="flex items-center justify-between gap-4 mb-7">
                     <div>
@@ -267,7 +274,7 @@
                         <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
                             @if ($ach->photo_url)
                                 <div class="w-full h-40 overflow-hidden bg-cream relative">
-                                    <img src="{{ $ach->photo_url }}" alt="{{ $ach->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <img src="{{ $ach->photo_url }}" alt="{{ $ach->title }}" width="400" height="160" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                     <span class="absolute top-3 left-3 bg-sun text-navy font-black text-xs px-2.5 py-0.5 rounded-full uppercase shadow-xs">
                                         {{ $ach->rank }}
                                     </span>
@@ -300,7 +307,7 @@
 
     {{-- Ekstrakurikuler & Pengembangan Bakat --}}
     @if (isset($featuredExtracurriculars) && $featuredExtracurriculars->isNotEmpty())
-        <section class="bg-cream/60 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
+        <section class="cv-auto bg-cream/60 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
             <div class="max-w-7xl mx-auto">
                 <div class="flex items-center justify-between gap-4 mb-7">
                     <div>
@@ -317,7 +324,7 @@
                     @foreach ($featuredExtracurriculars as $extra)
                         <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
                             @if ($extra->photo_url)
-                                <img src="{{ $extra->photo_url }}" alt="{{ $extra->name }}" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                                <img src="{{ $extra->photo_url }}" alt="{{ $extra->name }}" width="320" height="160" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
                             @else
                                 <div class="w-full h-40 bg-sky-soft flex items-center justify-center text-brand">
                                     <x-app-icon name="sparkles" class="w-8 h-8" />
@@ -338,7 +345,7 @@
     @endif
 
     {{-- Fasilitas Sekolah --}}
-    <section class="bg-sky-soft/40 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
+    <section class="cv-auto bg-sky-soft/40 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t-2 border-sun-soft/40">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between gap-4 mb-7">
                 <div>
@@ -355,7 +362,7 @@
                 @foreach ($featuredFacilities as $facility)
                     <x-card class="p-0 overflow-hidden flex flex-col hover:border-brand transition-colors group">
                         @if ($facility->photo_url)
-                            <img src="{{ $facility->photo_url }}" alt="{{ $facility->name }}" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="{{ $facility->photo_url }}" alt="{{ $facility->name }}" width="320" height="160" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="w-full h-40 bg-sky-soft flex items-center justify-center text-brand">
                                 <x-app-icon name="building" class="w-8 h-8" />

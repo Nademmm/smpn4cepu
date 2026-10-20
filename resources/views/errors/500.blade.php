@@ -1,4 +1,4 @@
-<x-layouts.app title="500 - Terjadi Gangguan Server">
+<x-layouts.app title="500 - Terjadi Gangguan Server" :noindex="true">
     <div class="min-h-[70vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-xl w-full text-center space-y-6">
             {{-- Visual Angka 500 --}}

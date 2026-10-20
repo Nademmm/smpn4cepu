@@ -27,6 +27,18 @@ class GalleryPhoto extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('public_gallery_photos_v1');
+        });
+        static::deleted(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('public_gallery_photos_v1');
+        });
+    }
+
     public function getPhotoUrlAttribute(): string
     {
         if (empty($this->photo_path)) {
@@ -41,10 +53,10 @@ class GalleryPhoto extends Model
             return asset($this->photo_path);
         }
 
-        if (Storage::disk('public')->exists($this->photo_path)) {
-            return Storage::disk('public')->url($this->photo_path);
-        }
-
-        return asset('images/assets/' . basename($this->photo_path));
+        return \App\Support\PublicAssetResolver::resolve(
+            $this->photo_path,
+            ['storage/', '', 'images/assets/'],
+            'images/assets/' . basename($this->photo_path)
+        );
     }
 }

@@ -1,4 +1,4 @@
-<x-layouts.app title="Katalog Perpustakaan Digital OPAC">
+<x-layouts.app title="Katalog Perpustakaan Digital OPAC" metaDescription="Katalog perpustakaan digital SMP Negeri 4 Cepu: cari buku, cek stok dan nomor rak, baca e-book, lalu reservasi peminjaman secara online.">
     {{-- Header Perpustakaan & Info OPAC --}}
     <x-page-header
         title="Perpustakaan Digital"
@@ -263,6 +263,8 @@
                                 <img
                                     src="{{ $book->cover_url }}"
                                     alt="{{ $book->title }}"
+                                    width="200"
+                                    height="260"
                                     loading="lazy"
                                     decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -372,7 +374,7 @@
                                 <td class="p-4">
                                     <div class="w-12 h-16 rounded-lg bg-sky-soft overflow-hidden border border-sun-soft/60 shrink-0 flex items-center justify-center">
                                         @if ($book->cover_url)
-                                            <img src="{{ $book->cover_url }}" alt="{{ $book->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                            <img src="{{ $book->cover_url }}" alt="{{ $book->title }}" width="48" height="64" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                         @else
                                             <x-app-icon name="book" class="w-6 h-6 text-brand" />
                                         @endif

@@ -1,4 +1,4 @@
-<x-layouts.app title="Statistik Rombongan Belajar Siswa">
+<x-layouts.app title="Statistik Rombongan Belajar Siswa" metaDescription="Rekapitulasi jumlah siswa dan rombongan belajar per kelas, serta data guru dan tenaga kependidikan SMP Negeri 4 Cepu pada tahun ajaran aktif.">
     <x-page-header
         title="Statistik Rombongan Belajar"
         subtitle="Rekapitulasi persebaran jumlah peserta didik dan rombongan belajar per tingkat kelas SMP Negeri 4 Cepu."

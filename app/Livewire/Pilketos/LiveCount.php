@@ -10,17 +10,21 @@ class LiveCount extends Component
 {
     public function render()
     {
-        $candidates = ElectionCandidate::withCount('votes')
-            ->orderBy('candidate_number')
-            ->get();
+        $data = \Illuminate\Support\Facades\Cache::remember('pilketos_live_chart_data', 10, function () {
+            $candidates = ElectionCandidate::withCount('votes')
+                ->orderBy('candidate_number')
+                ->get();
 
-        $totalVotes = ElectionVote::count();
+            $totalVotes = ElectionVote::count();
 
-        $chartData = [
-            'labels' => $candidates->pluck('candidate_name')->toArray(),
-            'votes' => $candidates->pluck('total_votes_cached')->toArray(),
-        ];
+            $chartData = [
+                'labels' => $candidates->pluck('candidate_name')->toArray(),
+                'votes' => $candidates->pluck('total_votes_cached')->toArray(),
+            ];
 
-        return view('livewire.pilketos.live-count', compact('candidates', 'totalVotes', 'chartData'));
+            return compact('candidates', 'totalVotes', 'chartData');
+        });
+
+        return view('livewire.pilketos.live-count', $data);
     }
 }

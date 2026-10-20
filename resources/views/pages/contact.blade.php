@@ -1,4 +1,4 @@
-<x-layouts.app title="Kontak & Lokasi Sekolah">
+<x-layouts.app title="Kontak & Lokasi Sekolah" metaDescription="Alamat, nomor telepon, email, jam layanan, dan peta lokasi SMP Negeri 4 Cepu di Mulyorejo, Cepu, Blora. Kirim pesan lewat formulir kontak.">
     <x-page-header
         title="Hubungi Kami"
         subtitle="Informasi alamat, nomor telepon resmi, surel, peta lokasi, dan saluran komunikasi SMP Negeri 4 Cepu."

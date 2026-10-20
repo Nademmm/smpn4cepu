@@ -55,6 +55,8 @@
                             <img
                                 src="{{ $staff->photo_url }}"
                                 alt="{{ $staff->name }}"
+                                width="80"
+                                height="80"
                                 loading="lazy"
                                 decoding="async"
                                 class="w-20 h-20 rounded-2xl object-cover border-2 border-sun-soft mb-3.5 group-hover:scale-105 transition-transform duration-200 shadow-2xs"

@@ -1,4 +1,4 @@
-<x-layouts.app title="Bilik Suara E-Voting Pilketos">
+<x-layouts.app title="Bilik Suara E-Voting Pilketos" :noindex="true" metaDescription="Bilik suara e-voting Pilketos SMP Negeri 4 Cepu untuk memilih Ketua dan Wakil Ketua OSIS, satu perangkat satu suara.">
     <x-page-header
         title="Pemilihan Ketua & Wakil OSIS"
         subtitle="Gunakan hak suaramu secara cerdas, berintegritas, langsung, umum, bebas, rahasia, jujur, dan adil."

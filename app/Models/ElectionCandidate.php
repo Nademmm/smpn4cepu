@@ -30,28 +30,28 @@ class ElectionCandidate extends Model
         return $this->hasMany(ElectionVote::class, 'candidate_id');
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('pilketos_live_chart_data');
+        });
+        static::deleted(function () {
+            \App\Support\PublicAssetResolver::flush();
+            \Illuminate\Support\Facades\Cache::forget('pilketos_live_chart_data');
+        });
+    }
+
     public function getPhotoUrlAttribute(): string
     {
         if (!$this->photo_path) {
             return asset('images/default-avatar.svg');
         }
 
-        if (str_starts_with($this->photo_path, 'http://') || str_starts_with($this->photo_path, 'https://')) {
-            return $this->photo_path;
-        }
-
-        if (file_exists(public_path($this->photo_path))) {
-            return asset($this->photo_path);
-        }
-
-        if (file_exists(public_path('images/assets/' . basename($this->photo_path)))) {
-            return asset('images/assets/' . basename($this->photo_path));
-        }
-
-        if (file_exists(public_path('storage/' . $this->photo_path))) {
-            return asset('storage/' . $this->photo_path);
-        }
-
-        return asset('images/default-avatar.svg');
+        return \App\Support\PublicAssetResolver::resolve(
+            $this->photo_path,
+            ['', 'images/assets/', 'storage/'],
+            'images/default-avatar.svg'
+        );
     }
 }

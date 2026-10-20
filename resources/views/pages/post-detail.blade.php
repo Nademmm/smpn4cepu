@@ -1,8 +1,28 @@
 <x-layouts.app
-    :title="$post->title . ' - ' . ($schoolSetting?->school_name ?? 'SMP Negeri 4 Cepu')"
+    :title="$post->title . ' - SMP Negeri 4 Cepu'"
     :metaDescription="$post->excerpt"
     :metaImage="$post->featured_image_url"
+    ogType="article"
 >
+    @push('meta')
+        <meta property="article:published_time" content="{{ ($post->published_at ?? $post->created_at)->toAtomString() }}">
+        <meta property="article:modified_time" content="{{ $post->updated_at->toAtomString() }}">
+        <meta property="article:section" content="{{ $post->category?->label() ?? 'Berita' }}">
+        <script type="application/ld+json">{!! json_encode(array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'NewsArticle',
+            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => route('post.detail', $post->slug)],
+            'headline' => \Illuminate\Support\Str::limit($post->title, 110, ''),
+            'description' => \Illuminate\Support\Str::limit(strip_tags((string) $post->excerpt), 200),
+            'image' => $post->featured_image_url ? [$post->featured_image_url] : null,
+            'datePublished' => ($post->published_at ?? $post->created_at)->toAtomString(),
+            'dateModified' => $post->updated_at->toAtomString(),
+            'inLanguage' => 'id-ID',
+            'author' => ['@type' => 'Person', 'name' => $post->author?->name ?? 'Admin Sekolah'],
+            'publisher' => ['@id' => url('/') . '#school'],
+        ]), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
+    @endpush
+
     <x-page-header
         :title="$post->title"
         crumb="Detail Berita"
@@ -20,15 +40,17 @@
                     <img
                         src="{{ $post->featured_image_url }}"
                         alt="{{ $post->title }}"
+                        width="800"
+                        height="384"
                         fetchpriority="high"
                         decoding="async"
                         class="w-full h-72 sm:h-96 object-cover rounded-2xl mb-6 border-2 border-sun-soft"
                     >
                 @endif
 
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-navy leading-tight mb-3">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-navy leading-tight mb-3">
                     {{ $post->title }}
-                </h1>
+                </h2>
 
                 <div class="text-xs font-semibold text-ink-mute pb-5 border-b-2 border-sun-soft flex flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center gap-2">

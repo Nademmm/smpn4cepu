@@ -1,4 +1,4 @@
-<x-layouts.app title="Fasilitas Sarana Prasarana">
+<x-layouts.app title="Fasilitas Sarana Prasarana" metaDescription="Sarana dan prasarana SMP Negeri 4 Cepu yang mendukung kegiatan belajar mengajar, mulai dari ruang kelas hingga fasilitas penunjang kegiatan siswa.">
     <x-page-header
         title="Fasilitas Sekolah"
         subtitle="{{ $facilities->count() }} sarana dan prasarana pendukung pembelajaran yang representatif dan berwawasan lingkungan."
@@ -14,6 +14,8 @@
                             <img
                                 src="{{ $facility->photo_url }}"
                                 alt="{{ $facility->name }}"
+                                width="400"
+                                height="208"
                                 loading="lazy"
                                 decoding="async"
                                 class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"

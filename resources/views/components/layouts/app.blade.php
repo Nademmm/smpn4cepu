@@ -1,64 +1,148 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    @php
+        $siteName = 'SMP Negeri 4 Cepu';
+        $defaultTitle = $siteName . ' - Satu Sekolah, Satu Ruang Digital';
+        $defaultDescription = 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.';
+
+        $pageTitle = (isset($title) && $title !== '' && $title !== 'Beranda' && $title !== $siteName)
+            ? (str_contains($title, $siteName) ? $title : $title . ' - ' . $siteName)
+            : $defaultTitle;
+
+        $pageDescription = \Illuminate\Support\Str::limit(
+            trim(preg_replace('/\s+/', ' ', strip_tags((string) ($metaDescription ?? $defaultDescription)))),
+            158,
+            '...'
+        );
+
+        $hasOwnImage = ! empty($metaImage);
+        $pageImage = $metaImage ?? asset('images/logo.png');
+        $pageOgType = $ogType ?? 'website';
+
+        $currentPage = (int) request()->query('page', 1);
+        $canonicalUrl = url()->current() . ($currentPage > 1 ? '?page=' . $currentPage : '');
+
+        $isNoindex = ! empty($noindex) || request()->filled('q');
+        $robotsContent = $isNoindex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
+
+        $sameAs = array_values(array_filter([
+            $schoolSetting->instagram_url ?? null,
+            $schoolSetting->youtube_url ?? null,
+            $schoolSetting->facebook_url ?? null,
+            $schoolSetting->tiktok_url ?? null,
+        ]));
+
+        $schemaGraph = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                array_filter([
+                    '@type' => 'EducationalOrganization',
+                    '@id' => url('/') . '#school',
+                    'name' => $siteName,
+                    'alternateName' => 'SMPN 4 Cepu',
+                    'identifier' => '20314928',
+                    'url' => url('/'),
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        'url' => asset('images/logo.png'),
+                        'width' => 300,
+                        'height' => 300,
+                    ],
+                    'image' => asset('images/logo.png'),
+                    'telephone' => $schoolSetting->school_phone ?? '(0296) 421631',
+                    'email' => $schoolSetting->school_email ?? 'smpn4cepu@gmail.com',
+                    'foundingDate' => '1979-09-04',
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'streetAddress' => $schoolSetting->school_address ?? 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315',
+                        'addressLocality' => 'Cepu',
+                        'addressRegion' => 'Jawa Tengah',
+                        'postalCode' => '58315',
+                        'addressCountry' => 'ID',
+                    ],
+                    'geo' => [
+                        '@type' => 'GeoCoordinates',
+                        'latitude' => -7.1576081,
+                        'longitude' => 111.5662531,
+                    ],
+                    'sameAs' => $sameAs ?: null,
+                ]),
+                [
+                    '@type' => 'WebSite',
+                    '@id' => url('/') . '#website',
+                    'url' => url('/'),
+                    'name' => $siteName,
+                    'inLanguage' => 'id-ID',
+                    'publisher' => ['@id' => url('/') . '#school'],
+                ],
+            ],
+        ];
+    @endphp
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}</title>
-    <meta name="description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
+    <meta name="theme-color" content="#1F5FBF">
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $pageDescription }}">
+    <meta name="robots" content="{{ $robotsContent }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
 
     {{-- Open Graph / Facebook & WhatsApp Share Card --}}
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="SMP Negeri 4 Cepu">
-    <meta property="og:title" content="{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}">
-    <meta property="og:description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
-    <meta property="og:image" content="{{ $metaImage ?? asset('images/logo.png') }}">
+    <meta property="og:type" content="{{ $pageOgType }}">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $pageDescription }}">
+    <meta property="og:image" content="{{ $pageImage }}">
+    <meta property="og:image:alt" content="{{ $hasOwnImage ? $pageTitle : 'Logo ' . $siteName }}">
 
-    {{-- Twitter Cards --}}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ isset($title) && $title !== 'SMP Negeri 4 Cepu' ? $title . ' - SMP Negeri 4 Cepu' : 'SMP Negeri 4 Cepu - Satu Sekolah, Satu Ruang Digital' }}">
-    <meta name="twitter:description" content="{{ $metaDescription ?? 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.' }}">
-    <meta name="twitter:image" content="{{ $metaImage ?? asset('images/logo.png') }}">
+    {{-- Twitter Cards: kartu besar hanya bila halaman punya gambar sendiri --}}
+    <meta name="twitter:card" content="{{ $hasOwnImage ? 'summary_large_image' : 'summary' }}">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    <meta name="twitter:image" content="{{ $pageImage }}">
 
     @stack('meta')
 
-    <link rel="canonical" href="{{ url()->current() }}">
+    {{-- Schema.org JSON-LD: Organisasi Pendidikan + WebSite --}}
+    <script type="application/ld+json">{!! json_encode($schemaGraph, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
 
-    {{-- Schema.org JSON-LD untuk Entitas Sekolah Formal --}}
-    <script type="application/ld+json">
+    {{-- Favicon / Icon Tab Browser --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    @if (request()->routeIs('home'))
+        <link rel="preload" as="image" href="{{ asset('images/logo.webp') }}" type="image/webp" fetchpriority="high">
+    @endif
+
+    {{-- Font Nunito di-host sendiri (lihat resources/css/app.css), cukup preload dua bobot utama --}}
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ \Illuminate\Support\Facades\Vite::asset('node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff2') }}">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ \Illuminate\Support\Facades\Vite::asset('node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff2') }}">
+
+    @vite('resources/css/app.css')
+    @livewireStyles
+
+    {{-- Speculation Rules API: Prefetch instan saat kursor mengarah ke tautan internal --}}
+    <script type="speculationrules">
     {
-        "@context": "https://schema.org",
-        "@type": "EducationalOrganization",
-        "name": "SMP Negeri 4 Cepu",
-        "alternateName": "SMPN 4 Cepu",
-        "identifier": "20314928",
-        "url": "{{ url('/') }}",
-        "logo": "{{ asset('images/logo.png') }}",
-        "telephone": @js($schoolSetting->school_phone ?? '(0296) 421631'),
-        "email": @js($schoolSetting->school_email ?? 'smpn4cepu@gmail.com'),
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": @js($schoolSetting->school_address ?? 'Jl. Raya Cepu Randu Km. 3,5, Mulyorejo, Cepu, Blora 58315'),
-            "addressLocality": "Cepu",
-            "addressRegion": "Jawa Tengah",
-            "postalCode": "58315",
-            "addressCountry": "ID"
-        }
+        "prefetch": [
+            {
+                "where": {
+                    "and": [
+                        { "href_matches": "/*" },
+                        { "not": { "href_matches": "/admin/*" } },
+                        { "not": { "href_matches": "/livewire/*" } },
+                        { "not": { "href_matches": "/logout" } },
+                        { "not": { "href_matches": "/unduhan/*/download" } }
+                    ]
+                },
+                "eagerness": "moderate"
+            }
+        ]
     }
     </script>
-    
-    {{-- Favicon / Icon Tab Browser --}}
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
 </head>
 <body class="bg-cream text-navy font-sans antialiased flex flex-col min-h-screen">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2.5 focus:text-sm focus:font-bold focus:text-white focus:shadow-lg">
@@ -114,7 +198,7 @@
                 {{-- Desktop Menu: 5 Menu Utama Lebih Besar, Tegas & Nyaman Dilihat --}}
                 <div class="hidden lg:flex items-center justify-center gap-1.5 text-[15px]">
                     {{-- 1. Beranda --}}
-                    <a href="{{ route('home') }}" class="px-4 py-2 rounded-full transition-colors {{ request()->routeIs('home') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand font-bold' }}">
+                    <a href="{{ route('home') }}" {!! request()->routeIs('home') ? 'aria-current="page"' : '' !!} class="px-4 py-2 rounded-full transition-colors {{ request()->routeIs('home') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand font-bold' }}">
                         Beranda
                     </a>
 
@@ -523,7 +607,7 @@
     </nav>
 
     {{-- Main Slot --}}
-    <main id="main-content" class="grow">
+    <main id="main-content" tabindex="-1" class="grow">
         {{ $slot }}
     </main>
 
@@ -634,7 +718,7 @@
                 </div>
             </div>
 
-            {{-- Kolom 4: Peta Lokasi Interaktif --}}
+            {{-- Kolom 4: Peta Lokasi Langsung --}}
             <div class="lg:col-span-3">
                 <div class="flex items-center justify-between mb-3">
                     <div class="font-extrabold text-sm text-sun uppercase tracking-wider">Lokasi Sekolah</div>
@@ -642,10 +726,12 @@
                         href="https://maps.google.com/?q=SMP+Negeri+4+Cepu"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Buka rute navigasi SMP Negeri 4 Cepu di Google Maps"
                         class="text-[11px] font-bold text-sky-300 hover:text-sun transition-colors inline-flex items-center gap-1"
                         title="Buka rute navigasi di Google Maps"
                     >
-                    <x-app-icon name="arrow-right" class="w-3 h-3" />
+                        <span>Buka Peta</span>
+                        <x-app-icon name="arrow-right" class="w-3 h-3" />
                     </a>
                 </div>
 
@@ -653,7 +739,7 @@
                     <iframe
                         src="{{ $schoolSetting?->maps_embed_url ?: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.8256193796336!2d111.56367817574345!3d-7.157602770284422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e776994781498b3%3A0x6a053cbfd38cce88!2sSMP%20Negeri%204%20Cepu!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid' }}"
                         width="100%"
-                        height="175"
+                        height="176"
                         style="border:0;"
                         allowfullscreen=""
                         loading="lazy"

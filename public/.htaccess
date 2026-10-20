@@ -32,5 +32,31 @@
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>
+
+# Kompresi teks (HTML, CSS, JS, JSON, XML, SVG)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/javascript text/javascript application/json application/ld+json image/svg+xml
+</IfModule>
+
+# Cache browser untuk aset statis (hasil build Vite memakai hash, aman immutable)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 week"
+    ExpiresByType image/png "access plus 1 week"
+    ExpiresByType image/webp "access plus 1 week"
+    ExpiresByType image/svg+xml "access plus 1 week"
+    ExpiresByType image/x-icon "access plus 1 week"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+<IfModule mod_headers.c>
+    <FilesMatch "^.*$">
+        SetEnvIf Request_URI "^/build/" IMMUTABLE_ASSET
+    </FilesMatch>
+    Header set Cache-Control "public, max-age=31536000, immutable" env=IMMUTABLE_ASSET
 </IfModule>
 
