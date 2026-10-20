@@ -20,7 +20,8 @@ Dokumentasi lengkap dan spesifikasi teknis mendalam tersedia pada direktori [`do
 1. **[Product Requirements Document (PRD)](docs/PRD.md)**: Analisis latar belakang, visi sekolah, ruang lingkup fungsional/non-fungsional, user persona, dan peta jalan rilis V1 hingga V4.
 2. **[Software Architecture Document (SAD)](docs/ARCHITECTURE.md)**: Cetak biru arsitektur modular monolith, diagram relasi entitas 3NF (ERD), mesin keamanan multi-tier Pilketos, zero client leakage kuis, serta integrasi LiteSpeed Web Server.
 3. **[Panduan Deployment Hostinger Cloud](docs/DEPLOYMENT.md)**: Prosedur isolasi direktori privat (`laravel_app`), symlink `public_html`, otomatisasi Git hPanel, konfigurasi bypass LiteSpeed Cache, dan skrip `deploy.sh`.
-4. **[Master Data Dictionary & Data Resmi](docs/DATA_DICTIONARY_AND_SEEDS.md)**: Profil lengkap sekolah, sejarah resmi 1979, 11 butir misi, direktori 33 GTK lengkap dengan NIP & Golongan, 11 fasilitas, dan 11 mata pelajaran Kurikulum Merdeka.
+4. **[Berkas Persyaratan Domain `.sch.id` (PANDI) & Checklist Migrasi Hostinger](docs/PANDI_DAN_CHECKLIST_HOSTINGER.md)**: Draf Surat Permohonan Kepala Sekolah, Surat Kuasa PANDI, daftar dokumen legalitas SMPN 4 Cepu, serta checklist teknis migrasi dari Railway ke Hostinger Cloud Startup.
+5. **[Master Data Dictionary & Data Resmi](docs/DATA_DICTIONARY_AND_SEEDS.md)**: Profil lengkap sekolah, sejarah resmi 1979, 11 butir misi, direktori 33 GTK lengkap dengan NIP & Golongan, 11 fasilitas, dan 11 mata pelajaran Kurikulum Merdeka.
 
 ---
 

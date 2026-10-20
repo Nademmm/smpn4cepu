@@ -169,50 +169,18 @@ Pastikan file `public/.htaccess` memuat konfigurasi bypass caching untuk Filamen
 
 ## 5. Skrip Otomasi Deployment (`deploy.sh`)
 
-Untuk rilis pembaruan berkala via Git hook atau SSH hPanel, cukup jalankan skrip `deploy.sh`:
+Untuk rilis awal maupun pembaruan berkala via Git hook atau SSH hPanel, cukup jalankan skrip `deploy.sh`:
 
 ```bash
 chmod +x deploy.sh
 ./deploy.sh
 ```
 
-Isi dari `deploy.sh`:
-```bash
-#!/bin/bash
-set -e
-
-echo "==> [1/6] Memasang dependensi Composer & membangun aset Frontend..."
-composer install --no-dev --optimize-autoloader --no-interaction
-if command -v npm >/dev/null 2>&1; then
-    npm ci --no-audit && npm run build
-fi
-
-echo "==> [2/6] Menjalankan migrasi basis data..."
-php artisan migrate --force
-
-echo "==> [3/6] Mengoptimalkan caching konfigurasi, route, view, dan komponen..."
-php artisan filament:assets || true
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
-php artisan icons:cache || true
-php artisan filament:cache-components || true
-
-echo "==> [4/6] Memperbarui tautan storage (Symlink)..."
-php artisan storage:link || true
-
-echo "==> [5/6] Memastikan direktori public_html terhubung..."
-if [ ! -L "../public_html" ]; then
-    rm -rf "../public_html"
-    ln -s "$(pwd)/public" "../public_html"
-fi
-
-echo "==> [6/6] Membersihkan cache LiteSpeed Web Server..."
-touch storage/framework/cache/.litespeed_purge || true
-
-echo "==> Selesai! Proyek SMP Negeri 4 Cepu siap digunakan."
-```
+Skrip `deploy.sh` telah dilengkapi otomatisasi penuh setara PaaS/Docker:
+- Memuat Node.js/NVM secara otomatis jika tersedia, atau menggunakan *pre-built* `public/build/manifest.json` dari repositori Git sehingga bebas galat `ViteManifestNotFoundException`.
+- Menjalankan `php artisan migrate --force` dan **otomatis menjalankan `DatabaseSeeder`** apabila basis data baru dibuat (tabel GTK/berita masih kosong) atau jika `RUN_SEEDER=true`.
+- Menyalin seluruh aset gambar bawaan dari `public/images/{staff,facilities,principal,assets}` ke `storage/app/public/` sebelum menautkan `php artisan storage:link`.
+- Menghubungkan *symlink* `../public_html` ke `laravel_app/public` secara aman dan membersihkan cache LiteSpeed Web Server.
 
 ---
 

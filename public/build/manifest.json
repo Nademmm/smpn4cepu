@@ -1,0 +1,23 @@
+{
+  "node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff": {
+    "file": "assets/nunito-latin-400-normal-DKg4f3fz.woff",
+    "src": "node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff"
+  },
+  "node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff2": {
+    "file": "assets/nunito-latin-400-normal-r8SDr6Up.woff2",
+    "src": "node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff2"
+  },
+  "node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff": {
+    "file": "assets/nunito-latin-800-normal-D-J0wlBY.woff",
+    "src": "node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff"
+  },
+  "node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff2": {
+    "file": "assets/nunito-latin-800-normal-Dz8SOQK_.woff2",
+    "src": "node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BkM-s569.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  }
+}
