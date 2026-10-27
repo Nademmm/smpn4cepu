@@ -19,7 +19,7 @@ class PilketosLiveChartWidget extends ChartWidget
 
     protected function getData(): array
     {
-        $candidateData = \Illuminate\Support\Facades\Cache::remember('pilketos_live_chart_data', 30, function () {
+        $candidateData = \Illuminate\Support\Facades\Cache::remember('pilketos_admin_chart_data', 30, function () {
             $candidates = ElectionCandidate::orderBy('candidate_number')->get();
 
             $labels = $candidates->map(function ($c) {

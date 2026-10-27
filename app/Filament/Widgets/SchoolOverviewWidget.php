@@ -17,14 +17,22 @@ class SchoolOverviewWidget extends StatsOverviewWidget
     protected function getStats(): array
     {
         $stats = Cache::remember('admin_school_overview_stats', 60, function () {
+            $latestAcademicYear = StudentStatistic::max('academic_year');
+            $studentQuery = StudentStatistic::query();
+            if ($latestAcademicYear) {
+                $studentQuery->where('academic_year', $latestAcademicYear);
+            }
+
             return [
-                'totalStudents' => StudentStatistic::sum('total_count'),
-                'totalStaff' => StaffMember::count(),
-                'totalBooks' => LibraryBook::sum('available_stock'),
+                'academicYear' => $latestAcademicYear ?? '2025/2026',
+                'totalStudents' => (int) $studentQuery->sum('total_count'),
+                'totalStaff' => StaffMember::where('is_active', true)->count(),
+                'totalBooks' => (int) LibraryBook::sum('available_stock'),
                 'totalVotes' => ElectionVote::count(),
             ];
         });
 
+        $academicYear = $stats['academicYear'] ?? '2025/2026';
         $totalStudents = $stats['totalStudents'];
         $totalStaff = $stats['totalStaff'];
         $totalBooks = $stats['totalBooks'];
@@ -32,7 +40,7 @@ class SchoolOverviewWidget extends StatsOverviewWidget
 
         return [
             Stat::make('Total Siswa Terdata', number_format($totalStudents))
-                ->description('Tahun Ajaran 2025/2026')
+                ->description('Tahun Ajaran ' . $academicYear)
                 ->descriptionIcon('heroicon-m-academic-cap')
                 ->color('primary'),
 

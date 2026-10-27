@@ -51,11 +51,13 @@ class StudentUserSeeder extends Seeder
         ];
 
         foreach ($students as $data) {
-            $user = User::updateOrCreate(
+            $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 $data
             );
-            $user->syncRoles([$siswaRole]);
+            if (! $user->hasRole('siswa')) {
+                $user->assignRole($siswaRole);
+            }
         }
     }
 }

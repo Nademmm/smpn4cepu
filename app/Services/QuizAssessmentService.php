@@ -110,14 +110,19 @@ class QuizAssessmentService
                 'completed_at' => now(),
             ]);
 
-            // Simpan setiap butir jawaban
-            foreach ($recordsToInsert as $record) {
-                QuizAttemptAnswer::create([
-                    'attempt_id' => $attempt->id,
-                    'question_id' => $record['question_id'],
-                    'selected_option_id' => $record['selected_option_id'],
-                    'is_correct' => $record['is_correct'],
-                ]);
+            // Simpan seluruh butir jawaban sekaligus (Bulk Insert 1 Query)
+            $now = now();
+            $answerRows = array_map(fn (array $record) => [
+                'attempt_id' => $attempt->id,
+                'question_id' => $record['question_id'],
+                'selected_option_id' => $record['selected_option_id'],
+                'is_correct' => $record['is_correct'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ], $recordsToInsert);
+
+            if (!empty($answerRows)) {
+                QuizAttemptAnswer::insert($answerRows);
             }
 
             return $attempt->load(['answers.question', 'answers.selectedOption']);

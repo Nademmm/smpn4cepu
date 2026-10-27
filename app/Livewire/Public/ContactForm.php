@@ -39,7 +39,16 @@ class ContactForm extends Component
             return;
         }
 
+        $throttleKey = 'contact-message:' . ($request->ip() ?? '127.0.0.1');
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+            $this->addError('message', "Terlalu banyak pengiriman pesan dalam waktu singkat. Silakan tunggu {$seconds} detik.");
+            return;
+        }
+
         $this->validate();
+
+        \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 120);
 
         ContactMessage::create([
             'name' => trim($this->name),

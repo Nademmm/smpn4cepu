@@ -34,9 +34,11 @@ class StudentStatistic extends Model
 
         static::saved(function () {
             \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+            \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
         });
         static::deleted(function () {
             \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+            \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
         });
     }
 

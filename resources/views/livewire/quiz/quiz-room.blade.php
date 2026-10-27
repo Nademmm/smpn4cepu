@@ -41,14 +41,7 @@
                 </div>
             </div>
 
-            {{-- Pesan Notifikasi Sukses / Error --}}
-            @if ($authSuccessMessage)
-                <div class="p-3.5 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2">
-                    <x-app-icon name="check-circle" class="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>{{ $authSuccessMessage }}</span>
-                </div>
-            @endif
-
+            {{-- Pesan Notifikasi Error --}}
             @if ($authErrorMessage)
                 <div class="p-3.5 bg-rose-50 border border-rose-300 rounded-xl text-xs font-bold text-rose-800 flex items-center gap-2">
                     <x-app-icon name="x" class="w-4 h-4 text-rose-600 shrink-0" />

@@ -67,7 +67,11 @@ class BookReservationResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $pendingCount = static::getModel()::where('status', 'menunggu')->count();
+        $pendingCount = \Illuminate\Support\Facades\Cache::remember(
+            'admin_nav_badge_pending_reservations',
+            60,
+            fn () => static::getModel()::where('status', 'menunggu')->count()
+        );
 
         return $pendingCount > 0 ? (string) $pendingCount : null;
     }

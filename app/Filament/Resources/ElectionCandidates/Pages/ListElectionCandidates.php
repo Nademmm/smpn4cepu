@@ -33,7 +33,8 @@ class ListElectionCandidates extends ListRecords
                         \App\Models\ElectionCandidate::query()->update(['total_votes_cached' => 0]);
                     });
 
-                    \Illuminate\Support\Facades\Cache::forget('pilketos_live_chart_data');
+                    \Illuminate\Support\Facades\Cache::forget('pilketos_public_live_count');
+                    \Illuminate\Support\Facades\Cache::forget('pilketos_admin_chart_data');
                     \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
 
                     \Filament\Notifications\Notification::make()

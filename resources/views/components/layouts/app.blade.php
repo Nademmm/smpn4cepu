@@ -377,7 +377,7 @@
                                 </div>
                                 <span class="text-xs font-black text-navy max-w-[120px] truncate">{{ $currentUser->name }}</span>
                             </div>
-                            @if($currentUser->hasRole(['super_admin', 'admin', 'guru']))
+                            @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
                                 <a href="{{ url('/admin') }}" class="px-2.5 py-1 text-[11px] font-extrabold bg-brand text-white rounded-full hover:bg-brand-dark transition-colors">
                                     Admin
                                 </a>
@@ -594,7 +594,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2 pt-1 border-t border-brand/10">
-                            @if($currentUser->hasRole(['super_admin', 'admin', 'guru']))
+                            @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
                                 <a href="{{ url('/admin') }}" class="flex-1 py-2 text-center text-xs font-extrabold bg-brand text-white rounded-xl hover:bg-brand-dark transition-colors">
                                     Panel Admin
                                 </a>

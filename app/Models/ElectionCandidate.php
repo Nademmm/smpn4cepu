@@ -34,24 +34,21 @@ class ElectionCandidate extends Model
     {
         static::saved(function () {
             \App\Support\PublicAssetResolver::flush();
-            \Illuminate\Support\Facades\Cache::forget('pilketos_live_chart_data');
+            \Illuminate\Support\Facades\Cache::forget('pilketos_public_live_count');
+            \Illuminate\Support\Facades\Cache::forget('pilketos_admin_chart_data');
         });
         static::deleted(function () {
             \App\Support\PublicAssetResolver::flush();
-            \Illuminate\Support\Facades\Cache::forget('pilketos_live_chart_data');
+            \Illuminate\Support\Facades\Cache::forget('pilketos_public_live_count');
+            \Illuminate\Support\Facades\Cache::forget('pilketos_admin_chart_data');
         });
     }
 
-    public function getPhotoUrlAttribute(): string
+    public function getPhotoUrlAttribute(): ?string
     {
-        if (!$this->photo_path) {
-            return asset('images/default-avatar.svg');
-        }
-
         return \App\Support\PublicAssetResolver::resolve(
             $this->photo_path,
-            ['', 'images/assets/', 'storage/'],
-            'images/default-avatar.svg'
+            ['', 'images/assets/', 'storage/']
         );
     }
 }

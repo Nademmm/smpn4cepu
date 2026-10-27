@@ -38,11 +38,13 @@ class StaffMember extends Model
             \App\Support\PublicAssetResolver::flush();
             \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
             \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+            \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
         });
         static::deleted(function () {
             \App\Support\PublicAssetResolver::flush();
             \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
             \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+            \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
         });
     }
 

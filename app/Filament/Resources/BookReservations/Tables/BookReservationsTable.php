@@ -73,9 +73,6 @@ class BookReservationsTable
                     ->action(function ($record) {
                         if ($record->status === 'menunggu') {
                             $record->update(['status' => 'diambil']);
-                            if ($record->book && $record->book->available_stock > 0) {
-                                $record->book->decrement('available_stock');
-                            }
                         }
                     }),
 
@@ -87,7 +84,6 @@ class BookReservationsTable
                     ->action(function ($record) {
                         if ($record->status === 'diambil') {
                             $record->update(['status' => 'selesai']);
-                            $record->book?->increment('available_stock');
                         }
                     }),
 

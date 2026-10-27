@@ -331,14 +331,10 @@ class DemoSchoolSeeder extends Seeder
         ];
 
         foreach ($staffData as $s) {
-            if (!empty($s['nip'])) {
-                $existingByNip = StaffMember::where('nip', $s['nip'])->first();
-                if ($existingByNip) {
-                    $existingByNip->update(array_merge($s, ['is_active' => true]));
-                    continue;
-                }
+            if (!empty($s['nip']) && StaffMember::where('nip', $s['nip'])->exists()) {
+                continue;
             }
-            StaffMember::updateOrCreate(
+            StaffMember::firstOrCreate(
                 ['name' => $s['name']],
                 array_merge($s, ['is_active' => true])
             );
@@ -360,7 +356,7 @@ class DemoSchoolSeeder extends Seeder
         ];
 
         foreach ($facilities as $idx => $fac) {
-            SchoolFacility::updateOrCreate(
+            SchoolFacility::firstOrCreate(
                 ['name' => $fac['name']],
                 ['description' => $fac['description'], 'photo_path' => $fac['photo_path'], 'display_order' => $idx + 1]
             );
@@ -443,7 +439,7 @@ class DemoSchoolSeeder extends Seeder
         ];
 
         foreach ($rombelData as $r) {
-            \App\Models\StudentStatistic::updateOrCreate(
+            \App\Models\StudentStatistic::firstOrCreate(
                 ['academic_year' => '2025/2026', 'class_name' => $r['class']],
                 [
                     'grade_level' => $r['grade'],
@@ -479,7 +475,7 @@ class DemoSchoolSeeder extends Seeder
 
         // 7. Berita, Pengumuman, dan Agenda Resmi
         if ($admin) {
-            Post::updateOrCreate(
+            Post::firstOrCreate(
                 ['slug' => 'penerapan-konsep-satu-sekolah-satu-ruang-digital'],
                 [
                     'author_id' => $admin->id,
@@ -493,7 +489,7 @@ class DemoSchoolSeeder extends Seeder
                 ]
             );
 
-            Post::updateOrCreate(
+            Post::firstOrCreate(
                 ['slug' => 'pengumuman-pelaksanaan-pemilihan-ketua-osis-daring-2026'],
                 [
                     'author_id' => $admin->id,
@@ -507,7 +503,7 @@ class DemoSchoolSeeder extends Seeder
                 ]
             );
 
-            Post::updateOrCreate(
+            Post::firstOrCreate(
                 ['slug' => 'agenda-penilaian-sumatif-tengah-semester-gasal'],
                 [
                     'author_id' => $admin->id,
@@ -527,11 +523,11 @@ class DemoSchoolSeeder extends Seeder
         $authorId = $guru ? $guru->id : ($admin ? $admin->id : 1);
         $ipa = Subject::where('code', 'IPA-SMP')->first();
         $matematika = Subject::where('code', 'MAT-SMP')->first();
-        $bindo = Subject::where('code', 'BIN-SMP')->first();
+        $bindo = Subject::where('code', 'IND-SMP')->first();
 
         // 8a. Paket Soal Angkatan Kelas 7 (IPA)
         if ($ipa) {
-            \App\Models\LearningMaterial::updateOrCreate(
+            \App\Models\LearningMaterial::firstOrCreate(
                 ['slug' => 'modul-klasifikasi-makhluk-hidup-dan-ekosistem-kelas-7'],
                 [
                     'subject_id' => $ipa->id,
@@ -544,7 +540,7 @@ class DemoSchoolSeeder extends Seeder
                 ]
             );
 
-            $bank7 = QuestionBank::updateOrCreate(
+            $bank7 = QuestionBank::firstOrCreate(
                 ['title' => 'Evaluasi Klasifikasi Makhluk Hidup & Ekosistem - Kelas 7'],
                 [
                     'subject_id' => $ipa->id,
@@ -579,7 +575,7 @@ class DemoSchoolSeeder extends Seeder
 
         // 8b. Paket Soal Angkatan Kelas 8 (Matematika)
         if ($matematika) {
-            \App\Models\LearningMaterial::updateOrCreate(
+            \App\Models\LearningMaterial::firstOrCreate(
                 ['slug' => 'modul-aljabar-dan-teorema-pythagoras-kelas-8'],
                 [
                     'subject_id' => $matematika->id,
@@ -592,7 +588,7 @@ class DemoSchoolSeeder extends Seeder
                 ]
             );
 
-            $bank = QuestionBank::updateOrCreate(
+            $bank = QuestionBank::firstOrCreate(
                 ['title' => 'Latihan Soal Aljabar & Teorema Pythagoras - Kelas 8'],
                 [
                     'subject_id' => $matematika->id,
@@ -629,7 +625,7 @@ class DemoSchoolSeeder extends Seeder
 
         // 8c. Paket Soal Angkatan Kelas 9 (Bahasa Indonesia)
         if ($bindo) {
-            \App\Models\LearningMaterial::updateOrCreate(
+            \App\Models\LearningMaterial::firstOrCreate(
                 ['slug' => 'modul-teks-laporan-percobaan-dan-pidato-persuasif-kelas-9'],
                 [
                     'subject_id' => $bindo->id,
@@ -642,7 +638,7 @@ class DemoSchoolSeeder extends Seeder
                 ]
             );
 
-            $bank9 = QuestionBank::updateOrCreate(
+            $bank9 = QuestionBank::firstOrCreate(
                 ['title' => 'Asesmen Teks Laporan Percobaan & Pidato Persuasif - Kelas 9'],
                 [
                     'subject_id' => $bindo->id,

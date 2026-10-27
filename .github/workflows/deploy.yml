@@ -85,25 +85,25 @@ jobs:
         if: env.HOSTINGER_SSH_KEY != ''
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.HOSTINGER_HOST || '187.127.222.27' }}
+          host: ${{ secrets.HOSTINGER_HOST }}
           port: ${{ secrets.HOSTINGER_PORT || 65002 }}
-          username: ${{ secrets.HOSTINGER_USER || 'u652241328' }}
+          username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
           source: "public/build"
-          target: "/home/u652241328/domains/smpn4cepu.sch.id/laravel_app"
+          target: "${{ secrets.HOSTINGER_APP_DIR || '/home/' }}"
           strip_components: 0
 
       - name: Execute Remote Deployment via SSH
         if: env.HOSTINGER_SSH_KEY != ''
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOSTINGER_HOST || '187.127.222.27' }}
+          host: ${{ secrets.HOSTINGER_HOST }}
           port: ${{ secrets.HOSTINGER_PORT || 65002 }}
-          username: ${{ secrets.HOSTINGER_USER || 'u652241328' }}
+          username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
           script_stop: true
           script: |
-            bash /home/u652241328/domains/smpn4cepu.sch.id/laravel_app/deploy.sh
+            bash "$HOME/domains/smpn4cepu.sch.id/laravel_app/deploy.sh"
 
       - name: Fallback Webhook Trigger (Optional)
         if: env.HOSTINGER_SSH_KEY == '' && env.DEPLOY_WEBHOOK_URL != ''

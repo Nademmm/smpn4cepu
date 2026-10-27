@@ -3,16 +3,13 @@
 namespace App\Livewire\Quiz;
 
 use App\Models\QuestionBank;
-use App\Models\User;
 use App\Services\QuizAssessmentService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
-use Spatie\Permission\Models\Role;
 
 class QuizRoom extends Component
 {
@@ -69,16 +66,7 @@ class QuizRoom extends Component
     #[Locked]
     public ?array $resultSummary = null;
 
-    // Autentikasi Siswa
-    public string $authTab = 'login'; // 'login' | 'register'
-    public string $loginEmail = '';
-    public string $loginPassword = '';
-    public string $regName = '';
-    public string $regEmail = '';
-    public string $regClass = '';
-    public string $regPassword = '';
     public string $authErrorMessage = '';
-    public string $authSuccessMessage = '';
 
     public function mount(int $bankId): void
     {
@@ -126,111 +114,6 @@ class QuizRoom extends Component
         }
 
         return in_array($fallbackGrade, [7, 8, 9], true) ? 'Kelas ' . $fallbackGrade : 'Kelas 7';
-    }
-
-    public function setAuthTab(string $tab): void
-    {
-        $this->authTab = $tab;
-        $this->authErrorMessage = '';
-        $this->authSuccessMessage = '';
-    }
-
-    public function loginStudent(): void
-    {
-        $this->authErrorMessage = '';
-        $this->authSuccessMessage = '';
-
-        $throttleKey = 'quiz-login:' . request()->ip();
-        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
-            $this->authErrorMessage = 'Terlalu banyak percobaan masuk. Silakan coba lagi dalam ' . RateLimiter::availableIn($throttleKey) . ' detik.';
-            return;
-        }
-
-        $this->validate([
-            'loginEmail' => 'required|string',
-            'loginPassword' => 'required|string',
-        ], [
-            'loginEmail.required' => 'Email atau NISN wajib diisi.',
-            'loginPassword.required' => 'Kata sandi wajib diisi.',
-        ]);
-
-        $input = trim($this->loginEmail);
-        $user = User::where('email', $input)->orWhere('nisn', $input)->first();
-
-        if ($user && Auth::attempt(['email' => $user->email, 'password' => $this->loginPassword], true)) {
-            RateLimiter::clear($throttleKey);
-            session()->regenerate();
-            $this->studentName = Auth::user()->name;
-            $this->studentClass = $this->normalizeCohort((string) Auth::user()->student_class, $this->gradeLevel);
-            $this->authSuccessMessage = 'Berhasil masuk sebagai ' . Auth::user()->name . '.';
-            $this->loginEmail = '';
-            $this->loginPassword = '';
-            return;
-        }
-
-        RateLimiter::hit($throttleKey, 60);
-        $this->authErrorMessage = 'Email / NISN atau kata sandi tidak cocok. Silakan periksa kembali.';
-    }
-
-    public function registerStudent(): void
-    {
-        $this->authErrorMessage = '';
-        $this->authSuccessMessage = '';
-
-        $throttleKey = 'quiz-register:' . request()->ip();
-        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
-            $this->authErrorMessage = 'Terlalu banyak percobaan pendaftaran. Silakan coba lagi dalam ' . RateLimiter::availableIn($throttleKey) . ' detik.';
-            return;
-        }
-
-        $this->validate([
-            'regName' => 'required|string|min:3|max:100',
-            'regEmail' => 'required|email|max:150|unique:users,email',
-            'regClass' => 'required|in:Kelas 7,Kelas 8,Kelas 9',
-            'regPassword' => 'required|string|min:6',
-        ], [
-            'regName.required' => 'Nama lengkap siswa wajib diisi.',
-            'regEmail.required' => 'Alamat email aktif wajib diisi.',
-            'regEmail.email' => 'Format email tidak valid.',
-            'regEmail.unique' => 'Email ini sudah terdaftar. Silakan gunakan tab Masuk.',
-            'regClass.required' => 'Tingkat angkatan kelas wajib dipilih.',
-            'regClass.in' => 'Pilih angkatan Kelas 7, Kelas 8, atau Kelas 9.',
-            'regPassword.required' => 'Kata sandi wajib diisi.',
-            'regPassword.min' => 'Kata sandi minimal 6 karakter.',
-        ]);
-
-        RateLimiter::hit($throttleKey, 300);
-
-        $cohort = $this->normalizeCohort($this->regClass, $this->gradeLevel);
-
-        $user = User::create([
-            'name' => trim($this->regName),
-            'email' => strtolower(trim($this->regEmail)),
-            'student_class' => $cohort,
-            'password' => Hash::make($this->regPassword),
-        ]);
-
-        Role::firstOrCreate(['name' => 'siswa']);
-        $user->assignRole('siswa');
-        Auth::login($user, true);
-        session()->regenerate();
-
-        $this->studentName = $user->name;
-        $this->studentClass = $cohort;
-        $this->authSuccessMessage = 'Akun siswa berhasil dibuat dan langsung terhubung!';
-    }
-
-    public function logoutStudent(): void
-    {
-        Auth::logout();
-        session()->invalidate();
-        session()->regenerateToken();
-        $this->studentName = '';
-        $this->studentClass = '';
-        $this->quizPassword = '';
-        $this->questions = [];
-        $this->hasStarted = false;
-        $this->authSuccessMessage = 'Anda telah keluar. Silakan masuk kembali untuk memulai kuis.';
     }
 
     public function startQuiz(QuizAssessmentService $assessmentService): void

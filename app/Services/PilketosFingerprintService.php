@@ -100,7 +100,8 @@ class PilketosFingerprintService
             return true;
         });
 
-        Cache::forget('pilketos_live_chart_data');
+        Cache::forget('pilketos_public_live_count');
+        Cache::forget('pilketos_admin_chart_data');
         Cache::forget('admin_school_overview_stats');
 
         return $result;

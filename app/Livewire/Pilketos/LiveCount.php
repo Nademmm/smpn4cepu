@@ -10,7 +10,7 @@ class LiveCount extends Component
 {
     public function render()
     {
-        $data = \Illuminate\Support\Facades\Cache::remember('pilketos_live_chart_data', 10, function () {
+        $data = \Illuminate\Support\Facades\Cache::remember('pilketos_public_live_count', 10, function () {
             $candidates = ElectionCandidate::withCount('votes')
                 ->orderBy('candidate_number')
                 ->get();

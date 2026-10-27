@@ -27,4 +27,15 @@ class ContactMessage extends Model
             'read_at' => 'datetime',
         ];
     }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('admin_nav_badge_unread_messages');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('admin_nav_badge_unread_messages');
+        });
+    }
 }

@@ -221,6 +221,19 @@ Route::post('/perpustakaan/reservasi', function (Request $request) {
         ], 422);
     }
 
+    $alreadyReserved = \App\Models\BookReservation::where('book_id', $book->id)
+        ->where('borrower_name', trim($validated['borrower_name']))
+        ->where('borrower_class', trim($validated['borrower_class']))
+        ->whereIn('status', ['menunggu', 'diambil'])
+        ->exists();
+
+    if ($alreadyReserved) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Anda sudah memiliki tiket reservasi atau peminjaman aktif untuk buku ini.',
+        ], 422);
+    }
+
     $code = 'LIB-' . rand(1000, 9999) . '-' . date('Y');
     $tries = 0;
     while (\App\Models\BookReservation::where('reservation_code', $code)->exists()) {

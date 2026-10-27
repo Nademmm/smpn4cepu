@@ -61,7 +61,11 @@ class ContactMessageResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $unreadCount = static::getModel()::where('is_read', false)->count();
+        $unreadCount = \Illuminate\Support\Facades\Cache::remember(
+            'admin_nav_badge_unread_messages',
+            60,
+            fn () => static::getModel()::where('is_read', false)->count()
+        );
 
         return $unreadCount > 0 ? (string) $unreadCount : null;
     }

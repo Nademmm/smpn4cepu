@@ -1,7 +1,11 @@
 @props(['title', 'subtitle' => null, 'crumb' => null, 'variant' => 'blue'])
 @php
     $hasTabs = isset($tabs) && $tabs->isNotEmpty();
-    $bg = $variant === 'violet' ? 'bg-gradient-to-br from-grape to-brand' : 'bg-brand';
+    $bg = match ($variant) {
+        'violet' => 'bg-gradient-to-br from-grape to-brand',
+        'amber' => 'bg-gradient-to-br from-navy to-brand-dark',
+        default => 'bg-brand',
+    };
 @endphp
 <header class="{{ $bg }} px-4 sm:px-6 pt-12 {{ $hasTabs ? 'pb-0' : 'pb-9' }}">
     <div class="mx-auto max-w-7xl">

@@ -50,10 +50,12 @@ class LibraryBook extends Model
         static::saved(function () {
             \App\Support\PublicAssetResolver::flush();
             \Illuminate\Support\Facades\Cache::forget('public_library_meta_v1');
+            \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
         });
         static::deleted(function () {
             \App\Support\PublicAssetResolver::flush();
             \Illuminate\Support\Facades\Cache::forget('public_library_meta_v1');
+            \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
         });
     }
 

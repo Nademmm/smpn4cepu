@@ -118,13 +118,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @forelse ($materials as $index => $mat)
                 @php
+                    $rawContent = (string) ($mat->content ?: ($mat->summary ?? 'Modul pembelajaran Kurikulum Merdeka yang disusun oleh tenaga pendidik SMP Negeri 4 Cepu.'));
+                    $isHtml = preg_match('/<(p|br|h[1-6]|ul|ol|li|strong|b|em|i|blockquote)\b/i', $rawContent) === 1;
+                    $safeContent = $isHtml
+                        ? preg_replace('/<([a-z][a-z0-9]*)\b[^>]*>/i', '<$1>', strip_tags($rawContent, '<p><br><strong><b><em><i><ul><ol><li><h2><h3><h4><blockquote>'))
+                        : $rawContent;
                     $matPayload = [
                         'title' => $mat->title,
                         'subject' => $mat->subject?->name ?? 'Mata Pelajaran',
                         'grade_level' => $mat->grade_level,
                         'author' => $mat->author?->name ?? 'Guru Pengampu',
                         'summary' => $mat->summary ?? '',
-                        'content' => $mat->content ?: ($mat->summary ?? 'Modul pembelajaran Kurikulum Merdeka yang disusun oleh tenaga pendidik SMP Negeri 4 Cepu.'),
+                        'content' => $safeContent,
+                        'is_html' => $isHtml,
                         'attachment_url' => $mat->attachment_url,
                     ];
                 @endphp
@@ -257,7 +263,12 @@
                             <div class="p-3.5 rounded-xl bg-cream/60 border border-sun-soft text-xs sm:text-sm text-navy font-semibold leading-relaxed" x-text="activeMaterial?.summary"></div>
                         </template>
 
-                        <div class="prose max-w-none text-navy text-sm sm:text-base leading-relaxed whitespace-pre-line font-medium" x-text="activeMaterial?.content"></div>
+                        <template x-if="activeMaterial?.is_html">
+                            <div class="prose max-w-none text-navy text-sm sm:text-base leading-relaxed font-medium" x-html="activeMaterial?.content"></div>
+                        </template>
+                        <template x-if="!activeMaterial?.is_html">
+                            <div class="prose max-w-none text-navy text-sm sm:text-base leading-relaxed whitespace-pre-line font-medium" x-text="activeMaterial?.content"></div>
+                        </template>
                     </div>
 
                     <div class="p-4 bg-cream/60 border-t-2 border-sun-soft flex flex-wrap items-center justify-between gap-3">
