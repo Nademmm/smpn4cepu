@@ -6,19 +6,23 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
 jobs:
   test-and-lint:
-    name: Run Automated Tests
+    name: Run Automated Tests & Build Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup PHP 8.2
+      - name: Setup PHP 8.3
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           extensions: mbstring, intl, pdo_sqlite, fileinfo, curl, zip, bcmath, gd, exif
           coverage: none
 
@@ -38,10 +42,12 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Install NPM Dependencies & Build Assets
-        run: npm ci && npm run build
+      - name: Install NPM Dependencies & Build Vite Assets
+        run: |
+          npm ci
+          npm run build
 
-      - name: Prepare Laravel Environment
+      - name: Prepare Laravel Testing Environment
         run: |
           cp .env.example .env
           php artisan key:generate
@@ -52,18 +58,61 @@ jobs:
       - name: Execute Tests (PHPUnit)
         run: php artisan test
 
-  auto-deploy:
-    name: Trigger PaaS Auto-Deploy
+  deploy-to-hostinger:
+    name: Auto-Deploy to Hostinger Cloud
     needs: test-and-lint
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     env:
+      HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
       DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
 
     steps:
-      - name: Trigger Webhook (Coolify / Railway / Render)
-        if: env.DEPLOY_WEBHOOK_URL != ''
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compile Fresh Production Assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload Fresh Vite Build to Hostinger
+        if: env.HOSTINGER_SSH_KEY != ''
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOSTINGER_HOST || '187.127.222.27' }}
+          port: ${{ secrets.HOSTINGER_PORT || 65002 }}
+          username: ${{ secrets.HOSTINGER_USER || 'u652241328' }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          source: "public/build"
+          target: "/home/u652241328/domains/smpn4cepu.sch.id/laravel_app"
+          strip_components: 0
+
+      - name: Execute Remote Deployment via SSH
+        if: env.HOSTINGER_SSH_KEY != ''
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTINGER_HOST || '187.127.222.27' }}
+          port: ${{ secrets.HOSTINGER_PORT || 65002 }}
+          username: ${{ secrets.HOSTINGER_USER || 'u652241328' }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          script_stop: true
+          script: |
+            bash /home/u652241328/domains/smpn4cepu.sch.id/laravel_app/deploy.sh
+
+      - name: Fallback Webhook Trigger (Optional)
+        if: env.HOSTINGER_SSH_KEY == '' && env.DEPLOY_WEBHOOK_URL != ''
         run: |
           echo "Triggering deployment webhook..."
           curl -X POST -f "$DEPLOY_WEBHOOK_URL" || echo "Webhook trigger warning: Check URL secret."
 
+      - name: Verify Live Website Health
+        run: |
+          echo "Verifying live site health..."
+          curl -f -sI -k https://smpn4cepu.sch.id || exit 1
+          echo "Production deployment is verified and healthy!"
