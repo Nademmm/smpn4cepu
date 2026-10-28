@@ -1,7 +1,7 @@
 # Berkas Persyaratan Domain `.sch.id` (PANDI) & Checklist Migrasi Hostinger Cloud Startup
 ## SMP Negeri 4 Cepu (`smpn4cepu.sch.id`)
 
-Dokumen ini disiapkan secara khusus agar proses pembelian paket **Hostinger Cloud Startup (12 Bulan)**, verifikasi domain resmi **`smpn4cepu.sch.id`** di **PANDI**, hingga migrasi penuh dari **Railway** berjalan lancar tanpa kendala teknis maupun administratif.
+Dokumen ini disiapkan secara khusus agar proses pembelian paket **Hostinger Cloud Startup (12 Bulan)**, verifikasi domain resmi **`smpn4cepu.sch.id`** di **PANDI**, hingga rilis penuh ke server produksi berjalan lancar tanpa kendala teknis maupun administratif.
 
 ---
 
@@ -84,7 +84,7 @@ kami ucapkan terima kasih.
 
 ---
 
-### C. Template 2: Surat Kuasa Pendaftaran Domain (OPSIONAL — Hanya Jika KTP Pendaftar di Hostinger BUKAN KTP Kepala Sekolah)
+### C. Template 2: Surat Kuasa Pendaftaran Domain (OPSIONAL: Hanya Jika KTP Pendaftar di Hostinger BUKAN KTP Kepala Sekolah)
 *(Jika saat mengisi data KTP pendaftar domain di Hostinger menggunakan KTP Operator Sekolah, Guru TIK, atau Developer, lampirkan surat kuasa ini dan gabungkan dalam 1 file PDF dengan Surat Permohonan).*
 
 ```text
@@ -236,7 +236,7 @@ chmod +x deploy.sh
 1. Menginstal seluruh paket Composer produksi (`--no-dev --optimize-autoloader`).
 2. Mem-build ulang aset Vite (jika Node.js aktif) atau langsung menggunakan *pre-built bundle* di `public/build/manifest.json` yang sudah disertakan di Git (sehingga bebas error `ViteManifestNotFoundException`).
 3. Menjalankan migrasi tabel ke MariaDB/MySQL (`php artisan migrate --force`).
-4. Mengecek isi database: jika baru pertama kali dipasang (tabel guru/berita masih kosong), **otomatis menjalankan `DatabaseSeeder`** berisi data resmi 33 GTK SMPN 4 Cepu, 11 fasilitas, visi-misi, akun role, dan bank soal.
+4. Mengecek isi database: jika baru pertama kali dipasang (tabel guru/berita masih kosong), **otomatis menjalankan `DatabaseSeeder`** berisi data resmi 609 siswa aktif (20 rombel), 33 GTK SMPN 4 Cepu, 11 fasilitas, 11 mapel, visi-misi, akun role, dan bank soal CBT.
 5. Menyalin seluruh foto bawaan dari `public/images/{staff,facilities,principal,assets}` ke `storage/app/public/` dan membuat `storage:link` agar tidak ada gambar yang *broken* (404).
 6. Mengubah `../public_html` menjadi *symlink* aman yang mengarah ke `laravel_app/public` (sehingga file `.env` dan kode sumber Laravel berada di luar `public_html` dan 100% aman dari publik).
 7. Mengoptimalkan cache Laravel, Filament, Livewire, serta membersihkan LiteSpeed Cache.

@@ -1,7 +1,7 @@
 # Master Data & Data Dictionary Resmi
-## SMP Negeri 4 Cepu — "Satu Sekolah, Satu Ruang Digital"
+## SMP Negeri 4 Cepu: "Satu Sekolah, Satu Ruang Digital"
 
-Dokumen ini memuat seluruh data resmi sekolah hasil riset dan ekstraksi dokumen primer (`DATA WEBSITE.docx`, `PROPOSAL PENAWARAN`, dan berkas pendukung resmi). Data ini menjadi acuan absolut dalam penataan basis data dan pengisian awal (*database seeding*).
+Dokumen ini memuat seluruh data resmi sekolah hasil riset dan ekstraksi dokumen primer (`DATA WEBSITE.docx`, dokumen Dapodik, berkas biodata siswa 2026/2027, dan berkas pendukung resmi). Data ini menjadi acuan absolut dalam penataan basis data dan pengisian awal (*database seeding*).
 
 ---
 
@@ -47,7 +47,7 @@ Dokumen ini memuat seluruh data resmi sekolah hasil riset dan ekstraksi dokumen 
 
 ## 3. Direktori Resmi Tenaga Pendidik & Kependidikan (GTK)
 
-Komposisi per Juli 2026: 29 Guru (20 PNS, 8 PPPK, 1 PPPK PW; 28 S1, 1 S2) dan 9 Tenaga Kependidikan.
+Komposisi resmi sekolah terdiri dari 29 Guru (20 PNS, 8 PPPK, 1 Honorer) dan 4 Tenaga Kependidikan.
 
 | No | Nama Lengkap & Gelar | NIP | Pangkat / Golongan | Jabatan Fungsional | Status Kepegawaian |
 | :---: | :--- | :--- | :--- | :--- | :---: |
@@ -79,11 +79,11 @@ Komposisi per Juli 2026: 29 Guru (20 PNS, 8 PPPK, 1 PPPK PW; 28 S1, 1 S2) dan 9 
 | 26 | Hetik Wulandari, S.Pd. | 20000705 202421 2 007 | Golongan IX | Guru Ahli Pertama | PPPK |
 | 27 | Brilliani Dyah Sekartaji, S.Pd. | 19970519 202521 2 011 | Golongan IX | Guru Ahli Pertama | PPPK |
 | 28 | Dhea Eristania Dewi, S.Pd. | 19981225 202521 2 015 | Golongan IX | Guru Ahli Pertama | PPPK |
-| 29 | Yaatun, A.Ma.Pust. | 19910628 202321 2 024 | Golongan VII | Tenaga Teknis Pustakawan | PPPK |
-| 30 | Ninik Yuliastutik | 19690726 202521 2 004 | - | Staf Tenaga Kependidikan | PPPK |
-| 31 | Hermayanti, S.P. | 19780913 202521 2 004 | - | Staf Tenaga Kependidikan | PPPK |
-| 32 | Dyah Dhirta Sukmasari | 19870130 202521 2 006 | - | Staf Tenaga Kependidikan | PPPK |
-| 33 | Ahmad Yusron Auladi, S.Pd. | - | Golongan IX | Guru / Tenaga Honorer | Honorer |
+| 29 | Ahmad Yusron Auladi, S.Pd. | - | - | Guru / Tenaga Honorer | Honorer |
+| 30 | Yaatun, A.Ma.Pust. | 19910628 202321 2 024 | Golongan VII | Tenaga Teknis Pustakawan | PPPK |
+| 31 | Ninik Yuliastutik | 19690726 202521 2 004 | - | Staf Tenaga Kependidikan | PPPK |
+| 32 | Hermayanti, S.P. | 19780913 202521 2 004 | - | Staf Tenaga Kependidikan | PPPK |
+| 33 | Dyah Dhirta Sukmasari | 19870130 202521 2 006 | - | Staf Tenaga Kependidikan | PPPK |
 
 ---
 
@@ -121,18 +121,71 @@ Komposisi per Juli 2026: 29 Guru (20 PNS, 8 PPPK, 1 PPPK PW; 28 S1, 1 S2) dan 9 
 
 ---
 
-## 6. Akun Bawaan Sistem & Matriks Akses RBAC
+## 6. Data Peserta Didik Resmi Tahun Ajaran 2026/2027 (609 Siswa)
 
-| Akun Peran | Alamat Email | Kata Sandi Default | Hak Akses Utama di Panel `/admin` |
-| :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@smpn4cepu.sch.id` | `AdminCepu2026!` | Hak mutlak sistem: Konfigurasi RBAC Shield, Pengguna, Database, Cadangan |
-| **Guru** | `guru@smpn4cepu.sch.id` | `GuruCepu2026!` | Manajemen Materi Belajar, Bank Soal & Butir Pertanyaan, Berita, Agenda |
-| **Staf Perpus** | `perpus@smpn4cepu.sch.id` | `PerpusCepu2026!` | Pengelolaan Katalog Buku, Lokasi Rak, dan Stok Sirkulasi Perpustakaan |
-| **Panitia Pilketos**| `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pendaftaran Nomor Urut & Visi Misi Paslon OSIS, Pemantauan Hasil Suara |
+Sistem memuat 100% data resmi seluruh siswa aktif SMP Negeri 4 Cepu dengan total **609 siswa** yang terdistribusi ke dalam **20 Rombongan Belajar (Rombel)**.
+
+### 6.1 Distribusi Rombel & Rasio Gender
+
+| Tingkat | Nama Rombel | Laki-Laki (L) | Perempuan (P) | Total Siswa |
+| :---: | :---: | :---: | :---: | :---: |
+| **Kelas 7** | 7A | 16 | 15 | 31 |
+| **Kelas 7** | 7B | 15 | 16 | 31 |
+| **Kelas 7** | 7C | 17 | 14 | 31 |
+| **Kelas 7** | 7D | 15 | 15 | 30 |
+| **Kelas 7** | 7E | 15 | 15 | 30 |
+| **Kelas 7** | 7F | 16 | 14 | 30 |
+| **Kelas 7** | 7G | 15 | 15 | 30 |
+| *Subtotal Kelas 7* | *7 Rombel* | *109* | *104* | *213* |
+| **Kelas 8** | 8A | 16 | 16 | 32 |
+| **Kelas 8** | 8B | 17 | 15 | 32 |
+| **Kelas 8** | 8C | 18 | 14 | 32 |
+| **Kelas 8** | 8D | 16 | 15 | 31 |
+| **Kelas 8** | 8E | 15 | 16 | 31 |
+| **Kelas 8** | 8F | 16 | 15 | 31 |
+| *Subtotal Kelas 8* | *6 Rombel* | *98* | *91* | *189* |
+| **Kelas 9** | 9A | 16 | 14 | 30 |
+| **Kelas 9** | 9B | 14 | 16 | 30 |
+| **Kelas 9** | 9C | 14 | 15 | 29 |
+| **Kelas 9** | 9D | 17 | 13 | 30 |
+| **Kelas 9** | 9E | 16 | 13 | 29 |
+| **Kelas 9** | 9F | 16 | 13 | 29 |
+| **Kelas 9** | 9G | 18 | 12 | 30 |
+| *Subtotal Kelas 9* | *7 Rombel* | *111* | *96* | *207* |
+| **TOTAL** | **20 Rombel** | **318 Laki-Laki** | **291 Perempuan** | **609 Siswa** |
+
+### 6.2 Skema Biodata Peserta Didik (7 Kolom Standar Kemendikbud)
+
+Setiap entitas siswa tercatat di tabel `users` dengan 7 atribut resmi:
+1. `nisn` (String 10 digit): Nomor Induk Siswa Nasional, unik dan digunakan sebagai identitas login siswa.
+2. `nis` (String 4-6 digit): Nomor Induk Sekolah lokal.
+3. `name` (String): Nama lengkap siswa sesuai akta kelahiran resmi.
+4. `gender` (Enum: `L` / `P`): Jenis kelamin siswa.
+5. `birth_place` (String): Kota/kabupaten tempat kelahiran.
+6. `birth_date` (Date format `YYYY-MM-DD`): Tanggal kelahiran siswa.
+7. `student_class` (String): Kelas/rombel aktif (contoh: `7A`, `8B`, `9F`).
+
+### 6.3 Pengelolaan Akun & Sinkronisasi
+
+- **Format Akun**: Seluruh 609 siswa otomatis dibuatkan akun portal dengan email `{nisn}@siswa.smpn4cepu.sch.id` dan password default `password123`.
+- **Google Sheets Online Master**: Data seluruh akun tersinkronisasi langsung pada Google Drive admin dengan ID spreadsheet `1xUgoOjHr_yxlYyLZahMxeFVzQWovpqZXXEcq4woG7RU`.
+- **Berkas Arsip Offline**: Salinan master data akun tersedia dalam format Excel di `data_semua_akun_smpn4cepu.xlsx`.
 
 ---
 
-## 7. Inventaris Berkas & Aset Media Riil Sekolah (ASET SEKOLAH)
+## 7. Akun Bawaan Sistem & Matriks Akses RBAC
+
+| Akun Peran | Alamat Email / NISN | Kata Sandi Default | Hak Akses Utama di Panel `/admin` |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `admin@smpn4cepu.sch.id` | `AdminCepu2026!` | Hak mutlak sistem: Konfigurasi RBAC Shield, Pengguna, Database, Cadangan, Seluruh 20 Modul |
+| **Guru** | `guru@smpn4cepu.sch.id` | `GuruCepu2026!` | Manajemen Materi Belajar, Bank Soal CBT, Hasil Kuis Siswa, Warta Berita & Agenda |
+| **Staf Perpus** | `perpus@smpn4cepu.sch.id` | `PerpusCepu2026!` | Pengelolaan Katalog Buku, Nomor Lokasi Rak, Stok Sirkulasi, dan Reservasi Peminjaman |
+| **Panitia Pilketos**| `pilketos@smpn4cepu.sch.id` | `PilketosCepu2026!` | Pendaftaran Nomor Urut & Visi Misi Paslon OSIS, Pemantauan Kotak Suara & Live Polling |
+| **Peserta Didik (Siswa)** | `{nisn}@siswa.smpn4cepu.sch.id` | `password123` | Portal Belajar Siswa (`/login`), Pengerjaan Latihan Soal CBT, Reservasi Buku Perpustakaan |
+
+---
+
+## 8. Inventaris Berkas & Aset Media Riil Sekolah (ASET SEKOLAH)
 
 Seluruh berkas media foto dokumentasi asli yang terdapat di subfolder `ASET SEKOLAH` pada Google Drive telah diunduh, diverifikasi integritasnya, dan ditempatkan pada direktori `public/images/assets/`:
 
@@ -143,4 +196,3 @@ Seluruh berkas media foto dokumentasi asli yang terdapat di subfolder `ASET SEKO
 | `IMG_6518.JPG` | JPEG (1620x1080 px) | 711 KB | Dokumentasi Kegiatan Lapangan Upacara / Pembiasaan Siswa |
 | `IMG_6522.JPG` | JPEG (1620x1080 px) | 716 KB | Dokumentasi Kegiatan Ekstrakurikuler & Gedung Serbaguna |
 | `IMG_8383.JPG` | JPEG/MPO (6000x4000 px) | 9,83 MB | Foto Resolusi Tinggi Lanskap Kawasan SMP Negeri 4 Cepu |
-
