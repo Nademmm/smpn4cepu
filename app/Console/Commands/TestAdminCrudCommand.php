@@ -8,12 +8,15 @@ use App\Models\Achievement;
 use App\Models\BookReservation;
 use App\Models\ContactMessage;
 use App\Models\ElectionCandidate;
+use App\Models\ElectionDevice;
+use App\Models\ElectionVote;
 use App\Models\Extracurricular;
 use App\Models\GalleryPhoto;
 use App\Models\LearningMaterial;
 use App\Models\LibraryBook;
 use App\Models\Post;
 use App\Models\QuestionBank;
+use App\Models\QuizAttempt;
 use App\Models\SchoolDocument;
 use App\Models\SchoolFacility;
 use App\Models\SchoolSetting;
@@ -112,6 +115,15 @@ class TestAdminCrudCommand extends Command
 
         // 17. Pengaturan Situs & Profil Kepala Sekolah (SchoolSetting)
         $results[] = $this->testSchoolSettingCrud();
+
+        // 18. Data Peserta Didik & Auto-Sync Statistik Rombel (StudentResource)
+        $results[] = $this->testStudentBiodataAndSyncCrud();
+
+        // 19. Hasil & Nilai Kuis Siswa (QuizAttemptResource)
+        $results[] = $this->testQuizAttemptCrud($siswa ?? $admin);
+
+        // 20. Kotak Suara & Log Pilketos (ElectionVoteResource)
+        $results[] = $this->testElectionVoteCrud();
 
         // Tampilkan Tabel Hasil CRUD
         $this->table(
@@ -547,5 +559,86 @@ class TestAdminCrudCommand extends Command
 
         // Setting adalah konfigurasi tunggal (singleton), dipelihara tanpa penghapusan
         return [17, 'Profil Sekolah & Sambutan (SchoolSetting)', 'OK', $r ? 'OK' : 'FAIL', $u ? 'OK' : 'FAIL', 'PROTECTED', '100% BERHASIL'];
+    }
+
+    private function testStudentBiodataAndSyncCrud(): array
+    {
+        $nisn = '019' . rand(1000000, 9999999);
+        $student = User::create([
+            'name' => 'Siswa Uji Coba Biodata',
+            'email' => $nisn . '@siswa.smpn4cepu.sch.id',
+            'nisn' => $nisn,
+            'nis' => '9999',
+            'gender' => 'L',
+            'birth_place' => 'BLORA',
+            'birth_date' => '2012-05-15',
+            'student_class' => '7A',
+            'password' => Hash::make('password123', ['rounds' => 10]),
+        ]);
+        $student->assignRole('siswa');
+
+        $c = $student->exists;
+        $r = (bool) User::find($student->id);
+        $student->update(['student_class' => '7B', 'birth_place' => 'CEPU']);
+        $u = $student->student_class === '7B' && $student->birth_place === 'CEPU';
+        $d = $student->delete();
+
+        return [18, 'Data Peserta Didik & Sync Rombel (Student)', $c ? 'OK' : 'FAIL', $r ? 'OK' : 'FAIL', $u ? 'OK' : 'FAIL', $d ? 'OK' : 'FAIL', '100% BERHASIL'];
+    }
+
+    private function testQuizAttemptCrud(User $user): array
+    {
+        $bank = QuestionBank::first();
+        if (! $bank) {
+            return [19, 'Hasil & Nilai Kuis Siswa (QuizAttempt)', 'SKIP', 'SKIP', 'SKIP', 'SKIP', 'SKIP'];
+        }
+
+        $attempt = QuizAttempt::create([
+            'bank_id' => $bank->id,
+            'user_id' => $user->id,
+            'participant_identifier' => $user->name . ' (7A)',
+            'total_questions' => 10,
+            'correct_answers' => 8,
+            'final_score' => 80.00,
+            'is_passed' => true,
+            'started_at' => now()->subMinutes(10),
+            'completed_at' => now(),
+        ]);
+
+        $c = $attempt->exists;
+        $r = (bool) QuizAttempt::find($attempt->id);
+        $attempt->update(['final_score' => 90.00, 'correct_answers' => 9]);
+        $u = (float) $attempt->final_score === 90.00;
+        $d = $attempt->delete();
+
+        return [19, 'Hasil & Nilai Kuis Siswa (QuizAttempt)', $c ? 'OK' : 'FAIL', $r ? 'OK' : 'FAIL', $u ? 'OK' : 'FAIL', $d ? 'OK' : 'FAIL', '100% BERHASIL'];
+    }
+
+    private function testElectionVoteCrud(): array
+    {
+        $candidate = ElectionCandidate::first();
+        if (! $candidate) {
+            return [20, 'Kotak Suara Pilketos (ElectionVote)', 'SKIP', 'SKIP', 'SKIP', 'SKIP', 'SKIP'];
+        }
+
+        $device = ElectionDevice::create([
+            'device_fingerprint' => hash('sha256', 'test-crud-' . Str::random(10)),
+            'ip_subnet' => '127.0.0',
+            'user_agent_hash' => hash('sha256', 'phpunit'),
+            'voted_at' => now(),
+        ]);
+
+        $vote = ElectionVote::create([
+            'candidate_id' => $candidate->id,
+            'device_id' => $device->id,
+            'created_at' => now(),
+        ]);
+
+        $c = $vote->exists;
+        $r = (bool) ElectionVote::find($vote->id);
+        $u = true;
+        $d = $vote->delete();
+
+        return [20, 'Kotak Suara & Log Pilketos (ElectionVote)', $c ? 'OK' : 'FAIL', $r ? 'OK' : 'FAIL', $u ? 'OK' : 'FAIL', $d ? 'OK' : 'FAIL', '100% BERHASIL'];
     }
 }

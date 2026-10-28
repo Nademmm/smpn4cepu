@@ -9,19 +9,30 @@ use App\Models\QuizAttempt;
 use App\Models\QuizAttemptAnswer;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class QuizAssessmentService
 {
     /**
+     * Muat QuestionBank beserta soal dan opsi dari cache (hemat 99% query saat 600 siswa mulai/kumpul kuis bersamaan).
+     */
+    protected function getCachedBank(int $bankId): QuestionBank
+    {
+        return Cache::remember('quiz_bank_full_' . $bankId, 120, function () use ($bankId) {
+            return QuestionBank::with(['subject', 'questions.options'])
+                ->where('is_active', true)
+                ->findOrFail($bankId);
+        });
+    }
+
+    /**
      * Mengambil daftar pertanyaan dan opsi TANPA mengekspos kolom 'is_correct' ke klien (Zero Client Leakage).
      */
     public function getQuestionsForQuiz(int $bankId): Collection
     {
-        $bank = QuestionBank::with(['questions.options' => function ($query) {
-            $query->select('id', 'question_id', 'option_text');
-        }])->where('is_active', true)->findOrFail($bankId);
+        $bank = $this->getCachedBank($bankId);
 
         return $bank->questions->map(function (Question $question) {
             return [
@@ -31,7 +42,7 @@ class QuizAssessmentService
                 'options' => $question->options->map(fn ($opt) => [
                     'id' => $opt->id,
                     'text' => $opt->option_text,
-                ])->shuffle()->values(), // Acak urutan opsi jawaban di sisi server
+                ])->shuffle()->values(), // Acak urutan opsi jawaban di sisi server per siswa
             ];
         });
     }
@@ -56,7 +67,7 @@ class QuizAssessmentService
         Carbon $startedAt,
         ?int $userId = null
     ): QuizAttempt {
-        $bank = QuestionBank::with('questions.options')->where('is_active', true)->findOrFail($bankId);
+        $bank = $this->getCachedBank($bankId);
 
         if ($bank->questions->isEmpty()) {
             throw new InvalidArgumentException('Bank soal tidak memiliki butir pertanyaan.');

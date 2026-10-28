@@ -31,6 +31,18 @@ class QuestionBank extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function (self $model) {
+            \Illuminate\Support\Facades\Cache::forget('public_active_question_banks_v1');
+            \Illuminate\Support\Facades\Cache::forget('quiz_bank_full_' . $model->id);
+        });
+        static::deleted(function (self $model) {
+            \Illuminate\Support\Facades\Cache::forget('public_active_question_banks_v1');
+            \Illuminate\Support\Facades\Cache::forget('quiz_bank_full_' . $model->id);
+        });
+    }
+
     public function requiresPassword(): bool
     {
         return filled(trim((string) $this->access_code));

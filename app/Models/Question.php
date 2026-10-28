@@ -23,6 +23,18 @@ class Question extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function (self $model) {
+            \Illuminate\Support\Facades\Cache::forget('public_active_question_banks_v1');
+            \Illuminate\Support\Facades\Cache::forget('quiz_bank_full_' . $model->bank_id);
+        });
+        static::deleted(function (self $model) {
+            \Illuminate\Support\Facades\Cache::forget('public_active_question_banks_v1');
+            \Illuminate\Support\Facades\Cache::forget('quiz_bank_full_' . $model->bank_id);
+        });
+    }
+
     public function bank(): BelongsTo
     {
         return $this->belongsTo(QuestionBank::class, 'bank_id');

@@ -1,0 +1,5649 @@
+{
+  "academic_year": "2026/2027",
+  "total_students": 609,
+  "statistics": [
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7A",
+      "male_count": 15,
+      "female_count": 16,
+      "total_count": 31
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7B",
+      "male_count": 15,
+      "female_count": 16,
+      "total_count": 31
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7C",
+      "male_count": 17,
+      "female_count": 15,
+      "total_count": 32
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7D",
+      "male_count": 15,
+      "female_count": 15,
+      "total_count": 30
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7E",
+      "male_count": 16,
+      "female_count": 15,
+      "total_count": 31
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7F",
+      "male_count": 16,
+      "female_count": 15,
+      "total_count": 31
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 7,
+      "class_name": "7G",
+      "male_count": 16,
+      "female_count": 15,
+      "total_count": 31
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8A",
+      "male_count": 16,
+      "female_count": 13,
+      "total_count": 29
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8B",
+      "male_count": 18,
+      "female_count": 12,
+      "total_count": 30
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8C",
+      "male_count": 17,
+      "female_count": 13,
+      "total_count": 30
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8D",
+      "male_count": 18,
+      "female_count": 11,
+      "total_count": 29
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8E",
+      "male_count": 18,
+      "female_count": 12,
+      "total_count": 30
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8F",
+      "male_count": 16,
+      "female_count": 12,
+      "total_count": 28
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 8,
+      "class_name": "8G",
+      "male_count": 16,
+      "female_count": 13,
+      "total_count": 29
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 9,
+      "class_name": "9A",
+      "male_count": 15,
+      "female_count": 16,
+      "total_count": 31
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 9,
+      "class_name": "9B",
+      "male_count": 14,
+      "female_count": 18,
+      "total_count": 32
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 9,
+      "class_name": "9C",
+      "male_count": 17,
+      "female_count": 15,
+      "total_count": 32
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 9,
+      "class_name": "9D",
+      "male_count": 13,
+      "female_count": 16,
+      "total_count": 29
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 9,
+      "class_name": "9E",
+      "male_count": 14,
+      "female_count": 18,
+      "total_count": 32
+    },
+    {
+      "academic_year": "2026/2027",
+      "grade_level": 9,
+      "class_name": "9F",
+      "male_count": 16,
+      "female_count": 15,
+      "total_count": 31
+    }
+  ],
+  "students": [
+    {
+      "nisn": "0137031983",
+      "nis": "269772",
+      "name": "AFIKA ARDINA SARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-10",
+      "class": "7A"
+    },
+    {
+      "nisn": "0136043304",
+      "nis": "269773",
+      "name": "AHMAD NUR ROMADHONI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-15",
+      "class": "7A"
+    },
+    {
+      "nisn": "0138293625",
+      "nis": "269774",
+      "name": "AIDANSYAHM BARRAQ PRANAJA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-22",
+      "class": "7A"
+    },
+    {
+      "nisn": "0131497180",
+      "nis": "269775",
+      "name": "AKIFA NAILA ULJANNA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-27",
+      "class": "7A"
+    },
+    {
+      "nisn": "0142132761",
+      "nis": "269776",
+      "name": "ALIF AHMAD AL MUSYAFFA'",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2014-04-05",
+      "class": "7A"
+    },
+    {
+      "nisn": "0147777225",
+      "nis": "269777",
+      "name": "ALINA MAHYA RAMADHINA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-02",
+      "class": "7A"
+    },
+    {
+      "nisn": "0148852430",
+      "nis": "269778",
+      "name": "ANDRIAN FAJAR KURNIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-04-29",
+      "class": "7A"
+    },
+    {
+      "nisn": "0144032436",
+      "nis": "269779",
+      "name": "ANIN DITA JUMATIL MU'MININ",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-31",
+      "class": "7A"
+    },
+    {
+      "nisn": "0139362177",
+      "nis": "269780",
+      "name": "ANJANI DEWI AYUNDA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-19",
+      "class": "7A"
+    },
+    {
+      "nisn": "0135503498",
+      "nis": "269781",
+      "name": "AQILA NURFITIYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-09",
+      "class": "7A"
+    },
+    {
+      "nisn": "0136740699",
+      "nis": "269782",
+      "name": "ARGANTA PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-28",
+      "class": "7A"
+    },
+    {
+      "nisn": "0135433447",
+      "nis": "269783",
+      "name": "ARSETY CHOIRIYAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-29",
+      "class": "7A"
+    },
+    {
+      "nisn": "0141518966",
+      "nis": "269784",
+      "name": "BAGUS ALFIAN ADITYA NUGRAHA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-01",
+      "class": "7A"
+    },
+    {
+      "nisn": "0134040523",
+      "nis": "269785",
+      "name": "HAFIZH DWI SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-12",
+      "class": "7A"
+    },
+    {
+      "nisn": "0133763882",
+      "nis": "269786",
+      "name": "IHSAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-26",
+      "class": "7A"
+    },
+    {
+      "nisn": "0146548501",
+      "nis": "269787",
+      "name": "Kartiko Wahyu Pramatyo",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2014-05-23",
+      "class": "7A"
+    },
+    {
+      "nisn": "3139884069",
+      "nis": "269788",
+      "name": "KAYLA ATHAYA PUTRI NABITA",
+      "gender": "P",
+      "birth_place": "Bojonegoro",
+      "birth_date": "2013-12-03",
+      "class": "7A"
+    },
+    {
+      "nisn": "0144205198",
+      "nis": "269789",
+      "name": "KHOIROTUN NISA",
+      "gender": "P",
+      "birth_place": "LAMPUNG BARAT",
+      "birth_date": "2014-03-25",
+      "class": "7A"
+    },
+    {
+      "nisn": "0148635132",
+      "nis": "269790",
+      "name": "MUHAMAT ELVIN LATIF HAIKAL SAPUTRA",
+      "gender": "L",
+      "birth_place": "GROBOGAN",
+      "birth_date": "2014-05-27",
+      "class": "7A"
+    },
+    {
+      "nisn": "0142256693",
+      "nis": "269791",
+      "name": "NARAYA WIJAYA SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-07-20",
+      "class": "7A"
+    },
+    {
+      "nisn": "0132350364",
+      "nis": "269792",
+      "name": "NASWA SALSABILA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-23",
+      "class": "7A"
+    },
+    {
+      "nisn": "0135965372",
+      "nis": "269793",
+      "name": "OKTAVIA WULANSARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-30",
+      "class": "7A"
+    },
+    {
+      "nisn": "0137414492",
+      "nis": "269794",
+      "name": "PUTRI APRIL RIYANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-26",
+      "class": "7A"
+    },
+    {
+      "nisn": "0143772311",
+      "nis": "269795",
+      "name": "ROYYAN ASKA AHSANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-10",
+      "class": "7A"
+    },
+    {
+      "nisn": "0133001694",
+      "nis": "269796",
+      "name": "SITI ANISA MUALIFAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-03",
+      "class": "7A"
+    },
+    {
+      "nisn": "0146715745",
+      "nis": "269797",
+      "name": "SITI NUR HIDAYAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-10",
+      "class": "7A"
+    },
+    {
+      "nisn": "0149902397",
+      "nis": "269798",
+      "name": "SOFIE KHAIRA SALSABILA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-05",
+      "class": "7A"
+    },
+    {
+      "nisn": "0138633633",
+      "nis": "269799",
+      "name": "SULTAN ARKYANU ROHMAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-21",
+      "class": "7A"
+    },
+    {
+      "nisn": "0147098875",
+      "nis": "269800",
+      "name": "YAQDHAN RAKHA AS-SAID",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2014-01-25",
+      "class": "7A"
+    },
+    {
+      "nisn": "0134397303",
+      "nis": "269801",
+      "name": "YUDHA BAYU PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-20",
+      "class": "7A"
+    },
+    {
+      "nisn": "0138582723",
+      "nis": "269802",
+      "name": "ZAKIA NUR ROISA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-25",
+      "class": "7A"
+    },
+    {
+      "nisn": "3140765374",
+      "nis": "269803",
+      "name": "ALIYA HANUN SALIM",
+      "gender": "P",
+      "birth_place": "BEKASI",
+      "birth_date": "2014-03-05",
+      "class": "7B"
+    },
+    {
+      "nisn": "0138094788",
+      "nis": "269804",
+      "name": "AMANDA APRILLIANI PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-08",
+      "class": "7B"
+    },
+    {
+      "nisn": "0136553025",
+      "nis": "269805",
+      "name": "ANNISA PERMATA RHAMADHANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-18",
+      "class": "7B"
+    },
+    {
+      "nisn": "0134768580",
+      "nis": "269806",
+      "name": "AQILA PUTRI ARIYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-05",
+      "class": "7B"
+    },
+    {
+      "nisn": "3146423453",
+      "nis": "269807",
+      "name": "ARDAN HAIKAL PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-19",
+      "class": "7B"
+    },
+    {
+      "nisn": "3133135332",
+      "nis": "269808",
+      "name": "ARJUN CAHYO PURNOMO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-26",
+      "class": "7B"
+    },
+    {
+      "nisn": "0137012559",
+      "nis": "269809",
+      "name": "ARKA AZMI NUR AMIN",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2013-06-21",
+      "class": "7B"
+    },
+    {
+      "nisn": "3131230325",
+      "nis": "269810",
+      "name": "AULIA RAMADHANI",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2013-07-27",
+      "class": "7B"
+    },
+    {
+      "nisn": "0131404321",
+      "nis": "269811",
+      "name": "BAYU DENDI SAPUTRA",
+      "gender": "L",
+      "birth_place": "GROBOGAN",
+      "birth_date": "2013-12-11",
+      "class": "7B"
+    },
+    {
+      "nisn": "0131716347",
+      "nis": "269812",
+      "name": "BINTANG ARYA PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-05",
+      "class": "7B"
+    },
+    {
+      "nisn": "0141310975",
+      "nis": "269813",
+      "name": "DAFA DWI MAULANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-16",
+      "class": "7B"
+    },
+    {
+      "nisn": "0134327797",
+      "nis": "269814",
+      "name": "DARREN RAYANGGA PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-30",
+      "class": "7B"
+    },
+    {
+      "nisn": "0132420562",
+      "nis": "269815",
+      "name": "DAVA SYANDANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-02",
+      "class": "7B"
+    },
+    {
+      "nisn": "0137735242",
+      "nis": "269816",
+      "name": "DESTIARA GRACILLA AQILASYANFA",
+      "gender": "P",
+      "birth_place": "Jakarta",
+      "birth_date": "2013-12-29",
+      "class": "7B"
+    },
+    {
+      "nisn": "0141803748",
+      "nis": "269817",
+      "name": "DEVITA RATNA WULANDARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-06",
+      "class": "7B"
+    },
+    {
+      "nisn": "0135992050",
+      "nis": "269818",
+      "name": "ELENA PUTRI ADILA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-15",
+      "class": "7B"
+    },
+    {
+      "nisn": "0133026849",
+      "nis": "269819",
+      "name": "ELSYA NOVITA MAHARANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-29",
+      "class": "7B"
+    },
+    {
+      "nisn": "0135338191",
+      "nis": "269820",
+      "name": "FAZILLA ALYA AZIZAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-13",
+      "class": "7B"
+    },
+    {
+      "nisn": "0138722245",
+      "nis": "269821",
+      "name": "HASNA NABILA KURNIAWAN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-15",
+      "class": "7B"
+    },
+    {
+      "nisn": "0148641817",
+      "nis": "269822",
+      "name": "JIHAN MARCHELIA ANDINA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-21",
+      "class": "7B"
+    },
+    {
+      "nisn": "3135568026",
+      "nis": "269823",
+      "name": "KAVITA NOVIANI ANINDIYA PUTRI",
+      "gender": "P",
+      "birth_place": "JAKARTA",
+      "birth_date": "2013-11-23",
+      "class": "7B"
+    },
+    {
+      "nisn": "0147380286",
+      "nis": "269824",
+      "name": "KENZA ALVARO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-08-01",
+      "class": "7B"
+    },
+    {
+      "nisn": "3132852581",
+      "nis": "269825",
+      "name": "KHOIRUL KHADAFI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-07",
+      "class": "7B"
+    },
+    {
+      "nisn": "0144960038",
+      "nis": "269826",
+      "name": "KRISNANDO DIMAS PRASETYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-08-31",
+      "class": "7B"
+    },
+    {
+      "nisn": "0149006158",
+      "nis": "269827",
+      "name": "MAWAR AYU KUSUMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-15",
+      "class": "7B"
+    },
+    {
+      "nisn": "3145706395",
+      "nis": "269828",
+      "name": "MOHAMMAD HAFEEZ IKHWAN",
+      "gender": "L",
+      "birth_place": "BEKASI",
+      "birth_date": "2014-09-03",
+      "class": "7B"
+    },
+    {
+      "nisn": "3112207215",
+      "nis": "269829",
+      "name": "NURUL HIDAYAH",
+      "gender": "P",
+      "birth_place": "TASIKMALAYA",
+      "birth_date": "2011-10-07",
+      "class": "7B"
+    },
+    {
+      "nisn": "0144965281",
+      "nis": "269830",
+      "name": "RAFFA FAUZAN KHAMIL",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-08",
+      "class": "7B"
+    },
+    {
+      "nisn": "0135589473",
+      "nis": "269831",
+      "name": "RAKA AJI SEPTIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-04",
+      "class": "7B"
+    },
+    {
+      "nisn": "0145707888",
+      "nis": "269832",
+      "name": "RAYSHA PUTRI DWI UTAMI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-07-07",
+      "class": "7B"
+    },
+    {
+      "nisn": "0133123908",
+      "nis": "269833",
+      "name": "SANDI RAFA DARMAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-09",
+      "class": "7B"
+    },
+    {
+      "nisn": "0148586398",
+      "nis": "269834",
+      "name": "ADSKIA SAMHA SAUFA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-19",
+      "class": "7C"
+    },
+    {
+      "nisn": "0134452089",
+      "nis": "269835",
+      "name": "AFRIAN NUR FATHAN AKBAR",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-16",
+      "class": "7C"
+    },
+    {
+      "nisn": "3137276315",
+      "nis": "269836",
+      "name": "AFRIZAL VINO ARDIANSAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-29",
+      "class": "7C"
+    },
+    {
+      "nisn": "0137679102",
+      "nis": "269837",
+      "name": "AIDIN BILLAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-24",
+      "class": "7C"
+    },
+    {
+      "nisn": "0145212960",
+      "nis": "269838",
+      "name": "AISHA SYIFA MAULIDYA",
+      "gender": "P",
+      "birth_place": "NGANJUK",
+      "birth_date": "2014-01-12",
+      "class": "7C"
+    },
+    {
+      "nisn": "0138003968",
+      "nis": "269839",
+      "name": "ARVIO ALFAZKA RAJENDRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-16",
+      "class": "7C"
+    },
+    {
+      "nisn": "0137939423",
+      "nis": "269840",
+      "name": "ASHAN OKTAVIAN SAPUTRA",
+      "gender": "L",
+      "birth_place": "BANYUMAS",
+      "birth_date": "2013-10-29",
+      "class": "7C"
+    },
+    {
+      "nisn": "0141731607",
+      "nis": "269841",
+      "name": "AVRILIYA EKA NORCAHYANTI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-04-12",
+      "class": "7C"
+    },
+    {
+      "nisn": "0133134354",
+      "nis": "269842",
+      "name": "CIKA AGUSTINA ROMADHONI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-05",
+      "class": "7C"
+    },
+    {
+      "nisn": "0134693269",
+      "nis": "269843",
+      "name": "DAVA RISKY KURNIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-04",
+      "class": "7C"
+    },
+    {
+      "nisn": "0142639536",
+      "nis": "269844",
+      "name": "DEEVA JEVANA DEKA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-03",
+      "class": "7C"
+    },
+    {
+      "nisn": "0146112462",
+      "nis": "269845",
+      "name": "DIKTA ATHA ASTRELLA AZALIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-04-13",
+      "class": "7C"
+    },
+    {
+      "nisn": "0131372763",
+      "nis": "269846",
+      "name": "DWI SETIA NINGRUM",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-19",
+      "class": "7C"
+    },
+    {
+      "nisn": "0137574912",
+      "nis": "269847",
+      "name": "DWIKI MIFTAH FIRDAUS",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2013-06-26",
+      "class": "7C"
+    },
+    {
+      "nisn": "0133083991",
+      "nis": "269848",
+      "name": "DYO SEPTIAN ALFIANO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-15",
+      "class": "7C"
+    },
+    {
+      "nisn": "0133883546",
+      "nis": "269849",
+      "name": "Dzakira Debi Azahra",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-21",
+      "class": "7C"
+    },
+    {
+      "nisn": "0134256713",
+      "nis": "269850",
+      "name": "FAEYZA HABIB AL GHAZALI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-29",
+      "class": "7C"
+    },
+    {
+      "nisn": "0141677820",
+      "nis": "269851",
+      "name": "FIRDAUS FITRI AGUSTINA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-08-01",
+      "class": "7C"
+    },
+    {
+      "nisn": "0143406680",
+      "nis": "269852",
+      "name": "IMELDA FANIYA MECCA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-01",
+      "class": "7C"
+    },
+    {
+      "nisn": "3131111641",
+      "nis": "269853",
+      "name": "IQBAL DWI FIRNANDA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-31",
+      "class": "7C"
+    },
+    {
+      "nisn": "0131726631",
+      "nis": "269854",
+      "name": "KUSUMADYA AYULISTARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-15",
+      "class": "7C"
+    },
+    {
+      "nisn": "3137022092",
+      "nis": "269993",
+      "name": "M. Fadly",
+      "gender": "L",
+      "birth_place": "Pelalawan",
+      "birth_date": "2013-03-17",
+      "class": "7C"
+    },
+    {
+      "nisn": "0143704233",
+      "nis": "269855",
+      "name": "MAUDY AYUNDA AZZAHRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-18",
+      "class": "7C"
+    },
+    {
+      "nisn": "3137506116",
+      "nis": "269855",
+      "name": "MAULANA TAHTA FIRIZKI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-14",
+      "class": "7C"
+    },
+    {
+      "nisn": "0133333634",
+      "nis": "269855",
+      "name": "MUCHAMMAD NABIL AMIN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-08",
+      "class": "7C"
+    },
+    {
+      "nisn": "3141062478",
+      "nis": "269855",
+      "name": "MUHAMAD BILAL MAHESA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-10-21",
+      "class": "7C"
+    },
+    {
+      "nisn": "0141434339",
+      "nis": "269855",
+      "name": "NADHIFA ERLYTA WIJANARKO",
+      "gender": "P",
+      "birth_place": "BANYUMAS",
+      "birth_date": "2014-09-06",
+      "class": "7C"
+    },
+    {
+      "nisn": "3141471618",
+      "nis": "269855",
+      "name": "NAYLA SUKMA ADZANA DZUHUR",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-25",
+      "class": "7C"
+    },
+    {
+      "nisn": "0141344798",
+      "nis": "269855",
+      "name": "PENGKUH CAHYONE LUKMANTORO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-04-24",
+      "class": "7C"
+    },
+    {
+      "nisn": "0144015847",
+      "nis": "269855",
+      "name": "SANDYNA MARGARETHA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-30",
+      "class": "7C"
+    },
+    {
+      "nisn": "3130589590",
+      "nis": "269855",
+      "name": "UKLA UDIN ZULZAMALI",
+      "gender": "L",
+      "birth_place": "KARAWANG",
+      "birth_date": "2013-11-24",
+      "class": "7C"
+    },
+    {
+      "nisn": "0137908488",
+      "nis": "269855",
+      "name": "YONGKI PRASTYO WIBOWO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-02",
+      "class": "7C"
+    },
+    {
+      "nisn": "0137695183",
+      "nis": "269865",
+      "name": "AFIZAH NOVIALYTA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-13",
+      "class": "7D"
+    },
+    {
+      "nisn": "0145664647",
+      "nis": "269866",
+      "name": "AKMAL JAMALLUDIN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-11-05",
+      "class": "7D"
+    },
+    {
+      "nisn": "0148675939",
+      "nis": "269867",
+      "name": "ALDI KRISTIAN SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-29",
+      "class": "7D"
+    },
+    {
+      "nisn": "0136578433",
+      "nis": "269868",
+      "name": "ARDIONA ABID AQILA PRANAJA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-29",
+      "class": "7D"
+    },
+    {
+      "nisn": "0134870099",
+      "nis": "269869",
+      "name": "CINTA AZZAHRA SEPTIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-23",
+      "class": "7D"
+    },
+    {
+      "nisn": "0138850738",
+      "nis": "269870",
+      "name": "CITA BELLA SAFIRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-22",
+      "class": "7D"
+    },
+    {
+      "nisn": "0133611021",
+      "nis": "269871",
+      "name": "DIMAS AL FARIDZI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-25",
+      "class": "7D"
+    },
+    {
+      "nisn": "0136131577",
+      "nis": "269872",
+      "name": "Dwi Cahya Ainunrifa'i",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-04",
+      "class": "7D"
+    },
+    {
+      "nisn": "0144162185",
+      "nis": "269873",
+      "name": "DWIFA NURI RAMADHANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-07-05",
+      "class": "7D"
+    },
+    {
+      "nisn": "0143764899",
+      "nis": "269874",
+      "name": "DYANDRA PUTRA YUDISTORO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-09",
+      "class": "7D"
+    },
+    {
+      "nisn": "0132665363",
+      "nis": "269875",
+      "name": "ERIA DEWI KIRANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-13",
+      "class": "7D"
+    },
+    {
+      "nisn": "0149152384",
+      "nis": "269876",
+      "name": "HENGKI ADI PUTRA WIJAYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-27",
+      "class": "7D"
+    },
+    {
+      "nisn": "0136772578",
+      "nis": "269877",
+      "name": "IRSYAD RIFQI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-17",
+      "class": "7D"
+    },
+    {
+      "nisn": "0137662685",
+      "nis": "269878",
+      "name": "JULIA DWI AGUSTIN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-20",
+      "class": "7D"
+    },
+    {
+      "nisn": "0133991636",
+      "nis": "269879",
+      "name": "JULIO PASHA ALVARO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-19",
+      "class": "7D"
+    },
+    {
+      "nisn": "0147088296",
+      "nis": "269880",
+      "name": "KENZIE AZHAR ZAHRAN ALABID",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-18",
+      "class": "7D"
+    },
+    {
+      "nisn": "0142264632",
+      "nis": "269881",
+      "name": "KEVIN EKA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-21",
+      "class": "7D"
+    },
+    {
+      "nisn": "0148400654",
+      "nis": "269882",
+      "name": "MUHAMMAD WAHYU ABIDZAR AL-AWWABY",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-05",
+      "class": "7D"
+    },
+    {
+      "nisn": "0145876689",
+      "nis": "269883",
+      "name": "NAFIZAH MAY ANGGREANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-27",
+      "class": "7D"
+    },
+    {
+      "nisn": "0131592667",
+      "nis": "269884",
+      "name": "NATASYA AFSHEN MEYSHA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-25",
+      "class": "7D"
+    },
+    {
+      "nisn": "0134659273",
+      "nis": "269885",
+      "name": "RAISA AYUDIA INARA",
+      "gender": "P",
+      "birth_place": "DEPOK",
+      "birth_date": "2013-12-04",
+      "class": "7D"
+    },
+    {
+      "nisn": "0139688562",
+      "nis": "269886",
+      "name": "REGITA ANGGUN WIDIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-06",
+      "class": "7D"
+    },
+    {
+      "nisn": "0144009621",
+      "nis": "269887",
+      "name": "REVALINA KUSUMA DIHARJA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-08-02",
+      "class": "7D"
+    },
+    {
+      "nisn": "0143869704",
+      "nis": "269888",
+      "name": "REVINA VIRGINIA ANGGREINI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-20",
+      "class": "7D"
+    },
+    {
+      "nisn": "0145296154",
+      "nis": "269889",
+      "name": "RIZQA ANGGRAINI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-14",
+      "class": "7D"
+    },
+    {
+      "nisn": "0138655200",
+      "nis": "269890",
+      "name": "TATA HARI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-09",
+      "class": "7D"
+    },
+    {
+      "nisn": "0147218691",
+      "nis": "269891",
+      "name": "WIDYA RAHAYU",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-29",
+      "class": "7D"
+    },
+    {
+      "nisn": "3134988883",
+      "nis": "269892",
+      "name": "YULIANA ALENA PRAMUDITA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-23",
+      "class": "7D"
+    },
+    {
+      "nisn": "0145352816",
+      "nis": "269893",
+      "name": "Zhultoni Dafa As'sidiq",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-09",
+      "class": "7D"
+    },
+    {
+      "nisn": "0132435216",
+      "nis": "269894",
+      "name": "ZLATAN ZUNNUR JABBAR FARUQ",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-18",
+      "class": "7D"
+    },
+    {
+      "nisn": "3135281063",
+      "nis": "269896",
+      "name": "ABIZAR AHMAD MAULANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-14",
+      "class": "7E"
+    },
+    {
+      "nisn": "3136263224",
+      "nis": "269897",
+      "name": "ADINDA DWI SAPUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-12",
+      "class": "7E"
+    },
+    {
+      "nisn": "0144469338",
+      "nis": "269898",
+      "name": "ADRIAN ANANDA REZA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-08",
+      "class": "7E"
+    },
+    {
+      "nisn": "0136762540",
+      "nis": "269899",
+      "name": "AISYAH ALIA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-13",
+      "class": "7E"
+    },
+    {
+      "nisn": "0133431414",
+      "nis": "269900",
+      "name": "AJUN TIRTA PRASETYO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-10-25",
+      "class": "7E"
+    },
+    {
+      "nisn": "0144266397",
+      "nis": "269901",
+      "name": "ANANDA WAHYU KESHA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-28",
+      "class": "7E"
+    },
+    {
+      "nisn": "0134464557",
+      "nis": "269902",
+      "name": "ANNISA PUTRI RINJANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-25",
+      "class": "7E"
+    },
+    {
+      "nisn": "0133877205",
+      "nis": "269903",
+      "name": "AQILA VEBYANA RAMANDHANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-15",
+      "class": "7E"
+    },
+    {
+      "nisn": "3132475956",
+      "nis": "269904",
+      "name": "ARYA BIYAN SEPTIANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-07",
+      "class": "7E"
+    },
+    {
+      "nisn": "0144981278",
+      "nis": "269905",
+      "name": "ATISHA KHAIRA WILDA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-30",
+      "class": "7E"
+    },
+    {
+      "nisn": "3141819211",
+      "nis": "269906",
+      "name": "AZZALYA AINUN FITRIYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-08-02",
+      "class": "7E"
+    },
+    {
+      "nisn": "0142538151",
+      "nis": "269907",
+      "name": "DAVID AKBAR SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-10-05",
+      "class": "7E"
+    },
+    {
+      "nisn": "0139052367",
+      "nis": "269908",
+      "name": "DEWI AYU RAHMAWATI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-27",
+      "class": "7E"
+    },
+    {
+      "nisn": "0143816853",
+      "nis": "269909",
+      "name": "ELYSIA CELYNE",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-28",
+      "class": "7E"
+    },
+    {
+      "nisn": "0132293608",
+      "nis": "269910",
+      "name": "HANAN ARIF FAITH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-10",
+      "class": "7E"
+    },
+    {
+      "nisn": "0131061615",
+      "nis": "269911",
+      "name": "KAYRA ALZINIA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-19",
+      "class": "7E"
+    },
+    {
+      "nisn": "3141502664",
+      "nis": "269912",
+      "name": "LATIF AKMAL EL AZZAM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-04-08",
+      "class": "7E"
+    },
+    {
+      "nisn": "3130775468",
+      "nis": "269913",
+      "name": "M. FADLI PRATAMA",
+      "gender": "L",
+      "birth_place": "BANGUN KARYA",
+      "birth_date": "2013-11-10",
+      "class": "7E"
+    },
+    {
+      "nisn": "0138292568",
+      "nis": "269914",
+      "name": "Masniken Nur'aini",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-28",
+      "class": "7E"
+    },
+    {
+      "nisn": "0144818210",
+      "nis": "269915",
+      "name": "MAYDIVA RISKY ANGGRAENI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-27",
+      "class": "7E"
+    },
+    {
+      "nisn": "0135702354",
+      "nis": "269916",
+      "name": "MOHAMMAD AZIB GHANY DEVANO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-04",
+      "class": "7E"
+    },
+    {
+      "nisn": "0141755084",
+      "nis": "269917",
+      "name": "MUHAMMAD ILHAM RABBANI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-20",
+      "class": "7E"
+    },
+    {
+      "nisn": "0144772793",
+      "nis": "269918",
+      "name": "MUKHAMAD ASTONI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-26",
+      "class": "7E"
+    },
+    {
+      "nisn": "3137801090",
+      "nis": "269919",
+      "name": "SANDRA DWI NUR FADHILA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-12",
+      "class": "7E"
+    },
+    {
+      "nisn": "0134962594",
+      "nis": "269920",
+      "name": "SEPTIAN EKA PRADANA",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2013-09-30",
+      "class": "7E"
+    },
+    {
+      "nisn": "3146604127",
+      "nis": "269921",
+      "name": "SITI NAJWA ASSYIFAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-04-20",
+      "class": "7E"
+    },
+    {
+      "nisn": "0136463349",
+      "nis": "269922",
+      "name": "SYIFA ALMAIRA ZULAIKAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-19",
+      "class": "7E"
+    },
+    {
+      "nisn": "0131625144",
+      "nis": "269923",
+      "name": "SYIFAAZZAHRA MASYATUL KHOIROT",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-03",
+      "class": "7E"
+    },
+    {
+      "nisn": "3138513151",
+      "nis": "269924",
+      "name": "VADO VERNANDA",
+      "gender": "L",
+      "birth_place": "BOGOR",
+      "birth_date": "2013-10-04",
+      "class": "7E"
+    },
+    {
+      "nisn": "0148994096",
+      "nis": "269925",
+      "name": "VIDI ARDIANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-19",
+      "class": "7E"
+    },
+    {
+      "nisn": "0133663821",
+      "nis": "269926",
+      "name": "ZHICA NAUFAL RAMADHAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-12",
+      "class": "7E"
+    },
+    {
+      "nisn": "0131012784",
+      "nis": "269927",
+      "name": "AERYLIN BELLVANIA NATZWA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-03",
+      "class": "7F"
+    },
+    {
+      "nisn": "0146443679",
+      "nis": "269928",
+      "name": "AHMAD FAHRUR ROSYID",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-27",
+      "class": "7F"
+    },
+    {
+      "nisn": "0142901990",
+      "nis": "269929",
+      "name": "AKBAR NURDAFFA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-26",
+      "class": "7F"
+    },
+    {
+      "nisn": "0149697688",
+      "nis": "269930",
+      "name": "ALMIRA RAMADHANI",
+      "gender": "P",
+      "birth_place": "DEPOK",
+      "birth_date": "2014-06-11",
+      "class": "7F"
+    },
+    {
+      "nisn": "0134673402",
+      "nis": "269931",
+      "name": "ANDHITA RAYHAN PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-19",
+      "class": "7F"
+    },
+    {
+      "nisn": "0146599971",
+      "nis": "269932",
+      "name": "ANGGITA FLORA PUSPITA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-07",
+      "class": "7F"
+    },
+    {
+      "nisn": "0136973970",
+      "nis": "269933",
+      "name": "ANUGRAH RAMADHAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-15",
+      "class": "7F"
+    },
+    {
+      "nisn": "3149549336",
+      "nis": "269934",
+      "name": "AZZA NURIYATUN NAFISAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-25",
+      "class": "7F"
+    },
+    {
+      "nisn": "0134355847",
+      "nis": "269935",
+      "name": "AZZAM PRADITYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-12",
+      "class": "7F"
+    },
+    {
+      "nisn": "0145868601",
+      "nis": "269936",
+      "name": "CITRA PUTRI ARUM FATIMAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-17",
+      "class": "7F"
+    },
+    {
+      "nisn": "0144125146",
+      "nis": "269937",
+      "name": "Darena Calista Putri",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-13",
+      "class": "7F"
+    },
+    {
+      "nisn": "0137363345",
+      "nis": "269938",
+      "name": "DHEA NUR SAFARA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-21",
+      "class": "7F"
+    },
+    {
+      "nisn": "0147006827",
+      "nis": "269939",
+      "name": "DZAKIRA TALITA ZAHRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-24",
+      "class": "7F"
+    },
+    {
+      "nisn": "3147855747",
+      "nis": "269940",
+      "name": "ERLITA OKTA SAFIRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-10-13",
+      "class": "7F"
+    },
+    {
+      "nisn": "0148029890",
+      "nis": "269941",
+      "name": "FELICYA AZELINA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-05",
+      "class": "7F"
+    },
+    {
+      "nisn": "0143878409",
+      "nis": "269942",
+      "name": "HENDRIKA DWI CAHYONO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-28",
+      "class": "7F"
+    },
+    {
+      "nisn": "0146472381",
+      "nis": "269943",
+      "name": "IKA FEBRIANTY",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-10",
+      "class": "7F"
+    },
+    {
+      "nisn": "0134400769",
+      "nis": "269944",
+      "name": "IRGI BRAMASTA ARDIANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-10-31",
+      "class": "7F"
+    },
+    {
+      "nisn": "0142005355",
+      "nis": "269945",
+      "name": "KAFIE EL AZZAM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-29",
+      "class": "7F"
+    },
+    {
+      "nisn": "0139625217",
+      "nis": "269946",
+      "name": "KANAYA PUTRI OKTAVIANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-23",
+      "class": "7F"
+    },
+    {
+      "nisn": "0149083881",
+      "nis": "269947",
+      "name": "KENZI NAURA HASNA ANNIDA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-19",
+      "class": "7F"
+    },
+    {
+      "nisn": "3131072489",
+      "nis": "269948",
+      "name": "MUHAMMAD ABBAS HARTANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-09",
+      "class": "7F"
+    },
+    {
+      "nisn": "0136203113",
+      "nis": "269949",
+      "name": "MUHAMMAD AFRIZAL IKHSANI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-27",
+      "class": "7F"
+    },
+    {
+      "nisn": "3146751851",
+      "nis": "269950",
+      "name": "MUHAMMAD ALVINE FEBRIYANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-15",
+      "class": "7F"
+    },
+    {
+      "nisn": "0148015265",
+      "nis": "269951",
+      "name": "MUHAMMAD FADHIL BAIHAQI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-10-15",
+      "class": "7F"
+    },
+    {
+      "nisn": "0131888368",
+      "nis": "269952",
+      "name": "MUHAMMAD JAVIER YUKAWA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-14",
+      "class": "7F"
+    },
+    {
+      "nisn": "0141000446",
+      "nis": "269953",
+      "name": "Nailla Inggillyandari",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-05",
+      "class": "7F"
+    },
+    {
+      "nisn": "0132520974",
+      "nis": "269954",
+      "name": "RAMADANI",
+      "gender": "L",
+      "birth_place": "RAWA BANGUN",
+      "birth_date": "2013-07-10",
+      "class": "7F"
+    },
+    {
+      "nisn": "0133035344",
+      "nis": "269955",
+      "name": "SHAWA GHOZALI PRASTYO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-08",
+      "class": "7F"
+    },
+    {
+      "nisn": "0132543923",
+      "nis": "269956",
+      "name": "VELINDA JIVA NOVIANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-19",
+      "class": "7F"
+    },
+    {
+      "nisn": "3144090681",
+      "nis": "269957",
+      "name": "ZHIELTEIV ZIVILIEN CHANSA",
+      "gender": "L",
+      "birth_place": "JAKARTA",
+      "birth_date": "2014-01-10",
+      "class": "7F"
+    },
+    {
+      "nisn": "0139857325",
+      "nis": "269958",
+      "name": "ADAM ARYA SATYA AL FAIZ",
+      "gender": "L",
+      "birth_place": "GROBOGAN",
+      "birth_date": "2013-04-10",
+      "class": "7G"
+    },
+    {
+      "nisn": "0148578582",
+      "nis": "269959",
+      "name": "AFIQA PUTRI NUR INTAN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-22",
+      "class": "7G"
+    },
+    {
+      "nisn": "0131423328",
+      "nis": "269960",
+      "name": "AGISTA NAJWA DESIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-18",
+      "class": "7G"
+    },
+    {
+      "nisn": "3130836282",
+      "nis": "269961",
+      "name": "AHMAD ANGGA ELSYEEFA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-21",
+      "class": "7G"
+    },
+    {
+      "nisn": "3133297088",
+      "nis": "269962",
+      "name": "AHMAD FAKHRI JANAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-08",
+      "class": "7G"
+    },
+    {
+      "nisn": "0141201860",
+      "nis": "269963",
+      "name": "ALKHUSNA DWI AKTAKIMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-11",
+      "class": "7G"
+    },
+    {
+      "nisn": "0136742677",
+      "nis": "269964",
+      "name": "BADSAINA IFTITAH IZZATUNNISA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-18",
+      "class": "7G"
+    },
+    {
+      "nisn": "0145144756",
+      "nis": "269965",
+      "name": "Daffana Niko Ramadhan",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-07-10",
+      "class": "7G"
+    },
+    {
+      "nisn": "0128595440",
+      "nis": "269966",
+      "name": "DUWIK RATNA ANTIKA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-03",
+      "class": "7G"
+    },
+    {
+      "nisn": "0148984746",
+      "nis": "269967",
+      "name": "DYRGA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-19",
+      "class": "7G"
+    },
+    {
+      "nisn": "0145913056",
+      "nis": "269968",
+      "name": "FINO SEPTRIA IRAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-09-14",
+      "class": "7G"
+    },
+    {
+      "nisn": "0148973832",
+      "nis": "269969",
+      "name": "Hafizh Maulana Arfandi",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-09-19",
+      "class": "7G"
+    },
+    {
+      "nisn": "0145620404",
+      "nis": "269970",
+      "name": "JIBRIL AL AQSA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-07-29",
+      "class": "7G"
+    },
+    {
+      "nisn": "3131639606",
+      "nis": "269971",
+      "name": "KELVINDRA ERLANGGA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-28",
+      "class": "7G"
+    },
+    {
+      "nisn": "0138586767",
+      "nis": "269972",
+      "name": "KHAYLA RISQI APRILLIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-03",
+      "class": "7G"
+    },
+    {
+      "nisn": "0144963080",
+      "nis": "269973",
+      "name": "LATHIFAH MISKAH FATIN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-09-19",
+      "class": "7G"
+    },
+    {
+      "nisn": "0143760047",
+      "nis": "269974",
+      "name": "MUHAMMAD BISMA ADITYA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-06-08",
+      "class": "7G"
+    },
+    {
+      "nisn": "0148533836",
+      "nis": "269975",
+      "name": "Muhammad Fa'ilun Husnan",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-18",
+      "class": "7G"
+    },
+    {
+      "nisn": "0139564512",
+      "nis": "269976",
+      "name": "MUHAMMAD GALIH NUR WAHYUDI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-19",
+      "class": "7G"
+    },
+    {
+      "nisn": "0133067238",
+      "nis": "269977",
+      "name": "MUTIARA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-15",
+      "class": "7G"
+    },
+    {
+      "nisn": "0134906482",
+      "nis": "269978",
+      "name": "NILNA RIKZATIL AKHFA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-26",
+      "class": "7G"
+    },
+    {
+      "nisn": "0149158056",
+      "nis": "269979",
+      "name": "NUR KHOFIFATUL MU'AQIDA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-03-02",
+      "class": "7G"
+    },
+    {
+      "nisn": "0141399634",
+      "nis": "269980",
+      "name": "REGITA CAHYANINGRUM",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-05-22",
+      "class": "7G"
+    },
+    {
+      "nisn": "0141076885",
+      "nis": "269981",
+      "name": "REYNO SUBEKTI ARDIAN FERDIANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2014-02-09",
+      "class": "7G"
+    },
+    {
+      "nisn": "3131974860",
+      "nis": "269982",
+      "name": "RIFAI RISKI PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-28",
+      "class": "7G"
+    },
+    {
+      "nisn": "0135708421",
+      "nis": "269983",
+      "name": "RINA FITRI SETIYA RAMADHANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-07",
+      "class": "7G"
+    },
+    {
+      "nisn": "0132145846",
+      "nis": "269984",
+      "name": "RIZKI TRI ANUGRAH PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-05",
+      "class": "7G"
+    },
+    {
+      "nisn": "0138674545",
+      "nis": "269985",
+      "name": "SEPTIATARA PUTRI NUR AULIA ANGGANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-16",
+      "class": "7G"
+    },
+    {
+      "nisn": "0146584920",
+      "nis": "269986",
+      "name": "SHAFIA ANASYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2014-01-26",
+      "class": "7G"
+    },
+    {
+      "nisn": "0136205816",
+      "nis": "269987",
+      "name": "SURYA INDRA CAHYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-20",
+      "class": "7G"
+    },
+    {
+      "nisn": "0138783970",
+      "nis": "269988",
+      "name": "WULAN CITRA RAHAYU",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-09",
+      "class": "7G"
+    },
+    {
+      "nisn": "0133907942",
+      "nis": "259677",
+      "name": "ABID HABIBI",
+      "gender": "L",
+      "birth_place": "KARANGANYAR",
+      "birth_date": "2013-07-08",
+      "class": "8A"
+    },
+    {
+      "nisn": "0134656666",
+      "nis": "259643",
+      "name": "ADELIA PUTRI HAPSARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-26",
+      "class": "8A"
+    },
+    {
+      "nisn": "0123710367",
+      "nis": "259678",
+      "name": "AHMAD KHOIRUL ANAM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-12",
+      "class": "8A"
+    },
+    {
+      "nisn": "0125404523",
+      "nis": "259575",
+      "name": "ALIF TRI NURCAHYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-11",
+      "class": "8A"
+    },
+    {
+      "nisn": "0131711717",
+      "nis": "259580",
+      "name": "ANDINI ASIFA SARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-06",
+      "class": "8A"
+    },
+    {
+      "nisn": "0132648508",
+      "nis": "259688",
+      "name": "ASTRYANZA SUSANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-06",
+      "class": "8A"
+    },
+    {
+      "nisn": "0133614803",
+      "nis": "259703",
+      "name": "ASYIFA KHOIRUL UMMAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-11",
+      "class": "8A"
+    },
+    {
+      "nisn": "0124160396",
+      "nis": "259655",
+      "name": "CAHYA FITRI AGUSTINA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-30",
+      "class": "8A"
+    },
+    {
+      "nisn": "0137501368",
+      "nis": "259594",
+      "name": "DANEYDRA FAHRIL FEBRIAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-25",
+      "class": "8A"
+    },
+    {
+      "nisn": "3133198321",
+      "nis": "259751",
+      "name": "DEWI WIDIYA AGUSTIN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-14",
+      "class": "8A"
+    },
+    {
+      "nisn": "0132567571",
+      "nis": "259561",
+      "name": "DWI PUTRA JULIAN RAMADHAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-30",
+      "class": "8A"
+    },
+    {
+      "nisn": "0135253671",
+      "nis": "259623",
+      "name": "FARID YUSUF MAULANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-07",
+      "class": "8A"
+    },
+    {
+      "nisn": "0131129942",
+      "nis": "259697",
+      "name": "FENI CITRA LESTARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-03",
+      "class": "8A"
+    },
+    {
+      "nisn": "0132605960",
+      "nis": "259629",
+      "name": "HAFIDZ ASSYIRBUNI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-08",
+      "class": "8A"
+    },
+    {
+      "nisn": "0111460166",
+      "nis": "259649",
+      "name": "ILHAM YUNTORO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-03-25",
+      "class": "8A"
+    },
+    {
+      "nisn": "0136707109",
+      "nis": "259644",
+      "name": "JUWITA ADE' PUTRI TAMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-26",
+      "class": "8A"
+    },
+    {
+      "nisn": "0133440711",
+      "nis": "259584",
+      "name": "LATHIEF AGMAL AL AZAM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-07",
+      "class": "8A"
+    },
+    {
+      "nisn": "0136615437",
+      "nis": "259637",
+      "name": "MAYDA SALSA DILLA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-07",
+      "class": "8A"
+    },
+    {
+      "nisn": "3121645148",
+      "nis": "259650",
+      "name": "MUHAMMAD ALIFIA NUR IRFAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-08",
+      "class": "8A"
+    },
+    {
+      "nisn": "0116738563",
+      "nis": "259596",
+      "name": "MUHAMMAD RIANTO AL LATHIF",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-11-11",
+      "class": "8A"
+    },
+    {
+      "nisn": "0123718163",
+      "nis": "259640",
+      "name": "Nayumi Ayu Rengganis",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-04-10",
+      "class": "8A"
+    },
+    {
+      "nisn": "3126761402",
+      "nis": "259657",
+      "name": "NOVAL DWI PUTRA LISTYAJI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-28",
+      "class": "8A"
+    },
+    {
+      "nisn": "0126754566",
+      "nis": "259664",
+      "name": "QONITA MAISYAROH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-15",
+      "class": "8A"
+    },
+    {
+      "nisn": "3137444079",
+      "nis": "259638",
+      "name": "RAKA APRILLIO ARDAVI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-29",
+      "class": "8A"
+    },
+    {
+      "nisn": "0129431708",
+      "nis": "259723",
+      "name": "RISQI ANUGRAH RAMADHANI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-13",
+      "class": "8A"
+    },
+    {
+      "nisn": "0127213442",
+      "nis": "259590",
+      "name": "SAFERA RHOMANDHONI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-28",
+      "class": "8A"
+    },
+    {
+      "nisn": "0138430901",
+      "nis": "259625",
+      "name": "SOFIANA PUTRI MULYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-26",
+      "class": "8A"
+    },
+    {
+      "nisn": "0129755642",
+      "nis": "259707",
+      "name": "VERNANDO ALDIANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-14",
+      "class": "8A"
+    },
+    {
+      "nisn": "0133510877",
+      "nis": "259574",
+      "name": "WAHYU DWI NORAINI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-10",
+      "class": "8A"
+    },
+    {
+      "nisn": "0136366371",
+      "nis": "259618",
+      "name": "ABIMANYU WIDYADANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-03",
+      "class": "8B"
+    },
+    {
+      "nisn": "0122400787",
+      "nis": "259699",
+      "name": "AFIKA AMALIA ROSHADHA",
+      "gender": "P",
+      "birth_place": "BEKASI",
+      "birth_date": "2012-07-04",
+      "class": "8B"
+    },
+    {
+      "nisn": "3139993661",
+      "nis": "259733",
+      "name": "AHMAD LEO PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-14",
+      "class": "8B"
+    },
+    {
+      "nisn": "0136649964",
+      "nis": "259572",
+      "name": "ALVIN BAGUS SETYA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-02",
+      "class": "8B"
+    },
+    {
+      "nisn": "0136256907",
+      "nis": "259604",
+      "name": "ANINDYA RATNA SHOFIYAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-10",
+      "class": "8B"
+    },
+    {
+      "nisn": "0138140805",
+      "nis": "259611",
+      "name": "ATIKA ZAHRA RATIFA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-10",
+      "class": "8B"
+    },
+    {
+      "nisn": "0127488869",
+      "nis": "259745",
+      "name": "AZKA THOHA RIZQI AZZUMAR",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-10",
+      "class": "8B"
+    },
+    {
+      "nisn": "0139996511",
+      "nis": "259609",
+      "name": "CHALYSTA BELVANIA FEBRIANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-11",
+      "class": "8B"
+    },
+    {
+      "nisn": "0122326529",
+      "nis": "259673",
+      "name": "DARREL NAUFAL TIARDI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-23",
+      "class": "8B"
+    },
+    {
+      "nisn": "0126110816",
+      "nis": "259667",
+      "name": "DIVA VALENTINA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-09",
+      "class": "8B"
+    },
+    {
+      "nisn": "0127662823",
+      "nis": "259719",
+      "name": "EGA SAMUDRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-20",
+      "class": "8B"
+    },
+    {
+      "nisn": "0137792907",
+      "nis": "259746",
+      "name": "FEBRI BINTANG PRAMULYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-15",
+      "class": "8B"
+    },
+    {
+      "nisn": "0137936215",
+      "nis": "259674",
+      "name": "GARNETTA AISYAH PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-18",
+      "class": "8B"
+    },
+    {
+      "nisn": "0124016318",
+      "nis": "259739",
+      "name": "HAFISHA GILANG RAMADHAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-13",
+      "class": "8B"
+    },
+    {
+      "nisn": "0121372721",
+      "nis": "259702",
+      "name": "IQBAL FAKHRUL ALFARIZZI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-24",
+      "class": "8B"
+    },
+    {
+      "nisn": "0139920198",
+      "nis": "259722",
+      "name": "KENZIE AZZALEA BATRISYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-01",
+      "class": "8B"
+    },
+    {
+      "nisn": "0136871618",
+      "nis": "259579",
+      "name": "LINGGA BAYU PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-14",
+      "class": "8B"
+    },
+    {
+      "nisn": "0126582950",
+      "nis": "259642",
+      "name": "MITHALIA",
+      "gender": "P",
+      "birth_place": "GIHAM SUKAMAJU",
+      "birth_date": "2012-11-11",
+      "class": "8B"
+    },
+    {
+      "nisn": "0124586765",
+      "nis": "259612",
+      "name": "Muhammad Alifiyan",
+      "gender": "L",
+      "birth_place": "Bojonegoro",
+      "birth_date": "2012-05-04",
+      "class": "8B"
+    },
+    {
+      "nisn": "0111212157",
+      "nis": "259568",
+      "name": "MUHAMMAD RISKI SURYA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-26",
+      "class": "8B"
+    },
+    {
+      "nisn": "0134209048",
+      "nis": "259692",
+      "name": "NIA RIZQITA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-01",
+      "class": "8B"
+    },
+    {
+      "nisn": "0137318186",
+      "nis": "259770",
+      "name": "Nova Wijat Moko",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2013-01-14",
+      "class": "8B"
+    },
+    {
+      "nisn": "3128440130",
+      "nis": "259566",
+      "name": "NURHASAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-26",
+      "class": "8B"
+    },
+    {
+      "nisn": "0131551171",
+      "nis": "259628",
+      "name": "RAKA FIRMANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-25",
+      "class": "8B"
+    },
+    {
+      "nisn": "3121740690",
+      "nis": "259670",
+      "name": "RIKA SAPUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-29",
+      "class": "8B"
+    },
+    {
+      "nisn": "0124933138",
+      "nis": "259727",
+      "name": "RIZAL EFENDI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-12",
+      "class": "8B"
+    },
+    {
+      "nisn": "0129980764",
+      "nis": "259603",
+      "name": "SONIA NOVA RAHMAWATI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-10",
+      "class": "8B"
+    },
+    {
+      "nisn": "0138903292",
+      "nis": "259753",
+      "name": "VAEYZA AZWAR FADDY ARDYANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-04",
+      "class": "8B"
+    },
+    {
+      "nisn": "3125241918",
+      "nis": "259651",
+      "name": "VUCINIC MUHAMMAD ABRISAMMUN YAHYA",
+      "gender": "L",
+      "birth_place": "KABUPATEN BEKASI",
+      "birth_date": "2012-11-23",
+      "class": "8B"
+    },
+    {
+      "nisn": "0127540316 / 259720",
+      "nis": "259720",
+      "name": "YUSRA LATHIFA USMANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-30",
+      "class": "8B"
+    },
+    {
+      "nisn": "0139827231",
+      "nis": "259691",
+      "name": "ACHMAD ABISHEKA TRI ATMAJA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-09-20",
+      "class": "8C"
+    },
+    {
+      "nisn": "0124838536",
+      "nis": "259558",
+      "name": "AFIKA ZAHRA UFAIRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-09",
+      "class": "8C"
+    },
+    {
+      "nisn": "0135190509",
+      "nis": "259690",
+      "name": "AHMAD MAHMUD ANDIKA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-25",
+      "class": "8C"
+    },
+    {
+      "nisn": "0138417705",
+      "nis": "269991",
+      "name": "AIRLANGGA TARUNA DEWA NUGRAHA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-13",
+      "class": "8C"
+    },
+    {
+      "nisn": "3139358517",
+      "nis": "259648",
+      "name": "ANIS MABRURA",
+      "gender": "P",
+      "birth_place": "Bojonegoro",
+      "birth_date": "2012-10-30",
+      "class": "8C"
+    },
+    {
+      "nisn": "0112653064",
+      "nis": "259713",
+      "name": "ARJUNA KAHITNA PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-13",
+      "class": "8C"
+    },
+    {
+      "nisn": "0131164248",
+      "nis": "259740",
+      "name": "AVICA NURUL PUTRI OLIFIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-04",
+      "class": "8C"
+    },
+    {
+      "nisn": "0128881443",
+      "nis": "259614",
+      "name": "CIKA SANTIKA AMELIYANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-22",
+      "class": "8C"
+    },
+    {
+      "nisn": "0121049889",
+      "nis": "259621",
+      "name": "DAVID ALVIAN RAMADANI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-12",
+      "class": "8C"
+    },
+    {
+      "nisn": "0138959507",
+      "nis": "259706",
+      "name": "DWI SITI NURKHOLIFAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-08",
+      "class": "8C"
+    },
+    {
+      "nisn": "0132122056",
+      "nis": "259589",
+      "name": "EGI FEBRI WIBOWO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-16",
+      "class": "8C"
+    },
+    {
+      "nisn": "3127856195",
+      "nis": "259689",
+      "name": "GALIH DWI WIDIANTORO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-21",
+      "class": "8C"
+    },
+    {
+      "nisn": "0136258599",
+      "nis": "259717",
+      "name": "GISHELLA MEIGA RAHMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-27",
+      "class": "8C"
+    },
+    {
+      "nisn": "0139041189",
+      "nis": "259610",
+      "name": "HAFIZH NUR RASYID",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-03",
+      "class": "8C"
+    },
+    {
+      "nisn": "3137399009",
+      "nis": "259709",
+      "name": "IQBAL FATURROHMAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-14",
+      "class": "8C"
+    },
+    {
+      "nisn": "3136268942",
+      "nis": "259730",
+      "name": "KIRANA PUTRI NUR AMELIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-31",
+      "class": "8C"
+    },
+    {
+      "nisn": "0139585930",
+      "nis": "259764",
+      "name": "MARVEL RENDRA SYAHPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-23",
+      "class": "8C"
+    },
+    {
+      "nisn": "0134747332",
+      "nis": "259686",
+      "name": "MOHAMAD RASYA PUTRA WIJAYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-19",
+      "class": "8C"
+    },
+    {
+      "nisn": "0139051892",
+      "nis": "259710",
+      "name": "MOZA AYUDRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-05",
+      "class": "8C"
+    },
+    {
+      "nisn": "0126435037",
+      "nis": "259582",
+      "name": "MUHAMMAD DIAZ NOVA ERLANGGA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-12",
+      "class": "8C"
+    },
+    {
+      "nisn": "3124652052",
+      "nis": "269990",
+      "name": "MUHAMMAD MISBAH AL FADHIL",
+      "gender": "L",
+      "birth_place": "LAMPUNG BARAT",
+      "birth_date": "2012-06-20",
+      "class": "8C"
+    },
+    {
+      "nisn": "0129293627",
+      "nis": "259652",
+      "name": "MUHAMMAD SAFARUL ILHAM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-20",
+      "class": "8C"
+    },
+    {
+      "nisn": "0112682205",
+      "nis": "259714",
+      "name": "NOVITA ANGELINA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-11-15",
+      "class": "8C"
+    },
+    {
+      "nisn": "0121925652",
+      "nis": "259734",
+      "name": "PANDU WAHYU BEKTI PRADANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-08",
+      "class": "8C"
+    },
+    {
+      "nisn": "0128569278",
+      "nis": "259721",
+      "name": "RAMDHAN AGUST WIDJAYANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-18",
+      "class": "8C"
+    },
+    {
+      "nisn": "0128319145",
+      "nis": "259588",
+      "name": "RAQIILA ASRI SAFITRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-03",
+      "class": "8C"
+    },
+    {
+      "nisn": "0122321425",
+      "nis": "259682",
+      "name": "RIMA IDA PERMATASARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-15",
+      "class": "8C"
+    },
+    {
+      "nisn": "0136028965",
+      "nis": "259602",
+      "name": "RIZQY AKBAR RAYHAN SYAPUTRA",
+      "gender": "L",
+      "birth_place": "TANGERANG",
+      "birth_date": "2013-09-11",
+      "class": "8C"
+    },
+    {
+      "nisn": "3132475884",
+      "nis": "259660",
+      "name": "SEKAR AYU DEVIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-12-12",
+      "class": "8C"
+    },
+    {
+      "nisn": "0135564825",
+      "nis": "259606",
+      "name": "SYAFA MELIANA AGUSTIN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-08-28",
+      "class": "8C"
+    },
+    {
+      "nisn": "0123072158",
+      "nis": "259735",
+      "name": "AFRIZA CAHYO NUGROHO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-16",
+      "class": "8D"
+    },
+    {
+      "nisn": "0133061729",
+      "nis": "259695",
+      "name": "AHMAD RIZKY RAKA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-03",
+      "class": "8D"
+    },
+    {
+      "nisn": "0133324967",
+      "nis": "259736",
+      "name": "ARKA MAULANA MALIK IBRAHIM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-10",
+      "class": "8D"
+    },
+    {
+      "nisn": "0132962772",
+      "nis": "259578",
+      "name": "ASHIFA AMELIA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-12",
+      "class": "8D"
+    },
+    {
+      "nisn": "0136524797",
+      "nis": "259633",
+      "name": "AYU NINGSIH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-03",
+      "class": "8D"
+    },
+    {
+      "nisn": "0121749184",
+      "nis": "259659",
+      "name": "BARA ALVIANO HERMAN SUBASTIAN",
+      "gender": "L",
+      "birth_place": "GROBOGAN",
+      "birth_date": "2012-11-15",
+      "class": "8D"
+    },
+    {
+      "nisn": "0139585108",
+      "nis": "269992",
+      "name": "CHELSIA DEVITA MARSA PURNAMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-22",
+      "class": "8D"
+    },
+    {
+      "nisn": "3135547720",
+      "nis": "259755",
+      "name": "CLARA ASISTIA GISTA",
+      "gender": "P",
+      "birth_place": "TEGAL",
+      "birth_date": "2013-08-20",
+      "class": "8D"
+    },
+    {
+      "nisn": "3132377355",
+      "nis": "259756",
+      "name": "DENIS ARGA ADITYA ARDANI",
+      "gender": "L",
+      "birth_place": "BANJARNEGARA",
+      "birth_date": "2013-12-27",
+      "class": "8D"
+    },
+    {
+      "nisn": "0131220523",
+      "nis": "259627",
+      "name": "EKA FEBBRI ARIANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-19",
+      "class": "8D"
+    },
+    {
+      "nisn": "0131431212",
+      "nis": "259732",
+      "name": "GHASSAN MUHAMMAD KHADAFI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-24",
+      "class": "8D"
+    },
+    {
+      "nisn": "0139173064",
+      "nis": "259705",
+      "name": "HAIKAL PUTRA AZAMI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-01",
+      "class": "8D"
+    },
+    {
+      "nisn": "0127022769",
+      "nis": "259587",
+      "name": "ILMI KHOIRUNNISWA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-28",
+      "class": "8D"
+    },
+    {
+      "nisn": "0135823532",
+      "nis": "259752",
+      "name": "JAKA PRAKOSO SETIADI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-12",
+      "class": "8D"
+    },
+    {
+      "nisn": "0129797731",
+      "nis": "259769",
+      "name": "LATHIFA NURUL FAJRINA",
+      "gender": "P",
+      "birth_place": "PONTIANAK",
+      "birth_date": "2012-07-02",
+      "class": "8D"
+    },
+    {
+      "nisn": "0121670474",
+      "nis": "269994",
+      "name": "Moch. Kevin Raka Denata Putra Pratama",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2012-07-05",
+      "class": "8D"
+    },
+    {
+      "nisn": "0134978910",
+      "nis": "259647",
+      "name": "MOHAMMAD FAUZAN ARYATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-27",
+      "class": "8D"
+    },
+    {
+      "nisn": "0111185883",
+      "nis": "259565",
+      "name": "MUHAMMAD EDO KURNIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-05-19",
+      "class": "8D"
+    },
+    {
+      "nisn": "0123413633",
+      "nis": "259641",
+      "name": "MUHAMMAD UBAYDHILLAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-26",
+      "class": "8D"
+    },
+    {
+      "nisn": "0138120761",
+      "nis": "259634",
+      "name": "NAFISA KAILA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-20",
+      "class": "8D"
+    },
+    {
+      "nisn": "3124259768",
+      "nis": "259737",
+      "name": "NUR ALIZA AZ-ZAHRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-21",
+      "class": "8D"
+    },
+    {
+      "nisn": "0129258031",
+      "nis": "259620",
+      "name": "RACHMAD DWI PRAKOSO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-05",
+      "class": "8D"
+    },
+    {
+      "nisn": "0123495418",
+      "nis": "259726",
+      "name": "RARI ADE ARYANZA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-25",
+      "class": "8D"
+    },
+    {
+      "nisn": "0114011394",
+      "nis": "259758",
+      "name": "REHAT AFANDA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-29",
+      "class": "8D"
+    },
+    {
+      "nisn": "0135501303",
+      "nis": "259681",
+      "name": "ROSITA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-23",
+      "class": "8D"
+    },
+    {
+      "nisn": "3134835300",
+      "nis": "259571",
+      "name": "SETYA SUPRAMONO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-26",
+      "class": "8D"
+    },
+    {
+      "nisn": "3139087970",
+      "nis": "259715",
+      "name": "SHAFIAH ISNA RAHMAHD",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-24",
+      "class": "8D"
+    },
+    {
+      "nisn": "0126790857",
+      "nis": "259624",
+      "name": "SYIFAUL QULUB",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-23",
+      "class": "8D"
+    },
+    {
+      "nisn": "3127871273",
+      "nis": "259693",
+      "name": "YUSUF SETIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-19",
+      "class": "8D"
+    },
+    {
+      "nisn": "0125067430",
+      "nis": "259586",
+      "name": "AHMAD ADI SANTOSO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-18",
+      "class": "8E"
+    },
+    {
+      "nisn": "0134405754",
+      "nis": "259668",
+      "name": "AIRLANGGA ANINDYA SUKMAWATI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-13",
+      "class": "8E"
+    },
+    {
+      "nisn": "0134878111",
+      "nis": "259718",
+      "name": "ALEX DWI ARVICO ARMANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-15",
+      "class": "8E"
+    },
+    {
+      "nisn": "3130065237",
+      "nis": "259656",
+      "name": "ARSA WIDURA PRASETYO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-15",
+      "class": "8E"
+    },
+    {
+      "nisn": "0131957494",
+      "nis": "259683",
+      "name": "ASSYFA PUTRI NUR APRILYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-08",
+      "class": "8E"
+    },
+    {
+      "nisn": "0137022305",
+      "nis": "259665",
+      "name": "AZZAHRA AQILA MELVIANAWATI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-04",
+      "class": "8E"
+    },
+    {
+      "nisn": "3121411458",
+      "nis": "259601",
+      "name": "BIMA STYA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-06",
+      "class": "8E"
+    },
+    {
+      "nisn": "0125215487",
+      "nis": "259616",
+      "name": "DEFA SEPTIANA KUSUMA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-09",
+      "class": "8E"
+    },
+    {
+      "nisn": "0136492432",
+      "nis": "259700",
+      "name": "DEREN OKTAVIAN PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-10-26",
+      "class": "8E"
+    },
+    {
+      "nisn": "3134715023",
+      "nis": "259615",
+      "name": "ELISA AYU RAHMAWATI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-31",
+      "class": "8E"
+    },
+    {
+      "nisn": "0137121171",
+      "nis": "259613",
+      "name": "F'fendy Shantiko",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-09",
+      "class": "8E"
+    },
+    {
+      "nisn": "0128625201",
+      "nis": "259562",
+      "name": "GILANG RAMADHAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-20",
+      "class": "8E"
+    },
+    {
+      "nisn": "3132289797",
+      "nis": "259630",
+      "name": "HARTADINATA DWI YOGA CIPTA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-02",
+      "class": "8E"
+    },
+    {
+      "nisn": "3136253911",
+      "nis": "259679",
+      "name": "INDAH FEBRIANTI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-15",
+      "class": "8E"
+    },
+    {
+      "nisn": "0129814695",
+      "nis": "259639",
+      "name": "JAYATUSYIFA BAGUS ALFARINO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-02",
+      "class": "8E"
+    },
+    {
+      "nisn": "3128313237",
+      "nis": "259567",
+      "name": "Keanu Najya Irvansyah",
+      "gender": "P",
+      "birth_place": "JAKARTA",
+      "birth_date": "2012-02-09",
+      "class": "8E"
+    },
+    {
+      "nisn": "0101924613",
+      "nis": "259704",
+      "name": "MUHAMAD BILY WIRATMAJA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-12-18",
+      "class": "8E"
+    },
+    {
+      "nisn": "0127642366",
+      "nis": "259662",
+      "name": "MUHAMMAD FARDA LU'AY",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-28",
+      "class": "8E"
+    },
+    {
+      "nisn": "3129138179",
+      "nis": "259761",
+      "name": "MUHAMMAD IBNU ABDILLAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-04",
+      "class": "8E"
+    },
+    {
+      "nisn": "0123636116",
+      "nis": "259738",
+      "name": "MUHAMMAD WAHYU ARYA SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-10",
+      "class": "8E"
+    },
+    {
+      "nisn": "0122070060",
+      "nis": "259725",
+      "name": "NAJWA SHOFIYA KHORUNISA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-24",
+      "class": "8E"
+    },
+    {
+      "nisn": "0125293880",
+      "nis": "259676",
+      "name": "Nur Laily Fauziah Barly",
+      "gender": "P",
+      "birth_place": "Bojonegoro",
+      "birth_date": "2012-07-05",
+      "class": "8E"
+    },
+    {
+      "nisn": "3137035013",
+      "nis": "259585",
+      "name": "RAFA FAEYZA KURNIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-11-17",
+      "class": "8E"
+    },
+    {
+      "nisn": "3123006324",
+      "nis": "259685",
+      "name": "RENDY MAULANA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-06",
+      "class": "8E"
+    },
+    {
+      "nisn": "0124492194",
+      "nis": "259595",
+      "name": "SABRINA AULIYA ARROSIDA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-19",
+      "class": "8E"
+    },
+    {
+      "nisn": "0128466452",
+      "nis": "259563",
+      "name": "Satria Putra Pratama",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2012-09-12",
+      "class": "8E"
+    },
+    {
+      "nisn": "3126312589",
+      "nis": "259661",
+      "name": "SHINTA APRILLIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-05",
+      "class": "8E"
+    },
+    {
+      "nisn": "3139148707",
+      "nis": "259762",
+      "name": "SYAHRIL IMAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-01",
+      "class": "8E"
+    },
+    {
+      "nisn": "0133626007",
+      "nis": "259750",
+      "name": "TESYA ZAHRA MAULINA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-30",
+      "class": "8E"
+    },
+    {
+      "nisn": "3135093371",
+      "nis": "259666",
+      "name": "ZAKI ARTIKO NUGRAHA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-26",
+      "class": "8E"
+    },
+    {
+      "nisn": "3125420024",
+      "nis": "259728",
+      "name": "AHMAD ATHARIQ RIZKY ARDIYANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-24",
+      "class": "8F"
+    },
+    {
+      "nisn": "0124080859",
+      "nis": "259712",
+      "name": "ALIEF SYAFAR RAYHAN RYU DANGKUA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-15",
+      "class": "8F"
+    },
+    {
+      "nisn": "0138872426",
+      "nis": "259708",
+      "name": "AMIRA BILQIS ATHIFA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-23",
+      "class": "8F"
+    },
+    {
+      "nisn": "0128254494",
+      "nis": "259560",
+      "name": "ARYA ILYAS SYAHPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-07",
+      "class": "8F"
+    },
+    {
+      "nisn": "0128675616",
+      "nis": "259577",
+      "name": "ASYA NURZIMAN",
+      "gender": "P",
+      "birth_place": "ACEH UTARA",
+      "birth_date": "2012-06-22",
+      "class": "8F"
+    },
+    {
+      "nisn": "0125785468",
+      "nis": "259636",
+      "name": "BINTANG SAQILLA AQUENSA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-30",
+      "class": "8F"
+    },
+    {
+      "nisn": "0137879684",
+      "nis": "259583",
+      "name": "BURHAN ADI ARIFIN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-22",
+      "class": "8F"
+    },
+    {
+      "nisn": "3131403900",
+      "nis": "259675",
+      "name": "DEVIANA ADYA MAHESTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-27",
+      "class": "8F"
+    },
+    {
+      "nisn": "0129236490",
+      "nis": "259576",
+      "name": "DEWA SYFHA IBRAHIM",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-24",
+      "class": "8F"
+    },
+    {
+      "nisn": "0138470684",
+      "nis": "259716",
+      "name": "EVI ANJAYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-29",
+      "class": "8F"
+    },
+    {
+      "nisn": "0124838578",
+      "nis": "259570",
+      "name": "FAIZAL ABIDIN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-16",
+      "class": "8F"
+    },
+    {
+      "nisn": "3121299281",
+      "nis": "259573",
+      "name": "GILBRAN KAIZ CAHYA FAREZA",
+      "gender": "L",
+      "birth_place": "CIMAHI",
+      "birth_date": "2012-09-26",
+      "class": "8F"
+    },
+    {
+      "nisn": "0132757141",
+      "nis": "259701",
+      "name": "IGNATIUS BAGAS SETYA WIBOWO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-29",
+      "class": "8F"
+    },
+    {
+      "nisn": "0132316409",
+      "nis": "259622",
+      "name": "IRMA NURMANDA RIANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-19",
+      "class": "8F"
+    },
+    {
+      "nisn": "0134635779",
+      "nis": "259605",
+      "name": "KAFA FEBRIAN RISKY",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-06",
+      "class": "8F"
+    },
+    {
+      "nisn": "3125536291",
+      "nis": "259680",
+      "name": "LIVIA HELENKA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-22",
+      "class": "8F"
+    },
+    {
+      "nisn": "0137264921",
+      "nis": "259743",
+      "name": "MUHAMAD IQBAL MUBAROK",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-27",
+      "class": "8F"
+    },
+    {
+      "nisn": "0126927617",
+      "nis": "259741",
+      "name": "MUHAMMAD HAFIZH KURNIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-11",
+      "class": "8F"
+    },
+    {
+      "nisn": "3122644470",
+      "nis": "259608",
+      "name": "NAUFAL ADITYA FERNANDA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-18",
+      "class": "8F"
+    },
+    {
+      "nisn": "0133849211",
+      "nis": "259684",
+      "name": "NAURA RIFA ARAYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-20",
+      "class": "8F"
+    },
+    {
+      "nisn": "0135171741",
+      "nis": "259645",
+      "name": "Nayra Ayu Rahmawati",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2013-03-19",
+      "class": "8F"
+    },
+    {
+      "nisn": "0121764531",
+      "nis": "259731",
+      "name": "RAFA ILHAM MAULANA",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2012-11-13",
+      "class": "8F"
+    },
+    {
+      "nisn": "0135391064",
+      "nis": "259658",
+      "name": "RIKO AMRULLAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-12",
+      "class": "8F"
+    },
+    {
+      "nisn": "3138295449",
+      "nis": "259742",
+      "name": "SAFA LAILATUL HASANAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-06",
+      "class": "8F"
+    },
+    {
+      "nisn": "0125199699",
+      "nis": "259559",
+      "name": "SITI AINJELINA MAGHFIROH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-21",
+      "class": "8F"
+    },
+    {
+      "nisn": "0139950711",
+      "nis": "259749",
+      "name": "TRIA WULAN RAHMADANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-07-16",
+      "class": "8F"
+    },
+    {
+      "nisn": "0126652689",
+      "nis": "259669",
+      "name": "TYO YUDHA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-12",
+      "class": "8F"
+    },
+    {
+      "nisn": "0133851171",
+      "nis": "259592",
+      "name": "ZALFAIZ MAULANA FEBRYAN",
+      "gender": "L",
+      "birth_place": "JAKARTA",
+      "birth_date": "2013-02-13",
+      "class": "8F"
+    },
+    {
+      "nisn": "0121651189",
+      "nis": "259607",
+      "name": "AHMAD HADI SOBIRIN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-25",
+      "class": "8G"
+    },
+    {
+      "nisn": "013730231",
+      "nis": "259696",
+      "name": "ALIF MAULANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-10",
+      "class": "8G"
+    },
+    {
+      "nisn": "0124338781",
+      "nis": "259632",
+      "name": "ANATASYA REGINA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-05",
+      "class": "8G"
+    },
+    {
+      "nisn": "0138127877",
+      "nis": "259581",
+      "name": "ARYA RIDWAN PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-04",
+      "class": "8G"
+    },
+    {
+      "nisn": "0134154837",
+      "nis": "259597",
+      "name": "ASYIFA GALUH TRIPRABANINGRUM",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-23",
+      "class": "8G"
+    },
+    {
+      "nisn": "0101676409",
+      "nis": "259757",
+      "name": "BAGUS ARIYA",
+      "gender": "L",
+      "birth_place": "Bojonegoro",
+      "birth_date": "2010-05-10",
+      "class": "8G"
+    },
+    {
+      "nisn": "0135321908",
+      "nis": "259671",
+      "name": "CAHAYA DWI PRASTIYO",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-20",
+      "class": "8G"
+    },
+    {
+      "nisn": "0129937282",
+      "nis": "259631",
+      "name": "DANAR IZZA SA'BANI",
+      "gender": "L",
+      "birth_place": "SEMARANG",
+      "birth_date": "2012-07-08",
+      "class": "8G"
+    },
+    {
+      "nisn": "3122608690",
+      "nis": "259619",
+      "name": "DEVITA RASTIANUR",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-21",
+      "class": "8G"
+    },
+    {
+      "nisn": "0104609199",
+      "nis": "259694",
+      "name": "DIMAS ALVIANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-12-12",
+      "class": "8G"
+    },
+    {
+      "nisn": "0138164800",
+      "nis": "259593",
+      "name": "FAREL DWI SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-01-17",
+      "class": "8G"
+    },
+    {
+      "nisn": "3134547187",
+      "nis": "259672",
+      "name": "FELISIA SANDRINA FEBRIYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-28",
+      "class": "8G"
+    },
+    {
+      "nisn": "0139101341",
+      "nis": "259626",
+      "name": "GUNTUR PURNOMO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-03-14",
+      "class": "8G"
+    },
+    {
+      "nisn": "0133654401",
+      "nis": "259635",
+      "name": "ILHAM KARNANDA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-14",
+      "class": "8G"
+    },
+    {
+      "nisn": "0129689539",
+      "nis": "259759",
+      "name": "ILHAM WILLYANDRO BUDI UTOMO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-30",
+      "class": "8G"
+    },
+    {
+      "nisn": "0135141712",
+      "nis": "259711",
+      "name": "ISTATUN QOIRIYAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2013-06-04",
+      "class": "8G"
+    },
+    {
+      "nisn": "0131324551",
+      "nis": "259687",
+      "name": "KRISNA BARA AVANDO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-05-16",
+      "class": "8G"
+    },
+    {
+      "nisn": "0127064388",
+      "nis": "259598",
+      "name": "MUHAMAD KELVIN SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-11",
+      "class": "8G"
+    },
+    {
+      "nisn": "0131019575",
+      "nis": "259653",
+      "name": "MUHAMMAD IBNU QURAISH SHIHAB",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-04-09",
+      "class": "8G"
+    },
+    {
+      "nisn": "0115666084",
+      "nis": "259617",
+      "name": "NAYLA SYIFA KURNIA SARI",
+      "gender": "P",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2011-06-13",
+      "class": "8G"
+    },
+    {
+      "nisn": "0125394112",
+      "nis": "259748",
+      "name": "NOVA RENO GALANG WAHYUDI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-06",
+      "class": "8G"
+    },
+    {
+      "nisn": "0123097230",
+      "nis": "259724",
+      "name": "ODALIVA MOORMAS NAURA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-29",
+      "class": "8G"
+    },
+    {
+      "nisn": "0133248926",
+      "nis": "259698",
+      "name": "RAFAEL ALVIN PRATAMA",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2013-04-19",
+      "class": "8G"
+    },
+    {
+      "nisn": "0133973828",
+      "nis": "259599",
+      "name": "RIO BAGAS FEBRIANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2013-02-08",
+      "class": "8G"
+    },
+    {
+      "nisn": "3122982513",
+      "nis": "259654",
+      "name": "SAFANA MAISAROH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-09",
+      "class": "8G"
+    },
+    {
+      "nisn": "0122833536",
+      "nis": "259564",
+      "name": "SEKAR ARUM",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-16",
+      "class": "8G"
+    },
+    {
+      "nisn": "0125395914",
+      "nis": "259744",
+      "name": "SITI EFRILITA",
+      "gender": "P",
+      "birth_place": "REMBANG",
+      "birth_date": "2012-05-08",
+      "class": "8G"
+    },
+    {
+      "nisn": "3126691230",
+      "nis": "259646",
+      "name": "UMI ALIFFIANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-03",
+      "class": "8G"
+    },
+    {
+      "nisn": "3121686735",
+      "nis": "259747",
+      "name": "ZAHFA ANANDIRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-01",
+      "class": "8G"
+    },
+    {
+      "nisn": "0129803162",
+      "nis": "249424",
+      "name": "ADELIA ISMI RAMADANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-15",
+      "class": "9A"
+    },
+    {
+      "nisn": "0111375372",
+      "nis": "249447",
+      "name": "ADHITYA RAKA PRATAMA PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-04",
+      "class": "9A"
+    },
+    {
+      "nisn": "0112070239",
+      "nis": "249504",
+      "name": "ALDO ANDREAN PURWANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-06-26",
+      "class": "9A"
+    },
+    {
+      "nisn": "0129898808",
+      "nis": "249426",
+      "name": "ALEXANDRA DILA AMEILITA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-12",
+      "class": "9A"
+    },
+    {
+      "nisn": "0121834641",
+      "nis": "249508",
+      "name": "ANGGITA APRILIYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-30",
+      "class": "9A"
+    },
+    {
+      "nisn": "0129466943",
+      "nis": "249379",
+      "name": "APRILIA ANJARSARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-02",
+      "class": "9A"
+    },
+    {
+      "nisn": "0114765470",
+      "nis": "249485",
+      "name": "ARGA AUTNA YUDISTIRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-06-08",
+      "class": "9A"
+    },
+    {
+      "nisn": "0119155915",
+      "nis": "249409",
+      "name": "Argha Narendra",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-09",
+      "class": "9A"
+    },
+    {
+      "nisn": "0127045967",
+      "nis": "249521",
+      "name": "CANTIKA EKA ALFIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-30",
+      "class": "9A"
+    },
+    {
+      "nisn": "0122944431",
+      "nis": "249530",
+      "name": "CHIPO CAVALIN AICKO FARZHANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-04",
+      "class": "9A"
+    },
+    {
+      "nisn": "0117580593",
+      "nis": "249480",
+      "name": "DAFA ARI NUGROHO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-01-14",
+      "class": "9A"
+    },
+    {
+      "nisn": "0129228902",
+      "nis": "249527",
+      "name": "Febi Nur Aini",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-21",
+      "class": "9A"
+    },
+    {
+      "nisn": "0121239367",
+      "nis": "249458",
+      "name": "FEBRIAN ADI BAGUS SONARIANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-26",
+      "class": "9A"
+    },
+    {
+      "nisn": "0127959890",
+      "nis": "249462",
+      "name": "GHUFRON AJMA'IN",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2012-08-05",
+      "class": "9A"
+    },
+    {
+      "nisn": "0126524950",
+      "nis": "249364",
+      "name": "Ira Nadya Kusuma",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-20",
+      "class": "9A"
+    },
+    {
+      "nisn": "0121463692",
+      "nis": "259766",
+      "name": "KEMAL IDRIS AGRASTA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-24",
+      "class": "9A"
+    },
+    {
+      "nisn": "0129200095",
+      "nis": "249537",
+      "name": "LAILATUL JANAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-12-23",
+      "class": "9A"
+    },
+    {
+      "nisn": "0115333492",
+      "nis": "249483",
+      "name": "LIN SOFWATI DZIKRIA",
+      "gender": "P",
+      "birth_place": "BEKASI",
+      "birth_date": "2011-09-15",
+      "class": "9A"
+    },
+    {
+      "nisn": "3124342179",
+      "nis": "249535",
+      "name": "MAIZA NINDYA PRATIWI",
+      "gender": "P",
+      "birth_place": "SEMARANG",
+      "birth_date": "2012-03-08",
+      "class": "9A"
+    },
+    {
+      "nisn": "0111583644",
+      "nis": "249357",
+      "name": "Maulida Putri Syafira",
+      "gender": "P",
+      "birth_place": "Rembang",
+      "birth_date": "2011-10-19",
+      "class": "9A"
+    },
+    {
+      "nisn": "0119957240",
+      "nis": "249431",
+      "name": "MOCHAMAD ANDRI SETYAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-06",
+      "class": "9A"
+    },
+    {
+      "nisn": "0103095040",
+      "nis": "249406",
+      "name": "Muhammad Anang Al Falaq",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-12-14",
+      "class": "9A"
+    },
+    {
+      "nisn": "0126835646",
+      "nis": "249511",
+      "name": "MUHAMMAD DAFFA HAFIZUDDIN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-17",
+      "class": "9A"
+    },
+    {
+      "nisn": "0125407165",
+      "nis": "249374",
+      "name": "MUHAMMAD RIFKY",
+      "gender": "L",
+      "birth_place": "KUNINGAN",
+      "birth_date": "2012-06-06",
+      "class": "9A"
+    },
+    {
+      "nisn": "0114641956",
+      "nis": "249520",
+      "name": "NJELINA EKA MEMA AINI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-29",
+      "class": "9A"
+    },
+    {
+      "nisn": "0128498987",
+      "nis": "249469",
+      "name": "Rahmawati Lestari",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-13",
+      "class": "9A"
+    },
+    {
+      "nisn": "0114375708",
+      "nis": "249552",
+      "name": "RAYHANA ANISAUL NAIFAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-04-26",
+      "class": "9A"
+    },
+    {
+      "nisn": "0128542853",
+      "nis": "249432",
+      "name": "REVAN ALEAN WIBOWO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-19",
+      "class": "9A"
+    },
+    {
+      "nisn": "0119565703",
+      "nis": "249499",
+      "name": "Riski Julang Maulana Isan",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-06-21",
+      "class": "9A"
+    },
+    {
+      "nisn": "0124372387",
+      "nis": "249423",
+      "name": "Sa'id Aqil",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-13",
+      "class": "9A"
+    },
+    {
+      "nisn": "0119432754",
+      "nis": "249395",
+      "name": "SILFIA TRI KHUSNUL KHOTIMAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-05-31",
+      "class": "9A"
+    },
+    {
+      "nisn": "0115641414",
+      "nis": "249495",
+      "name": "ADILA NOVITA NUR ANGGRAENI",
+      "gender": "P",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2011-11-11",
+      "class": "9B"
+    },
+    {
+      "nisn": "0126850997",
+      "nis": "249381",
+      "name": "ALIFIA LOVELINA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-22",
+      "class": "9B"
+    },
+    {
+      "nisn": "0114470269",
+      "nis": "249463",
+      "name": "ANANDA YOGIK SUGIARTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-11-16",
+      "class": "9B"
+    },
+    {
+      "nisn": "0128295399",
+      "nis": "249368",
+      "name": "Anggara Putra Noval",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-05",
+      "class": "9B"
+    },
+    {
+      "nisn": "0122757936",
+      "nis": "249373",
+      "name": "ANGGITA LUVINA PRAMADANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-24",
+      "class": "9B"
+    },
+    {
+      "nisn": "0111749450",
+      "nis": "249375",
+      "name": "ARGA LANA LINGGA PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-11-24",
+      "class": "9B"
+    },
+    {
+      "nisn": "0123718979",
+      "nis": "249473",
+      "name": "ARIYANI PUSPITA SARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-14",
+      "class": "9B"
+    },
+    {
+      "nisn": "0122961042",
+      "nis": "249512",
+      "name": "AURA SYIFA AULIA",
+      "gender": "P",
+      "birth_place": "JAKARTA",
+      "birth_date": "2012-01-23",
+      "class": "9B"
+    },
+    {
+      "nisn": "0104778273",
+      "nis": "249528",
+      "name": "BRIYAN ARMADANI GIO FALLENTINO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-07-14",
+      "class": "9B"
+    },
+    {
+      "nisn": "0122993901",
+      "nis": "249487",
+      "name": "DAFA RASYA PRADIPTAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-10",
+      "class": "9B"
+    },
+    {
+      "nisn": "0128686585",
+      "nis": "249539",
+      "name": "DEVDAN ABHIRAMA DRIPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-28",
+      "class": "9B"
+    },
+    {
+      "nisn": "0113798693",
+      "nis": "249407",
+      "name": "DEVI ZALVA SALSABILA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-06",
+      "class": "9B"
+    },
+    {
+      "nisn": "0122274673",
+      "nis": "249491",
+      "name": "FEBRINDA PUTRI MAHARANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-22",
+      "class": "9B"
+    },
+    {
+      "nisn": "3127615315",
+      "nis": "249384",
+      "name": "FEBRYAN DONA ADITAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-25",
+      "class": "9B"
+    },
+    {
+      "nisn": "0124979806",
+      "nis": "259771",
+      "name": "Galih Putra Pratama",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-26",
+      "class": "9B"
+    },
+    {
+      "nisn": "0129612400",
+      "nis": "249514",
+      "name": "HERLITA TRI FEBRIANKA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-25",
+      "class": "9B"
+    },
+    {
+      "nisn": "0106981625",
+      "nis": "249399",
+      "name": "ILHAM ARDIAN PUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-11-08",
+      "class": "9B"
+    },
+    {
+      "nisn": "0127775916",
+      "nis": "249476",
+      "name": "JEINA AYUNDA DWI AINUR",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-27",
+      "class": "9B"
+    },
+    {
+      "nisn": "0124096160",
+      "nis": "249371",
+      "name": "LYLALITA ALDINI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-24",
+      "class": "9B"
+    },
+    {
+      "nisn": "0129436754",
+      "nis": "249402",
+      "name": "Mega Angelisia Eveline",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-25",
+      "class": "9B"
+    },
+    {
+      "nisn": "0125756928",
+      "nis": "249524",
+      "name": "MOCHAMAD FAISAL",
+      "gender": "L",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2012-04-17",
+      "class": "9B"
+    },
+    {
+      "nisn": "0116324288",
+      "nis": "249464",
+      "name": "Muhammad Arenza Pratama",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-29",
+      "class": "9B"
+    },
+    {
+      "nisn": "0118326256",
+      "nis": "249440",
+      "name": "MUHAMMAD DWI SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-04-24",
+      "class": "9B"
+    },
+    {
+      "nisn": "0126305775",
+      "nis": "249415",
+      "name": "MUHAMMAD RISKI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-18",
+      "class": "9B"
+    },
+    {
+      "nisn": "0116677298",
+      "nis": "249413",
+      "name": "Nava Andarista",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-11-08",
+      "class": "9B"
+    },
+    {
+      "nisn": "3113463300",
+      "nis": "249460",
+      "name": "RIFKI CANDRA KATRISNA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-08-14",
+      "class": "9B"
+    },
+    {
+      "nisn": "0121042375",
+      "nis": "249358",
+      "name": "SAFIRA ANISA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-21",
+      "class": "9B"
+    },
+    {
+      "nisn": "0121861191",
+      "nis": "249554",
+      "name": "Salsabilla Putri Zahrani",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-19",
+      "class": "9B"
+    },
+    {
+      "nisn": "0111317079",
+      "nis": "249536",
+      "name": "Siti Nuriyah Dwi Wibowo",
+      "gender": "P",
+      "birth_place": "Tangerang",
+      "birth_date": "2011-08-19",
+      "class": "9B"
+    },
+    {
+      "nisn": "0118672286",
+      "nis": "249516",
+      "name": "Siti Salsabila Athalia Fredlina",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-31",
+      "class": "9B"
+    },
+    {
+      "nisn": "0123043594",
+      "nis": "249449",
+      "name": "SYAFA NARINTA AULYA AZZAHRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-06",
+      "class": "9B"
+    },
+    {
+      "nisn": "0123303838",
+      "nis": "249434",
+      "name": "TIARA AYU WIDIA PUTRI",
+      "gender": "P",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2012-01-16",
+      "class": "9B"
+    },
+    {
+      "nisn": "0127085527",
+      "nis": "249362",
+      "name": "ADINDA DWI SAFIRA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-29",
+      "class": "9C"
+    },
+    {
+      "nisn": "0117935334",
+      "nis": "249482",
+      "name": "AGUSTYAN PUJI ROMADHONA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-11",
+      "class": "9C"
+    },
+    {
+      "nisn": "0127618658",
+      "nis": "249451",
+      "name": "ALIYAH MUMTAZ ARIYANTI",
+      "gender": "P",
+      "birth_place": "JAKARTA",
+      "birth_date": "2012-06-22",
+      "class": "9C"
+    },
+    {
+      "nisn": "0125043765",
+      "nis": "249497",
+      "name": "ANDI SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-05",
+      "class": "9C"
+    },
+    {
+      "nisn": "0126395229",
+      "nis": "249478",
+      "name": "ANINDYTA LAILIYA SOBRIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-26",
+      "class": "9C"
+    },
+    {
+      "nisn": "0129933509",
+      "nis": "249484",
+      "name": "ARNETA FEBRIANTORO",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-13",
+      "class": "9C"
+    },
+    {
+      "nisn": "0115111636",
+      "nis": "249525",
+      "name": "AURIN ELFARIANI",
+      "gender": "P",
+      "birth_place": "BOJONEGORO",
+      "birth_date": "2011-04-08",
+      "class": "9C"
+    },
+    {
+      "nisn": "0127414852",
+      "nis": "249394",
+      "name": "BAMBANG CAHYO WIBOWO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-24",
+      "class": "9C"
+    },
+    {
+      "nisn": "0126331650",
+      "nis": "249467",
+      "name": "David Ilyas Syaputra",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-01",
+      "class": "9C"
+    },
+    {
+      "nisn": "0115929718",
+      "nis": "249422",
+      "name": "DISTA CITRA LESTARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-20",
+      "class": "9C"
+    },
+    {
+      "nisn": "0127725369",
+      "nis": "249412",
+      "name": "FERDY NUR ERLANGGA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-29",
+      "class": "9C"
+    },
+    {
+      "nisn": "0123838389",
+      "nis": "249454",
+      "name": "FIKA AGISTA HANDAYANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-21",
+      "class": "9C"
+    },
+    {
+      "nisn": "0114871712",
+      "nis": "249398",
+      "name": "INNO RAMIN AFGAN KURNIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-12",
+      "class": "9C"
+    },
+    {
+      "nisn": "0125717029",
+      "nis": "249421",
+      "name": "KARTIKA AYUDYA INARA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-24",
+      "class": "9C"
+    },
+    {
+      "nisn": "0129826647",
+      "nis": "259767",
+      "name": "KEMAL LUTFI AGRASTA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-24",
+      "class": "9C"
+    },
+    {
+      "nisn": "0122477623",
+      "nis": "249387",
+      "name": "MEISHA KIRANA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-17",
+      "class": "9C"
+    },
+    {
+      "nisn": "0113311264",
+      "nis": "249433",
+      "name": "MOCHAMMAD KEVIN SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-06",
+      "class": "9C"
+    },
+    {
+      "nisn": "0112644821",
+      "nis": "249465",
+      "name": "Muhammad Daffa Fa'al Hidayah",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-12-15",
+      "class": "9C"
+    },
+    {
+      "nisn": "0129960712",
+      "nis": "249459",
+      "name": "MUHAMMAD KHAIRIL 'ANAM PRASETYA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-01",
+      "class": "9C"
+    },
+    {
+      "nisn": "0117099659",
+      "nis": "249397",
+      "name": "MUHAMMAD RIZIQ",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-05-20",
+      "class": "9C"
+    },
+    {
+      "nisn": "0114236067",
+      "nis": "249522",
+      "name": "NABILLA ZAHRA RAMADHANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-17",
+      "class": "9C"
+    },
+    {
+      "nisn": "0114057514",
+      "nis": "249545",
+      "name": "NOVA GINANJAR SYAPUTRA",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-11-12",
+      "class": "9C"
+    },
+    {
+      "nisn": "0115858212",
+      "nis": "249367",
+      "name": "Okhila Khaharanti",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-10-22",
+      "class": "9C"
+    },
+    {
+      "nisn": "3115804195",
+      "nis": "249546",
+      "name": "RAAFI AIDYANTO",
+      "gender": "L",
+      "birth_place": "KLATEN",
+      "birth_date": "2011-09-14",
+      "class": "9C"
+    },
+    {
+      "nisn": "0121550843",
+      "nis": "249363",
+      "name": "ROBIUL FERZA ALFIANO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-21",
+      "class": "9C"
+    },
+    {
+      "nisn": "0111929125",
+      "nis": "249534",
+      "name": "SAGITA SIFA VIRGINIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-30",
+      "class": "9C"
+    },
+    {
+      "nisn": "0111232859",
+      "nis": "249382",
+      "name": "SAVA GISELLA ISTIANA SARI DIANTORO",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-11-29",
+      "class": "9C"
+    },
+    {
+      "nisn": "0121071426",
+      "nis": "249388",
+      "name": "SETYA BEKTI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-13",
+      "class": "9C"
+    },
+    {
+      "nisn": "0124594906",
+      "nis": "249533",
+      "name": "SHALSABILA ANISA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-10-09",
+      "class": "9C"
+    },
+    {
+      "nisn": "0114873950",
+      "nis": "249461",
+      "name": "SYAHDILA KIRANA PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-15",
+      "class": "9C"
+    },
+    {
+      "nisn": "0126339124",
+      "nis": "259765",
+      "name": "VALENTINO ADITYA RIFKY",
+      "gender": "L",
+      "birth_place": "Bojonegoro",
+      "birth_date": "2012-02-14",
+      "class": "9C"
+    },
+    {
+      "nisn": "0121214071",
+      "nis": "249437",
+      "name": "YUSUF JAFAR ASH SHIDDIQ",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-10",
+      "class": "9C"
+    },
+    {
+      "nisn": "0121540052",
+      "nis": "249369",
+      "name": "ADISTA PAMELA AUDYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-12",
+      "class": "9D"
+    },
+    {
+      "nisn": "3116091483",
+      "nis": "249505",
+      "name": "AHMAD GIBRAN AL ASYFA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-01",
+      "class": "9D"
+    },
+    {
+      "nisn": "0124302458",
+      "nis": "249510",
+      "name": "ALYSIA AYU MAERANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-27",
+      "class": "9D"
+    },
+    {
+      "nisn": "0124736265",
+      "nis": "249391",
+      "name": "ANDIKA BAGUS PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-22",
+      "class": "9D"
+    },
+    {
+      "nisn": "0126604069",
+      "nis": "249386",
+      "name": "ANISA PRASETIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-05",
+      "class": "9D"
+    },
+    {
+      "nisn": "0119624625",
+      "nis": "249360",
+      "name": "ARIF DZAKI INSAN KAMIL",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-10",
+      "class": "9D"
+    },
+    {
+      "nisn": "0114730419",
+      "nis": "249417",
+      "name": "Arnetta Septiani",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-09-22",
+      "class": "9D"
+    },
+    {
+      "nisn": "3111964544",
+      "nis": "249378",
+      "name": "BINTANG ARTAWANSYAH CRISNAMADJI",
+      "gender": "L",
+      "birth_place": "PONTIANAK",
+      "birth_date": "2011-12-09",
+      "class": "9D"
+    },
+    {
+      "nisn": "0129350209",
+      "nis": "249441",
+      "name": "ELLYA WAHYU NINGSIH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-11",
+      "class": "9D"
+    },
+    {
+      "nisn": "0122880677",
+      "nis": "249494",
+      "name": "ENDIN EDZECO FERDICO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-25",
+      "class": "9D"
+    },
+    {
+      "nisn": "0124410714",
+      "nis": "249500",
+      "name": "Fadhiilah Pratama Putra",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-11-30",
+      "class": "9D"
+    },
+    {
+      "nisn": "0127065416",
+      "nis": "249549",
+      "name": "Ferdiana Dwi Cahyani",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-03-17",
+      "class": "9D"
+    },
+    {
+      "nisn": "0127782337",
+      "nis": "249377",
+      "name": "FLORA PUTRI SUKADI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-11",
+      "class": "9D"
+    },
+    {
+      "nisn": "0118731082",
+      "nis": "249390",
+      "name": "INTAN CAHAYA PERTIWI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-23",
+      "class": "9D"
+    },
+    {
+      "nisn": "0098773302",
+      "nis": "249400",
+      "name": "KARTIKA ZYAHRANI WULANDARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2009-08-10",
+      "class": "9D"
+    },
+    {
+      "nisn": "0117517070",
+      "nis": "249498",
+      "name": "Khoirul Sandy Ramadhan",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-08-23",
+      "class": "9D"
+    },
+    {
+      "nisn": "0123788005",
+      "nis": "249393",
+      "name": "MEY SYAROH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-31",
+      "class": "9D"
+    },
+    {
+      "nisn": "0119822928",
+      "nis": "249389",
+      "name": "MUHAMMAD LATHIF ARROSYID",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-07",
+      "class": "9D"
+    },
+    {
+      "nisn": "0125373384",
+      "nis": "249430",
+      "name": "MUHAMMAD ROFIQ NUR IRFANSYAH",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-23",
+      "class": "9D"
+    },
+    {
+      "nisn": "0113072862",
+      "nis": "249408",
+      "name": "Muhammad Satria Zaki Pratama",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-06-24",
+      "class": "9D"
+    },
+    {
+      "nisn": "0116049518",
+      "nis": "249411",
+      "name": "Nabela Regina Septiana Putri",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-09-21",
+      "class": "9D"
+    },
+    {
+      "nisn": "3126255014",
+      "nis": "249419",
+      "name": "NAVALIA SHAFARANI WIJAYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-07",
+      "class": "9D"
+    },
+    {
+      "nisn": "3119317120",
+      "nis": "249496",
+      "name": "ROHMAN RENDI SETIAWAN",
+      "gender": "L",
+      "birth_place": "MALANG",
+      "birth_date": "2011-01-09",
+      "class": "9D"
+    },
+    {
+      "nisn": "0102199250",
+      "nis": "249493",
+      "name": "SAHRY ARYA RAMADANI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-09-22",
+      "class": "9D"
+    },
+    {
+      "nisn": "0117172656",
+      "nis": "249450",
+      "name": "SELLENA GOLFITA MARSAMAD",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-09",
+      "class": "9D"
+    },
+    {
+      "nisn": "0121219384",
+      "nis": "249492",
+      "name": "STEVEEN ALDO BRIANSHA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-09-15",
+      "class": "9D"
+    },
+    {
+      "nisn": "0122750987",
+      "nis": "249529",
+      "name": "TIA DWI APRILIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-10",
+      "class": "9D"
+    },
+    {
+      "nisn": "0123043952",
+      "nis": "249446",
+      "name": "VIONA DWI LESTARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-21",
+      "class": "9D"
+    },
+    {
+      "nisn": "0111606499",
+      "nis": "249506",
+      "name": "Zaskia Nur Airin",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-07-31",
+      "class": "9D"
+    },
+    {
+      "nisn": "0124800682",
+      "nis": "249361",
+      "name": "Adib Musthofa",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2012-01-21",
+      "class": "9E"
+    },
+    {
+      "nisn": "0113479213",
+      "nis": "249519",
+      "name": "AHMAD NAVIS SETIAWAN",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-29",
+      "class": "9E"
+    },
+    {
+      "nisn": "0121388905",
+      "nis": "249513",
+      "name": "AISHA NAYYARA KINARIAN",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-22",
+      "class": "9E"
+    },
+    {
+      "nisn": "0124745446",
+      "nis": "249365",
+      "name": "ANA NAJMA SAROYA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-09",
+      "class": "9E"
+    },
+    {
+      "nisn": "0126054358",
+      "nis": "249385",
+      "name": "ANGGA ADITYA PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-31",
+      "class": "9E"
+    },
+    {
+      "nisn": "0113120514",
+      "nis": "249372",
+      "name": "ANJELIA SURYA DELIMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-15",
+      "class": "9E"
+    },
+    {
+      "nisn": "0117289864",
+      "nis": "249551",
+      "name": "ARDELLA AJENGGALIH NURWENING",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-29",
+      "class": "9E"
+    },
+    {
+      "nisn": "0117989409",
+      "nis": "249370",
+      "name": "ASYAFA ZIDNI ILMA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-02",
+      "class": "9E"
+    },
+    {
+      "nisn": "0112851789",
+      "nis": "249550",
+      "name": "Ayu Fiki Syarifatul Kamila",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-12-16",
+      "class": "9E"
+    },
+    {
+      "nisn": "0121528494",
+      "nis": "249404",
+      "name": "Azzahra Kayana Naina Gushein",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-09-05",
+      "class": "9E"
+    },
+    {
+      "nisn": "0111314969",
+      "nis": "249517",
+      "name": "BINTANG INDRA YUDHA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-19",
+      "class": "9E"
+    },
+    {
+      "nisn": "0113253649",
+      "nis": "249380",
+      "name": "EVI AGUSTIN RAMADANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-28",
+      "class": "9E"
+    },
+    {
+      "nisn": "0108366754",
+      "nis": "249502",
+      "name": "FADIL ANDIKA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-08-21",
+      "class": "9E"
+    },
+    {
+      "nisn": "0122007545",
+      "nis": "249359",
+      "name": "Fajar Arsyavino Saputra",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-10-16",
+      "class": "9E"
+    },
+    {
+      "nisn": "0126598200",
+      "nis": "249410",
+      "name": "Febiola Erliana Suci",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-02-29",
+      "class": "9E"
+    },
+    {
+      "nisn": "0121117488",
+      "nis": "249428",
+      "name": "INTAN CANDRA KIRANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-15",
+      "class": "9E"
+    },
+    {
+      "nisn": "0123552717",
+      "nis": "249489",
+      "name": "KHAILA APRILIANA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-17",
+      "class": "9E"
+    },
+    {
+      "nisn": "0111045499",
+      "nis": "249401",
+      "name": "Khrisna Jaka Satria",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-12-14",
+      "class": "9E"
+    },
+    {
+      "nisn": "0129007756",
+      "nis": "249481",
+      "name": "MIXELL GRIENFISH VARAZHIMOTZHA RIDINI PUTRI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-28",
+      "class": "9E"
+    },
+    {
+      "nisn": "0115323973",
+      "nis": "249396",
+      "name": "MUHAMMAD AGUS PRASETYO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-08-21",
+      "class": "9E"
+    },
+    {
+      "nisn": "0124574220",
+      "nis": "249442",
+      "name": "MUHAMMAD NOVA ARIANTO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-11-23",
+      "class": "9E"
+    },
+    {
+      "nisn": "0128427687",
+      "nis": "249526",
+      "name": "NAYLIKA AGHITA AURORA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-04",
+      "class": "9E"
+    },
+    {
+      "nisn": "0123646757",
+      "nis": "249507",
+      "name": "NUR ROHMAT ABIMANYU",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-20",
+      "class": "9E"
+    },
+    {
+      "nisn": "0113365263",
+      "nis": "249414",
+      "name": "Raditya Dwi Sastra",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-09-22",
+      "class": "9E"
+    },
+    {
+      "nisn": "0128505120",
+      "nis": "249452",
+      "name": "RANIA SYIFA ANGGREANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-01-01",
+      "class": "9E"
+    },
+    {
+      "nisn": "0108612563",
+      "nis": "249531",
+      "name": "RIFKY FAHRIL FAHRUL FAHROZI",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-06-16",
+      "class": "9E"
+    },
+    {
+      "nisn": "0129168809",
+      "nis": "249405",
+      "name": "Sania Sinta Dewi",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-08-29",
+      "class": "9E"
+    },
+    {
+      "nisn": "0125705173",
+      "nis": "249443",
+      "name": "SERENA RAHMAWATI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-10",
+      "class": "9E"
+    },
+    {
+      "nisn": "0125664541",
+      "nis": "249470",
+      "name": "Shanty Yuliani Araya",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-07-01",
+      "class": "9E"
+    },
+    {
+      "nisn": "0101857449",
+      "nis": "249532",
+      "name": "SUNARYO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-10-03",
+      "class": "9E"
+    },
+    {
+      "nisn": "0116892722",
+      "nis": "249488",
+      "name": "SURYA LANGGENG HERLAMBANG",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-06-25",
+      "class": "9E"
+    },
+    {
+      "nisn": "0126696779",
+      "nis": "249425",
+      "name": "WANDA APRILIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-18",
+      "class": "9E"
+    },
+    {
+      "nisn": "0121008287",
+      "nis": "259768",
+      "name": "ABDUL GHOFUR RIZKI PRATAMA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-19",
+      "class": "9F"
+    },
+    {
+      "nisn": "0129605358",
+      "nis": "249466",
+      "name": "Ahmad Aris Triatmaja",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2012-06-05",
+      "class": "9F"
+    },
+    {
+      "nisn": "0123312969",
+      "nis": "249427",
+      "name": "AHMAD SYAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-23",
+      "class": "9F"
+    },
+    {
+      "nisn": "3128339745",
+      "nis": "249479",
+      "name": "AJENG NUR KUSUMA DEWI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-02-29",
+      "class": "9F"
+    },
+    {
+      "nisn": "0127975330",
+      "nis": "249477",
+      "name": "ANGGINI PUTRI ANGGREINI",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-05-23",
+      "class": "9F"
+    },
+    {
+      "nisn": "0123156063",
+      "nis": "249383",
+      "name": "ANNISAH NUR FATHONAH",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-31",
+      "class": "9F"
+    },
+    {
+      "nisn": "0129246755",
+      "nis": "249438",
+      "name": "ARFA CHOYRUL HUDA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-05-16",
+      "class": "9F"
+    },
+    {
+      "nisn": "0128072779",
+      "nis": "249518",
+      "name": "ATNI EKA APRELIANI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-04-02",
+      "class": "9F"
+    },
+    {
+      "nisn": "0119684478",
+      "nis": "249435",
+      "name": "BELA DWI SASTRIA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-29",
+      "class": "9F"
+    },
+    {
+      "nisn": "0122679219",
+      "nis": "249418",
+      "name": "CHRISNADO VELDRI LERI``IL",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-08-03",
+      "class": "9F"
+    },
+    {
+      "nisn": "0112507761",
+      "nis": "249475",
+      "name": "FAIKHA NIRINA PUTRI",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-12-09",
+      "class": "9F"
+    },
+    {
+      "nisn": "0113333367",
+      "nis": "249392",
+      "name": "FAJAR DWI ANDIKA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-03-26",
+      "class": "9F"
+    },
+    {
+      "nisn": "0117829981",
+      "nis": "249515",
+      "name": "Flowra Nesya Asantika",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-11-12",
+      "class": "9F"
+    },
+    {
+      "nisn": "0101594533",
+      "nis": "249376",
+      "name": "GERI PREDIANANTA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2010-04-09",
+      "class": "9F"
+    },
+    {
+      "nisn": "0113820482",
+      "nis": "249474",
+      "name": "KHOIRUNNISA HANIFAH MAHDIYAH",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-12-29",
+      "class": "9F"
+    },
+    {
+      "nisn": "0129403365",
+      "nis": "249445",
+      "name": "MARZEN DWI SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-19",
+      "class": "9F"
+    },
+    {
+      "nisn": "0123374336",
+      "nis": "249457",
+      "name": "Mochamad Hafiz Khoirul Anam",
+      "gender": "L",
+      "birth_place": "Sumedang",
+      "birth_date": "2012-05-05",
+      "class": "9F"
+    },
+    {
+      "nisn": "0123217846",
+      "nis": "249509",
+      "name": "MONIKA PUTRI HAPSARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-30",
+      "class": "9F"
+    },
+    {
+      "nisn": "0116897092",
+      "nis": "249436",
+      "name": "MUHAMMAD ARKAN MAULANA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-12-14",
+      "class": "9F"
+    },
+    {
+      "nisn": "0124983638",
+      "nis": "249523",
+      "name": "MUHAMMAD OKTA RIDHO PRASETYO",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2011-10-24",
+      "class": "9F"
+    },
+    {
+      "nisn": "0125955141",
+      "nis": "249439",
+      "name": "MUHAMMAD WAHYU ZIAN SYAHPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2012-03-23",
+      "class": "9F"
+    },
+    {
+      "nisn": "0127395139",
+      "nis": "249456",
+      "name": "NAZWA FIPRIANTIKA SARI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-06-26",
+      "class": "9F"
+    },
+    {
+      "nisn": "0113499406",
+      "nis": "249490",
+      "name": "PUTRA GILANG RAMADHAN WIJAYA",
+      "gender": "L",
+      "birth_place": "Jakarta",
+      "birth_date": "2011-08-24",
+      "class": "9F"
+    },
+    {
+      "nisn": "0127977716",
+      "nis": "249403",
+      "name": "Rama Aditya Hermansyah",
+      "gender": "L",
+      "birth_place": "Blora",
+      "birth_date": "2012-06-03",
+      "class": "9F"
+    },
+    {
+      "nisn": "0116856104",
+      "nis": "249503",
+      "name": "REVALINA SEPTIANI DEVI",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2011-09-19",
+      "class": "9F"
+    },
+    {
+      "nisn": "0128493491",
+      "nis": "249471",
+      "name": "SILFIA MOZA ANGGRAINI",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-01-29",
+      "class": "9F"
+    },
+    {
+      "nisn": "0122199387",
+      "nis": "249416",
+      "name": "Siti Andira Alyani",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2012-03-07",
+      "class": "9F"
+    },
+    {
+      "nisn": "0116722757",
+      "nis": "249547",
+      "name": "STELO OKTA HILMY DEDY SAPUTRA",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-10-22",
+      "class": "9F"
+    },
+    {
+      "nisn": "0118753424",
+      "nis": "249420",
+      "name": "SUSILO",
+      "gender": "L",
+      "birth_place": "BLORA",
+      "birth_date": "2011-01-30",
+      "class": "9F"
+    },
+    {
+      "nisn": "0116606117",
+      "nis": "249468",
+      "name": "Yofia Cantika",
+      "gender": "P",
+      "birth_place": "Blora",
+      "birth_date": "2011-10-24",
+      "class": "9F"
+    },
+    {
+      "nisn": "0125495331",
+      "nis": "249366",
+      "name": "YULIKA VALENTINA",
+      "gender": "P",
+      "birth_place": "BLORA",
+      "birth_date": "2012-07-30",
+      "class": "9F"
+    }
+  ]
+}

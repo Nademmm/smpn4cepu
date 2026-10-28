@@ -414,19 +414,19 @@ class DemoSchoolSeeder extends Seeder
             LibraryBook::firstOrCreate(['isbn' => $b['isbn']], $b);
         }
 
-        // 5b. Rincian 20 Rombongan Belajar (Rombel) Resmi
+        // 5b. Rincian 20 Rombongan Belajar (Rombel) Resmi Tahun Pelajaran 2026/2027 (609 Siswa)
         $rombelData = [
             ['grade' => 7, 'class' => '7A', 'l' => 15, 'p' => 16, 'total' => 31],
             ['grade' => 7, 'class' => '7B', 'l' => 15, 'p' => 16, 'total' => 31],
             ['grade' => 7, 'class' => '7C', 'l' => 17, 'p' => 15, 'total' => 32],
-            ['grade' => 7, 'class' => '7D', 'l' => 16, 'p' => 15, 'total' => 31],
+            ['grade' => 7, 'class' => '7D', 'l' => 15, 'p' => 15, 'total' => 30],
             ['grade' => 7, 'class' => '7E', 'l' => 16, 'p' => 15, 'total' => 31],
-            ['grade' => 7, 'class' => '7F', 'l' => 16, 'p' => 16, 'total' => 32],
+            ['grade' => 7, 'class' => '7F', 'l' => 16, 'p' => 15, 'total' => 31],
             ['grade' => 7, 'class' => '7G', 'l' => 16, 'p' => 15, 'total' => 31],
             ['grade' => 8, 'class' => '8A', 'l' => 16, 'p' => 13, 'total' => 29],
             ['grade' => 8, 'class' => '8B', 'l' => 18, 'p' => 12, 'total' => 30],
-            ['grade' => 8, 'class' => '8C', 'l' => 15, 'p' => 13, 'total' => 28],
-            ['grade' => 8, 'class' => '8D', 'l' => 17, 'p' => 11, 'total' => 28],
+            ['grade' => 8, 'class' => '8C', 'l' => 17, 'p' => 13, 'total' => 30],
+            ['grade' => 8, 'class' => '8D', 'l' => 18, 'p' => 11, 'total' => 29],
             ['grade' => 8, 'class' => '8E', 'l' => 18, 'p' => 12, 'total' => 30],
             ['grade' => 8, 'class' => '8F', 'l' => 16, 'p' => 12, 'total' => 28],
             ['grade' => 8, 'class' => '8G', 'l' => 16, 'p' => 13, 'total' => 29],
@@ -439,8 +439,8 @@ class DemoSchoolSeeder extends Seeder
         ];
 
         foreach ($rombelData as $r) {
-            \App\Models\StudentStatistic::firstOrCreate(
-                ['academic_year' => '2025/2026', 'class_name' => $r['class']],
+            \App\Models\StudentStatistic::updateOrCreate(
+                ['academic_year' => '2026/2027', 'class_name' => $r['class']],
                 [
                     'grade_level' => $r['grade'],
                     'male_count' => $r['l'],

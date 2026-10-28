@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 // Rute Autentikasi Masuk Portal Terpadu (Untuk Siswa, Guru, dan Admin)
+// Throttle 300/menit per IP agar aman bagi 600+ siswa dalam 1 Wi-Fi NAT sekolah (proteksi brute-force per akun ditangani di LoginController)
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:10,1')->name('login.post');
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:300,1')->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // 1. Beranda
@@ -140,7 +141,7 @@ Route::get('/rekap-siswa', function () {
 // 6. Bilik Suara E-Voting Pilketos (Livewire)
 Route::get('/pilketos', function () {
     return view('pages.pilketos');
-})->middleware('throttle:60,1')->name('pilketos');
+})->middleware('throttle:600,1')->name('pilketos');
 
 // 7. Quick Count Real-Time Pilketos (Livewire Polling)
 Route::get('/pilketos/live-count', function () {
@@ -259,26 +260,30 @@ Route::post('/perpustakaan/reservasi', function (Request $request) {
         'reservation_code' => $reservation->reservation_code,
         'message' => 'Tiket reservasi berhasil dibuat dan terdaftar di sistem sirkulasi perpustakaan.',
     ]);
-})->middleware('throttle:10,1')->name('library.reserve');
+})->middleware('throttle:120,1')->name('library.reserve');
 
 // 9, 10, 11: Ruang Belajar Mandiri (Wajib Masuk Akun Terlebih Dahulu)
 Route::middleware('auth')->group(function () {
     // 9. Materi Pelajaran
     Route::get('/materi', function () {
-        $materials = LearningMaterial::with(['subject', 'author'])
-            ->where('is_active', true)
-            ->orderBy('grade_level')
-            ->get();
+        $materials = Cache::remember('public_active_materials_v1', 300, function () {
+            return LearningMaterial::with(['subject', 'author'])
+                ->where('is_active', true)
+                ->orderBy('grade_level')
+                ->get();
+        });
         return view('pages.materials', compact('materials'));
     })->name('materials');
 
     // 10. Daftar Kuis Bank Soal
     Route::get('/latihan-soal', function () {
-        $questionBanks = QuestionBank::with('subject')
-            ->withCount('questions')
-            ->where('is_active', true)
-            ->orderBy('grade_level')
-            ->get();
+        $questionBanks = Cache::remember('public_active_question_banks_v1', 300, function () {
+            return QuestionBank::with('subject')
+                ->withCount('questions')
+                ->where('is_active', true)
+                ->orderBy('grade_level')
+                ->get();
+        });
 
         $myAttempts = \App\Models\QuizAttempt::with('bank.subject')
             ->where('user_id', auth()->id())
@@ -397,7 +402,7 @@ Route::get('/unduhan/{document}/download', function (\App\Models\SchoolDocument 
             'Content-Disposition' => 'attachment; filename="' . \Illuminate\Support\Str::slug($document->title) . '.txt"',
         ]
     );
-})->middleware('throttle:30,1')->name('downloads.file');
+})->middleware('throttle:300,1')->name('downloads.file');
 
 // 16. Kontak
 Route::get('/kontak', function () {

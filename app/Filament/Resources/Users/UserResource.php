@@ -25,6 +25,11 @@ class UserResource extends Resource
         return ['name', 'email', 'nisn', 'nip'];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with('roles');
+    }
+
     public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
     {
         return [

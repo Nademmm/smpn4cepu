@@ -181,6 +181,7 @@
                 currentIndex: 0,
                 total: {{ $totalQuestions }},
                 confirmFinish: false,
+                selectedAnswers: @entangle('answers'),
                 timeLeft: {{ $durationSeconds }},
                 timer: null,
                 init() {
@@ -240,23 +241,27 @@
                             {{ $qIndex + 1 }}. {{ $question['question_text'] ?? ($question['text'] ?? '') }}
                         </h2>
 
-                        {{-- Opsi Jawaban Radio Card --}}
+                        {{-- Opsi Jawaban Radio Card (Client-Side Alpine Entangle: 0ms Instan, 0 Server Request saat Klik) --}}
                         <div class="grid gap-3">
                             @foreach ($question['options'] as $optIndex => $option)
                                 @php
                                     $optLetter = chr(65 + $optIndex);
                                 @endphp
                                 <label
-                                    class="flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border-2 cursor-pointer transition-all focus-within:ring-2 focus-within:ring-brand {{ ($answers[$question['id']] ?? null) == $option['id'] ? 'bg-sky-soft border-brand text-brand font-extrabold' : 'border-sun-soft bg-white text-navy hover:border-brand font-bold' }}"
+                                    class="flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border-2 cursor-pointer transition-all focus-within:ring-2 focus-within:ring-brand"
+                                    :class="selectedAnswers[{{ $question['id'] }}] == {{ $option['id'] }} ? 'bg-sky-soft border-brand text-brand font-extrabold' : 'border-sun-soft bg-white text-navy hover:border-brand font-bold'"
                                 >
                                     <input
                                         type="radio"
                                         name="question_{{ $question['id'] }}"
                                         value="{{ $option['id'] }}"
-                                        wire:model.live="answers.{{ $question['id'] }}"
+                                        x-model="selectedAnswers[{{ $question['id'] }}]"
                                         class="sr-only"
                                     >
-                                    <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 border-2 {{ ($answers[$question['id']] ?? null) == $option['id'] ? 'bg-brand text-white border-brand' : 'border-ink-mute text-ink-mute bg-white' }}">
+                                    <span
+                                        class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 border-2"
+                                        :class="selectedAnswers[{{ $question['id'] }}] == {{ $option['id'] }} ? 'bg-brand text-white border-brand' : 'border-ink-mute text-ink-mute bg-white'"
+                                    >
                                         {{ $optLetter }}
                                     </span>
                                     <span class="text-sm sm:text-base leading-snug">
@@ -317,8 +322,11 @@
                             type="button"
                             @click="currentIndex = {{ $qIndex }}"
                             aria-label="Soal nomor {{ $qIndex + 1 }}"
-                            class="w-10 h-10 min-h-[40px] rounded-xl text-xs font-black transition-all flex items-center justify-center border-2 {{ isset($answers[$question['id']]) ? 'bg-sky-soft text-brand border-brand' : 'bg-white text-ink-mute border-sun-soft hover:border-brand' }}"
-                            :class="currentIndex === {{ $qIndex }} ? 'ring-2 ring-brand ring-offset-2' : ''"
+                            class="w-10 h-10 min-h-[40px] rounded-xl text-xs font-black transition-all flex items-center justify-center border-2"
+                            :class="[
+                                selectedAnswers[{{ $question['id'] }}] ? 'bg-sky-soft text-brand border-brand' : 'bg-white text-ink-mute border-sun-soft hover:border-brand',
+                                currentIndex === {{ $qIndex }} ? 'ring-2 ring-brand ring-offset-2' : ''
+                            ]"
                         >
                             {{ $qIndex + 1 }}
                         </button>

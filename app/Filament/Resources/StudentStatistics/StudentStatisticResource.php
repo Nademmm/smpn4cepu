@@ -41,12 +41,12 @@ class StudentStatisticResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Profil & Informasi';
+        return 'Kesiswaan';
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Statistik Siswa';
+        return 'Rekap Statistik Rombel';
     }
 
     public static function getModelLabel(): string
@@ -56,12 +56,12 @@ class StudentStatisticResource extends Resource
 
     public static function getPluralModelLabel(): string
     {
-        return 'Statistik Siswa';
+        return 'Rekap Statistik Rombel';
     }
 
     public static function getNavigationSort(): ?int
     {
-        return 4;
+        return 2;
     }
 
     public static function form(Schema $schema): Schema

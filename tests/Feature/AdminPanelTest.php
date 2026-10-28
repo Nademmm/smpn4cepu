@@ -55,8 +55,12 @@ class AdminPanelTest extends TestCase
             '/admin/school-settings',
             '/admin/staff-members',
             '/admin/staff-members/create',
+            '/admin/students',
+            '/admin/students/create',
             '/admin/student-statistics',
             '/admin/student-statistics/create',
+            '/admin/quiz-attempts',
+            '/admin/election-votes',
             '/admin/subjects',
             '/admin/subjects/create',
             '/admin/users',
@@ -72,7 +76,7 @@ class AdminPanelTest extends TestCase
 
     public function test_rbac_role_isolation_on_admin_panel(): void
     {
-        $student = User::where('nisn', '0081234567')->first();
+        $student = User::whereNotNull('nisn')->first();
         $this->assertNotNull($student);
         $this->actingAs($student)->get('/admin')->assertStatus(403);
 
@@ -81,8 +85,11 @@ class AdminPanelTest extends TestCase
         $this->flushSession();
         $this->actingAs($guru)->get('/admin/learning-materials')->assertStatus(200);
         $this->actingAs($guru)->get('/admin/question-banks')->assertStatus(200);
+        $this->actingAs($guru)->get('/admin/students')->assertStatus(200);
+        $this->actingAs($guru)->get('/admin/quiz-attempts')->assertStatus(200);
         $this->actingAs($guru)->get('/admin/users')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/election-candidates')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/election-votes')->assertStatus(403);
 
         $perpus = User::where('email', 'perpus@smpn4cepu.sch.id')->first();
         $this->assertNotNull($perpus);
@@ -90,11 +97,14 @@ class AdminPanelTest extends TestCase
         $this->actingAs($perpus)->get('/admin/library-books')->assertStatus(200);
         $this->actingAs($perpus)->get('/admin/book-reservations')->assertStatus(200);
         $this->actingAs($perpus)->get('/admin/users')->assertStatus(403);
+        $this->actingAs($perpus)->get('/admin/students')->assertStatus(403);
 
         $pilketos = User::where('email', 'pilketos@smpn4cepu.sch.id')->first();
         $this->assertNotNull($pilketos);
         $this->flushSession();
         $this->actingAs($pilketos)->get('/admin/election-candidates')->assertStatus(200);
+        $this->actingAs($pilketos)->get('/admin/election-votes')->assertStatus(200);
         $this->actingAs($pilketos)->get('/admin/users')->assertStatus(403);
+        $this->actingAs($pilketos)->get('/admin/students')->assertStatus(403);
     }
 }

@@ -5,15 +5,23 @@
         candidateNumber: '',
         candidateName: '',
         init() {
-            // Generate canvas-based hardware hash fingerprint
+            // Generate canvas-based hardware hash + persistent per-browser device UUID (aman untuk 600+ siswa di Wi-Fi sekolah yang sama)
             try {
+                let deviceId = localStorage.getItem('pilketos_device_uid');
+                if (!deviceId) {
+                    deviceId = (window.crypto && crypto.randomUUID)
+                        ? crypto.randomUUID()
+                        : ('HW-' + Math.random().toString(36).substring(2, 15) + '-' + Date.now().toString(36));
+                    localStorage.setItem('pilketos_device_uid', deviceId);
+                }
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 ctx.textBaseline = 'top';
                 ctx.font = '14px Arial';
                 ctx.fillText('SMPN4CEPU-PILKETOS', 2, 2);
-                const hash = btoa(canvas.toDataURL()).slice(0, 32);
-                $wire.set('clientHardwareHash', hash);
+                const dataUrl = canvas.toDataURL();
+                const tailHash = btoa(dataUrl.slice(-48)).slice(0, 24);
+                $wire.set('clientHardwareHash', deviceId + '-' + tailHash);
             } catch(e) {
                 $wire.set('clientHardwareHash', 'HW-' + Math.random().toString(36).substring(2, 15));
             }

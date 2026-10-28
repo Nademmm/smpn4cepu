@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -64,13 +65,27 @@ class LoginController extends Controller
                 ]);
         }
 
-        // Cari user berdasarkan identifier unik terlebih dahulu (email, NISN, NIP), lalu fallback ke nama akun
-        $user = User::where('email', $loginInput)
-            ->orWhere('nisn', $loginInput)
-            ->orWhere('nip', $loginInput)
-            ->first() ?? User::where('name', $loginInput)->first();
+        // Cari user secara terarah menggunakan indeks spesifik (email / NISN / NIP) dengan eager-loading roles
+        $user = null;
+        if (str_contains($loginInput, '@')) {
+            $user = User::with('roles')->where('email', Str::lower($loginInput))->first();
+        } elseif (ctype_digit($loginInput) && strlen($loginInput) <= 12) {
+            $user = User::with('roles')->where('nisn', $loginInput)->first();
+        } elseif (ctype_digit($loginInput) && strlen($loginInput) > 12) {
+            $user = User::with('roles')->where('nip', $loginInput)->first();
+        }
 
-        if ($user && Auth::attempt(['email' => $user->email, 'password' => $password], $remember)) {
+        if (! $user) {
+            $user = User::with('roles')
+                ->where('email', $loginInput)
+                ->orWhere('nisn', $loginInput)
+                ->orWhere('nip', $loginInput)
+                ->first()
+                ?? User::with('roles')->whereRaw('LOWER(name) = ?', [Str::lower($loginInput)])->first();
+        }
+
+        if ($user && Hash::check($password, $user->password)) {
+            Auth::login($user, $remember);
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 

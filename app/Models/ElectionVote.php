@@ -22,6 +22,25 @@ class ElectionVote extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::deleted(function (self $vote) {
+            if ($vote->device_id) {
+                ElectionDevice::where('id', $vote->device_id)->delete();
+            }
+
+            if ($vote->candidate_id) {
+                $actualCount = self::where('candidate_id', $vote->candidate_id)->count();
+                ElectionCandidate::where('id', $vote->candidate_id)->update([
+                    'total_votes_cached' => $actualCount,
+                ]);
+            }
+
+            \Illuminate\Support\Facades\Cache::forget('pilketos_public_live_count');
+            \Illuminate\Support\Facades\Cache::forget('pilketos_admin_chart_data');
+        });
+    }
+
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(ElectionCandidate::class, 'candidate_id');

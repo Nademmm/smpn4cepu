@@ -1,4 +1,4 @@
-<div wire:poll.5s class="space-y-6">
+<div wire:poll.8s.visible class="space-y-6">
     {{-- Header Status Live Count --}}
     <div class="card p-5 sm:p-6 bg-white border border-sand/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div class="space-y-1">

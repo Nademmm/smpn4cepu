@@ -30,7 +30,11 @@ class PostForm
 
                 Select::make('author_id')
                     ->label('Penulis / Kontributor')
-                    ->relationship('author', 'name')
+                    ->relationship(
+                        'author',
+                        'name',
+                        modifyQueryUsing: fn ($query) => $query->whereHas('roles', fn ($q) => $q->whereIn('name', ['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
+                    )
                     ->searchable()
                     ->preload()
                     ->default(fn () => auth()->id())

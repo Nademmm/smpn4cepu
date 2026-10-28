@@ -22,6 +22,11 @@ class PilketosFingerprintService
      */
     public function generateFingerprint(Request $request, string $clientHardwareHash): string
     {
+        // Jika pemilih masuk dengan akun siswa/guru resmi, ikatkan hak suara secara eksklusif ke ID akun (1 Akun = 1 Suara, aman di Lab Komputer bersama)
+        if (auth()->check()) {
+            return hash('sha256', 'AUTH_VOTER_USER_ID|' . auth()->id());
+        }
+
         $userAgent = $request->userAgent() ?? 'UNKNOWN_UA';
         $ip = $request->ip() ?? '127.0.0.1';
 
@@ -38,11 +43,16 @@ class PilketosFingerprintService
     }
 
     /**
-     * Periksa apakah perangkat ini sudah memberikan suara berdasarkan fingerprint atau token cookie.
+     * Periksa apakah perangkat atau akun ini sudah memberikan suara berdasarkan fingerprint atau token cookie.
      */
     public function hasAlreadyVoted(Request $request, ?string $fingerprint = null): bool
     {
-        // 1. Periksa cookie token pemilih
+        if (auth()->check()) {
+            $userFp = $fingerprint ?? $this->generateFingerprint($request, '');
+            return ElectionDevice::where('device_fingerprint', $userFp)->exists();
+        }
+
+        // 1. Periksa cookie token pemilih (untuk mode tamu/non-login)
         $cookieToken = $request->cookie(self::COOKIE_NAME);
         if (!empty($cookieToken)) {
             return true;

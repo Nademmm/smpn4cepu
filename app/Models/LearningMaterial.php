@@ -32,6 +32,16 @@ class LearningMaterial extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('public_active_materials_v1');
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('public_active_materials_v1');
+        });
+    }
+
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
