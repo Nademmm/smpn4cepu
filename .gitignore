@@ -26,3 +26,8 @@ yarn-error.log
 temp_students.xlsx
 *.xlsx
 
+
+# Skrip ekspor lokal (memuat logika data akun), jangan di-commit
+/scripts
+/data_semua_akun_*
+/storage/app/data_semua_akun_*
