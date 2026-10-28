@@ -64,6 +64,8 @@ jobs:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     env:
+      HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+      HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
       HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
       DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
 
@@ -81,8 +83,20 @@ jobs:
           npm ci
           npm run build
 
+      - name: Validate Deployment Configuration
+        run: |
+          if [ -z "$HOSTINGER_HOST" ] || [ -z "$HOSTINGER_USER" ] || [ -z "$HOSTINGER_SSH_KEY" ]; then
+            echo "⚠️ Konfigurasi SSH Secrets belum lengkap di GitHub Repository Secrets:"
+            [ -z "$HOSTINGER_HOST" ] && echo "  - HOSTINGER_HOST (Belum diisi - IP / Hostname SSH Hostinger)"
+            [ -z "$HOSTINGER_USER" ] && echo "  - HOSTINGER_USER (Belum diisi - Username SSH, misal u652241328)"
+            [ -z "$HOSTINGER_SSH_KEY" ] && echo "  - HOSTINGER_SSH_KEY (Belum diisi - Private Key SSH)"
+            echo "Silakan lengkapi di GitHub: Repo Settings -> Secrets and variables -> Actions."
+          else
+            echo "✅ Konfigurasi SSH Secrets terdeteksi lengkap. Melanjutkan deploy via SSH..."
+          fi
+
       - name: Upload Fresh Vite Build to Hostinger
-        if: env.HOSTINGER_SSH_KEY != ''
+        if: env.HOSTINGER_SSH_KEY != '' && env.HOSTINGER_HOST != '' && env.HOSTINGER_USER != ''
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOSTINGER_HOST }}
@@ -90,11 +104,11 @@ jobs:
           username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
           source: "public/build"
-          target: "${{ secrets.HOSTINGER_APP_DIR || '/home/' }}"
+          target: "${{ secrets.HOSTINGER_APP_DIR || '/home/u652241328/domains/smpn4cepu.sch.id/laravel_app' }}"
           strip_components: 0
 
       - name: Execute Remote Deployment via SSH
-        if: env.HOSTINGER_SSH_KEY != ''
+        if: env.HOSTINGER_SSH_KEY != '' && env.HOSTINGER_HOST != '' && env.HOSTINGER_USER != ''
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOSTINGER_HOST }}
@@ -103,10 +117,10 @@ jobs:
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
           script_stop: true
           script: |
-            bash "$HOME/domains/smpn4cepu.sch.id/laravel_app/deploy.sh"
+            bash "${{ secrets.HOSTINGER_APP_DIR || '/home/u652241328/domains/smpn4cepu.sch.id/laravel_app' }}/deploy.sh"
 
       - name: Fallback Webhook Trigger (Optional)
-        if: env.HOSTINGER_SSH_KEY == '' && env.DEPLOY_WEBHOOK_URL != ''
+        if: (env.HOSTINGER_SSH_KEY == '' || env.HOSTINGER_HOST == '' || env.HOSTINGER_USER == '') && env.DEPLOY_WEBHOOK_URL != ''
         run: |
           echo "Triggering deployment webhook..."
           curl -X POST -f "$DEPLOY_WEBHOOK_URL" || echo "Webhook trigger warning: Check URL secret."
