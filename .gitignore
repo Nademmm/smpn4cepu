@@ -23,4 +23,6 @@ yarn-error.log
 /.idea
 /.vscode
 /scratch
+temp_students.xlsx
+*.xlsx
 

@@ -170,7 +170,7 @@ class QuizRoom extends Component
         $this->studentClass = $cohort;
 
         $user = Auth::user();
-        if ($user && $user->student_class !== $cohort) {
+        if ($user && $this->normalizeCohort((string) $user->student_class, $this->gradeLevel) !== $cohort) {
             $user->update(['student_class' => $cohort]);
         }
 

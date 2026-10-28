@@ -11,9 +11,29 @@ class UserForm
     public static function configure(Schema $schema): Schema
     {
         $gradeCohortOptions = [
-            'Kelas 7' => 'Kelas VII (Angkatan Kelas 7)',
-            'Kelas 8' => 'Kelas VIII (Angkatan Kelas 8)',
-            'Kelas 9' => 'Kelas IX (Angkatan Kelas 9)',
+            'Kelas 7' => 'Kelas VII (Umum)',
+            '7A' => 'Kelas 7A',
+            '7B' => 'Kelas 7B',
+            '7C' => 'Kelas 7C',
+            '7D' => 'Kelas 7D',
+            '7E' => 'Kelas 7E',
+            '7F' => 'Kelas 7F',
+            '7G' => 'Kelas 7G',
+            'Kelas 8' => 'Kelas VIII (Umum)',
+            '8A' => 'Kelas 8A',
+            '8B' => 'Kelas 8B',
+            '8C' => 'Kelas 8C',
+            '8D' => 'Kelas 8D',
+            '8E' => 'Kelas 8E',
+            '8F' => 'Kelas 8F',
+            '8G' => 'Kelas 8G',
+            'Kelas 9' => 'Kelas IX (Umum)',
+            '9A' => 'Kelas 9A',
+            '9B' => 'Kelas 9B',
+            '9C' => 'Kelas 9C',
+            '9D' => 'Kelas 9D',
+            '9E' => 'Kelas 9E',
+            '9F' => 'Kelas 9F',
         ];
 
         return $schema
