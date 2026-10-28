@@ -2,7 +2,7 @@
     RewriteEngine On
 
     # 1. Proteksi Keamanan: Blokir mutlak akses ke berkas & folder sensitif Laravel
-    RewriteRule ^(\.env|\.git|composer\.(json|lock)|package(-lock)?\.json|Dockerfile|railway\.json|deploy\.sh) - [F,L,NC]
+    RewriteRule ^(\.env|\.git|composer\.(json|lock)|package(-lock)?\.json|Dockerfile|deploy\.sh) - [F,L,NC]
     RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)/ - [F,L,NC]
 
     # 2. Pengalihan Otomatis: Arahkan seluruh trafik ke subfolder public/ secara transparan
