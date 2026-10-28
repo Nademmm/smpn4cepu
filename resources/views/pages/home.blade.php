@@ -1,4 +1,4 @@
-<x-layouts.app title="Beranda" metaDescription="Portal resmi SMP Negeri 4 Cepu, Blora: berita sekolah, profil, direktori guru, perpustakaan digital, dan materi belajar untuk siswa dan orang tua.">
+<x-layouts.app title="Beranda" metaDescription="Situs resmi SMP Negeri 4 Cepu (SMPN 4 Cepu), Blora, Jawa Tengah: berita sekolah, profil, direktori guru, perpustakaan digital, dan materi belajar untuk siswa dan orang tua.">
     {{-- Hero Section dengan Logo SMPN 4 Cepu Lurus & Menyatu di Background --}}
     <section class="relative overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
         {{-- Lingkaran Cahaya Dekoratif Latar Belakang --}}

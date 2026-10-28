@@ -3,8 +3,8 @@
 <head>
     @php
         $siteName = 'SMP Negeri 4 Cepu';
-        $defaultTitle = $siteName . ' - Satu Sekolah, Satu Ruang Digital';
-        $defaultDescription = 'Portal Resmi dan Layanan Digital Terpadu SMP Negeri 4 Cepu (NPSN: 20314928), Blora, Jawa Tengah.';
+        $defaultTitle = $siteName . ' - Sekolah Menengah Pertama di Cepu, Blora';
+        $defaultDescription = 'Situs resmi SMP Negeri 4 Cepu (SMPN 4 Cepu, NPSN 20314928), Blora, Jawa Tengah: berita sekolah, profil, direktori guru, perpustakaan digital, dan layanan belajar daring.';
 
         $pageTitle = (isset($title) && $title !== '' && $title !== 'Beranda' && $title !== $siteName)
             ? (str_contains($title, $siteName) ? $title : $title . ' - ' . $siteName)
@@ -16,40 +16,54 @@
             '...'
         );
 
+        // Seluruh URL SEO memakai domain utama dari APP_URL, bukan host request (hindari duplikat www / domain sementara)
+        $baseUrl = \App\Support\Seo::baseUrl();
+        $logoUrl = \App\Support\Seo::url('/images/logo.png');
+
         $hasOwnImage = ! empty($metaImage);
-        $pageImage = $metaImage ?? asset('images/logo.png');
+        $pageImage = $hasOwnImage ? \App\Support\Seo::absoluteAsset($metaImage) : $logoUrl;
         $pageOgType = $ogType ?? 'website';
 
         $currentPage = (int) request()->query('page', 1);
-        $canonicalUrl = url()->current() . ($currentPage > 1 ? '?page=' . $currentPage : '');
+        $canonicalUrl = \App\Support\Seo::url(trim(request()->path(), '/')) . ($currentPage > 1 ? '?page=' . $currentPage : '');
 
         $isNoindex = ! empty($noindex) || request()->filled('q');
-        $robotsContent = $isNoindex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
+        $robotsContent = $isNoindex
+            ? 'noindex, follow'
+            : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
         $sameAs = array_values(array_filter([
             $schoolSetting->instagram_url ?? null,
             $schoolSetting->youtube_url ?? null,
             $schoolSetting->facebook_url ?? null,
             $schoolSetting->tiktok_url ?? null,
+            config('seo.kemdikbud_profile_url'),
         ]));
+
+        $weekdayHours = [
+            ['dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], 'opens' => '07:00', 'closes' => '14:00'],
+            ['dayOfWeek' => 'Friday', 'opens' => '07:00', 'closes' => '11:00'],
+            ['dayOfWeek' => 'Saturday', 'opens' => '07:00', 'closes' => '13:00'],
+        ];
 
         $schemaGraph = [
             '@context' => 'https://schema.org',
             '@graph' => [
                 array_filter([
                     '@type' => 'EducationalOrganization',
-                    '@id' => url('/') . '#school',
+                    '@id' => $baseUrl . '#school',
                     'name' => $siteName,
-                    'alternateName' => 'SMPN 4 Cepu',
-                    'identifier' => '20314928',
-                    'url' => url('/'),
+                    'alternateName' => ['SMPN 4 Cepu', 'SMP 4 Cepu'],
+                    'description' => $defaultDescription,
+                    'identifier' => config('seo.npsn'),
+                    'url' => $baseUrl,
                     'logo' => [
                         '@type' => 'ImageObject',
-                        'url' => asset('images/logo.png'),
+                        'url' => $logoUrl,
                         'width' => 300,
                         'height' => 300,
                     ],
-                    'image' => asset('images/logo.png'),
+                    'image' => $logoUrl,
                     'telephone' => $schoolSetting->school_phone ?? '(0296) 421631',
                     'email' => $schoolSetting->school_email ?? 'smpn4cepu@gmail.com',
                     'foundingDate' => '1979-09-04',
@@ -63,19 +77,37 @@
                     ],
                     'geo' => [
                         '@type' => 'GeoCoordinates',
-                        'latitude' => -7.1576081,
-                        'longitude' => 111.5662531,
+                        'latitude' => config('seo.latitude'),
+                        'longitude' => config('seo.longitude'),
                     ],
+                    'hasMap' => 'https://www.google.com/maps?q=' . config('seo.latitude') . ',' . config('seo.longitude'),
+                    'areaServed' => 'Cepu, Kabupaten Blora, Jawa Tengah',
+                    'openingHoursSpecification' => array_map(
+                        fn (array $h) => ['@type' => 'OpeningHoursSpecification'] + $h,
+                        $weekdayHours
+                    ),
                     'sameAs' => $sameAs ?: null,
                 ]),
                 [
                     '@type' => 'WebSite',
-                    '@id' => url('/') . '#website',
-                    'url' => url('/'),
+                    '@id' => $baseUrl . '#website',
+                    'url' => $baseUrl,
                     'name' => $siteName,
+                    'alternateName' => 'SMPN 4 Cepu',
                     'inLanguage' => 'id-ID',
-                    'publisher' => ['@id' => url('/') . '#school'],
+                    'publisher' => ['@id' => $baseUrl . '#school'],
                 ],
+                array_filter([
+                    '@type' => $pageType ?? 'WebPage',
+                    '@id' => $canonicalUrl . '#webpage',
+                    'url' => $canonicalUrl,
+                    'name' => $pageTitle,
+                    'description' => $pageDescription,
+                    'inLanguage' => 'id-ID',
+                    'isPartOf' => ['@id' => $baseUrl . '#website'],
+                    'about' => ['@id' => $baseUrl . '#school'],
+                    'primaryImageOfPage' => $hasOwnImage ? ['@type' => 'ImageObject', 'url' => $pageImage] : null,
+                ]),
             ],
         ];
     @endphp
@@ -87,6 +119,22 @@
     <meta name="description" content="{{ $pageDescription }}">
     <meta name="robots" content="{{ $robotsContent }}">
     <link rel="canonical" href="{{ $canonicalUrl }}">
+    <link rel="alternate" hreflang="id" href="{{ $canonicalUrl }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
+    <link rel="alternate" type="application/rss+xml" title="Berita {{ $siteName }}" href="{{ $baseUrl }}/feed.xml">
+
+    @if (config('seo.google_site_verification'))
+        <meta name="google-site-verification" content="{{ config('seo.google_site_verification') }}">
+    @endif
+    @if (config('seo.bing_site_verification'))
+        <meta name="msvalidate.01" content="{{ config('seo.bing_site_verification') }}">
+    @endif
+
+    {{-- Sinyal lokasi untuk pencarian lokal (Cepu, Blora) --}}
+    <meta name="geo.region" content="ID-JT">
+    <meta name="geo.placename" content="Cepu, Blora">
+    <meta name="geo.position" content="{{ config('seo.latitude') }};{{ config('seo.longitude') }}">
+    <meta name="ICBM" content="{{ config('seo.latitude') }}, {{ config('seo.longitude') }}">
 
     {{-- Open Graph / Facebook & WhatsApp Share Card --}}
     <meta property="og:type" content="{{ $pageOgType }}">
@@ -97,16 +145,21 @@
     <meta property="og:description" content="{{ $pageDescription }}">
     <meta property="og:image" content="{{ $pageImage }}">
     <meta property="og:image:alt" content="{{ $hasOwnImage ? $pageTitle : 'Logo ' . $siteName }}">
+    @unless ($hasOwnImage)
+        <meta property="og:image:width" content="300">
+        <meta property="og:image:height" content="300">
+    @endunless
 
     {{-- Twitter Cards: kartu besar hanya bila halaman punya gambar sendiri --}}
     <meta name="twitter:card" content="{{ $hasOwnImage ? 'summary_large_image' : 'summary' }}">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDescription }}">
     <meta name="twitter:image" content="{{ $pageImage }}">
+    <meta name="twitter:image:alt" content="{{ $hasOwnImage ? $pageTitle : 'Logo ' . $siteName }}">
 
     @stack('meta')
 
-    {{-- Schema.org JSON-LD: Organisasi Pendidikan + WebSite --}}
+    {{-- Schema.org JSON-LD: Organisasi Pendidikan + WebSite + WebPage --}}
     <script type="application/ld+json">{!! json_encode($schemaGraph, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
 
     {{-- Favicon / Icon Tab Browser --}}

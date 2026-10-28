@@ -1,4 +1,4 @@
-<x-layouts.app title="Berita & Informasi" metaDescription="Berita, pengumuman, dan agenda terbaru SMP Negeri 4 Cepu seputar kegiatan sekolah, prestasi siswa, dan informasi resmi untuk orang tua.">
+<x-layouts.app title="Berita & Informasi" pageType="CollectionPage" metaDescription="Berita, pengumuman, dan agenda terbaru SMP Negeri 4 Cepu seputar kegiatan sekolah, prestasi siswa, dan informasi resmi untuk orang tua.">
     <x-page-header
         title="Berita Sekolah"
         subtitle="Informasi terkini seputar kegiatan dan prestasi SMP Negeri 4 Cepu"

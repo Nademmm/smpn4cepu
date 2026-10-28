@@ -55,7 +55,11 @@ fi
 
 # 6. Sinkronisasi seluruh file public ke public_html
 echo "==> [6/8] Menyinkronkan aset ke direktori web public_html..."
-rsync -av --exclude='index.php' --exclude='.htaccess' --exclude='storage' "$APP_DIR/public/" "$DOCROOT/"
+rsync -av --exclude='index.php' --exclude='.htaccess' --exclude='storage' --exclude='robots.txt' --exclude='sitemap.xml' "$APP_DIR/public/" "$DOCROOT/"
+
+# robots.txt, sitemap.xml, dan feed.xml dilayani dinamis oleh Laravel (SeoController).
+# Hapus salinan statis usang di docroot karena berkas statis menimpa rute dinamis.
+rm -f "$DOCROOT/robots.txt" "$DOCROOT/sitemap.xml" "$DOCROOT/feed.xml"
 
 # Pastikan symlink storage terhubung langsung via shell
 ln -sfn "$APP_DIR/storage/app/public" "$DOCROOT/storage"

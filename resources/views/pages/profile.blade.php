@@ -1,4 +1,4 @@
-<x-layouts.app title="Profil, Sejarah & Visi Misi" metaDescription="Sejarah, visi CERIA BERIMAN, dan 11 butir misi SMP Negeri 4 Cepu, sekolah yang berdiri sejak 4 September 1979 di Desa Mulyorejo, Cepu, Blora.">
+<x-layouts.app title="Profil, Sejarah & Visi Misi" pageType="AboutPage" metaDescription="Sejarah, visi CERIA BERIMAN, dan 11 butir misi SMP Negeri 4 Cepu, sekolah yang berdiri sejak 4 September 1979 di Desa Mulyorejo, Cepu, Blora.">
     <x-page-header
         title="Profil & Visi Misi Sekolah"
         subtitle="Mengenal lebih dekat identitas, sejarah berdirinya, visi misi, dan karakteristik satuan pendidikan SMP Negeri 4 Cepu."

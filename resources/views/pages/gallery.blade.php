@@ -1,4 +1,4 @@
-<x-layouts.app title="Galeri Foto Kegiatan" metaDescription="Galeri foto kegiatan SMP Negeri 4 Cepu: pembelajaran, upacara, ekstrakurikuler, dan momen kebersamaan warga sekolah.">
+<x-layouts.app title="Galeri Foto Kegiatan" pageType="ImageGallery" metaDescription="Galeri foto kegiatan SMP Negeri 4 Cepu: pembelajaran, upacara, ekstrakurikuler, dan momen kebersamaan warga sekolah.">
     <x-page-header
         title="Galeri Kegiatan"
         subtitle="Dokumentasi aktivitas pembelajaran, ekstrakurikuler, dan momentum kebersamaan di SMP Negeri 4 Cepu."

@@ -197,11 +197,46 @@ class PublicRoutesTest extends TestCase
         $home = $this->get('/');
         $home->assertOk();
         $home->assertSee('<link rel="canonical" href="' . url('/') . '">', false);
-        $home->assertSee('content="index, follow, max-image-preview:large"', false);
+        $home->assertSee('content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"', false);
         $home->assertSee('"@type":"EducationalOrganization"', false);
+        $home->assertSee('"@type":"WebPage"', false);
+        $home->assertSee('"openingHoursSpecification"', false);
+        $home->assertSee('type="application/rss+xml"', false);
+        $home->assertSee('name="geo.region"', false);
         $home->assertDontSee('fonts.googleapis.com', false);
 
         $this->get('/login')->assertSee('content="noindex, follow"', false);
         $this->get('/pilketos')->assertSee('content="noindex, follow"', false);
         $this->get('/berita?q=lomba')->assertSee('content="noindex, follow"', false);
-    }}
+    }
+
+    public function test_seo_machine_endpoints_are_cookie_free_and_valid(): void
+    {
+        foreach (['/sitemap.xml', '/robots.txt', '/feed.xml'] as $uri) {
+            $response = $this->get($uri);
+            $response->assertOk();
+            $this->assertEmpty($response->headers->getCookies(), "Respons {$uri} tidak boleh mengirim cookie");
+        }
+
+        $sitemap = $this->get('/sitemap.xml')->getContent();
+        $this->assertNotFalse(simplexml_load_string($sitemap), 'Sitemap harus XML valid');
+        $this->assertStringContainsString('<lastmod>', $sitemap);
+
+        $feed = $this->get('/feed.xml');
+        $this->assertNotFalse(simplexml_load_string($feed->getContent()), 'Feed harus XML valid');
+        $this->assertStringContainsString('application/rss+xml', $feed->headers->get('Content-Type'));
+    }
+
+    public function test_post_detail_has_news_article_schema_and_multilevel_breadcrumb(): void
+    {
+        $post = Post::published()->first();
+        $this->assertNotNull($post, 'Seeder harus menyediakan minimal satu berita terbit');
+
+        $response = $this->get(route('post.detail', $post->slug));
+        $response->assertOk();
+        $response->assertSee('"@type":"NewsArticle"', false);
+        $response->assertSee('"@type":"EducationalOrganization"', false);
+        $response->assertSee('<meta itemprop="position" content="3" />', false);
+        $response->assertSee('<link rel="canonical" href="' . url('/berita/' . $post->slug) . '">', false);
+    }
+}

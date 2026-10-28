@@ -409,85 +409,18 @@ Route::get('/kontak', function () {
     return view('pages.contact');
 })->name('contact');
 
-// 17. Sitemap XML Dinamis untuk SEO (di-cache, otomatis dibersihkan saat berita berubah)
-Route::get('/sitemap.xml', function () {
-    $xml = Cache::remember('public_sitemap_xml_v1', 3600, function () {
-        // Halaman noindex (e-voting, kuis, materi, login) sengaja tidak dimasukkan
-        $staticRoutes = [
-            'home' => ['daily', '1.0'],
-            'profile' => ['monthly', '0.8'],
-            'achievements' => ['monthly', '0.7'],
-            'extracurriculars' => ['monthly', '0.7'],
-            'facilities' => ['monthly', '0.7'],
-            'staff' => ['monthly', '0.7'],
-            'student-stats' => ['monthly', '0.6'],
-            'library' => ['weekly', '0.7'],
-            'posts' => ['daily', '0.9'],
-            'gallery' => ['weekly', '0.6'],
-            'downloads' => ['monthly', '0.6'],
-            'contact' => ['yearly', '0.6'],
-        ];
-
-        $urls = [];
-        foreach ($staticRoutes as $routeName => [$changefreq, $priority]) {
-            $urls[] = ['loc' => route($routeName), 'lastmod' => null, 'changefreq' => $changefreq, 'priority' => $priority];
-        }
-
-        try {
-            foreach (Post::published()->orderByDesc('published_at')->get(['slug', 'updated_at', 'published_at']) as $post) {
-                $urls[] = [
-                    'loc' => route('post.detail', $post->slug),
-                    'lastmod' => ($post->updated_at ?? $post->published_at)?->toAtomString(),
-                    'changefreq' => 'monthly',
-                    'priority' => '0.7',
-                ];
-            }
-        } catch (\Throwable $e) {
-            // Fallback aman bila tabel belum dimigrasi
-        }
-
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
-        foreach ($urls as $u) {
-            $xml .= "  <url>\n";
-            $xml .= '    <loc>' . htmlspecialchars($u['loc'], ENT_XML1) . "</loc>\n";
-            if ($u['lastmod']) {
-                $xml .= "    <lastmod>{$u['lastmod']}</lastmod>\n";
-            }
-            $xml .= "    <changefreq>{$u['changefreq']}</changefreq>\n";
-            $xml .= "    <priority>{$u['priority']}</priority>\n";
-            $xml .= "  </url>\n";
-        }
-
-        return $xml . "</urlset>\n";
-    });
-
-    return response($xml, 200, [
-        'Content-Type' => 'application/xml; charset=UTF-8',
-        'Cache-Control' => 'public, max-age=3600',
-    ]);
-})->name('sitemap');
-
-// 18. robots.txt dinamis agar Sitemap memakai URL absolut sesuai domain yang aktif
-Route::get('/robots.txt', function () {
-    // Halaman bertanda noindex (login, pilketos) sengaja tidak di-Disallow agar tag noindex tetap terbaca crawler
-    $lines = [
-        'User-agent: *',
-        'Disallow: /admin',
-        'Disallow: /livewire',
-        'Disallow: /logout',
-        'Disallow: /materi',
-        'Disallow: /latihan-soal',
-        'Disallow: /unduhan/*/download',
-        'Disallow: /*?q=',
-        '',
-        'Sitemap: ' . route('sitemap'),
-    ];
-
-    return response(implode("\n", $lines) . "\n", 200, [
-        'Content-Type' => 'text/plain; charset=UTF-8',
-        'Cache-Control' => 'public, max-age=3600',
-    ]);
-})->name('robots');
+// 17. Sitemap XML, robots.txt, dan RSS berita untuk SEO.
+// Dilayani tanpa session/cookie agar respons bersih dan bisa di-cache CDN maupun crawler.
+Route::withoutMiddleware([
+    \Illuminate\Cookie\Middleware\EncryptCookies::class,
+    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    \Illuminate\Session\Middleware\StartSession::class,
+    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+])->group(function () {
+    Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
+    Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+    Route::get('/feed.xml', [\App\Http\Controllers\SeoController::class, 'feed'])->name('feed');
+});
 
 

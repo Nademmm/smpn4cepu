@@ -57,16 +57,16 @@ class Post extends Model
 
     protected static function booted(): void
     {
-        static::saved(function () {
+        $flushPublicCaches = function () {
             \App\Support\PublicAssetResolver::flush();
             \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
-            \Illuminate\Support\Facades\Cache::forget('public_sitemap_xml_v1');
-        });
-        static::deleted(function () {
-            \App\Support\PublicAssetResolver::flush();
-            \Illuminate\Support\Facades\Cache::forget('public_home_data_v1');
-            \Illuminate\Support\Facades\Cache::forget('public_sitemap_xml_v1');
-        });
+            foreach (\App\Support\Seo::cacheKeys() as $key) {
+                \Illuminate\Support\Facades\Cache::forget($key);
+            }
+        };
+
+        static::saved($flushPublicCaches);
+        static::deleted($flushPublicCaches);
     }
 
     public function getFeaturedImageUrlAttribute(): ?string

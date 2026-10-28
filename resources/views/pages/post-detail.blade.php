@@ -11,21 +11,28 @@
         <script type="application/ld+json">{!! json_encode(array_filter([
             '@context' => 'https://schema.org',
             '@type' => 'NewsArticle',
-            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => route('post.detail', $post->slug)],
+            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => \App\Support\Seo::url('/berita/' . $post->slug)],
             'headline' => \Illuminate\Support\Str::limit($post->title, 110, ''),
             'description' => \Illuminate\Support\Str::limit(strip_tags((string) $post->excerpt), 200),
-            'image' => $post->featured_image_url ? [$post->featured_image_url] : null,
+            'image' => [\App\Support\Seo::absoluteAsset($post->featured_image_url) ?: \App\Support\Seo::url('/images/logo.png')],
             'datePublished' => ($post->published_at ?? $post->created_at)->toAtomString(),
             'dateModified' => $post->updated_at->toAtomString(),
+            'articleSection' => $post->category?->label(),
             'inLanguage' => 'id-ID',
             'author' => ['@type' => 'Person', 'name' => $post->author?->name ?? 'Admin Sekolah'],
-            'publisher' => ['@id' => url('/') . '#school'],
+            'publisher' => [
+                '@type' => 'EducationalOrganization',
+                '@id' => \App\Support\Seo::url('/') . '#school',
+                'name' => 'SMP Negeri 4 Cepu',
+                'logo' => ['@type' => 'ImageObject', 'url' => \App\Support\Seo::url('/images/logo.png')],
+            ],
         ]), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
     @endpush
 
     <x-page-header
         :title="$post->title"
-        crumb="Detail Berita"
+        :crumb="\Illuminate\Support\Str::limit($post->title, 60)"
+        :parents="[['Berita', route('posts')]]"
     />
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16">
