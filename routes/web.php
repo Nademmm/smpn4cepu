@@ -149,60 +149,8 @@ Route::get('/pilketos/live-count', function () {
 })->name('pilketos.live');
 
 // 8. Perpustakaan Digital (Katalog OPAC Modern)
-Route::get('/perpustakaan', function (Request $request) {
-    $query = LibraryBook::query();
-
-    if ($search = trim((string) $request->input('q'))) {
-        $query->where(function ($q) use ($search) {
-            $q->where('title', 'like', "%{$search}%")
-              ->orWhere('author', 'like', "%{$search}%")
-              ->orWhere('publisher', 'like', "%{$search}%")
-              ->orWhere('call_number', 'like', "%{$search}%")
-              ->orWhere('isbn', 'like', "%{$search}%");
-        });
-    }
-
-    if ($category = $request->input('category')) {
-        $query->where('category', $category);
-    }
-
-    if ($stock = $request->input('stock')) {
-        if ($stock === 'available') {
-            $query->where('available_stock', '>', 0);
-        } elseif ($stock === 'digital') {
-            $query->whereNotNull('digital_file_path');
-        }
-    }
-
-    $sort = $request->input('sort', 'newest');
-    if ($sort === 'title_asc') {
-        $query->orderBy('title', 'asc');
-    } elseif ($sort === 'title_desc') {
-        $query->orderBy('title', 'desc');
-    } elseif ($sort === 'year_desc') {
-        $query->orderBy('publication_year', 'desc');
-    } elseif ($sort === 'stock_desc') {
-        $query->orderBy('available_stock', 'desc');
-    } else {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    $books = $query->paginate(12)->withQueryString();
-    $libraryMeta = Cache::remember('public_library_meta_v1', 600, function () {
-        return [
-            'categories' => LibraryBook::select('category')->distinct()->whereNotNull('category')->pluck('category'),
-            'stats' => [
-                'total_titles' => LibraryBook::count(),
-                'total_copies' => (int) LibraryBook::sum('total_stock'),
-                'available_copies' => (int) LibraryBook::sum('available_stock'),
-                'digital_books' => LibraryBook::whereNotNull('digital_file_path')->count(),
-            ],
-        ];
-    });
-    $categories = $libraryMeta['categories'];
-    $stats = $libraryMeta['stats'];
-
-    return view('pages.library', compact('books', 'categories', 'stats'));
+Route::get('/perpustakaan', function () {
+    return view('pages.library');
 })->name('library');
 
 Route::post('/perpustakaan/reservasi', function (Request $request) {

@@ -1,0 +1,678 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Enums\BookCategory;
+use App\Models\Book;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+class BookSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // Pastikan direktori penyimpanan lokal siap
+        $disk = Storage::disk('public');
+        if (!$disk->exists('books/covers')) {
+            $disk->makeDirectory('books/covers');
+        }
+        if (!$disk->exists('books/ebooks')) {
+            $disk->makeDirectory('books/ebooks');
+        }
+
+        $books = [
+            // -----------------------------------------------------------------
+            // KELAS 7: BUKU PAKET KURIKULUM MERDEKA RESMI SMPN 4 CEPU
+            // -----------------------------------------------------------------
+            [
+                'title' => 'Matematika untuk SMP/MTs Kelas VII',
+                'isbn' => '9786022448839',
+                'author' => 'Hobri, Susanto, Mohammad Syaifuddin, dkk.',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2022,
+                'category' => BookCategory::KELAS_7->value,
+                'description' => 'Buku teks utama Kurikulum Merdeka yang memuat materi bilangan bulat dan rasional, bentuk aljabar, persamaan linear satu variabel, perbandingan, kesebangunan, serta penyajian data statistik kontekstual untuk siswa kelas VII SMP.',
+                'has_local_pdf' => true,
+                'page_count' => 288,
+                'language' => 'id',
+                'physical_stock' => 35,
+                'views_count' => 142,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#1F5FBF',
+            ],
+            [
+                'title' => 'Bahasa Indonesia: Nusantara Bertutur Kelas VII',
+                'isbn' => '9786022442998',
+                'author' => 'Rakhma Subarna, Sofie Dewayani, C. Erni Setyowati',
+                'publisher' => 'Pusat Kurikulum dan Perbukuan Kemendikbudristek',
+                'published_year' => 2021,
+                'category' => BookCategory::KELAS_7->value,
+                'description' => 'Menumbuhkan kecakapan literasi membaca teks deskripsi, puisi rakyat, cerita fantasi, serta keterampilan menulis kreatif berbasis kearifan lokal dan keberagaman budaya Nusantara.',
+                'has_local_pdf' => true,
+                'page_count' => 248,
+                'language' => 'id',
+                'physical_stock' => 32,
+                'views_count' => 118,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#1F5FBF',
+            ],
+            [
+                'title' => 'Ilmu Pengetahuan Alam (IPA) SMP Kelas VII',
+                'isbn' => '9786022443834',
+                'author' => 'Victoriani Inabuy, Cece Sutia, Okky Fajar Tri Maryana',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2021,
+                'category' => BookCategory::KELAS_7->value,
+                'description' => 'Mengeksplorasi hakikat sains dan metode ilmiah, zat dan perubahannya, suhu, kalor dan pemuaian, gerak dan gaya, hingga ekologi dan keanekaragaman hayati Indonesia.',
+                'has_local_pdf' => true,
+                'page_count' => 240,
+                'language' => 'id',
+                'physical_stock' => 30,
+                'views_count' => 165,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#1F5FBF',
+            ],
+            [
+                'title' => 'Ilmu Pengetahuan Sosial (IPS) Kelas VII',
+                'isbn' => '9786022443063',
+                'author' => 'M. Naras Shenandoah, Supardi, Mohammad Rizky Satria',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2021,
+                'category' => BookCategory::KELAS_7->value,
+                'description' => 'Memahami keberadaan diri dan keluarga di tengah lingkungan sosial, potensi ekonomi wilayah maritim dan agraris, serta interaksi dinamis masyarakat antarwilayah.',
+                'has_local_pdf' => false,
+                'page_count' => 272,
+                'language' => 'id',
+                'physical_stock' => 28,
+                'views_count' => 94,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#1F5FBF',
+            ],
+            [
+                'title' => 'English for Nusantara: Grade VII',
+                'isbn' => '9786022448853',
+                'author' => 'Ika Lestari Damayanti, Yusnita Febrianti, Pipit Prihartanti',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2022,
+                'category' => BookCategory::KELAS_7->value,
+                'description' => 'Pembelajaran bahasa Inggris komunikatif untuk siswa SMP dengan konteks kehidupan sehari-hari remaja Indonesia, mulai dari perkenalan, aktivitas sekolah, kuliner favorit, hingga deskripsi ruangan.',
+                'has_local_pdf' => false,
+                'page_count' => 264,
+                'language' => 'en',
+                'physical_stock' => 34,
+                'views_count' => 130,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#1F5FBF',
+            ],
+
+            // -----------------------------------------------------------------
+            // KELAS 8: BUKU PAKET KURIKULUM MERDEKA RESMI SMPN 4 CEPU
+            // -----------------------------------------------------------------
+            [
+                'title' => 'Matematika untuk SMP/MTs Kelas VIII',
+                'isbn' => '9786022447986',
+                'author' => 'Mohammad Tohir, Abdur Rahman Asari, Erik Valentino',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2022,
+                'category' => BookCategory::KELAS_8->value,
+                'description' => 'Memuat materi esensial teorema Pythagoras, sistem persamaan linear dua variabel, relasi dan fungsi, pola bilangan bertingkat, serta peluang empiris secara aplikatif dalam pemecahan masalah.',
+                'has_local_pdf' => true,
+                'page_count' => 272,
+                'language' => 'id',
+                'physical_stock' => 26,
+                'views_count' => 155,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#163D8A',
+            ],
+            [
+                'title' => 'Bahasa Indonesia SMP Kelas VIII',
+                'isbn' => '9786022446224',
+                'author' => 'Maya Lestari Gusfitri, Elly Delfia',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2021,
+                'category' => BookCategory::KELAS_8->value,
+                'description' => 'Melatih siswa menulis teks laporan hasil observasi, menyusun iklan, slogan, poster yang persuasif, menulis artikel ilmiah populer, serta mengapresiasi karya fiksi dan puisi modern.',
+                'has_local_pdf' => false,
+                'page_count' => 232,
+                'language' => 'id',
+                'physical_stock' => 25,
+                'views_count' => 88,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#163D8A',
+            ],
+            [
+                'title' => 'Ilmu Pengetahuan Alam (IPA) SMP Kelas VIII',
+                'isbn' => '9786022447894',
+                'author' => 'Sri Handayani Lestari, Marianna Magdalena, dkk.',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2021,
+                'category' => BookCategory::KELAS_8->value,
+                'description' => 'Kajian mendalam sistem pencernaan, sistem peredaran darah, sistem pernapasan manusia, struktur dan fungsi jaringan tumbuhan, gelombang bunyi, serta alat-alat optik.',
+                'has_local_pdf' => false,
+                'page_count' => 256,
+                'language' => 'id',
+                'physical_stock' => 24,
+                'views_count' => 140,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#163D8A',
+            ],
+            [
+                'title' => 'Informatika untuk SMP Kelas VIII',
+                'isbn' => '9786022446828',
+                'author' => 'Vania Natali, Mewati Ayub, dkk.',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2021,
+                'category' => BookCategory::KELAS_8->value,
+                'description' => 'Mempelajari konsep berpikir komputasional, algoritma pemrograman visual berbasis blok, teknologi jaringan komputer dan internet, analisis data digital, serta etika berinternet.',
+                'has_local_pdf' => true,
+                'page_count' => 280,
+                'language' => 'id',
+                'physical_stock' => 22,
+                'views_count' => 205,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#163D8A',
+            ],
+
+            // -----------------------------------------------------------------
+            // KELAS 9: BUKU PAKET KURIKULUM MERDEKA RESMI SMPN 4 CEPU
+            // -----------------------------------------------------------------
+            [
+                'title' => 'Matematika SMP Kelas IX',
+                'isbn' => '9786231184566',
+                'author' => 'Yosep Dwi Kristanto, Muhammad Fauzi, dkk.',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2023,
+                'category' => BookCategory::KELAS_9->value,
+                'description' => 'Pendalaman materi fungsi kuadrat, sistem persamaan linear tiga variabel, transformasi geometri (translasi, refleksi, rotasi, dilatasi), serta geometri bangun ruang sisi lengkung.',
+                'has_local_pdf' => true,
+                'page_count' => 260,
+                'language' => 'id',
+                'physical_stock' => 30,
+                'views_count' => 172,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#F5B700',
+            ],
+            [
+                'title' => 'Bahasa Indonesia SMP Kelas IX',
+                'isbn' => '9786231184504',
+                'author' => 'Eva Y. Nukman, Farida Rahmawati',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2023,
+                'category' => BookCategory::KELAS_9->value,
+                'description' => 'Melatih kecakapan berpidato persuasif, menulis cerpen bertema inspiratif, menyusun teks diskusi dengan argumen logis, dan menulis esai ulasan kritis.',
+                'has_local_pdf' => false,
+                'page_count' => 220,
+                'language' => 'id',
+                'physical_stock' => 28,
+                'views_count' => 110,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#F5B700',
+            ],
+            [
+                'title' => 'Ilmu Pengetahuan Alam (IPA) SMP Kelas IX',
+                'isbn' => '9786231184580',
+                'author' => 'Cece Sutia, Ika Rifqiawati, dkk.',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2023,
+                'category' => BookCategory::KELAS_9->value,
+                'description' => 'Materi pewarisan sifat makhluk hidup (genetika Mendel), bioteknologi ramah lingkungan, kelistrikan dan kemagnetan dalam teknologi modern, serta tanah dan keberlangsungan kehidupan.',
+                'has_local_pdf' => false,
+                'page_count' => 244,
+                'language' => 'id',
+                'physical_stock' => 30,
+                'views_count' => 160,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#F5B700',
+            ],
+            [
+                'title' => 'Informatika untuk SMP Kelas IX',
+                'isbn' => '9786231184627',
+                'author' => 'Irya Wisnubhadra, Maresha Caroline Wijanto, dkk.',
+                'publisher' => 'Pusat Perbukuan Kemendikbudristek',
+                'published_year' => 2023,
+                'category' => BookCategory::KELAS_9->value,
+                'description' => 'Literasi kecerdasan buatan (AI fundamental), keamanan siber pribadi, struktur data lanjutan, pembuatan purwarupa aplikasi digital, dan etika hukum di ruang maya.',
+                'has_local_pdf' => true,
+                'page_count' => 236,
+                'language' => 'id',
+                'physical_stock' => 20,
+                'views_count' => 189,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#F5B700',
+            ],
+
+            // -----------------------------------------------------------------
+            // LITERASI UMUM & NOVEL FIKSI NUSANTARA (KOLEKSI BUKU FISIK DI RAK)
+            // -----------------------------------------------------------------
+            [
+                'title' => 'Laskar Pelangi',
+                'isbn' => '9789793062792',
+                'author' => 'Andrea Hirata',
+                'publisher' => 'Bentang Pustaka',
+                'published_year' => 2005,
+                'category' => BookCategory::LITERASI_UMUM->value,
+                'description' => 'Kisah epik perjuangan sepuluh anak di Belitung bersama Bu Muslimah dan Pak Harfan yang membuktikan bahwa keterbatasan fasilitas bukan penghalang untuk meraih impian pendidikan setinggi langit.',
+                'has_local_pdf' => false,
+                'page_count' => 529,
+                'language' => 'id',
+                'physical_stock' => 15,
+                'views_count' => 312,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#10B981',
+            ],
+            [
+                'title' => 'Bumi Manusia',
+                'isbn' => '9789799731234',
+                'author' => 'Pramoedya Ananta Toer',
+                'publisher' => 'Lentera Dipantara',
+                'published_year' => 2005,
+                'category' => BookCategory::LITERASI_UMUM->value,
+                'description' => 'Karya sastra legendaris tentang perjalanan Minke, pemuda pribumi terpelajar yang menuntut keadilan, harga diri, dan cinta di tengah pergolakan era kolonial awal abad ke-20.',
+                'has_local_pdf' => false,
+                'page_count' => 535,
+                'language' => 'id',
+                'physical_stock' => 8,
+                'views_count' => 245,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#10B981',
+            ],
+            [
+                'title' => 'Negeri 5 Menara',
+                'isbn' => '9789792248616',
+                'author' => 'Ahmad Fuadi',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'published_year' => 2009,
+                'category' => BookCategory::LITERASI_UMUM->value,
+                'description' => 'Mantra Man Jadda Wajada (siapa bersungguh-sungguh pasti berhasil) yang dipegang teguh oleh enam pemuda perantau dari berbagai pelosok Nusantara saat menuntut ilmu dan merajut cita-cita.',
+                'has_local_pdf' => false,
+                'page_count' => 423,
+                'language' => 'id',
+                'physical_stock' => 12,
+                'views_count' => 198,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#10B981',
+            ],
+            [
+                'title' => 'Laut Bercerita',
+                'isbn' => '9786024246945',
+                'author' => 'Leila S. Chudori',
+                'publisher' => 'Kepustakaan Populer Gramedia',
+                'published_year' => 2017,
+                'category' => BookCategory::LITERASI_UMUM->value,
+                'description' => 'Novel kemanusiaan yang menggugah nurani tentang persahabatan, ikatan keluarga, kehilangan, dan suara mereka yang tak pernah kembali dalam peristiwa pergolakan reformasi.',
+                'has_local_pdf' => false,
+                'page_count' => 379,
+                'language' => 'id',
+                'physical_stock' => 10,
+                'views_count' => 270,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#10B981',
+            ],
+            [
+                'title' => 'Filosofi Teras',
+                'isbn' => '9786024125189',
+                'author' => 'Henry Manampiring',
+                'publisher' => 'Penerbit Buku Kompas',
+                'published_year' => 2018,
+                'category' => BookCategory::LITERASI_UMUM->value,
+                'description' => 'Penerapan praktis filsafat Stoisisme kuno untuk generasi muda dalam mengelola emosi negatif, mengatasi kecemasan masa depan, dan melatih ketenangan batin dalam kehidupan sehari-hari.',
+                'has_local_pdf' => false,
+                'page_count' => 346,
+                'language' => 'id',
+                'physical_stock' => 14,
+                'views_count' => 290,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#10B981',
+            ],
+            [
+                'title' => 'Sepatu Dahlan',
+                'isbn' => '9786029498356',
+                'author' => 'Khrisna Pabichara',
+                'publisher' => 'Noura Books',
+                'published_year' => 2012,
+                'category' => BookCategory::LITERASI_UMUM->value,
+                'description' => 'Kisah masa kecil penuh ketabahan seorang anak desa miskin di Kebon Dalem Magetan yang berjuang bersekolah belasan kilometer tanpa alas kaki demi meraih mimpi masa depan.',
+                'has_local_pdf' => false,
+                'page_count' => 392,
+                'language' => 'id',
+                'physical_stock' => 9,
+                'views_count' => 134,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#10B981',
+            ],
+
+            // -----------------------------------------------------------------
+            // KARYA GURU & SISWA SMP NEGERI 4 CEPU (KARYA LOKAL RESMI)
+            // -----------------------------------------------------------------
+            [
+                'title' => 'Antologi Puisi Siswa: Lentera di Tepian Bengawan',
+                'isbn' => '9786239004018',
+                'author' => 'Komunitas Literasi Siswa Spensapo (SMPN 4 Cepu)',
+                'publisher' => 'Pustaka Literasi SMP Negeri 4 Cepu',
+                'published_year' => 2024,
+                'category' => BookCategory::KARYA_SEKOLAH->value,
+                'description' => 'Kumpulan puisi orisinal karya siswa-siswi kelas VII hingga IX SMPN 4 Cepu yang mengekspresikan keelokan alam bumi Cepu, rimbun pohon jati, rasa cinta almamater, dan optimisme generasi penerus bangsa.',
+                'has_local_pdf' => true,
+                'page_count' => 112,
+                'language' => 'id',
+                'physical_stock' => 18,
+                'views_count' => 185,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#7C3AED',
+            ],
+            [
+                'title' => 'Modul Praktikum Sains Ramah Lingkungan SMPN 4 Cepu',
+                'isbn' => '9786239004025',
+                'author' => 'MGMP IPA SMP Negeri 4 Cepu',
+                'publisher' => 'Unit Litbang Pendidikan SMPN 4 Cepu',
+                'published_year' => 2024,
+                'category' => BookCategory::KARYA_SEKOLAH->value,
+                'description' => 'Panduan eksperimen laboratorium IPA berbasis bahan daur ulang dan eksplorasi kearifan lokal sekitar sekolah, dirancang guna membekali keterampilan inkuiri ilmiah peserta didik.',
+                'has_local_pdf' => true,
+                'page_count' => 86,
+                'language' => 'id',
+                'physical_stock' => 25,
+                'views_count' => 140,
+                'is_featured' => false,
+                'is_active' => true,
+                'color' => '#7C3AED',
+            ],
+            [
+                'title' => 'Buletin Spensapo: Inspirasi dan Rekam Jejak Prestasi',
+                'isbn' => '9786239004032',
+                'author' => 'Tim Jurnalistik Siswa dan OSIS SMPN 4 Cepu',
+                'publisher' => 'Redaksi Multimedia SMPN 4 Cepu',
+                'published_year' => 2024,
+                'category' => BookCategory::KARYA_SEKOLAH->value,
+                'description' => 'Publikasi berkala yang merangkum deretan prestasi akademik dan non-akademik siswa, wawancara mendalam profil guru teladan, komik strip, dan liputan 12 ekstrakurikuler unggulan SMPN 4 Cepu.',
+                'has_local_pdf' => true,
+                'page_count' => 64,
+                'language' => 'id',
+                'physical_stock' => 40,
+                'views_count' => 220,
+                'is_featured' => true,
+                'is_active' => true,
+                'color' => '#7C3AED',
+            ],
+        ];
+
+        foreach ($books as $item) {
+            $slug = Str::slug($item['title']);
+
+            // 1. Generate cover SVG lokal di storage/app/public/books/covers/
+            $coverFileName = "books/covers/{$slug}.svg";
+            $categoryEnum = BookCategory::tryFrom($item['category']);
+            $categoryLabel = $categoryEnum ? $categoryEnum->getLabel() : 'Koleksi Buku';
+            $coverSvg = $this->createCoverSvg(
+                $item['title'],
+                $item['author'],
+                $categoryLabel,
+                $item['color'] ?? '#1F5FBF'
+            );
+            $disk->put($coverFileName, $coverSvg);
+
+            // 2. Generate PDF lokal di storage/app/public/books/ebooks/ jika buku memiliki e-book
+            $pdfFileName = null;
+            if (!empty($item['has_local_pdf'])) {
+                $pdfFileName = "books/ebooks/{$slug}.pdf";
+                $pdfBinary = $this->createLocalPdf(
+                    $item['title'],
+                    $item['author'],
+                    $item['publisher'] ?? 'Pusat Perbukuan Kemendikbudristek',
+                    $categoryLabel,
+                    $item['description']
+                );
+                $disk->put($pdfFileName, $pdfBinary);
+            }
+
+            // 3. Simpan data buku ke database dengan 100% path lokal, cover_url dan pdf_url null
+            Book::updateOrCreate(
+                ['isbn' => $item['isbn']],
+                [
+                    'title' => $item['title'],
+                    'slug' => $slug,
+                    'isbn' => $item['isbn'],
+                    'author' => $item['author'],
+                    'publisher' => $item['publisher'],
+                    'published_year' => $item['published_year'],
+                    'category' => $item['category'],
+                    'description' => $item['description'],
+                    'cover_path' => $coverFileName,
+                    'cover_url' => null,
+                    'pdf_path' => $pdfFileName,
+                    'pdf_url' => null,
+                    'page_count' => $item['page_count'],
+                    'language' => $item['language'],
+                    'physical_stock' => $item['physical_stock'],
+                    'views_count' => $item['views_count'],
+                    'is_featured' => $item['is_featured'],
+                    'is_active' => $item['is_active'],
+                ]
+            );
+        }
+    }
+
+    /**
+     * Membuat berkas sampul buku SVG yang rapi sesuai identitas SMPN 4 Cepu.
+     */
+    protected function createCoverSvg(string $title, string $author, string $categoryLabel, string $accentColor): string
+    {
+        $safeTitle = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+        $safeAuthor = htmlspecialchars($author, ENT_QUOTES, 'UTF-8');
+        $safeCategory = htmlspecialchars(strtoupper($categoryLabel), ENT_QUOTES, 'UTF-8');
+
+        $titleLines = explode("\n", wordwrap($safeTitle, 22, "\n"));
+        $titleTspans = '';
+        $y = 225;
+        foreach (array_slice($titleLines, 0, 4) as $line) {
+            $titleTspans .= "<tspan x=\"150\" y=\"{$y}\">{$line}</tspan>";
+            $y += 24;
+        }
+
+        return <<<SVG
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450" fill="none">
+    <rect width="300" height="450" rx="16" fill="#1B2A4A"/>
+    <rect x="10" y="10" width="280" height="430" rx="12" stroke="{$accentColor}" stroke-width="2" stroke-opacity="0.35"/>
+    <circle cx="150" cy="110" r="50" fill="{$accentColor}" fill-opacity="0.15"/>
+    <circle cx="150" cy="110" r="36" stroke="{$accentColor}" stroke-width="2" stroke-opacity="0.5"/>
+    <path d="M130 120V98C130 94 140 92 150 92C160 92 170 94 170 98V120M130 120C130 116 140 114 150 114C160 114 170 116 170 120M130 120C140 122 150 122 150 122M170 120C160 122 150 122 150 122V114" stroke="{$accentColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="35" y="172" width="230" height="26" rx="13" fill="{$accentColor}" fill-opacity="0.25"/>
+    <text x="150" y="189" fill="#FFFFFF" font-family="Nunito, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1">{$safeCategory}</text>
+    <text fill="#FFFFFF" font-family="Nunito, sans-serif" font-size="15" font-weight="800" text-anchor="middle">
+        {$titleTspans}
+    </text>
+    <line x1="60" y1="345" x2="240" y2="345" stroke="#FFE3A0" stroke-width="1.5" stroke-opacity="0.3"/>
+    <text x="150" y="365" fill="#FFE3A0" font-family="Nunito, sans-serif" font-size="11" font-weight="700" text-anchor="middle">{$safeAuthor}</text>
+    <rect x="30" y="395" width="240" height="28" rx="8" fill="#0D2960"/>
+    <text x="150" y="413" fill="#FFE3A0" font-family="Nunito, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1.5">SMP NEGERI 4 CEPU</text>
+</svg>
+SVG;
+    }
+
+    /**
+     * Membuat berkas PDF lokal multi-halaman yang valid dan rapi untuk modul e-book sekolah.
+     */
+    protected function createLocalPdf(string $title, string $author, string $publisher, string $category, string $description): string
+    {
+        $pages = [];
+
+        // Halaman 1: Cover Judul & Identitas
+        $p1 = "BT /F1 11 Tf 50 780 Td (PERPUSTAKAAN DIGITAL SMP NEGERI 4 CEPU) Tj ET\n";
+        $p1 .= "BT /F1 9 Tf 50 765 Td (Katalog Pembelajaran Kurikulum Merdeka dan Literasi Sekolah) Tj ET\n";
+        $p1 .= "BT /F1 18 Tf 50 690 Td (" . addcslashes($title, "()\n\r\\") . ") Tj ET\n";
+        $p1 .= "BT /F1 11 Tf 50 655 Td (" . addcslashes("Penyusun: " . $author, "()\n\r\\") . ") Tj ET\n";
+        $p1 .= "BT /F1 11 Tf 50 635 Td (" . addcslashes("Penerbit: " . $publisher, "()\n\r\\") . ") Tj ET\n";
+        $p1 .= "BT /F1 10 Tf 50 600 Td (" . addcslashes("Klasifikasi: " . $category, "()\n\r\\") . ") Tj ET\n";
+        $p1 .= "BT /F1 10 Tf 50 540 Td (Ringkasan Sinopsis Materi:) Tj ET\n";
+        $lines = explode("\n", wordwrap($description, 70, "\n"));
+        $y = 520;
+        foreach ($lines as $line) {
+            $p1 .= "BT /F1 10 Tf 50 {$y} Td (" . addcslashes($line, "()\n\r\\") . ") Tj ET\n";
+            $y -= 16;
+        }
+        $p1 .= "BT /F1 9 Tf 50 80 Td (SMP NEGERI 4 CEPU : SATU SEKOLAH, SATU RUANG DIGITAL) Tj ET\n";
+        $p1 .= "BT /F1 8 Tf 50 65 Td (Dokumen digital resmi terdaftar pada pangkalan data sirkulasi sekolah.) Tj ET\n";
+        $pages[] = $p1;
+
+        // Halaman 2: Hak Cipta & Informasi Bibliografi
+        $p2 = "BT /F1 14 Tf 50 780 Td (INFORMASI PENERBITAN DAN HAK CIPTA) Tj ET\n";
+        $p2 .= "BT /F1 10 Tf 50 740 Td (Judul Koleksi: " . addcslashes($title, "()\n\r\\") . ") Tj ET\n";
+        $p2 .= "BT /F1 10 Tf 50 720 Td (Penulis / Pengarang: " . addcslashes($author, "()\n\r\\") . ") Tj ET\n";
+        $p2 .= "BT /F1 10 Tf 50 700 Td (Penerbit: " . addcslashes($publisher, "()\n\r\\") . ") Tj ET\n";
+        $p2 .= "BT /F1 10 Tf 50 680 Td (Tahun Publikasi: 2024 / Edisi Kurikulum Merdeka) Tj ET\n";
+        $p2 .= "BT /F1 10 Tf 50 660 Td (Bahasa Pengantar: Bahasa Indonesia) Tj ET\n";
+        $p2 .= "BT /F1 10 Tf 50 620 Td (Katalog Dalam Terbitan (KDT):) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 595 Td (Unit Perpustakaan Digital SMP Negeri 4 Cepu) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 580 Td (Jl. Diponegoro No. 53 Cepu, Kabupaten Blora, Jawa Tengah 58312) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 565 Td (Surel: perpustakaan@smpn4cepu.sch.id | Laman: smpn4cepu.sch.id) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 510 Td (Hak Cipta dilindungi Undang-Undang Republik Indonesia.) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 495 Td (Dilarang mengumumkan atau memperbanyak sebagian maupun seluruh dokumen) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 480 Td (tanpa izin tertulis dari pemegang hak cipta dan pengelola perpustakaan.) Tj ET\n";
+        $p2 .= "BT /F1 9 Tf 50 80 Td (Halaman 2 : Perpustakaan Digital SMPN 4 Cepu) Tj ET\n";
+        $pages[] = $p2;
+
+        // Halaman 3: Kata Pengantar
+        $p3 = "BT /F1 14 Tf 50 780 Td (KATA PENGANTAR KEPALA SEKOLAH) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 735 Td (Puji syukur kita panjatkan ke hadirat Tuhan Yang Maha Esa atas hadirnya inovasi) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 715 Td (layanan Perpustakaan Digital di lingkungan SMP Negeri 4 Cepu.) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 685 Td (Pendidikan modern abad ke-21 menuntut kecakapan literasi digital, kemandirian) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 665 Td (dalam mencari referensi, serta ketajaman berpikir kritis. Portal ini dihadirkan) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 645 Td (agar setiap siswa dapat mengakses buku ajar resmi dan karya literasi kapan saja.) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 615 Td (Gunakan e-book ini sebagai sahabat belajar dalam menggapai cita-cita luhur.) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 550 Td (Cepu, Juli 2024) Tj ET\n";
+        $p3 .= "BT /F1 10 Tf 50 530 Td (Kepala SMP Negeri 4 Cepu) Tj ET\n";
+        $p3 .= "BT /F1 9 Tf 50 80 Td (Halaman 3 : Perpustakaan Digital SMPN 4 Cepu) Tj ET\n";
+        $pages[] = $p3;
+
+        // Halaman 4: Daftar Isi
+        $p4 = "BT /F1 14 Tf 50 780 Td (DAFTAR ISI DAN PETA MATERI) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 50 730 Td (KATA PENGANTAR KEPALA SEKOLAH .................................... Halaman 3) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 50 705 Td (PETUNJUK PENGGUNAAN E-BOOK INTERAKTIF ................. Halaman 4) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 50 680 Td (BAB 1 : EKSPLORASI KONSEP UTAMA .................................. Halaman 5) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 70 660 Td (1.1 Capaian Pembelajaran dan Tujuan Materi) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 70 640 Td (1.2 Landasan Teori dan Ulasan Kontekstual) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 70 620 Td (1.3 Karakter Profil Pelajar Pancasila) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 50 590 Td (BAB 2 : LATIHAN SOAL DAN AKTIVITAS SISWA ................. Halaman 6) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 70 570 Td (2.1 Pertanyaan Pemantik Berpikir Kritis) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 70 550 Td (2.2 Lembar Refleksi Pembelajaran Mandiri) Tj ET\n";
+        $p4 .= "BT /F1 10 Tf 50 520 Td (GLOSARIUM DAN INFORMASI KOLEKSI FISIK .................. Halaman 6) Tj ET\n";
+        $p4 .= "BT /F1 9 Tf 50 80 Td (Halaman 4 : Perpustakaan Digital SMPN 4 Cepu) Tj ET\n";
+        $pages[] = $p4;
+
+        // Halaman 5: Bab 1 Materi Utama
+        $p5 = "BT /F1 14 Tf 50 780 Td (BAB 1 : EKSPLORASI KONSEP DAN CAPAIAN MATERI) Tj ET\n";
+        $p5 .= "BT /F1 11 Tf 50 745 Td (1.1 Capaian Pembelajaran) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 50 725 Td (Peserta didik mampu memahami konsep esensial, menghubungkannya dengan peristiwa) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 50 705 Td (di sekitar kehidupan sehari-hari, serta menyajikan argumen berbasis data faktual.) Tj ET\n";
+        $p5 .= "BT /F1 11 Tf 50 665 Td (1.2 Pembahasan Materi Esensial) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 50 645 Td (" . addcslashes("Ulasan pada " . $title . " dirancang terstruktur guna membimbing siswa", "()\n\r\\") . ") Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 50 625 Td (melakukan penyelidikan ilmiah secara bertahap, mulai dari orientasi masalah,) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 50 605 Td (pengumpulan data terukur, hingga penarikan simpulan yang dapat dipertanggungjawabkan.) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 50 575 Td (Dimensi Profil Pelajar Pancasila yang dikuatkan:) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 70 555 Td (- Beriman, bertakwa kepada Tuhan Yang Maha Esa, dan berakhlak mulia) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 70 535 Td (- Mandiri serta berdaya juang dalam menyelesaikan tugas) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 70 515 Td (- Bernalar kritis dalam menanggapi informasi dan fenomena) Tj ET\n";
+        $p5 .= "BT /F1 10 Tf 70 495 Td (- Bergotong royong dalam kerja kelompok dan eksperimen sains) Tj ET\n";
+        $p5 .= "BT /F1 9 Tf 50 80 Td (Halaman 5 : Perpustakaan Digital SMPN 4 Cepu) Tj ET\n";
+        $pages[] = $p5;
+
+        // Halaman 6: Aktivitas, Soal & Refleksi
+        $p6 = "BT /F1 14 Tf 50 780 Td (LATIHAN MANDIRI DAN REFLEKSI SISWA) Tj ET\n";
+        $p6 .= "BT /F1 11 Tf 50 740 Td (A. Uji Pemahaman Mandiri) Tj ET\n";
+        $p6 .= "BT /F1 10 Tf 50 715 Td (1. Tuliskan gagasan utama dari bab ini dengan menggunakan bahasa Anda sendiri!) Tj ET\n";
+        $p6 .= "BT /F1 10 Tf 50 690 Td (2. Berikan satu contoh penerapan nyata dari konsep ini di sekolah atau rumah!) Tj ET\n";
+        $p6 .= "BT /F1 10 Tf 50 665 Td (3. Kendala apa yang Anda temui saat belajar dan bagaimana cara mengatasinya?) Tj ET\n";
+        $p6 .= "BT /F1 11 Tf 50 615 Td (B. Ketersediaan Koleksi Fisik Perpustakaan) Tj ET\n";
+        $p6 .= "BT /F1 10 Tf 50 590 Td (Buku teks cetak dan modul referensi lengkap tersedia di Ruang Perpustakaan) Tj ET\n";
+        $p6 .= "BT /F1 10 Tf 50 570 Td (SMP Negeri 4 Cepu. Silakan hubungi petugas sirkulasi untuk peminjaman.) Tj ET\n";
+        $p6 .= "BT /F1 9 Tf 50 490 Td (Layanan Perpustakaan Digital SMP Negeri 4 Cepu | smpn4cepu.sch.id) Tj ET\n";
+        $p6 .= "BT /F1 9 Tf 50 80 Td (Halaman 6 : Akhir Modul · Perpustakaan Digital SMPN 4 Cepu) Tj ET\n";
+        $pages[] = $p6;
+
+        $numPages = count($pages);
+        $fontObjId = 2 + ($numPages * 2) + 1;
+        $catalogObj = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
+
+        $kidsStr = "";
+        for ($i = 0; $i < $numPages; $i++) {
+            $pId = 3 + ($i * 2);
+            $kidsStr .= "{$pId} 0 R ";
+        }
+        $pagesObj = "2 0 obj\n<< /Type /Pages /Kids [{$kidsStr}] /Count {$numPages} >>\nendobj\n";
+
+        $body = $catalogObj . $pagesObj;
+
+        for ($i = 0; $i < $numPages; $i++) {
+            $pId = 3 + ($i * 2);
+            $cId = 4 + ($i * 2);
+            $cStream = $pages[$i];
+            $cLen = strlen($cStream);
+
+            $pObj = "{$pId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents {$cId} 0 R /Resources << /Font << /F1 {$fontObjId} 0 R >> >> >>\nendobj\n";
+            $cObj = "{$cId} 0 obj\n<< /Length {$cLen} >>\nstream\n{$cStream}\nendstream\nendobj\n";
+
+            $body .= $pObj . $cObj;
+        }
+
+        $fontObj = "{$fontObjId} 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n";
+        $body .= $fontObj;
+
+        $header = "%PDF-1.4\n";
+        $fullContentWithoutXref = $header . $body;
+
+        $totalObjects = $fontObjId;
+        $xref = "xref\n0 " . ($totalObjects + 1) . "\n";
+        $xref .= "0000000000 65535 f \n";
+
+        $currPos = strlen($header);
+        $xref .= sprintf("%010d 00000 n \n", $currPos); // Obj 1
+        $currPos += strlen($catalogObj);
+        $xref .= sprintf("%010d 00000 n \n", $currPos); // Obj 2
+        $currPos += strlen($pagesObj);
+
+        for ($i = 0; $i < $numPages; $i++) {
+            $pId = 3 + ($i * 2);
+            $cId = 4 + ($i * 2);
+            $cStream = $pages[$i];
+            $cLen = strlen($cStream);
+            $pObj = "{$pId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents {$cId} 0 R /Resources << /Font << /F1 {$fontObjId} 0 R >> >> >>\nendobj\n";
+            $cObj = "{$cId} 0 obj\n<< /Length {$cLen} >>\nstream\n{$cStream}\nendstream\nendobj\n";
+
+            $xref .= sprintf("%010d 00000 n \n", $currPos);
+            $currPos += strlen($pObj);
+            $xref .= sprintf("%010d 00000 n \n", $currPos);
+            $currPos += strlen($cObj);
+        }
+
+        $xref .= sprintf("%010d 00000 n \n", $currPos); // Font obj
+
+        $xrefOffset = strlen($fullContentWithoutXref);
+        $trailer = "trailer\n<< /Size " . ($totalObjects + 1) . " /Root 1 0 R >>\nstartxref\n{$xrefOffset}\n%%EOF\n";
+
+        return $fullContentWithoutXref . $xref . $trailer;
+    }
+}

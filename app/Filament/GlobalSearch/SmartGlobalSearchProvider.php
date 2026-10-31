@@ -126,7 +126,21 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
                 'permission' => 'Create:LearningMaterial',
             ],
             [
-                'title' => 'Katalog Buku Perpustakaan',
+                'title' => 'Perpustakaan Digital',
+                'group' => 'Perpustakaan & Literasi',
+                'keywords' => ['buku', 'perpustakaan', 'digital', 'ebook', 'e-book', 'katalog', 'literasi', 'bacaan', 'novel', 'pelajaran', 'kurikulum merdeka'],
+                'routeName' => 'filament.admin.resources.books.index',
+                'permission' => 'ViewAny:Book',
+            ],
+            [
+                'title' => 'Tambah Buku Perpustakaan Digital',
+                'group' => 'Perpustakaan & Literasi',
+                'keywords' => ['tambah buku', 'input buku', 'buku digital', 'ebook baru', 'buku baru', 'katalog baru', 'perpustakaan'],
+                'routeName' => 'filament.admin.resources.books.create',
+                'permission' => 'Create:Book',
+            ],
+            [
+                'title' => 'Katalog Buku Perpustakaan (Koleksi Fisik Lama)',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['buku', 'perpustakaan', 'katalog', 'pustaka', 'literasi', 'bacaan', 'novel', 'pelajaran'],
                 'routeName' => 'filament.admin.resources.library-books.index',

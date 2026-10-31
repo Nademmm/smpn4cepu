@@ -32,6 +32,8 @@ class AdminPanelTest extends TestCase
         $resources = [
             '/admin/achievements',
             '/admin/achievements/create',
+            '/admin/books',
+            '/admin/books/create',
             '/admin/book-reservations',
             '/admin/contact-messages',
             '/admin/election-candidates',
@@ -95,6 +97,7 @@ class AdminPanelTest extends TestCase
         $this->assertNotNull($perpus);
         $this->flushSession();
         $this->actingAs($perpus)->get('/admin/library-books')->assertStatus(200);
+        $this->actingAs($perpus)->get('/admin/books')->assertStatus(200);
         $this->actingAs($perpus)->get('/admin/book-reservations')->assertStatus(200);
         $this->actingAs($perpus)->get('/admin/users')->assertStatus(403);
         $this->actingAs($perpus)->get('/admin/students')->assertStatus(403);

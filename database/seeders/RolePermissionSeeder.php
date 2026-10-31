@@ -24,6 +24,7 @@ class RolePermissionSeeder extends Seeder
         // 2. Buat Shield Permissions untuk Semua Entity Filament & Widget secara langsung (bebas hang CLI)
         $entities = [
             'Achievement',
+            'Book',
             'BookReservation',
             'ContactMessage',
             'ElectionCandidate',
@@ -108,7 +109,8 @@ class RolePermissionSeeder extends Seeder
 
         // C. Staf Perpustakaan: Khusus Buku & Katalog Perpustakaan serta Reservasi
         $stafPerpusPermissions = Permission::where(function ($q) {
-            $q->where('name', 'like', '%LibraryBook%')
+            $q->where('name', 'like', '%Book%')
+              ->orWhere('name', 'like', '%LibraryBook%')
               ->orWhere('name', 'like', '%BookReservation%')
               ->orWhere('name', 'like', '%library%')
               ->orWhere('name', 'view_admin_panel')

@@ -2,13 +2,10 @@
 
 namespace App\Filament\Resources\LibraryBooks\Schemas;
 
-use App\Services\PerpusnasBookService;
-use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 
 class LibraryBookForm
@@ -27,56 +24,7 @@ class LibraryBookForm
                     ->label('Nomor ISBN / Barcode')
                     ->placeholder('978-602-xxx-xxx-x')
                     ->unique(ignoreRecord: true)
-                    ->maxLength(20)
-                    ->helperText('Klik tombol kaca pembesar untuk menarik otomatis data buku dari Perpusnas / Katalog ISBN.')
-                    ->suffixAction(
-                        Action::make('lookupIsbn')
-                            ->icon('heroicon-m-magnifying-glass')
-                            ->tooltip('Tarik Data Otomatis dari Perpusnas / ISBN')
-                            ->action(function ($state, $set) {
-                                if (empty($state)) {
-                                    Notification::make()
-                                        ->warning()
-                                        ->title('ISBN Belum Diisi')
-                                        ->body('Masukkan nomor ISBN buku terlebih dahulu.')
-                                        ->send();
-                                    return;
-                                }
-
-                                $service = new PerpusnasBookService();
-                                $data = $service->lookupByIsbn($state);
-
-                                if ($data) {
-                                    if (!empty($data['title'])) {
-                                        $set('title', $data['title']);
-                                    }
-                                    if (!empty($data['author'])) {
-                                        $set('author', $data['author']);
-                                    }
-                                    if (!empty($data['publisher'])) {
-                                        $set('publisher', $data['publisher']);
-                                    }
-                                    if (!empty($data['publish_year'])) {
-                                        $set('publication_year', $data['publish_year']);
-                                    }
-                                    if (!empty($data['pages'])) {
-                                        $set('page_count', $data['pages']);
-                                    }
-
-                                    Notification::make()
-                                        ->success()
-                                        ->title('Data Buku Berhasil Ditemukan')
-                                        ->body('Informasi judul, penulis, penerbit, dan tahun terbit berhasil diisi otomatis.')
-                                        ->send();
-                                } else {
-                                    Notification::make()
-                                        ->warning()
-                                        ->title('Data ISBN Tidak Ditemukan Online')
-                                        ->body('Nomor ISBN tidak ditemukan di repositori online. Silakan isi data secara manual.')
-                                        ->send();
-                                }
-                            })
-                    ),
+                    ->maxLength(20),
 
                 TextInput::make('author')
                     ->label('Pengarang / Penulis')
