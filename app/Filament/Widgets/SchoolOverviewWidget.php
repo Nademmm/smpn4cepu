@@ -24,16 +24,11 @@ class SchoolOverviewWidget extends StatsOverviewWidget
                 $studentQuery->where('academic_year', $latestAcademicYear);
             }
 
-            $bookStock = (int) Book::active()->sum('physical_stock');
-            if ($bookStock <= 0) {
-                $bookStock = (int) LibraryBook::sum('available_stock');
-            }
-
             return [
                 'academicYear' => $latestAcademicYear ?? '2025/2026',
                 'totalStudents' => (int) $studentQuery->sum('total_count'),
                 'totalStaff' => StaffMember::where('is_active', true)->count(),
-                'totalBooks' => $bookStock,
+                'totalBooks' => (int) Book::active()->sum('physical_stock'),
                 'totalVotes' => ElectionVote::count(),
             ];
         });

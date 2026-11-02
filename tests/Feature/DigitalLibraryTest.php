@@ -10,6 +10,42 @@ use Tests\TestCase;
 
 class DigitalLibraryTest extends TestCase
 {
+    protected ?Book $testBook = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->testBook = Book::updateOrCreate(
+            ['slug' => 'test-matematika-smp-kelas-vii'],
+            [
+                'title' => 'Matematika untuk SMP Kelas VII (Uji Katalog)',
+                'isbn' => '978-602-244-000-0',
+                'author' => 'Tim Kemendikbudristek',
+                'publisher' => 'Pusat Perbukuan',
+                'published_year' => 2024,
+                'category' => BookCategory::KELAS_7->value,
+                'description' => 'Buku paket uji otomatis perpustakaan digital.',
+                'pdf_path' => 'books/ebooks/test-ebook.pdf',
+                'page_count' => 200,
+                'language' => 'id',
+                'physical_stock' => 25,
+                'views_count' => 10,
+                'is_featured' => true,
+                'is_active' => true,
+            ]
+        );
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->testBook) {
+            $this->testBook->forceDelete();
+        }
+
+        parent::tearDown();
+    }
+
     public function test_digital_library_page_renders_successfully(): void
     {
         $response = $this->get('/perpustakaan');

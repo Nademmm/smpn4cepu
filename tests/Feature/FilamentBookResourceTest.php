@@ -68,5 +68,7 @@ class FilamentBookResourceTest extends TestCase
             'author' => 'Tim Pembina KIR SMPN 4 Cepu',
             'physical_stock' => 15,
         ]);
+
+        Book::where('slug', 'modul-karya-tulis-ilmiah-remaja-smpn-4-cepu')->forceDelete();
     }
 }

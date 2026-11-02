@@ -198,21 +198,30 @@
             <div class="w-14 h-14 mx-auto rounded-2xl bg-sky-soft text-brand flex items-center justify-center">
                 <x-app-icon name="book" class="w-8 h-8" />
             </div>
-            <div class="space-y-1">
-                <h3 class="font-extrabold text-navy text-lg">Koleksi Buku Tidak Ditemukan</h3>
-                <p class="text-xs sm:text-sm text-ink-soft max-w-md mx-auto">
-                    Tidak ada koleksi buku yang sesuai dengan kata kunci pencarian atau filter yang Anda pilih. Silakan coba kata kunci lain.
-                </p>
-            </div>
-            <div>
-                <button
-                    type="button"
-                    wire:click="resetFilters"
-                    class="btn-primary text-xs min-h-[44px] px-5"
-                >
-                    Tampilkan Semua Koleksi
-                </button>
-            </div>
+            @if (($stats['total_titles'] ?? 0) === 0 && empty($search) && $category === 'semua' && $format === 'all')
+                <div class="space-y-1">
+                    <h3 class="font-extrabold text-navy text-lg">Belum Ada Koleksi Buku Terdaftar</h3>
+                    <p class="text-xs sm:text-sm text-ink-soft max-w-md mx-auto">
+                        Katalog buku paket dan e-book digital akan tampil di halaman ini setelah diunggah oleh pengelola perpustakaan melalui Panel Admin.
+                    </p>
+                </div>
+            @else
+                <div class="space-y-1">
+                    <h3 class="font-extrabold text-navy text-lg">Koleksi Buku Tidak Ditemukan</h3>
+                    <p class="text-xs sm:text-sm text-ink-soft max-w-md mx-auto">
+                        Tidak ada koleksi buku yang sesuai dengan kata kunci pencarian atau filter yang Anda pilih. Silakan coba kata kunci lain.
+                    </p>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        wire:click="resetFilters"
+                        class="btn-primary text-xs min-h-[44px] px-5"
+                    >
+                        Tampilkan Semua Koleksi
+                    </button>
+                </div>
+            @endif
         </x-card>
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">

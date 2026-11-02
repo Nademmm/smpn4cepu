@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             GalleryPhotoSeeder::class,
             SchoolDocumentSeeder::class,
             SchoolSettingSeeder::class,
-            BookSeeder::class,
         ]);
     }
 }
