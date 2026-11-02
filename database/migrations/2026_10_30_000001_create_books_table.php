@@ -34,6 +34,13 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // Buat 1 buku dummy contoh saat tabel dibuat agar perpustakaan memiliki 1 sampel siap baca
+        try {
+            (new \Database\Seeders\BookSeeder())->run();
+        } catch (\Throwable $e) {
+            // Abaikan bila gagal saat pengujian
+        }
     }
 
     /**
