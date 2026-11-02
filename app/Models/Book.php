@@ -222,6 +222,8 @@ SVG;
             PublicAssetResolver::flush();
             Cache::forget('public_library_meta_v1');
             Cache::forget('public_books_stats_v1');
+            Cache::forget('public_books_category_counts_v1');
+            Cache::forget('public_sitemap_xml_v2');
             Cache::forget('admin_school_overview_stats');
         });
 
@@ -229,6 +231,8 @@ SVG;
             PublicAssetResolver::flush();
             Cache::forget('public_library_meta_v1');
             Cache::forget('public_books_stats_v1');
+            Cache::forget('public_books_category_counts_v1');
+            Cache::forget('public_sitemap_xml_v2');
             Cache::forget('admin_school_overview_stats');
         });
     }

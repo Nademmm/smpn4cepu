@@ -17,6 +17,7 @@ class DigitalLibrary extends Component
     public string $category = 'semua';
     public string $format = 'all'; // all, digital, physical
     public string $sort = 'latest'; // latest, title_asc, popular, year_desc
+    public string $buku = '';
 
     public ?int $selectedBookId = null;
     public bool $showDetailModal = false;
@@ -32,7 +33,19 @@ class DigitalLibrary extends Component
         'category' => ['except' => 'semua'],
         'format' => ['except' => 'all'],
         'sort' => ['except' => 'latest'],
+        'buku' => ['except' => ''],
     ];
+
+    public function mount(): void
+    {
+        if (!empty(trim($this->buku))) {
+            $book = Book::active()->where('slug', trim($this->buku))->first();
+            if ($book) {
+                $this->selectedBookId = $book->id;
+                $this->showDetailModal = true;
+            }
+        }
+    }
 
     public function updatingSearch(): void
     {
@@ -77,7 +90,13 @@ class DigitalLibrary extends Component
 
     public function openDetail(int $bookId): void
     {
-        $this->selectedBookId = $bookId;
+        $book = Book::active()->find($bookId);
+        if (!$book) {
+            return;
+        }
+
+        $this->selectedBookId = $book->id;
+        $this->buku = $book->slug;
         $this->showDetailModal = true;
     }
 
@@ -85,6 +104,7 @@ class DigitalLibrary extends Component
     {
         $this->showDetailModal = false;
         $this->selectedBookId = null;
+        $this->buku = '';
     }
 
     public function readEbook(int $bookId): void
@@ -104,6 +124,7 @@ class DigitalLibrary extends Component
         $this->activePdfPageCount = $book->page_count ?? 6;
         $this->showPdfModal = true;
         $this->showDetailModal = false;
+        $this->buku = '';
     }
 
     public function closePdfModal(): void

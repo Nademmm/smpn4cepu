@@ -66,5 +66,18 @@ class DigitalLibraryTest extends TestCase
         $book->refresh();
         $this->assertEquals($initialViews + 1, $book->views_count);
     }
+
+    public function test_digital_library_deep_link_opens_book_detail_modal(): void
+    {
+        $book = Book::active()->first();
+        $this->assertNotNull($book);
+
+        Livewire::withQueryParams(['buku' => $book->slug])
+            ->test(DigitalLibrary::class)
+            ->assertSet('showDetailModal', true)
+            ->assertSet('selectedBookId', $book->id)
+            ->assertSee('Kutipan Daftar Pustaka')
+            ->assertSee($book->title);
+    }
 }
 

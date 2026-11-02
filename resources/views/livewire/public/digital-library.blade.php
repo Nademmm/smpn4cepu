@@ -223,7 +223,11 @@
                 >
                     <div>
                         {{-- Cover Area Rasio 2:3 --}}
-                        <div class="relative w-full aspect-[2/3] bg-sky-soft overflow-hidden border-b border-sun-soft/60">
+                        <div
+                            wire:click="openDetail({{ $b->id }})"
+                            class="relative w-full aspect-[2/3] bg-sky-soft overflow-hidden border-b border-sun-soft/60 cursor-pointer"
+                            title="Lihat detail {{ $b->title }}"
+                        >
                             <img
                                 src="{{ $b->cover_image }}"
                                 alt="{{ $b->title }}"
@@ -271,7 +275,10 @@
 
                         {{-- Metadata Buku --}}
                         <div class="p-4 sm:p-5 space-y-2">
-                            <h3 class="font-extrabold text-navy text-[15px] sm:text-base leading-snug line-clamp-2 group-hover:text-brand transition-colors">
+                            <h3
+                                wire:click="openDetail({{ $b->id }})"
+                                class="font-extrabold text-navy text-[15px] sm:text-base leading-snug line-clamp-2 group-hover:text-brand transition-colors cursor-pointer"
+                            >
                                 {{ $b->title }}
                             </h3>
 
@@ -443,6 +450,44 @@
                             {{ $selectedBook->description ?? 'Deskripsi untuk koleksi buku ini belum ditambahkan ke dalam basis data katalog.' }}
                         </p>
                     </div>
+
+                    {{-- Kutipan Daftar Pustaka & Bagikan Tautan --}}
+                    @php
+                        $citationText = ($selectedBook->author ?? 'Penyusun Resmi') . '. (' . ($selectedBook->published_year ?? date('Y')) . '). ' . $selectedBook->title . '. ' . ($selectedBook->publisher ?? 'SMP Negeri 4 Cepu') . '.';
+                        $shareUrl = route('library', ['buku' => $selectedBook->slug]);
+                    @endphp
+                    <div
+                        x-data="{ copiedCite: false, copiedLink: false }"
+                        class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-2.5"
+                    >
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-[11px] font-black text-navy uppercase tracking-wider flex items-center gap-1.5">
+                                <x-app-icon name="academic-cap" class="w-3.5 h-3.5 text-brand" />
+                                <span>Kutipan Daftar Pustaka</span>
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    @click="navigator.clipboard.writeText(@js($citationText)); copiedCite = true; setTimeout(() => copiedCite = false, 2000)"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-white border border-slate-200 text-navy hover:border-brand hover:text-brand transition-colors shadow-2xs cursor-pointer"
+                                >
+                                    <span x-show="!copiedCite">Salin Kutipan</span>
+                                    <span x-show="copiedCite" x-cloak class="text-emerald-700">Kutipan Tersalin!</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="navigator.clipboard.writeText(@js($shareUrl)); copiedLink = true; setTimeout(() => copiedLink = false, 2000)"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-white border border-slate-200 text-navy hover:border-brand hover:text-brand transition-colors shadow-2xs cursor-pointer"
+                                >
+                                    <span x-show="!copiedLink">Salin Tautan Buku</span>
+                                    <span x-show="copiedLink" x-cloak class="text-emerald-700">Tautan Tersalin!</span>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-ink-soft font-mono bg-white p-2.5 rounded-lg border border-slate-200/70 select-all">
+                            {{ $citationText }}
+                        </p>
+                    </div>
                 </div>
 
                 {{-- Modal Footer --}}
@@ -456,14 +501,26 @@
                     </button>
 
                     @if ($selectedBook->has_digital)
-                        <button
-                            type="button"
-                            wire:click="readEbook({{ $selectedBook->id }})"
-                            class="btn-primary text-xs flex items-center gap-2 shadow-2xs font-black min-h-[44px]"
-                        >
-                            <x-app-icon name="book" class="w-4 h-4 text-navy" />
-                            <span>Baca E-Book Sekarang</span>
-                        </button>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <a
+                                href="{{ $selectedBook->pdf_file }}"
+                                download="{{ $selectedBook->slug }}.pdf"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn-ghost bg-white border border-slate-200 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold min-h-[44px] px-4"
+                            >
+                                <x-app-icon name="download" class="w-4 h-4 text-brand" />
+                                <span>Unduh PDF</span>
+                            </a>
+                            <button
+                                type="button"
+                                wire:click="readEbook({{ $selectedBook->id }})"
+                                class="btn-primary text-xs flex items-center gap-2 shadow-2xs font-black min-h-[44px]"
+                            >
+                                <x-app-icon name="book" class="w-4 h-4 text-navy" />
+                                <span>Baca E-Book Sekarang</span>
+                            </button>
+                        </div>
                     @else
                         <div class="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 px-3.5 py-2 rounded-xl border border-emerald-200">
                             <x-app-icon name="check-circle" class="w-4 h-4 text-emerald-600" />

@@ -92,25 +92,19 @@ class BookForm
 
                 // 2. Section Sampul & Berkas E-Book Digital
                 Section::make('Sampul & Berkas Digital (E-Book)')
-                    ->description('Unggah sampul dan berkas PDF buku langsung ke server sekolah melalui form admin.')
+                    ->description('Unggah gambar sampul dan berkas PDF buku langsung ke penyimpanan server sekolah.')
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 FileUpload::make('cover_path')
-                                    ->label('Upload File Sampul Buku')
+                                    ->label('Upload Gambar Sampul Buku')
                                     ->image()
                                     ->directory('books/covers')
                                     ->disk('public')
                                     ->maxSize(5120)
                                     ->openable()
                                     ->downloadable()
-                                    ->helperText('Format JPG, PNG, atau WebP (maks 5MB). Disarankan rasio vertikal 2:3 atau 3:4.'),
-
-                                TextInput::make('cover_url')
-                                    ->label('Atau Masukkan Tautan Cover Gambar (Opsional)')
-                                    ->url()
-                                    ->placeholder('https://...')
-                                    ->helperText('Gunakan field ini jika gambar sampul di-host pada penyimpanan cloud terpisah.'),
+                                    ->helperText('Format JPG, PNG, WebP, atau SVG (maks 5MB). Disarankan rasio vertikal 2:3.'),
 
                                 FileUpload::make('pdf_path')
                                     ->label('Upload Berkas E-Book PDF')
@@ -120,13 +114,7 @@ class BookForm
                                     ->maxSize(51200)
                                     ->openable()
                                     ->downloadable()
-                                    ->helperText('Unggah berkas PDF materi/buku (maks 50MB) untuk dapat dibaca langsung oleh siswa di web.'),
-
-                                TextInput::make('pdf_url')
-                                    ->label('Atau Masukkan Tautan E-Book PDF (Opsional)')
-                                    ->url()
-                                    ->placeholder('https://...')
-                                    ->helperText('Gunakan field ini jika berkas PDF disimpan pada cloud drive atau tautan luar.'),
+                                    ->helperText('Unggah berkas PDF materi atau buku (maks 50MB) agar dapat dibaca langsung di web.'),
                             ]),
                     ]),
 

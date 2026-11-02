@@ -110,7 +110,7 @@ class BooksTable
                     ->label('Lihat di Web')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('info')
-                    ->url(fn ($record) => route('library') . '?search=' . urlencode($record->title), shouldOpenInNewTab: true),
+                    ->url(fn ($record) => route('library', ['buku' => $record->slug]), shouldOpenInNewTab: true),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

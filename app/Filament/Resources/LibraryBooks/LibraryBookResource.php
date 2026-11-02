@@ -20,6 +20,8 @@ class LibraryBookResource extends Resource
 {
     protected static ?string $model = LibraryBook::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $recordTitleAttribute = 'title';
 
     public static function getGloballySearchableAttributes(): array

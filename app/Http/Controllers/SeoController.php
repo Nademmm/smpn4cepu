@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Achievement;
+use App\Models\Book;
 use App\Models\Extracurricular;
 use App\Models\GalleryPhoto;
 use App\Models\LibraryBook;
@@ -74,7 +75,7 @@ class SeoController extends Controller
             ['/profil/fasilitas', 'facilities', $this->latest(SchoolFacility::query()), 'monthly', '0.7'],
             ['/guru-staf', 'staff', $this->latest(StaffMember::query()), 'monthly', '0.7'],
             ['/rekap-siswa', 'student-stats', $this->latest(StudentStatistic::query()), 'monthly', '0.6'],
-            ['/perpustakaan', 'library', $this->latest(LibraryBook::query()), 'weekly', '0.7'],
+            ['/perpustakaan', 'library', $this->latest(Book::query()) ?? $this->latest(LibraryBook::query()), 'weekly', '0.7'],
             ['/berita', 'posts', $lastPost, 'daily', '0.9'],
             ['/galeri', 'gallery', $this->latest(GalleryPhoto::query()), 'weekly', '0.6'],
             ['/unduhan', 'downloads', $this->latest(SchoolDocument::query()), 'monthly', '0.6'],
