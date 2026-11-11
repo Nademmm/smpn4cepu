@@ -38,6 +38,7 @@ class LibraryLoanService
         ?string $nisn,
         string $pickupDate,
         ?string $notes = null,
+        ?int $userId = null,
     ): BookReservation {
         $name = trim($name);
         $class = trim($class);
@@ -54,7 +55,7 @@ class LibraryLoanService
             throw new DomainException('Perpustakaan tutup pada hari Sabtu dan Minggu. Pilih hari Senin sampai Jumat.');
         }
 
-        return DB::transaction(function () use ($bookId, $name, $class, $nisn, $pickup, $notes) {
+        return DB::transaction(function () use ($bookId, $name, $class, $nisn, $pickup, $notes, $userId) {
             /** @var Book|null $book */
             $book = Book::active()->lockForUpdate()->find($bookId);
             if (! $book) {
@@ -69,9 +70,17 @@ class LibraryLoanService
                 throw new DomainException('Mohon maaf, seluruh eksemplar buku fisik ini sedang dipinjam atau sudah dipesan.');
             }
 
-            $borrowerQuery = fn ($q) => $nisn
-                ? $q->where('borrower_nisn', $nisn)
-                : $q->where('borrower_name', $name)->where('borrower_class', $class);
+            $borrowerQuery = fn ($q) => $q->where(function ($sub) use ($userId, $nisn, $name, $class) {
+                if ($userId) {
+                    $sub->where('user_id', $userId);
+                }
+                if ($nisn) {
+                    $sub->orWhere('borrower_nisn', $nisn);
+                }
+                if (! $userId && ! $nisn) {
+                    $sub->where('borrower_name', $name)->where('borrower_class', $class);
+                }
+            });
 
             $active = BookReservation::holdingStock()->where($borrowerQuery)->get();
 
@@ -89,6 +98,7 @@ class LibraryLoanService
 
             return BookReservation::create([
                 'book_id' => $book->id,
+                'user_id' => $userId,
                 'reservation_code' => $this->generateCode(),
                 'borrower_nisn' => $nisn,
                 'borrower_name' => $name,
@@ -99,6 +109,30 @@ class LibraryLoanService
                 'notes' => $notes ? trim($notes) : null,
             ]);
         });
+    }
+
+    /**
+     * Dapatkan histori seluruh riwayat peminjaman buku per akun siswa atau nomor NISN.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, BookReservation>
+     */
+    public function getBorrowerHistory(?int $userId = null, ?string $nisn = null)
+    {
+        if (! $userId && ! $nisn) {
+            return collect();
+        }
+
+        return BookReservation::with('book')
+            ->where(function ($q) use ($userId, $nisn) {
+                if ($userId) {
+                    $q->where('user_id', $userId);
+                }
+                if ($nisn) {
+                    $q->orWhere('borrower_nisn', $nisn);
+                }
+            })
+            ->orderByDesc('created_at')
+            ->get();
     }
 
     /**

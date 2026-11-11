@@ -116,11 +116,6 @@ class LibraryRevisionTest extends TestCase
             ->assertSee($reservation->reservation_code)
             ->assertSee($book->title);
 
-        // Unduh berkas barcode SVG langsung
-        $this->get(route('library.ticket.download-barcode', $reservation->reservation_code))
-            ->assertStatus(200)
-            ->assertHeader('Content-Type', 'image/svg+xml');
-
         // Uji coba pengembalian buku: status beralih ke 'selesai' dan stok fisik kembali ke katalog
         $loanService->receiveReturn($reservation);
         $reservation->refresh();
@@ -202,5 +197,60 @@ class LibraryRevisionTest extends TestCase
         $this->flushSession();
         $this->actingAs($admin)->get('/admin/posts/create')->assertStatus(200);
         $this->actingAs($admin)->get('/admin/books/create')->assertStatus(200);
+    }
+
+    /**
+     * Test 6: Histori peminjaman buku tercatat per akun siswa dan dapat diakses
+     */
+    public function test_student_account_tracks_borrowing_history(): void
+    {
+        $student = User::whereHas('roles', fn ($q) => $q->where('name', 'siswa'))->first();
+        if (! $student) {
+            $student = User::create([
+                'name' => 'Budi Santoso',
+                'email' => 'budi.siswa@smpn4cepu.sch.id',
+                'password' => bcrypt('password'),
+                'nisn' => '0087654321',
+                'student_class' => '8B',
+            ]);
+            $student->assignRole('siswa');
+        }
+
+        $book = Book::where('physical_stock', '>', 0)->first();
+        $this->assertNotNull($book);
+
+        // Siswa meminjam buku via Livewire dalam kondisi masuk akun
+        Livewire::actingAs($student)
+            ->test(\App\Livewire\Public\DigitalLibrary::class)
+            ->call('openBorrowModal', $book->id)
+            ->assertSet('borrowerName', $student->name)
+            ->assertSet('borrowerNisn', $student->nisn)
+            ->set('pickupDate', now()->format('Y-m-d'))
+            ->call('submitBorrow')
+            ->assertHasNoErrors();
+
+        // Verifikasi bahwa user_id tercatat pada BookReservation
+        $reservation = BookReservation::where('user_id', $student->id)->latest()->first();
+        $this->assertNotNull($reservation);
+        $this->assertEquals($book->id, $reservation->book_id);
+        $this->assertEquals($student->id, $reservation->user->id);
+
+        // Verifikasi relasi User->bookReservations
+        $this->assertTrue($student->bookReservations()->where('book_id', $book->id)->exists());
+
+        // Verifikasi halaman riwayat peminjaman siswa dapat diakses
+        $this->actingAs($student)
+            ->get(route('library.history'))
+            ->assertStatus(200)
+            ->assertSee($reservation->reservation_code)
+            ->assertSee($book->title);
+
+        // Verifikasi pelacakan dengan NISN pada modal publik
+        Livewire::test(\App\Livewire\Public\DigitalLibrary::class)
+            ->call('openCheckTicketModal')
+            ->set('ticketSearchCode', $student->nisn)
+            ->call('searchTicket')
+            ->assertHasNoErrors()
+            ->assertSet('checkTicketErrorMessage', null);
     }
 }

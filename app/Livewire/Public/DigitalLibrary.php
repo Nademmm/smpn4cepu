@@ -52,6 +52,10 @@ class DigitalLibrary extends Component
     public string $ticketSearchCode = '';
     public ?BookReservation $checkedTicket = null;
     public ?string $checkTicketErrorMessage = null;
+    public $searchedHistory = null;
+
+    // Modal Histori Peminjaman Akun Siswa
+    public bool $showHistoryModal = false;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -236,6 +240,7 @@ class DigitalLibrary extends Component
                 nisn: !empty($this->borrowerNisn) ? $this->borrowerNisn : null,
                 pickupDate: $this->pickupDate,
                 notes: !empty($this->borrowNotes) ? $this->borrowNotes : null,
+                userId: Auth::id(),
             );
 
             $this->activeReservation = $reservation;
@@ -262,6 +267,7 @@ class DigitalLibrary extends Component
     {
         $this->ticketSearchCode = '';
         $this->checkedTicket = null;
+        $this->searchedHistory = null;
         $this->checkTicketErrorMessage = null;
         $this->showCheckTicketModal = true;
     }
@@ -271,26 +277,68 @@ class DigitalLibrary extends Component
         $this->showCheckTicketModal = false;
         $this->ticketSearchCode = '';
         $this->checkedTicket = null;
+        $this->searchedHistory = null;
         $this->checkTicketErrorMessage = null;
     }
 
     /**
-     * Lacak status tiket berdasarkan kode reservasi sirkulasi.
+     * Buka modal riwayat peminjaman akun siswa yang sedang login.
+     */
+    public function openHistoryModal(): void
+    {
+        $this->showHistoryModal = true;
+    }
+
+    public function closeHistoryModal(): void
+    {
+        $this->showHistoryModal = false;
+    }
+
+    /**
+     * Dapatkan daftar seluruh riwayat peminjaman buku untuk akun siswa yang sedang login.
+     */
+    public function getMyBorrowingHistoryProperty(): \Illuminate\Support\Collection
+    {
+        if (! Auth::check()) {
+            return collect();
+        }
+
+        $user = Auth::user();
+        return app(\App\Services\LibraryLoanService::class)->getBorrowerHistory(
+            userId: $user->id,
+            nisn: $user->nisn ?? null,
+        );
+    }
+
+    /**
+     * Lacak status tiket berdasarkan kode reservasi sirkulasi atau nomor NISN siswa.
      */
     public function searchTicket(?\App\Services\LibraryLoanService $loanService = null): void
     {
         $this->checkTicketErrorMessage = null;
         $this->checkedTicket = null;
+        $this->searchedHistory = null;
 
         $code = trim($this->ticketSearchCode);
         if (empty($code)) {
-            $this->checkTicketErrorMessage = 'Silakan masukkan kode tiket reservasi Anda (contoh: LIB-2026-ABC12).';
+            $this->checkTicketErrorMessage = 'Silakan masukkan kode tiket (contoh: LIB-2026-ABC12) atau nomor NISN Anda.';
             return;
         }
 
         $service = $loanService ?? app(\App\Services\LibraryLoanService::class);
-        $ticket = $service->findByCode($code);
 
+        // Jika input berupa nomor NISN (angka)
+        if (preg_match('/^[0-9]{6,20}$/', $code)) {
+            $history = $service->getBorrowerHistory(nisn: $code);
+            if ($history->isEmpty()) {
+                $this->checkTicketErrorMessage = "Tidak ditemukan riwayat peminjaman untuk NISN {$code}. Pastikan nomor NISN Anda benar.";
+                return;
+            }
+            $this->searchedHistory = $history;
+            return;
+        }
+
+        $ticket = $service->findByCode($code);
         if (!$ticket) {
             $this->checkTicketErrorMessage = 'Tiket dengan kode "' . htmlspecialchars($code) . '" tidak ditemukan. Pastikan kode sesuai dengan bukti reservasi.';
             return;

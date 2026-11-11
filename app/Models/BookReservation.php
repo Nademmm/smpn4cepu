@@ -25,6 +25,7 @@ class BookReservation extends Model
 
     protected $fillable = [
         'book_id',
+        'user_id',
         'reservation_code',
         'borrower_nisn',
         'borrower_name',
@@ -57,6 +58,14 @@ class BookReservation extends Model
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class, 'book_id');
+    }
+
+    /**
+     * Relasi ke akun pengguna peminjam (jika terdaftar di sistem).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function scopeHoldingStock(Builder $query): Builder

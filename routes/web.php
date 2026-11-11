@@ -174,6 +174,7 @@ Route::post('/perpustakaan/reservasi', function (Request $request, \App\Services
             nisn: $validated['borrower_nisn'] ?? null,
             pickupDate: $validated['pickup_date'],
             notes: $validated['notes'] ?? null,
+            userId: Auth::id(),
         );
 
         return response()->json([
@@ -211,7 +212,7 @@ Route::get('/perpustakaan/tiket/{code}', function (string $code, \App\Services\L
 Route::get('/perpustakaan/tiket/{code}/unduh-barcode', function (string $code, \App\Services\LibraryLoanService $loanService) {
     $ticket = $loanService->findByCode($code);
     if (! $ticket) {
-        abort(404, 'Tiket tidak ditemukan.');
+        abort(404, 'Tiket sirkulasi perpustakaan tidak ditemukan.');
     }
 
     return response($ticket->barcode_svg, 200, [
@@ -260,6 +261,13 @@ Route::middleware('auth')->group(function () {
             ->findOrFail($id);
         return view('pages.quiz-play', compact('bank'));
     })->name('quiz.play');
+
+    // 11b. Riwayat Sirkulasi Peminjaman Buku Akun Siswa
+    Route::get('/perpustakaan/riwayat', function (\App\Services\LibraryLoanService $loanService) {
+        $user = Auth::user();
+        $history = $loanService->getBorrowerHistory(userId: $user->id, nisn: $user->nisn ?? null);
+        return view('pages.library-history', compact('history', 'user'));
+    })->name('library.history');
 });
 
 // 12. Berita & Informasi

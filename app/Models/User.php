@@ -131,4 +131,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(QuizAttempt::class, 'user_id');
     }
+
+    public function bookReservations(): HasMany
+    {
+        return $this->hasMany(BookReservation::class, 'user_id');
+    }
 }

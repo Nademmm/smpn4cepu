@@ -23,7 +23,7 @@
                     class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-lg cursor-pointer shadow-2xs"
                 >
                     <x-app-icon name="printer" class="w-4 h-4 text-navy" />
-                    <span>Cetak Tiket</span>
+                    <span>Cetak / Simpan PDF</span>
                 </button>
             </div>
         </div>
@@ -82,7 +82,7 @@
                     </p>
                 </div>
 
-                {{-- Tombol Aksi Cepat Unduh Barcode --}}
+                {{-- Tombol Aksi Unduh Barcode --}}
                 <div class="flex flex-wrap items-center justify-center gap-2 print:hidden">
                     <button
                         type="button"
@@ -95,8 +95,9 @@
                     <a
                         href="{{ route('library.ticket.download-barcode', $ticket->reservation_code) }}"
                         download="barcode-{{ $ticket->reservation_code }}.svg"
-                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-3 py-2 rounded-lg"
+                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5"
                     >
+                        <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-navy" />
                         <span>Unduh Berkas SVG</span>
                     </a>
                 </div>
