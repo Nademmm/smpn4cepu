@@ -44,50 +44,64 @@
     </div>
 
     {{-- Banner Unit Pengelola Perpustakaan Resmi --}}
-    <div class="card p-5 sm:p-6 bg-gradient-to-r from-sky-soft/70 via-white to-cream/60 border border-sky-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-        <div class="flex items-start sm:items-center gap-3.5">
-            <div class="w-11 h-11 rounded-2xl bg-brand text-white flex items-center justify-center shrink-0 shadow-xs">
-                <x-app-icon name="building" class="w-6 h-6" />
-            </div>
-            <div>
-                <h3 class="text-sm font-extrabold text-navy">Layanan Perpustakaan Terpadu SMP Negeri 4 Cepu</h3>
-                <p class="text-xs text-ink-mute mt-0.5">Mendukung gerakan literasi sekolah, pembelajaran Kurikulum Merdeka, dan akses buku daring.</p>
-            </div>
-        </div>
-        <div class="flex flex-wrap items-center gap-2.5 text-xs">
-            <div class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
-                <span class="text-[10px] uppercase font-bold text-ink-mute block">Penanggung Jawab</span>
-                <span class="font-extrabold text-navy">Laeli Hasanah, S.Pd.</span>
-            </div>
-            <div class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
-                <span class="text-[10px] uppercase font-bold text-ink-mute block">Tenaga Teknis</span>
-                <span class="font-extrabold text-brand">Yaatun, A.Ma.Pust.</span>
+    <div class="card p-5 sm:p-6 bg-gradient-to-r from-sky-soft/70 via-white to-cream/60 border border-sky-200/80 shadow-xs">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+            {{-- Sisi Kiri: Identitas Layanan & Profil Staf Pengelola --}}
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-brand text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+                    <x-app-icon name="building" class="w-6 h-6" />
+                </div>
+                <div class="space-y-2.5">
+                    <div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-navy leading-tight">
+                            Layanan Perpustakaan Terpadu SMP Negeri 4 Cepu
+                        </h3>
+                        <p class="text-xs text-ink-mute mt-1 leading-relaxed">
+                            Mendukung gerakan literasi sekolah, pembelajaran Kurikulum Merdeka, dan akses buku daring.
+                        </p>
+                    </div>
+
+                    {{-- Profil Staf Pengelola Perpustakaan --}}
+                    <div class="flex flex-wrap items-center gap-2 pt-0.5 text-xs">
+                        <div class="px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-2xs">
+                            <span class="text-[9px] uppercase font-bold text-ink-mute block leading-none mb-1 tracking-wider">Penanggung Jawab</span>
+                            <span class="text-xs font-extrabold text-navy leading-none">Laeli Hasanah, S.Pd.</span>
+                        </div>
+                        <div class="px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-2xs">
+                            <span class="text-[9px] uppercase font-bold text-ink-mute block leading-none mb-1 tracking-wider">Tenaga Teknis</span>
+                            <span class="text-xs font-extrabold text-brand leading-none">Yaatun, A.Ma.Pust.</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            @auth
+            {{-- Sisi Kanan: Aksi Sirkulasi Mandiri Siswa (Selalu Berdampingan & Rapi) --}}
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0 pt-2 lg:pt-0">
                 <button
                     type="button"
-                    wire:click="openHistoryModal"
-                    class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-xl shadow-2xs cursor-pointer min-h-[40px]"
+                    wire:click="openCheckTicketModal"
+                    class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center justify-center gap-2 font-extrabold px-4 py-2.5 rounded-xl shadow-2xs cursor-pointer hover:shadow-xs transition-all whitespace-nowrap min-h-[42px] flex-1 sm:flex-none"
                 >
-                    <x-app-icon name="bookmark" class="w-4 h-4 text-white" />
-                    <span>Histori Pinjam Saya</span>
-                    @if ($this->myBorrowingHistory->isNotEmpty())
-                        <span class="inline-flex items-center justify-center px-1.5 py-0.2 rounded-full text-[10px] font-black bg-white text-navy ml-0.5">
-                            {{ $this->myBorrowingHistory->count() }}
-                        </span>
-                    @endif
+                    <x-app-icon name="qr-code" class="w-4 h-4 text-navy shrink-0" />
+                    <span>Lacak Tiket &amp; Barcode</span>
                 </button>
-            @endauth
 
-            <button
-                type="button"
-                wire:click="openCheckTicketModal"
-                class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-xl shadow-2xs cursor-pointer min-h-[40px]"
-            >
-                <x-app-icon name="qr-code" class="w-4 h-4 text-navy" />
-                <span>Lacak Tiket &amp; Barcode</span>
-            </button>
+                @auth
+                    <button
+                        type="button"
+                        wire:click="openHistoryModal"
+                        class="btn-primary text-xs flex items-center justify-center gap-2 font-extrabold px-4 py-2.5 rounded-xl shadow-2xs cursor-pointer hover:shadow-xs transition-all whitespace-nowrap min-h-[42px] flex-1 sm:flex-none"
+                    >
+                        <x-app-icon name="bookmark" class="w-4 h-4 text-white shrink-0" />
+                        <span>Histori Pinjam Saya</span>
+                        @if ($this->myBorrowingHistory->isNotEmpty())
+                            <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-[10px] font-black bg-white text-navy ml-0.5">
+                                {{ $this->myBorrowingHistory->count() }}
+                            </span>
+                        @endif
+                    </button>
+                @endauth
+            </div>
         </div>
     </div>
 
