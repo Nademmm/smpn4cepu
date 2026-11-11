@@ -2,7 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\User;
 use Filament\Widgets\Widget;
+use Illuminate\Support\Facades\Auth;
 
 class CirculationCameraWidget extends Widget
 {
@@ -13,6 +15,9 @@ class CirculationCameraWidget extends Widget
 
     public static function canView(): bool
     {
-        return auth()->user()?->hasAnyRole(['super_admin', 'staf_perpus', 'admin']) ?? false;
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user?->hasAnyRole(['super_admin', 'staf_perpus', 'admin']) ?? false;
     }
 }

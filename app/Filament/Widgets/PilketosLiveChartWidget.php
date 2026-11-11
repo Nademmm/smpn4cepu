@@ -3,7 +3,9 @@
 namespace App\Filament\Widgets;
 
 use App\Models\ElectionCandidate;
+use App\Models\User;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class PilketosLiveChartWidget extends ChartWidget
 {
@@ -14,7 +16,10 @@ class PilketosLiveChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->hasAnyRole(['super_admin', 'panitia_pilketos']) ?? false;
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user?->hasAnyRole(['super_admin', 'panitia_pilketos']) ?? false;
     }
 
     protected function getData(): array
