@@ -30,21 +30,21 @@
 
         {{-- Kartu Tiket Sirkulasi Resmi --}}
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden print:border-none print:shadow-none print:m-0">
-            {{-- Header Tiket --}}
-            <div class="p-5 sm:p-6 bg-gradient-to-r from-navy via-navy to-brand-deep text-white flex items-center justify-between gap-4 border-b border-navy/40">
+            {{-- Header Tiket (Solid Navy Tanpa Gradasi untuk Kontras Maksimal) --}}
+            <div class="p-5 sm:p-6 bg-navy text-white flex items-center justify-between gap-4 border-b border-navy/40" style="background-color: #1B2A4A; color: #FFFFFF;">
                 <div class="flex items-center gap-3">
                     <picture>
                         <source srcset="{{ asset('images/logo.webp') }}" type="image/webp">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo SMP Negeri 4 Cepu" class="w-11 h-11 object-contain drop-shadow" />
                     </picture>
                     <div>
-                        <h1 class="text-sm sm:text-base font-black tracking-tight leading-tight">SMP NEGERI 4 CEPU</h1>
-                        <p class="text-[11px] text-slate-200 font-medium">Unit Layanan Perpustakaan &amp; Sirkulasi Fisik</p>
+                        <h1 class="text-sm sm:text-base font-black tracking-tight leading-tight text-white" style="color: #FFFFFF;">SMP NEGERI 4 CEPU</h1>
+                        <p class="text-[11px] text-slate-200 font-medium" style="color: #E2E8F0;">Unit Layanan Perpustakaan &amp; Sirkulasi Fisik</p>
                     </div>
                 </div>
                 <div class="text-right shrink-0">
-                    <span class="text-[10px] uppercase font-extrabold tracking-wider text-slate-200 block leading-tight">Kode Sirkulasi</span>
-                    <span class="inline-block mt-1 px-2.5 py-0.5 rounded-lg bg-white/10 border border-white/20 font-mono font-black text-sm sm:text-base text-amber-300 tracking-wider shadow-2xs">
+                    <span class="text-[10px] uppercase font-extrabold tracking-wider text-slate-200 block leading-tight" style="color: #E2E8F0;">Kode Sirkulasi</span>
+                    <span class="inline-block mt-1 px-3 py-1 rounded-lg border border-white/20 font-mono font-black text-sm sm:text-base text-amber-300 tracking-wider shadow-2xs" style="background-color: rgba(255, 255, 255, 0.12); color: #FCD34D;">
                         {{ $ticket->reservation_code }}
                     </span>
                 </div>
