@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class TeacherLoginTest extends TestCase
@@ -31,7 +32,7 @@ class TeacherLoginTest extends TestCase
             $dashResponse = $this->actingAs($teacher)->get('/admin');
             $dashResponse->assertStatus(200);
 
-            auth()->logout();
+            Auth::logout();
             $this->flushSession();
         }
     }
@@ -56,7 +57,7 @@ class TeacherLoginTest extends TestCase
             $response->assertRedirect(route('filament.admin.pages.dashboard'));
             $this->assertAuthenticatedAs($teacher);
 
-            auth()->logout();
+            Auth::logout();
             $this->flushSession();
         }
     }
@@ -79,7 +80,7 @@ class TeacherLoginTest extends TestCase
             $response->assertRedirect(route('filament.admin.pages.dashboard'));
             $this->assertAuthenticatedAs($teacher);
 
-            auth()->logout();
+            Auth::logout();
             $this->flushSession();
         }
     }
