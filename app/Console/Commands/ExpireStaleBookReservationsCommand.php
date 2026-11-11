@@ -39,3 +39,4 @@ class ExpireStaleBookReservationsCommand extends Command
         return self::SUCCESS;
     }
 }
+

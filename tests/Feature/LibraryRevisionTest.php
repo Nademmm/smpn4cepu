@@ -116,6 +116,11 @@ class LibraryRevisionTest extends TestCase
             ->assertSee($reservation->reservation_code)
             ->assertSee($book->title);
 
+        // Unduh berkas barcode SVG langsung
+        $this->get(route('library.ticket.download-barcode', $reservation->reservation_code))
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'image/svg+xml');
+
         // Uji coba pengembalian buku: status beralih ke 'selesai' dan stok fisik kembali ke katalog
         $loanService->receiveReturn($reservation);
         $reservation->refresh();

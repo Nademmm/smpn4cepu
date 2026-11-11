@@ -860,13 +860,32 @@
                         </div>
 
                         {{-- Barcode Code 128 (SVG Vektor Murni) --}}
-                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center shadow-2xs">
-                            <div class="w-full max-w-[320px] mx-auto overflow-hidden">
+                        <div class="p-3.5 bg-white rounded-xl border border-slate-200 text-center shadow-2xs space-y-2.5">
+                            <div id="active-ticket-barcode-box" class="w-full max-w-[320px] mx-auto overflow-hidden">
                                 {!! $activeReservation->barcode_svg !!}
                             </div>
-                            <span class="text-[10px] text-ink-mute font-semibold block mt-1">
+                            <span class="text-[10px] text-ink-mute font-semibold block">
                                 Scan Barcode di atas saat serah terima buku di meja sirkulasi
                             </span>
+
+                            {{-- Tombol Unduh Barcode & Tiket --}}
+                            <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+                                <button
+                                    type="button"
+                                    onclick="downloadBarcodePng('active-ticket-barcode-box', 'barcode-{{ $activeReservation->reservation_code }}.png')"
+                                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-extrabold bg-navy text-white hover:bg-brand transition-colors cursor-pointer shadow-2xs"
+                                >
+                                    <x-app-icon name="arrow-down-tray" class="w-4 h-4 text-white" />
+                                    <span>Unduh Gambar Barcode (PNG)</span>
+                                </button>
+                                <a
+                                    href="{{ route('library.ticket.download-barcode', $activeReservation->reservation_code) }}"
+                                    download="barcode-{{ $activeReservation->reservation_code }}.svg"
+                                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                                >
+                                    <span>Unduh SVG</span>
+                                </a>
+                            </div>
                         </div>
 
                         {{-- Rincian Peminjaman --}}
@@ -1030,9 +1049,26 @@
                                     <div><span class="text-ink-mute">Tenggat Kembali:</span> <strong class="text-brand font-bold">{{ $checkedTicket->due_date ? $checkedTicket->due_date->format('d M Y') : '-' }}</strong></div>
                                 </div>
 
-                                <div class="p-3 bg-white rounded-lg border border-slate-200 text-center">
-                                    <div class="max-w-[280px] mx-auto overflow-hidden">
+                                <div class="p-3 bg-white rounded-lg border border-slate-200 text-center space-y-2">
+                                    <div id="checked-ticket-barcode-box" class="max-w-[280px] mx-auto overflow-hidden">
                                         {!! $checkedTicket->barcode_svg !!}
+                                    </div>
+                                    <div class="flex flex-wrap items-center justify-center gap-2">
+                                        <button
+                                            type="button"
+                                            onclick="downloadBarcodePng('checked-ticket-barcode-box', 'barcode-{{ $checkedTicket->reservation_code }}.png')"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold bg-navy text-white hover:bg-brand transition-colors cursor-pointer shadow-2xs"
+                                        >
+                                            <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
+                                            <span>Unduh Barcode (PNG)</span>
+                                        </button>
+                                        <a
+                                            href="{{ route('library.ticket.download-barcode', $checkedTicket->reservation_code) }}"
+                                            download="barcode-{{ $checkedTicket->reservation_code }}.svg"
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                                        >
+                                            <span>Unduh SVG</span>
+                                        </a>
                                     </div>
                                 </div>
 
@@ -1063,4 +1099,40 @@
             </div>
         </template>
     @endif
+
+    <script>
+        function downloadBarcodePng(containerId, filename) {
+            const box = document.getElementById(containerId);
+            if (!box) return;
+            const svg = box.querySelector('svg');
+            if (!svg) return;
+
+            const xml = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+            const img = new Image();
+
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                const scale = 2;
+                const w = (svg.viewBox.baseVal.width || 360);
+                const h = (svg.viewBox.baseVal.height || 90);
+                canvas.width = w * scale;
+                canvas.height = h * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(url);
+
+                const link = document.createElement('a');
+                link.download = filename || 'barcode.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+            img.src = url;
+        }
+    </script>
 </div>
