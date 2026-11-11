@@ -23,21 +23,12 @@ class ListBookReservations extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('fullScanner')
-                ->label('Buka Kamera Pemindai QR')
+            Action::make('scanQr')
+                ->label('Scan QR Tiket')
                 ->icon('heroicon-m-camera')
                 ->color('success')
-                ->tooltip('Buka layar pemindai kamera penuh (disarankan untuk HP & Desktop)')
-                ->url(route('admin.circulation.scanner'))
-                ->openUrlInNewTab(false),
-
-            Action::make('cameraScan')
-                ->label('Scan QR (Pop-up)')
-                ->icon('heroicon-m-qr-code')
-                ->color('primary')
-                ->tooltip('Buka pemindai QR dalam jendela pop-up')
-                ->modalHeading('Pemindai QR Code Sirkulasi')
-                ->modalDescription('Pindai QR Code tiket peminjaman siswa untuk serah terima atau pengembalian buku fisik.')
+                ->modalHeading('Pemindai QR Code Tiket Sirkulasi')
+                ->modalDescription(null)
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Tutup Scanner')
                 ->modalWidth('md')

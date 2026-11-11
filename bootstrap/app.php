@@ -13,7 +13,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $trusted = env('TRUSTED_PROXIES', '*');
         $middleware->trustProxies(at: $trusted === '*' ? '*' : explode(',', (string) $trusted));
-        $middleware->append(\App\Http\Middleware\PermissionsPolicyMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, \Illuminate\Http\Request $request) {
