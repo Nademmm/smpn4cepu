@@ -30,4 +30,5 @@ temp_students.xlsx
 # Skrip ekspor lokal (memuat logika data akun), jangan di-commit
 /scripts
 /data_semua_akun_*
+/data_akun_guru_*
 /storage/app/data_semua_akun_*
