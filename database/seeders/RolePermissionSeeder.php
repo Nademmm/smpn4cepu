@@ -102,6 +102,7 @@ class RolePermissionSeeder extends Seeder
                   'ViewAny:Subject', 'View:Subject',
                   'ViewAny:Post', 'View:Post',
                   'ViewAny:Book', 'View:Book',
+                  'ViewAny:BookReservation', 'View:BookReservation', 'Update:BookReservation',
                   'ViewAny:LibraryBook', 'View:LibraryBook',
                   'ViewAny:Student', 'View:Student',
                   'ViewAny:QuizAttempt', 'View:QuizAttempt',

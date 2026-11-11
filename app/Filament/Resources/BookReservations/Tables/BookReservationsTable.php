@@ -70,23 +70,26 @@ class BookReservationsTable
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
-                // 1. Lihat Tiket & Barcode
-                Action::make('viewBarcode')
-                    ->label('Tiket & Barcode')
+                // 1. Lihat Tiket & QR Code
+                Action::make('viewQrCode')
+                    ->label('Tiket & QR Code')
                     ->icon('heroicon-o-qr-code')
                     ->color('primary')
                     ->modalHeading(fn (BookReservation $record) => "Tiket Sirkulasi: {$record->reservation_code}")
-                    ->modalDescription('Pindai barcode di bawah ini dengan pemindai sirkulasi perpustakaan.')
+                    ->modalDescription('Pindai QR Code di bawah ini menggunakan kamera sirkulasi perpustakaan.')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (BookReservation $record) => new HtmlString(
-                        '<div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">' .
+                        '<div style="text-align: center; padding: 1.25rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">' .
                         '<div style="margin-bottom: 0.75rem;">' .
                         '<h3 style="font-weight: 800; color: #0f172a; font-size: 1.1rem; margin: 0 0 0.25rem 0;">' . htmlspecialchars($record->book?->title ?? 'Buku Perpustakaan', ENT_QUOTES, 'UTF-8') . '</h3>' .
                         '<p style="color: #64748b; font-size: 0.85rem; margin: 0;">Peminjam: <strong>' . htmlspecialchars($record->borrower_name, ENT_QUOTES, 'UTF-8') . ' (' . htmlspecialchars($record->borrower_class, ENT_QUOTES, 'UTF-8') . ')</strong></p>' .
                         '</div>' .
-                        '<div style="background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; display: inline-block; margin-bottom: 0.75rem; max-width: 100%;">' .
-                        $record->barcode_svg .
+                        '<div style="background: #ffffff; padding: 1rem; border-radius: 12px; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; width: 220px; height: 220px;">' .
+                        $record->qr_svg .
+                        '</div>' .
+                        '<div style="font-family: monospace; font-weight: 800; font-size: 1.1rem; color: #1e293b; letter-spacing: 0.05em; margin-bottom: 0.75rem;">' .
+                        htmlspecialchars($record->reservation_code, ENT_QUOTES, 'UTF-8') .
                         '</div>' .
                         '<div style="display: flex; justify-content: center; gap: 1rem; font-size: 0.8rem; color: #475569; margin-bottom: 0.75rem;">' .
                         '<div><strong>Tgl Ambil:</strong> ' . ($record->pickup_date ? $record->pickup_date->format('d M Y') : '-') . '</div>' .

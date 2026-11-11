@@ -136,17 +136,59 @@ class LibraryLoanService
     }
 
     /**
-     * Cari tiket dari hasil scan/ketik. Toleran terhadap spasi, huruf kecil, dan karakter sisa scanner.
+     * Cari tiket dari hasil scan QR atau ketik manual.
+     * Toleran terhadap spasi, URL lengkap, huruf kecil, asteris, dan akhiran kode saja.
      */
     public function findByCode(?string $raw): ?BookReservation
     {
-        $code = strtoupper(preg_replace('/[^A-Za-z0-9\-]/', '', (string) $raw));
-
-        if ($code === '') {
+        $raw = trim((string) $raw);
+        if ($raw === '') {
             return null;
         }
 
-        return BookReservation::with('book')->where('reservation_code', $code)->first();
+        // 1. Ekstrak pola kanonik LIB-YYYY-XXXXX dari string apa pun (URL, teks, JSON)
+        if (preg_match('/LIB-\d{4}-[A-Z0-9]{4,6}/i', $raw, $matches)) {
+            $cleanCode = strtoupper($matches[0]);
+            $ticket = BookReservation::with('book')->where('reservation_code', $cleanCode)->first();
+            if ($ticket) {
+                return $ticket;
+            }
+        }
+
+        // 2. Jika kode berupa pembersihan alphanumeric standar
+        $clean = strtoupper(preg_replace('/[^A-Za-z0-9\-]/', '', $raw));
+        if ($clean !== '') {
+            $ticket = BookReservation::with('book')->where('reservation_code', $clean)->first();
+            if ($ticket) {
+                return $ticket;
+            }
+        }
+
+        // 3. Pencarian toleran jika yang diketik hanya akhiran suffix 4 sampai 6 karakter
+        $suffix = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $raw));
+        if (strlen($suffix) >= 4 && strlen($suffix) <= 6) {
+            $ticket = BookReservation::with('book')
+                ->where('reservation_code', 'like', "%-{$suffix}")
+                ->latest()
+                ->first();
+            if ($ticket) {
+                return $ticket;
+            }
+        }
+
+        // 4. Pencarian toleran dengan nomor NISN siswa jika menunjukkan kartu pelajar
+        if (preg_match('/^\d{6,16}$/', $suffix)) {
+            $ticket = BookReservation::with('book')
+                ->where('borrower_nisn', $suffix)
+                ->whereIn('status', [BookReservation::STATUS_PENDING, BookReservation::STATUS_BORROWED])
+                ->latest()
+                ->first();
+            if ($ticket) {
+                return $ticket;
+            }
+        }
+
+        return null;
     }
 
     /**

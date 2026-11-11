@@ -168,8 +168,9 @@ class LibraryRevisionTest extends TestCase
         $guru = User::where('email', 'guru@smpn4cepu.sch.id')->first();
         $this->assertNotNull($guru);
 
-        // 1. Guru bisa melihat katalog buku di Filament (Viewer)
+        // 1. Guru bisa melihat katalog buku dan antrean reservasi sirkulasi di Filament
         $this->actingAs($guru)->get('/admin/books')->assertStatus(200);
+        $this->actingAs($guru)->get('/admin/book-reservations')->assertStatus(200);
 
         // 2. Guru TIDAK BISA mengakses form tambah buku fisik (403 Forbidden)
         $this->actingAs($guru)->get('/admin/books/create')->assertStatus(403);
@@ -303,7 +304,16 @@ class LibraryRevisionTest extends TestCase
         $book->refresh();
         $this->assertEquals($initialStock, $book->physical_stock);
 
-        // 3. Verifikasi QR Code dan Barcode SVG tergenerate
+        // 3. Verifikasi QR Code tergenerate dan findByCode toleran terhadap URL dan suffix
+        $foundFromUrl = $loanService->findByCode("http://127.0.0.1:8000/perpustakaan/tiket/{$ticket->reservation_code}");
+        $this->assertNotNull($foundFromUrl);
+        $this->assertEquals($ticket->reservation_code, $foundFromUrl->reservation_code);
+
+        $suffix = substr($ticket->reservation_code, 9);
+        $foundFromSuffix = $loanService->findByCode($suffix);
+        $this->assertNotNull($foundFromSuffix);
+        $this->assertEquals($ticket->reservation_code, $foundFromSuffix->reservation_code);
+
         $qrSvg = BarcodeService::generateQrCodeSvg($ticket->reservation_code);
         $this->assertStringContainsString('<svg', $qrSvg);
         $this->assertStringContainsString('</svg>', $qrSvg);
