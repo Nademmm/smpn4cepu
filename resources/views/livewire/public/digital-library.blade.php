@@ -811,7 +811,7 @@
 
                             {{-- Petunjuk Prosedur --}}
                             <div class="p-3 bg-sky-soft/60 border border-sky-100 rounded-xl text-[11px] text-navy leading-relaxed">
-                                <strong>Petunjuk:</strong> Setelah mengajukan, sistem akan menerbitkan <strong>Tiket Digital Ber-Barcode</strong>. Tunjukkan tiket tersebut kepada petugas di Ruang Perpustakaan SMPN 4 Cepu saat mengambil buku fisik.
+                                <strong>Petunjuk:</strong> Setelah mengajukan, sistem akan menerbitkan <strong>Tiket Digital QR Code</strong>. Tunjukkan tiket tersebut kepada petugas di Ruang Perpustakaan SMPN 4 Cepu saat mengambil buku fisik.
                             </div>
                         </div>
                     </div>
@@ -832,7 +832,7 @@
                             class="btn-primary text-xs font-black min-h-[44px] flex items-center gap-2 !bg-emerald-600 hover:!bg-emerald-700 !text-white shadow-2xs"
                         >
                             <x-app-icon name="check-circle" class="w-4 h-4 text-white" />
-                            <span wire:loading.remove>Konfirmasi & Dapatkan Tiket Barcode</span>
+                            <span wire:loading.remove>Konfirmasi & Dapatkan Tiket QR Code</span>
                             <span wire:loading>Memproses Tiket...</span>
                         </button>
                     </div>
@@ -841,7 +841,7 @@
         </template>
     @endif
 
-    {{-- 8. Modal Tiket Digital Ber-Barcode & QR Code --}}
+    {{-- 8. Modal Tiket Digital QR Code --}}
     @if ($showTicketModal && $activeReservation)
         <template x-teleport="body">
             <div
@@ -1098,21 +1098,21 @@
                                 </div>
 
                                 <div class="p-3 bg-white rounded-lg border border-slate-200 text-center space-y-2">
-                                    <div id="checked-ticket-barcode-box" class="max-w-[280px] mx-auto overflow-hidden">
-                                        {!! $checkedTicket->barcode_svg !!}
+                                    <div id="checked-ticket-qr-box" class="w-40 h-40 p-2 mx-auto flex items-center justify-center">
+                                        {!! $checkedTicket->qr_svg !!}
                                     </div>
                                     <div class="flex flex-wrap items-center justify-center gap-2">
                                         <button
                                             type="button"
-                                            onclick="downloadBarcodePng('checked-ticket-barcode-box', 'barcode-{{ $checkedTicket->reservation_code }}.png')"
+                                            onclick="downloadBarcodePng('checked-ticket-qr-box', 'qr-{{ $checkedTicket->reservation_code }}.png')"
                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold bg-navy text-white hover:bg-brand transition-colors cursor-pointer shadow-2xs"
                                         >
                                             <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
-                                            <span>Unduh Barcode (PNG)</span>
+                                            <span>Unduh QR Code (PNG)</span>
                                         </button>
                                         <a
                                             href="{{ route('library.ticket.download-barcode', $checkedTicket->reservation_code) }}"
-                                            download="barcode-{{ $checkedTicket->reservation_code }}.svg"
+                                            download="qr-{{ $checkedTicket->reservation_code }}.svg"
                                             class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
                                         >
                                             <span>Unduh SVG</span>
@@ -1235,16 +1235,16 @@
                                                     class="btn-ghost bg-white border border-slate-300 hover:border-brand text-[11px] font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1 shadow-2xs"
                                                 >
                                                     <x-app-icon name="qr-code" class="w-3.5 h-3.5 text-navy" />
-                                                    <span>Tiket &amp; Barcode</span>
+                                                    <span>Tiket &amp; QR Code</span>
                                                 </a>
 
                                                 <a
                                                     href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
-                                                    download="barcode-{{ $item->reservation_code }}.svg"
+                                                    download="qr-{{ $item->reservation_code }}.svg"
                                                     class="btn-primary text-[11px] font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1 shadow-2xs"
                                                 >
                                                     <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
-                                                    <span>Unduh Barcode</span>
+                                                    <span>Unduh QR Code</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -1291,8 +1291,8 @@
             img.onload = function () {
                 const canvas = document.createElement('canvas');
                 const scale = 2;
-                const w = (svg.viewBox.baseVal.width || 360);
-                const h = (svg.viewBox.baseVal.height || 90);
+                const w = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 280;
+                const h = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.height) || 280;
                 canvas.width = w * scale;
                 canvas.height = h * scale;
                 const ctx = canvas.getContext('2d');
@@ -1302,7 +1302,7 @@
                 URL.revokeObjectURL(url);
 
                 const link = document.createElement('a');
-                link.download = filename || 'barcode.png';
+                link.download = filename || 'qr-code.png';
                 link.href = canvas.toDataURL('image/png');
                 document.body.appendChild(link);
                 link.click();

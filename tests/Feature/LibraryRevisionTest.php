@@ -321,5 +321,11 @@ class LibraryRevisionTest extends TestCase
         $barcodeSvg = BarcodeService::generateCode128Svg($ticket->reservation_code);
         $this->assertStringContainsString('<svg', $barcodeSvg);
         $this->assertStringContainsString('</svg>', $barcodeSvg);
+
+        // 4. Verifikasi halaman pemindai kamera scanner dapat diakses oleh staf perpus
+        $scannerResponse = $this->actingAs($perpus)->get(route('admin.circulation.scanner'));
+        $scannerResponse->assertStatus(200);
+        $scannerResponse->assertSee('Pemindai QR Code Sirkulasi');
+        $scannerResponse->assertSee('native-scanner-video');
     }
 }

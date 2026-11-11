@@ -1,7 +1,7 @@
 <x-layouts.app title="Riwayat Peminjaman Buku Saya - SMPN 4 Cepu" metaDescription="Daftar buku fisik yang sedang dan pernah dipinjam dari Perpustakaan SMP Negeri 4 Cepu.">
     <x-page-header
         title="Riwayat Peminjaman Buku Saya"
-        subtitle="Pantau status sirkulasi buku fisik, jadwal jatuh tempo, dan bukti tiket barcode peminjaman Anda."
+        subtitle="Pantau status sirkulasi buku fisik, jadwal jatuh tempo, dan bukti tiket QR Code peminjaman Anda."
         crumb="Riwayat Peminjaman"
     />
 
@@ -133,16 +133,16 @@
                                     class="btn-ghost bg-slate-50 border border-slate-200 hover:border-brand text-xs font-bold px-3 py-2 rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
                                 >
                                     <x-app-icon name="qr-code" class="w-4 h-4 text-navy" />
-                                    <span>Lihat Tiket &amp; Barcode</span>
+                                    <span>Lihat Tiket &amp; QR Code</span>
                                 </a>
 
                                 <a
                                     href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
-                                    download="barcode-{{ $item->reservation_code }}.svg"
+                                    download="qr-{{ $item->reservation_code }}.svg"
                                     class="btn-primary text-xs font-extrabold px-3 py-2 rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
                                 >
                                     <x-app-icon name="arrow-down-tray" class="w-4 h-4 text-white" />
-                                    <span>Unduh Barcode</span>
+                                    <span>Unduh QR Code</span>
                                 </a>
                             </div>
                         </div>

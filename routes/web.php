@@ -269,7 +269,18 @@ Route::middleware('auth')->group(function () {
         return view('pages.library-history', compact('history', 'user'));
     })->name('library.history');
 
-    // 11c. Sirkulasi Perpustakaan: Endpoint Pemindaian Barcode via Kamera / Scanner (Admin Only)
+    // 11c. Halaman Antarmuka Pemindai QR Code Sirkulasi (Mobile & Desktop)
+    Route::get('/admin/circulation/scanner', function () {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        if (! $user || ! $user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin'))) {
+            return redirect()->route('filament.admin.auth.login');
+        }
+
+        return view('pages.circulation-scanner');
+    })->name('admin.circulation.scanner');
+
+    // 11d. Sirkulasi Perpustakaan: Endpoint Pemindaian Barcode via Kamera / Scanner (Admin Only)
     Route::post('/admin/circulation/process-scan', function (Request $request, \App\Services\LibraryLoanService $loanService) {
         /** @var \App\Models\User|null $user */
         $user = $request->user();
