@@ -16,6 +16,7 @@ class PermissionsPolicyMiddleware
         $response = $next($request);
 
         $response->headers->set('Permissions-Policy', 'camera=*, microphone=*');
+        $response->headers->set('Feature-Policy', "camera '*'; microphone '*'");
 
         return $response;
     }

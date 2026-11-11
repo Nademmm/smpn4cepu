@@ -10,6 +10,7 @@
                 permissionError: null,
                 cameraNotice: null,
                 isSecure: true,
+                isInIframe: false,
                 actionMode: 'auto',
                 cameras: [],
                 currentCameraIndex: 0,
@@ -23,10 +24,17 @@
 
                 init() {
                     this.isSecure = window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+                    try {
+                        this.isInIframe = window.self !== window.top;
+                    } catch (e) {
+                        this.isInIframe = true;
+                    }
 
                     // Tunggu hingga elemen pembaca terlihat di layar (setelah modal selesai transisi)
                     this.waitForVisibleElement('circulation-camera-reader', () => {
-                        if (this.isSecure) {
+                        if (this.isInIframe) {
+                            this.cameraNotice = 'Halaman ini berada di dalam tab pratinjau editor (iframe). Buka di tab Chrome baru atau gunakan Foto via Kamera HP.';
+                        } else if (this.isSecure) {
                             this.startCameraDirect();
                         } else {
                             this.cameraNotice = 'Peramban membatasi streaming video langsung pada HTTP lokal. Silakan klik tombol Foto via Kamera HP untuk memindai tiket.';
@@ -39,6 +47,10 @@
                         clearTimeout(this.startTimeoutTimer);
                     }
                     this.stopCamera();
+                },
+
+                openInNewTab() {
+                    window.open(window.location.href, '_blank');
                 },
 
                 waitForVisibleElement(elementId, callback, maxTries = 30) {
@@ -117,8 +129,7 @@
 
                         const onError = () => {};
 
-                        // Panggil start langsung dengan kamera belakang (environment)
-                        // Langkah ini langsung memicu peramban meminta izin kamera kepada pengguna
+                        // Panggil start dengan kamera belakang (environment)
                         this.html5QrCode.start({ facingMode: 'environment' }, config, onSuccess, onError)
                             .then(() => {
                                 if (this.startTimeoutTimer) clearTimeout(this.startTimeoutTimer);
@@ -126,7 +137,6 @@
                                 this.isStarting = false;
                                 this.permissionError = null;
 
-                                // Deteksi kamera untuk tombol ganti kamera
                                 if (Html5Qrcode.getCameras) {
                                     Html5Qrcode.getCameras().then(devices => {
                                         if (devices && devices.length) {
@@ -136,6 +146,16 @@
                                 }
                             })
                             .catch(err => {
+                                const msg = (err && err.message) ? err.message : String(err || '');
+
+                                // Jika diblokir oleh Permissions Policy, langsung hentikan (jangan ulangi agar tidak memicu pelanggaran ganda)
+                                if (msg.includes('Permissions policy') || msg.includes('camera is not allowed in this document') || msg.includes('PermissionPolicyViolation')) {
+                                    if (this.startTimeoutTimer) clearTimeout(this.startTimeoutTimer);
+                                    this.isStarting = false;
+                                    this.handleCameraError(err);
+                                    return;
+                                }
+
                                 // Fallback: jika perangkat adalah laptop/PC yang hanya punya webcam depan
                                 this.html5QrCode.start({ facingMode: 'user' }, config, onSuccess, onError)
                                     .then(() => {
@@ -144,20 +164,10 @@
                                         this.isStarting = false;
                                         this.permissionError = null;
                                     })
-                                    .catch(() => {
-                                        // Fallback terakhir: coba buka kamera apapun tanpa batasan
-                                        this.html5QrCode.start({}, config, onSuccess, onError)
-                                            .then(() => {
-                                                if (this.startTimeoutTimer) clearTimeout(this.startTimeoutTimer);
-                                                this.isCameraRunning = true;
-                                                this.isStarting = false;
-                                                this.permissionError = null;
-                                            })
-                                            .catch(finalErr => {
-                                                if (this.startTimeoutTimer) clearTimeout(this.startTimeoutTimer);
-                                                this.isStarting = false;
-                                                this.handleCameraError(finalErr || err);
-                                            });
+                                    .catch(fallbackErr => {
+                                        if (this.startTimeoutTimer) clearTimeout(this.startTimeoutTimer);
+                                        this.isStarting = false;
+                                        this.handleCameraError(fallbackErr || err);
                                     });
                             });
 
@@ -174,9 +184,13 @@
                     const msg = (err && err.message) ? err.message : String(err || '');
 
                     if (msg.includes('Permissions policy') || msg.includes('camera is not allowed in this document') || msg.includes('PermissionPolicyViolation')) {
-                        this.permissionError = 'Akses kamera dibatasi oleh Permissions Policy (misal di tab preview editor atau HTTP IP lokal). Silakan buka di Google Chrome utama pada http://localhost:8000 atau gunakan tombol Foto via Kamera HP di bawah.';
+                        if (this.isInIframe) {
+                            this.permissionError = 'Kamera diblokir karena halaman dibuka di dalam tab pratinjau editor (iframe). Silakan klik tombol "Buka di Tab Baru" di bawah untuk membuka di Google Chrome/Edge, atau gunakan tombol "Foto via Kamera HP".';
+                        } else {
+                            this.permissionError = 'Akses streaming kamera dibatasi oleh kebijakan peramban (misal alamat IP lokal tanpa HTTPS). Silakan gunakan tombol "Foto via Kamera HP" di bawah untuk memindai langsung menggunakan kamera HP Anda.';
+                        }
                     } else if (msg.includes('NotAllowedError') || msg.includes('Permission denied') || msg.includes('PermissionDismissedError')) {
-                        this.permissionError = 'Izin kamera belum diberikan. Klik ikon gembok di sebelah kiri bilah URL peramban, ubah Kamera menjadi "Izinkan", lalu klik Nyalakan Kamera di bawah.';
+                        this.permissionError = 'Izin kamera belum diberikan. Klik ikon gembok di bilah URL peramban, ubah Kamera menjadi "Izinkan", lalu klik Nyalakan Kamera di bawah.';
                     } else if (msg.includes('NotFoundError') || msg.includes('DevicesNotFoundError')) {
                         this.permissionError = 'Tidak ada perangkat kamera yang terdeteksi di perangkat Anda.';
                     } else if (msg.includes('NotReadableError') || msg.includes('TrackStartError')) {
