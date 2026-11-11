@@ -75,22 +75,13 @@
                 </div>
             </div>
 
-            {{-- Sisi Kanan: Aksi Sirkulasi Mandiri Siswa (Selalu Berdampingan & Rapi) --}}
-            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0 pt-2 lg:pt-0">
-                <button
-                    type="button"
-                    wire:click="openCheckTicketModal"
-                    class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center justify-center gap-2 font-extrabold px-4 py-2.5 rounded-xl shadow-2xs cursor-pointer hover:shadow-xs transition-all whitespace-nowrap min-h-[42px] flex-1 sm:flex-none"
-                >
-                    <x-app-icon name="qr-code" class="w-4 h-4 text-navy shrink-0" />
-                    <span>Lacak Tiket &amp; Barcode</span>
-                </button>
-
+            {{-- Sisi Kanan: Akses Histori Peminjaman Siswa --}}
+            <div class="shrink-0 pt-2 lg:pt-0">
                 @auth
                     <button
                         type="button"
                         wire:click="openHistoryModal"
-                        class="btn-primary text-xs flex items-center justify-center gap-2 font-extrabold px-4 py-2.5 rounded-xl shadow-2xs cursor-pointer hover:shadow-xs transition-all whitespace-nowrap min-h-[42px] flex-1 sm:flex-none"
+                        class="btn-primary text-xs flex items-center justify-center gap-2 font-extrabold px-4 py-2.5 rounded-xl shadow-2xs cursor-pointer hover:shadow-xs transition-all whitespace-nowrap min-h-[42px]"
                     >
                         <x-app-icon name="bookmark" class="w-4 h-4 text-white shrink-0" />
                         <span>Histori Pinjam Saya</span>
@@ -100,6 +91,14 @@
                             </span>
                         @endif
                     </button>
+                @else
+                    <a
+                        href="{{ route('filament.admin.auth.login') }}"
+                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center justify-center gap-2 font-extrabold px-4 py-2.5 rounded-xl shadow-2xs cursor-pointer hover:shadow-xs transition-all whitespace-nowrap min-h-[42px]"
+                    >
+                        <x-app-icon name="user" class="w-4 h-4 text-navy shrink-0" />
+                        <span>Masuk untuk Cek Histori</span>
+                    </a>
                 @endauth
             </div>
         </div>
