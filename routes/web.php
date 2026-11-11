@@ -12,8 +12,11 @@ use App\Models\StaffMember;
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\StudentStatistic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 // Rute Autentikasi Masuk Portal Terpadu (Untuk Siswa, Guru, dan Admin)
 // Throttle 300/menit per IP agar aman bagi 600+ siswa dalam 1 Wi-Fi NAT sekolah (proteksi brute-force per akun ditangani di LoginController)
@@ -242,7 +245,7 @@ Route::middleware('auth')->group(function () {
         });
 
         $myAttempts = \App\Models\QuizAttempt::with('bank.subject')
-            ->where('user_id', auth()->id())
+            ->where('user_id', Auth::id())
             ->orderByDesc('created_at')
             ->limit(6)
             ->get();
@@ -337,11 +340,12 @@ Route::get('/unduhan/{document}/download', function (\App\Models\SchoolDocument 
 
     $document->increment('download_count');
 
-    $disk = \Illuminate\Support\Facades\Storage::disk('public');
+    /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+    $disk = Storage::disk('public');
     if ($document->file_path && $disk->exists($document->file_path)) {
         return $disk->download(
             $document->file_path,
-            \Illuminate\Support\Str::slug($document->title) . '.' . ($document->file_extension ?: 'pdf')
+            Str::slug($document->title) . '.' . ($document->file_extension ?: 'pdf')
         );
     }
 
