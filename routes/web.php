@@ -271,7 +271,8 @@ Route::middleware('auth')->group(function () {
 
     // 11c. Sirkulasi Perpustakaan: Endpoint Pemindaian Barcode via Kamera / Scanner (Admin Only)
     Route::post('/admin/circulation/process-scan', function (Request $request, \App\Services\LibraryLoanService $loanService) {
-        $user = auth()->user();
+        /** @var \App\Models\User|null $user */
+        $user = $request->user();
         if (! $user || ! $user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin'))) {
             return response()->json([
                 'success' => false,
