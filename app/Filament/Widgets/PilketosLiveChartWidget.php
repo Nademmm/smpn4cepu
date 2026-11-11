@@ -23,7 +23,7 @@ class PilketosLiveChartWidget extends ChartWidget
             $candidates = ElectionCandidate::orderBy('candidate_number')->get();
 
             $labels = $candidates->map(function ($c) {
-                return "No. {$c->candidate_number}: {$c->candidate_name}";
+                return "Nomor {$c->candidate_number}: {$c->candidate_name}";
             })->toArray();
 
             $data = $candidates->pluck('total_votes_cached')->toArray();

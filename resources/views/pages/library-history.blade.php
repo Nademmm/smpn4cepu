@@ -30,7 +30,7 @@
             <div class="card p-5 bg-white border border-slate-200/90 shadow-2xs">
                 <span class="text-xs font-bold text-ink-mute uppercase tracking-wider block">Menunggu Ambil</span>
                 <strong class="text-2xl sm:text-3xl font-black text-amber-600 leading-none mt-1 block">{{ $pendingLoans->count() }}</strong>
-                <span class="text-[11px] text-ink-soft block mt-1 font-semibold">Siap di Meja Perpus</span>
+                <span class="text-[11px] text-ink-soft block mt-1 font-semibold">Siap di Meja Perpustakaan</span>
             </div>
 
             <div class="card p-5 bg-white border border-slate-200/90 shadow-2xs">
@@ -152,3 +152,4 @@
         </div>
     </div>
 </x-layouts.app>
+

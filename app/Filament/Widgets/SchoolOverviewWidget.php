@@ -50,7 +50,7 @@ class SchoolOverviewWidget extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('success'),
 
-            Stat::make('Stok Buku Perpustakaan', number_format($totalBooks) . ' Eks.')
+            Stat::make('Stok Buku Perpustakaan', number_format($totalBooks) . ' Eksemplar')
                 ->description('Siap Dipinjam')
                 ->descriptionIcon('heroicon-m-book-open')
                 ->color('info'),

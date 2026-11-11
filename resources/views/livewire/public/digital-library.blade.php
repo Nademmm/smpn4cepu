@@ -38,7 +38,7 @@
             <div>
                 <span class="text-xs font-bold text-ink-mute uppercase tracking-wider block">Ketersediaan Fisik</span>
                 <strong class="text-2xl sm:text-3xl font-black text-emerald-700 leading-none">{{ $stats['total_physical'] }}</strong>
-                <span class="text-[11px] text-ink-soft block mt-1 font-semibold">Eksemplar Buku di Ruang Perpus</span>
+                <span class="text-[11px] text-ink-soft block mt-1 font-semibold">Eksemplar Buku di Ruang Perpustakaan</span>
             </div>
         </div>
     </div>
