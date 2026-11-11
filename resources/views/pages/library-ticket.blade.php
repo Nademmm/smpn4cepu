@@ -31,7 +31,7 @@
         {{-- Kartu Tiket Sirkulasi Resmi --}}
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden print:border-none print:shadow-none print:m-0">
             {{-- Header Tiket --}}
-            <div class="p-5 sm:p-6 bg-gradient-to-r from-navy to-navy-soft text-white flex items-center justify-between gap-4 border-b border-navy-soft/50">
+            <div class="p-5 sm:p-6 bg-gradient-to-r from-navy via-navy to-brand-deep text-white flex items-center justify-between gap-4 border-b border-navy/40">
                 <div class="flex items-center gap-3">
                     <picture>
                         <source srcset="{{ asset('images/logo.webp') }}" type="image/webp">
@@ -39,12 +39,14 @@
                     </picture>
                     <div>
                         <h1 class="text-sm sm:text-base font-black tracking-tight leading-tight">SMP NEGERI 4 CEPU</h1>
-                        <p class="text-[11px] text-slate-300 font-medium">Unit Layanan Perpustakaan &amp; Sirkulasi Fisik</p>
+                        <p class="text-[11px] text-slate-200 font-medium">Unit Layanan Perpustakaan &amp; Sirkulasi Fisik</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <span class="text-[10px] uppercase font-bold tracking-wider text-slate-300 block">Kode Sirkulasi</span>
-                    <span class="font-mono font-black text-sm sm:text-base text-amber-300 tracking-wider">{{ $ticket->reservation_code }}</span>
+                <div class="text-right shrink-0">
+                    <span class="text-[10px] uppercase font-extrabold tracking-wider text-slate-200 block leading-tight">Kode Sirkulasi</span>
+                    <span class="inline-block mt-1 px-2.5 py-0.5 rounded-lg bg-white/10 border border-white/20 font-mono font-black text-sm sm:text-base text-amber-300 tracking-wider shadow-2xs">
+                        {{ $ticket->reservation_code }}
+                    </span>
                 </div>
             </div>
 
