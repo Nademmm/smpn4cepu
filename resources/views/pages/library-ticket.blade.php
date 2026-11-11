@@ -33,7 +33,10 @@
             {{-- Header Tiket --}}
             <div class="p-5 sm:p-6 bg-gradient-to-r from-navy to-navy-soft text-white flex items-center justify-between gap-4 border-b border-navy-soft/50">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/assets/LOGO-SMPN4CEPU.png') }}" alt="Logo SMPN 4 Cepu" class="w-11 h-11 object-contain drop-shadow" />
+                    <picture>
+                        <source srcset="{{ asset('images/logo.webp') }}" type="image/webp">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo SMP Negeri 4 Cepu" class="w-11 h-11 object-contain drop-shadow" />
+                    </picture>
                     <div>
                         <h1 class="text-sm sm:text-base font-black tracking-tight leading-tight">SMP NEGERI 4 CEPU</h1>
                         <p class="text-[11px] text-slate-300 font-medium">Unit Layanan Perpustakaan &amp; Sirkulasi Fisik</p>
