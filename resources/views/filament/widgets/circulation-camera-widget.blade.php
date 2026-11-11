@@ -10,7 +10,7 @@
                 accept="image/*"
                 capture="environment"
                 x-ref="widgetPhotoRef"
-                class="hidden"
+                style="display: none !important; position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none;"
                 x-on:change="scanSelectedFile($event.target.files[0])"
             />
 

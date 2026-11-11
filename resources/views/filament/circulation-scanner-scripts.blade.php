@@ -1,46 +1,82 @@
 <script src="{{ asset('vendor/html5-qrcode/html5-qrcode.min.js') }}"></script>
 <style>
-    /* Penyesuaian responsif scanner kamera agar tidak overflow di layar HP */
-    #circulation-camera-reader, #widget-camera-reader {
+    /* Styling responsif & pembersihan elemen default html5-qrcode */
+    #circulation-camera-reader {
         width: 100% !important;
         max-width: 100% !important;
         border: none !important;
         position: relative !important;
+        background: #020617 !important;
+        border-radius: 1rem !important;
+        overflow: hidden !important;
     }
-    #circulation-camera-reader video, #widget-camera-reader video {
+    #circulation-camera-reader video {
         width: 100% !important;
         height: 100% !important;
         max-height: 46vh !important;
         object-fit: cover !important;
-        border-radius: 0.75rem !important;
+        border-radius: 1rem !important;
+        background: #020617 !important;
     }
-    #circulation-camera-reader__scan_region, #widget-camera-reader__scan_region {
+    #circulation-camera-reader__scan_region {
         background: transparent !important;
         border: none !important;
     }
-    #circulation-camera-reader__scan_region img, #widget-camera-reader__scan_region img {
+    #circulation-camera-reader__scan_region img {
         display: none !important;
     }
-    #circulation-camera-reader__header_message, #widget-camera-reader__header_message {
+    #circulation-camera-reader__header_message {
         display: none !important;
+    }
+    #circulation-camera-reader__status_span {
+        display: none !important;
+    }
+    #circulation-camera-reader__dashboard {
+        display: none !important;
+    }
+    #circulation-camera-reader input[type="file"] {
+        display: none !important;
+    }
+    #circulation-camera-reader button {
+        display: none !important;
+    }
+
+    /* Animasi garis pemindai QR Code */
+    @keyframes qr-scan-pulse {
+        0%, 100% {
+            top: 10%;
+            opacity: 0.2;
+        }
+        50% {
+            top: 85%;
+            opacity: 0.9;
+        }
+    }
+    .scanner-laser-line {
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #10B981, #34D399, transparent);
+        box-shadow: 0 0 12px #10B981;
+        animation: qr-scan-pulse 2.2s ease-in-out infinite;
+        pointer-events: none;
     }
 </style>
 <script>
     (function () {
-        function createCirculationScanner(readerElementId) {
-            const isWidget = readerElementId === 'widget-camera-reader';
-            const targetId = readerElementId || 'circulation-camera-reader';
-
+        function createCirculationModalScanner() {
             return {
-                targetId: targetId,
                 html5QrCode: null,
-                isCameraOpen: !isWidget,
                 isCameraRunning: false,
+                isStarting: false,
                 isProcessing: false,
                 permissionError: null,
+                cameraNotice: null,
                 isSecure: true,
                 actionMode: 'auto',
                 cameras: [],
+                currentCameraIndex: 0,
                 selectedCameraId: null,
                 manualCode: '',
                 scannedCode: '',
@@ -51,39 +87,62 @@
                 init() {
                     this.isSecure = window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
-                    if (!this.isSecure) {
-                        this.permissionError = 'Streaming kamera langsung peramban membutuhkan HTTPS atau localhost. Jika diakses via HTTP jaringan lokal di HP, silakan gunakan tombol "Ambil Foto QR" untuk memindai lewat kamera HP Anda.';
-                    }
-
-                    // Jika berada di modal dan konteks aman, coba nyalakan kamera belakang langsung
-                    if (!isWidget && this.isSecure && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                        this.startCamera('environment');
-                    }
+                    // Tunggu hingga modal Filament selesai melakukan transisi dan elemen pembaca terlihat di layar
+                    this.waitForVisibleElement('circulation-camera-reader', () => {
+                        if (this.isSecure) {
+                            this.startCameraAuto();
+                        } else {
+                            this.cameraNotice = 'Peramban membatasi streaming video langsung pada HTTP lokal. Silakan gunakan tombol "Ambil Foto QR" untuk memindai lewat kamera HP Anda.';
+                        }
+                    });
                 },
 
                 destroy() {
                     this.stopCamera();
                 },
 
-                startCamera(preferFacing) {
-                    if (this.isCameraRunning) return;
+                waitForVisibleElement(elementId, callback, maxTries = 30) {
+                    let tries = 0;
+                    const check = () => {
+                        const el = document.getElementById(elementId);
+                        if (el && el.clientWidth > 0 && el.clientHeight > 0) {
+                            callback();
+                            return;
+                        }
+                        tries++;
+                        if (tries < maxTries) {
+                            setTimeout(check, 100);
+                        } else if (el) {
+                            callback();
+                        }
+                    };
+                    check();
+                },
+
+                startCameraAuto() {
+                    if (this.isCameraRunning || this.isStarting) return;
+                    this.isStarting = true;
+                    this.permissionError = null;
+                    this.cameraNotice = null;
+
                     if (!window.Html5Qrcode) {
-                        this.permissionError = 'Pustaka pemindai belum siap dimuat.';
+                        this.permissionError = 'Pustaka pemindai belum siap. Silakan muat ulang halaman.';
+                        this.isStarting = false;
                         return;
                     }
 
-                    const readerElement = document.getElementById(this.targetId);
-                    if (!readerElement) return;
-
-                    this.permissionError = null;
-                    const facing = preferFacing || 'environment';
+                    const readerEl = document.getElementById('circulation-camera-reader');
+                    if (!readerEl) {
+                        this.isStarting = false;
+                        return;
+                    }
 
                     try {
                         if (!this.html5QrCode) {
                             const formats = window.Html5QrcodeSupportedFormats
                                 ? [window.Html5QrcodeSupportedFormats.QR_CODE]
                                 : undefined;
-                            this.html5QrCode = new Html5Qrcode(this.targetId, {
+                            this.html5QrCode = new Html5Qrcode('circulation-camera-reader', {
                                 formatsToSupport: formats,
                                 verbose: false
                             });
@@ -93,114 +152,153 @@
                             fps: 15,
                             qrbox: (viewfinderWidth, viewfinderHeight) => {
                                 const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                                const size = Math.max(Math.floor(minEdge * 0.72), 170);
+                                const size = Math.max(Math.floor(minEdge * 0.72), 120);
                                 return { width: size, height: size };
                             },
                             aspectRatio: 1.0
                         };
 
-                        const cameraConfig = this.selectedCameraId
-                            ? { deviceId: { exact: this.selectedCameraId } }
-                            : { facingMode: facing };
+                        const onSuccess = (decodedText) => {
+                            this.onCodeDetected(decodedText);
+                        };
 
-                        this.html5QrCode.start(
-                            cameraConfig,
-                            config,
-                            (decodedText) => {
-                                this.onCodeDetected(decodedText);
-                            },
-                            () => {}
-                        ).then(() => {
-                            this.isCameraRunning = true;
-                            this.permissionError = null;
+                        const onError = () => {};
 
-                            // Muat daftar kamera setelah izin aktif agar label perangkat terbaca
-                            if (Html5Qrcode.getCameras) {
-                                Html5Qrcode.getCameras().then(devices => {
-                                    if (devices && devices.length) {
-                                        this.cameras = devices;
+                        // Panggil getCameras() terlebih dahulu untuk memicu dialog izin bawaan peramban
+                        Html5Qrcode.getCameras().then(devices => {
+                            if (devices && devices.length > 0) {
+                                this.cameras = devices;
+
+                                // Deteksi kamera belakang untuk HP
+                                let targetIndex = 0;
+                                for (let i = 0; i < devices.length; i++) {
+                                    const label = (devices[i].label || '').toLowerCase();
+                                    if (label.includes('back') || label.includes('rear') || label.includes('belakang') || label.includes('environment')) {
+                                        targetIndex = i;
+                                        break;
                                     }
-                                }).catch(() => {});
-                            }
-                        }).catch((err) => {
-                            // Fallback jika kamera belakang tidak ditemukan (misal di PC / webcam depan)
-                            if (facing === 'environment' && !this.selectedCameraId) {
-                                this.html5QrCode.start(
-                                    { facingMode: 'user' },
-                                    config,
-                                    (decodedText) => this.onCodeDetected(decodedText),
-                                    () => {}
-                                ).then(() => {
-                                    this.isCameraRunning = true;
-                                    this.permissionError = null;
-                                }).catch((e) => {
-                                    this.handleCameraError(e);
-                                });
+                                }
+                                if (devices.length > 1 && targetIndex === 0) {
+                                    targetIndex = devices.length - 1;
+                                }
+
+                                this.currentCameraIndex = targetIndex;
+                                this.selectedCameraId = devices[targetIndex].id;
+
+                                this.html5QrCode.start(this.selectedCameraId, config, onSuccess, onError)
+                                    .then(() => {
+                                        this.isCameraRunning = true;
+                                        this.isStarting = false;
+                                        this.permissionError = null;
+                                    })
+                                    .catch(err => {
+                                        this.fallbackStartFacingMode(config, onSuccess, onError, err);
+                                    });
                             } else {
-                                this.handleCameraError(err);
+                                this.fallbackStartFacingMode(config, onSuccess, onError, null);
                             }
+                        }).catch(err => {
+                            this.fallbackStartFacingMode(config, onSuccess, onError, err);
                         });
+
                     } catch (e) {
+                        this.isStarting = false;
                         this.handleCameraError(e);
                     }
                 },
 
-                handleCameraError(err) {
-                    this.isCameraRunning = false;
-                    const msg = (err && err.message) ? err.message : String(err || '');
-
-                    const isLocalOrHttps = window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-                    if (!isLocalOrHttps) {
-                        this.permissionError = 'Akses kamera peramban dibatasi pada protokol HTTP (IP lokal). Silakan buka melalui HTTPS atau gunakan tombol "Ambil Foto QR" untuk memindai langsung menggunakan kamera HP.';
+                fallbackStartFacingMode(config, onSuccess, onError, previousError) {
+                    if (!this.html5QrCode) {
+                        this.isStarting = false;
+                        this.handleCameraError(previousError);
                         return;
                     }
 
-                    if (msg.includes('NotAllowedError') || msg.includes('Permission denied')) {
-                        this.permissionError = 'Izin kamera ditolak. Silakan klik ikon gembok / setelan situs di bilah alamat peramban Anda, lalu ubah izin kamera menjadi "Izinkan" (Allow).';
+                    // Percobaan 1: Kamera belakang
+                    this.html5QrCode.start({ facingMode: 'environment' }, config, onSuccess, onError)
+                        .then(() => {
+                            this.isCameraRunning = true;
+                            this.isStarting = false;
+                            this.permissionError = null;
+                        })
+                        .catch(() => {
+                            // Percobaan 2: Kamera depan / webcam laptop
+                            this.html5QrCode.start({ facingMode: 'user' }, config, onSuccess, onError)
+                                .then(() => {
+                                    this.isCameraRunning = true;
+                                    this.isStarting = false;
+                                    this.permissionError = null;
+                                })
+                                .catch(() => {
+                                    // Percobaan 3: Kamera apapun tanpa batasan
+                                    this.html5QrCode.start({}, config, onSuccess, onError)
+                                        .then(() => {
+                                            this.isCameraRunning = true;
+                                            this.isStarting = false;
+                                            this.permissionError = null;
+                                        })
+                                        .catch(err => {
+                                            this.isStarting = false;
+                                            this.handleCameraError(previousError || err);
+                                        });
+                                });
+                        });
+                },
+
+                handleCameraError(err) {
+                    this.isCameraRunning = false;
+                    this.isStarting = false;
+                    const msg = (err && err.message) ? err.message : String(err || '');
+
+                    if (msg.includes('NotAllowedError') || msg.includes('Permission denied') || msg.includes('PermissionDismissedError')) {
+                        this.permissionError = 'Izin kamera belum diizinkan. Silakan klik ikon gembok di sebelah kiri bilah alamat peramban, ubah Kamera menjadi "Izinkan" (Allow), lalu klik tombol "Coba Nyalakan Kamera" di bawah.';
                     } else if (msg.includes('NotFoundError') || msg.includes('DevicesNotFoundError')) {
-                        this.permissionError = 'Tidak ada perangkat kamera yang terdeteksi di perangkat ini.';
+                        this.permissionError = 'Tidak ada perangkat kamera yang terdeteksi di perangkat Anda.';
                     } else if (msg.includes('NotReadableError') || msg.includes('TrackStartError')) {
-                        this.permissionError = 'Kamera sedang digunakan oleh aplikasi lain atau belum siap. Silakan tutup aplikasi lain dan coba lagi.';
+                        this.permissionError = 'Kamera sedang digunakan oleh aplikasi lain. Tutup aplikasi yang menggunakan kamera dan coba lagi.';
+                    } else if (!this.isSecure) {
+                        this.permissionError = 'Peramban membatasi streaming kamera pada protokol HTTP lokal. Silakan gunakan tombol "Ambil Foto QR" untuk memindai via kamera HP.';
                     } else {
-                        this.permissionError = 'Tidak dapat membuka kamera: ' + msg;
+                        this.permissionError = 'Tidak dapat mengakses kamera: ' + msg;
                     }
                 },
 
                 stopCamera() {
-                    if (this.html5QrCode && this.isCameraRunning) {
-                        try {
-                            this.html5QrCode.stop().then(() => {
+                    if (this.html5QrCode) {
+                        if (this.isCameraRunning) {
+                            try {
+                                this.html5QrCode.stop().then(() => {
+                                    try { this.html5QrCode.clear(); } catch(e){}
+                                    this.html5QrCode = null;
+                                    this.isCameraRunning = false;
+                                    this.isStarting = false;
+                                }).catch(() => {
+                                    try { this.html5QrCode.clear(); } catch(e){}
+                                    this.html5QrCode = null;
+                                    this.isCameraRunning = false;
+                                    this.isStarting = false;
+                                });
+                            } catch (e) {
                                 this.isCameraRunning = false;
-                            }).catch(() => {
-                                this.isCameraRunning = false;
-                            });
-                        } catch (e) {
-                            this.isCameraRunning = false;
+                                this.isStarting = false;
+                            }
+                        } else {
+                            try { this.html5QrCode.clear(); } catch(e){}
+                            this.html5QrCode = null;
+                            this.isStarting = false;
                         }
-                    } else {
-                        this.isCameraRunning = false;
-                    }
-                },
-
-                toggleCamera() {
-                    if (this.isCameraRunning) {
-                        this.stopCamera();
-                        if (isWidget) {
-                            this.isCameraOpen = false;
-                        }
-                    } else {
-                        if (isWidget) {
-                            this.isCameraOpen = true;
-                        }
-                        this.startCamera('environment');
                     }
                 },
 
                 switchCamera() {
-                    if (this.isCameraRunning) {
-                        this.stopCamera();
-                        setTimeout(() => this.startCamera('environment'), 250);
-                    }
+                    if (this.cameras.length <= 1) return;
+                    this.currentCameraIndex = (this.currentCameraIndex + 1) % this.cameras.length;
+                    this.selectedCameraId = this.cameras[this.currentCameraIndex].id;
+
+                    this.stopCamera();
+                    setTimeout(() => {
+                        this.startCameraAuto();
+                    }, 250);
                 },
 
                 scanSelectedFile(file) {
@@ -208,14 +306,11 @@
                     this.isProcessing = true;
                     this.scannedCode = file.name || 'Foto QR Tiket';
 
-                    const readerElement = document.getElementById(this.targetId);
-                    if (!readerElement) return;
-
                     if (!this.html5QrCode) {
                         const formats = window.Html5QrcodeSupportedFormats
                             ? [window.Html5QrcodeSupportedFormats.QR_CODE]
                             : undefined;
-                        this.html5QrCode = new Html5Qrcode(this.targetId, {
+                        this.html5QrCode = new Html5Qrcode('circulation-camera-reader', {
                             formatsToSupport: formats,
                             verbose: false
                         });
@@ -229,7 +324,7 @@
                             this.isProcessing = false;
                             this.lastResult = {
                                 success: false,
-                                message: 'QR Code tidak terdeteksi pada foto. Pastikan gambar jelas, fokus, dan tidak terpotong.'
+                                message: 'QR Code tidak terdeteksi pada foto. Pastikan gambar jelas, fokus, dan tidak buram.'
                             };
                         });
                 },
@@ -254,7 +349,7 @@
                     const now = Date.now();
                     const code = (rawCode || '').trim();
 
-                    if (code === this.lastScannedCode && (now - this.lastScannedAt) < 3000) {
+                    if (code === this.lastScannedCode && (now - this.lastScannedAt) < 2500) {
                         return;
                     }
 
@@ -292,6 +387,7 @@
                         this.lastResult = data;
                         this.manualCode = '';
 
+                        // Refresh tabel data Filament agar status langsung terupdate
                         if (window.Livewire) {
                             Livewire.dispatch('refresh');
                         }
@@ -309,8 +405,8 @@
 
         function registerComponents() {
             if (window.Alpine) {
-                Alpine.data('circulationCameraScanner', () => createCirculationScanner('circulation-camera-reader'));
-                Alpine.data('circulationWidgetScanner', () => createCirculationScanner('widget-camera-reader'));
+                Alpine.data('circulationCameraScanner', createCirculationModalScanner);
+                Alpine.data('circulationWidgetScanner', createCirculationModalScanner);
             }
         }
 
@@ -320,11 +416,7 @@
             document.addEventListener('alpine:init', registerComponents);
         }
 
-        window.circulationCameraScanner = function () {
-            return createCirculationScanner('circulation-camera-reader');
-        };
-        window.circulationWidgetScanner = function () {
-            return createCirculationScanner('widget-camera-reader');
-        };
+        window.circulationCameraScanner = createCirculationModalScanner;
+        window.circulationWidgetScanner = createCirculationModalScanner;
     })();
 </script>

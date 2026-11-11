@@ -20,26 +20,18 @@ class ListBookReservations extends ListRecords
 {
     protected static string $resource = BookReservationResource::class;
 
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            \App\Filament\Widgets\CirculationCameraWidget::class,
-        ];
-    }
-
     protected function getHeaderActions(): array
     {
         return [
-            // Pemindaian QR Code Langsung via Kamera
             Action::make('cameraScan')
                 ->label('Scan QR Code Tiket')
-                ->icon('heroicon-o-qr-code')
-                ->color('success')
-                ->modalHeading('Scanner Kamera: QR Code Sirkulasi')
-                ->modalDescription('Arahkan kamera belakang HP atau webcam ke QR Code tiket siswa.')
+                ->icon('heroicon-m-qr-code')
+                ->color('primary')
+                ->modalHeading('Pemindai QR Code Sirkulasi')
+                ->modalDescription('Pindai QR Code tiket peminjaman siswa untuk serah terima atau pengembalian buku fisik.')
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Tutup Scanner')
-                ->modalWidth('lg')
+                ->modalWidth('md')
                 ->modalContent(fn () => view('filament.components.circulation-camera-modal')),
         ];
     }
