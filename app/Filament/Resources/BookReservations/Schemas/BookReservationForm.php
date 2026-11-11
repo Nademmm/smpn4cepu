@@ -15,12 +15,12 @@ class BookReservationForm
         return $schema
             ->components([
                 TextInput::make('reservation_code')
-                    ->label('Kode Tiket Reservasi')
+                    ->label('Kode Tiket Reservasi / Barcode')
                     ->disabled()
                     ->required(),
 
                 Select::make('book_id')
-                    ->label('Buku yang Dipesan')
+                    ->label('Buku yang Dipinjam')
                     ->relationship('book', 'title')
                     ->searchable()
                     ->preload()
@@ -31,6 +31,10 @@ class BookReservationForm
                     ->required()
                     ->maxLength(100),
 
+                TextInput::make('borrower_nisn')
+                    ->label('NISN Siswa')
+                    ->maxLength(20),
+
                 TextInput::make('borrower_class')
                     ->label('Kelas / Rombel')
                     ->required()
@@ -40,11 +44,15 @@ class BookReservationForm
                     ->label('Tanggal Rencana Ambil')
                     ->required(),
 
+                DatePicker::make('due_date')
+                    ->label('Tenggat Pengembalian')
+                    ->helperText('Batas waktu buku harus dikembalikan ke perpustakaan (default 7 hari).'),
+
                 Select::make('status')
                     ->label('Status Reservasi / Sirkulasi')
                     ->options([
                         'menunggu' => 'Menunggu Pengambilan',
-                        'diambil' => 'Buku Telah Diambil (Dipinjam)',
+                        'diambil' => 'Buku Telah Diambil (Sedang Dipinjam)',
                         'selesai' => 'Buku Selesai Dikembalikan',
                         'dibatalkan' => 'Reservasi Dibatalkan / Kadaluarsa',
                     ])
@@ -53,7 +61,7 @@ class BookReservationForm
 
                 Textarea::make('notes')
                     ->label('Catatan Staf Perpustakaan')
-                    ->placeholder('Kondisi buku, catatan denda, atau tanggal pengembalian fisik...')
+                    ->placeholder('Kondisi buku saat dipinjam, nomor seri fisik, catatan denda, dsb...')
                     ->rows(3)
                     ->columnSpanFull(),
             ]);

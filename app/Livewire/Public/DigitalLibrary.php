@@ -4,8 +4,12 @@ namespace App\Livewire\Public;
 
 use App\Enums\BookCategory;
 use App\Models\Book;
+use App\Models\BookReservation;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,6 +23,7 @@ class DigitalLibrary extends Component
     public string $sort = 'latest'; // latest, title_asc, popular, year_desc
     public string $buku = '';
 
+    // Modal Detail & E-Book
     public ?int $selectedBookId = null;
     public bool $showDetailModal = false;
     public bool $showPdfModal = false;
@@ -27,6 +32,20 @@ class DigitalLibrary extends Component
     public ?string $activePdfAuthor = null;
     public ?string $activePdfCategory = null;
     public ?int $activePdfPageCount = null;
+
+    // Modal Form Peminjaman Fisik
+    public bool $showBorrowModal = false;
+    public ?int $borrowBookId = null;
+    public string $borrowerName = '';
+    public string $borrowerNisn = '';
+    public string $borrowerClass = '';
+    public string $pickupDate = '';
+    public string $borrowNotes = '';
+    public ?string $borrowErrorMessage = null;
+
+    // Modal Tiket Peminjaman (Hasil Sukses + Barcode / QR)
+    public bool $showTicketModal = false;
+    public ?BookReservation $activeReservation = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -114,7 +133,6 @@ class DigitalLibrary extends Component
             return;
         }
 
-        // Tambah counter views
         $book->increment('views_count');
 
         $this->activePdfUrl = $book->pdf_file;
@@ -137,6 +155,118 @@ class DigitalLibrary extends Component
         $this->activePdfPageCount = null;
     }
 
+    /**
+     * Buka formulir peminjaman buku fisik.
+     */
+    public function openBorrowModal(int $bookId): void
+    {
+        $book = Book::active()->find($bookId);
+        if (!$book || ($book->physical_stock ?? 0) <= 0) {
+            return;
+        }
+
+        $this->borrowBookId = $book->id;
+        $this->borrowErrorMessage = null;
+        $this->borrowNotes = '';
+
+        // Otomatis isi data siswa jika sedang masuk akun
+        if (Auth::check()) {
+            $user = Auth::user();
+            $this->borrowerName = $user->name ?? '';
+            $this->borrowerNisn = $user->nisn ?? '';
+            $this->borrowerClass = $user->student_class ?? 'Siswa SMPN 4 Cepu';
+        } else {
+            $this->borrowerName = '';
+            $this->borrowerNisn = '';
+            $this->borrowerClass = '';
+        }
+
+        // Default tanggal ambil hari ini atau besok jika akhir pekan
+        $this->pickupDate = Carbon::now()->isWeekend()
+            ? Carbon::now()->next(Carbon::MONDAY)->format('Y-m-d')
+            : Carbon::now()->format('Y-m-d');
+
+        $this->showDetailModal = false;
+        $this->showBorrowModal = true;
+    }
+
+    public function closeBorrowModal(): void
+    {
+        $this->showBorrowModal = false;
+        $this->borrowBookId = null;
+        $this->borrowErrorMessage = null;
+    }
+
+    /**
+     * Kirim formulir peminjaman dan bangkitkan tiket digital ber-barcode.
+     */
+    public function submitBorrow(): void
+    {
+        $this->borrowErrorMessage = null;
+
+        $this->validate([
+            'borrowerName' => 'required|string|min:3|max:100',
+            'borrowerClass' => 'required|string|min:2|max:50',
+            'pickupDate' => 'required|date|after_or_equal:today',
+        ], [
+            'borrowerName.required' => 'Nama lengkap peminjam wajib diisi.',
+            'borrowerClass.required' => 'Kelas / rombel peminjam wajib diisi.',
+            'pickupDate.required' => 'Tanggal rencana pengambilan buku wajib dipilih.',
+            'pickupDate.after_or_equal' => 'Tanggal pengambilan tidak boleh lewat dari hari ini.',
+        ]);
+
+        $book = Book::active()->find($this->borrowBookId);
+        if (!$book || ($book->physical_stock ?? 0) <= 0) {
+            $this->borrowErrorMessage = 'Mohon maaf, stok buku fisik ini sedang kosong atau habis dipinjam.';
+            return;
+        }
+
+        // Cek jika peminjam yang sama sudah memesan buku yang sama dalam status menunggu
+        $alreadyReserved = BookReservation::where('book_id', $book->id)
+            ->where('borrower_name', trim($this->borrowerName))
+            ->where('borrower_class', trim($this->borrowerClass))
+            ->whereIn('status', ['menunggu', 'dipinjam', 'diambil'])
+            ->exists();
+
+        if ($alreadyReserved) {
+            $this->borrowErrorMessage = 'Anda sudah memiliki tiket peminjaman aktif untuk buku ini. Silakan selesaikan peminjaman sebelumnya di perpustakaan.';
+            return;
+        }
+
+        // Bangkitkan kode reservasi unik, misal: LIB-2026-4892
+        $year = date('Y');
+        $code = 'LIB-' . $year . '-' . strtoupper(Str::random(5));
+        while (BookReservation::where('reservation_code', $code)->exists()) {
+            $code = 'LIB-' . $year . '-' . strtoupper(Str::random(5));
+        }
+
+        $pickupCarbon = Carbon::parse($this->pickupDate);
+        $dueDate = $pickupCarbon->copy()->addDays(7); // Masa pinjam 7 hari
+
+        $reservation = BookReservation::create([
+            'book_id' => $book->id,
+            'reservation_code' => $code,
+            'borrower_nisn' => !empty($this->borrowerNisn) ? trim($this->borrowerNisn) : null,
+            'borrower_name' => trim($this->borrowerName),
+            'borrower_class' => trim($this->borrowerClass),
+            'pickup_date' => $this->pickupDate,
+            'due_date' => $dueDate->format('Y-m-d'),
+            'status' => 'menunggu',
+            'notes' => !empty($this->borrowNotes) ? trim($this->borrowNotes) : null,
+        ]);
+
+        $this->activeReservation = $reservation;
+        $this->showBorrowModal = false;
+        $this->showTicketModal = true;
+    }
+
+    public function closeTicketModal(): void
+    {
+        $this->showTicketModal = false;
+        $this->activeReservation = null;
+        $this->borrowBookId = null;
+    }
+
     public function getSelectedBookProperty(): ?Book
     {
         if (!$this->selectedBookId) {
@@ -146,9 +276,17 @@ class DigitalLibrary extends Component
         return Book::active()->find($this->selectedBookId);
     }
 
+    public function getBorrowBookProperty(): ?Book
+    {
+        if (!$this->borrowBookId) {
+            return null;
+        }
+
+        return Book::active()->find($this->borrowBookId);
+    }
+
     public function render()
     {
-        // 1. Ambil statistik koleksi real-time dari database
         $stats = Cache::remember('public_books_stats_v1', 300, function () {
             return [
                 'total_titles' => Book::active()->count(),
@@ -159,20 +297,16 @@ class DigitalLibrary extends Component
             ];
         });
 
-        // 2. Query katalog buku
         $query = Book::active();
 
-        // Filter pencarian
         if (!empty(trim($this->search))) {
             $query->search(trim($this->search));
         }
 
-        // Filter kategori
         if ($this->category !== 'semua') {
             $query->where('category', $this->category);
         }
 
-        // Filter ketersediaan format
         if ($this->format === 'digital') {
             $query->where(function (Builder $q) {
                 $q->whereNotNull('pdf_path')->orWhereNotNull('pdf_url');
@@ -181,7 +315,6 @@ class DigitalLibrary extends Component
             $query->where('physical_stock', '>', 0);
         }
 
-        // Pengurutan
         switch ($this->sort) {
             case 'title_asc':
                 $query->orderBy('title', 'asc');
@@ -200,7 +333,6 @@ class DigitalLibrary extends Component
 
         $books = $query->paginate(12);
 
-        // Kategori pills data
         $categoriesList = [
             'semua' => 'Semua Koleksi',
             BookCategory::KELAS_7->value => 'Kelas VII',
@@ -210,7 +342,6 @@ class DigitalLibrary extends Component
             BookCategory::KARYA_SEKOLAH->value => 'Karya Sekolah',
         ];
 
-        // Hitung jumlah buku per kategori untuk badge pill
         $categoryCounts = Cache::remember('public_books_category_counts_v1', 300, function () {
             $counts = Book::active()->selectRaw('category, count(*) as total')->groupBy('category')->pluck('total', 'category')->toArray();
             $counts['semua'] = Book::active()->count();
@@ -223,7 +354,7 @@ class DigitalLibrary extends Component
             'categoriesList' => $categoriesList,
             'categoryCounts' => $categoryCounts,
             'selectedBook' => $this->selectedBook,
+            'borrowBook' => $this->borrowBook,
         ]);
     }
 }
-

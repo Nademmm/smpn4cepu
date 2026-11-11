@@ -1,7 +1,7 @@
 <div
     class="space-y-8"
     x-effect="
-        const modalActive = $wire.showPdfModal || $wire.showDetailModal;
+        const modalActive = $wire.showPdfModal || $wire.showDetailModal || $wire.showBorrowModal || $wire.showTicketModal;
         document.documentElement.classList.toggle('overflow-hidden', modalActive);
         document.body.classList.toggle('overflow-hidden', modalActive);
     "
@@ -324,14 +324,25 @@
                                 <span>Detail Bibliografi</span>
                             </button>
                         @else
-                            <button
-                                type="button"
-                                wire:click="openDetail({{ $b->id }})"
-                                class="btn-primary w-full text-xs font-extrabold !py-2.5 shadow-2xs flex items-center justify-center gap-1.5 !bg-emerald-600 hover:!bg-emerald-700 !text-white min-h-[44px]"
-                            >
-                                <x-app-icon name="check-circle" class="w-4 h-4 text-white" />
-                                <span>Koleksi Rak Fisik</span>
-                            </button>
+                            @if ($b->physical_stock > 0)
+                                <button
+                                    type="button"
+                                    wire:click="openBorrowModal({{ $b->id }})"
+                                    class="btn-primary w-full text-xs font-extrabold !py-2.5 shadow-2xs flex items-center justify-center gap-1.5 !bg-emerald-600 hover:!bg-emerald-700 !text-white min-h-[44px]"
+                                >
+                                    <x-app-icon name="bookmark" class="w-4 h-4 text-white" />
+                                    <span>Pinjam Buku Fisik</span>
+                                </button>
+                            @else
+                                <button
+                                    type="button"
+                                    disabled
+                                    class="btn-ghost w-full text-xs font-bold !py-2.5 bg-slate-100 text-ink-mute flex items-center justify-center gap-1.5 min-h-[44px] cursor-not-allowed opacity-75"
+                                >
+                                    <x-app-icon name="x-circle" class="w-4 h-4 text-rose-500" />
+                                    <span>Stok Habis Dipinjam</span>
+                                </button>
+                            @endif
                             <button
                                 type="button"
                                 wire:click="openDetail({{ $b->id }})"
@@ -509,8 +520,19 @@
                         Tutup
                     </button>
 
-                    @if ($selectedBook->has_digital)
-                        <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex flex-wrap items-center gap-2">
+                        @if ($selectedBook->physical_stock > 0)
+                            <button
+                                type="button"
+                                wire:click="openBorrowModal({{ $selectedBook->id }})"
+                                class="btn-primary text-xs flex items-center gap-2 shadow-2xs font-black min-h-[44px] !bg-emerald-600 hover:!bg-emerald-700 !text-white"
+                            >
+                                <x-app-icon name="bookmark" class="w-4 h-4 text-white" />
+                                <span>Pinjam Buku Fisik (Stok: {{ $selectedBook->physical_stock }})</span>
+                            </button>
+                        @endif
+
+                        @if ($selectedBook->has_digital)
                             <a
                                 href="{{ $selectedBook->pdf_file }}"
                                 download="{{ $selectedBook->slug }}.pdf"
@@ -527,15 +549,10 @@
                                 class="btn-primary text-xs flex items-center gap-2 shadow-2xs font-black min-h-[44px]"
                             >
                                 <x-app-icon name="book" class="w-4 h-4 text-navy" />
-                                <span>Baca E-Book Sekarang</span>
+                                <span>Baca E-Book</span>
                             </button>
-                        </div>
-                    @else
-                        <div class="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 px-3.5 py-2 rounded-xl border border-emerald-200">
-                            <x-app-icon name="check-circle" class="w-4 h-4 text-emerald-600" />
-                            <span>Buku fisik tersedia di ruang baca perpustakaan</span>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -608,6 +625,300 @@
                         style="width: 100%; height: 100%; border: none;"
                     ></iframe>
                 </main>
+            </div>
+        </template>
+    @endif
+
+    {{-- 7. Modal Formulir Peminjaman Buku Fisik --}}
+    @if ($showBorrowModal && $borrowBook)
+        <template x-teleport="body">
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="borrow-modal-title"
+                @keydown.escape.window="$wire.closeBorrowModal()"
+                class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-navy/85 backdrop-blur-md overflow-y-auto w-full h-full m-0"
+            >
+                <div
+                    @click.outside="$wire.closeBorrowModal()"
+                    class="card max-w-xl w-full p-0 overflow-hidden shadow-2xl max-h-[92vh] flex flex-col bg-white my-auto animate-fade-in relative z-10"
+                >
+                    {{-- Header Modal --}}
+                    <div class="p-5 bg-sky-soft border-b-2 border-sun-soft flex items-start justify-between gap-4">
+                        <div>
+                            <span class="text-[10px] font-black uppercase tracking-wider text-brand block">
+                                Layanan Sirkulasi Fisik
+                            </span>
+                            <h2 id="borrow-modal-title" class="text-base sm:text-lg font-extrabold text-navy leading-snug">
+                                Formulir Peminjaman Buku Fisik
+                            </h2>
+                        </div>
+                        <button
+                            type="button"
+                            wire:click="closeBorrowModal"
+                            aria-label="Tutup formulir"
+                            class="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-xl text-ink-mute hover:text-navy hover:bg-white transition-colors"
+                        >
+                            <x-app-icon name="x" class="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {{-- Body Form --}}
+                    <div class="p-5 sm:p-6 overflow-y-auto space-y-4 grow">
+                        {{-- Ringkasan Buku yang Dipilih --}}
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3">
+                            <div class="w-12 h-16 rounded-lg bg-navy/10 overflow-hidden shrink-0 border border-slate-200 shadow-2xs">
+                                <img
+                                    src="{{ $borrowBook->cover_image }}"
+                                    alt="{{ $borrowBook->title }}"
+                                    class="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <span class="text-[10px] font-bold text-ink-mute uppercase tracking-wider block">Buku Terpilih</span>
+                                <h3 class="text-xs sm:text-sm font-bold text-navy truncate" title="{{ $borrowBook->title }}">
+                                    {{ $borrowBook->title }}
+                                </h3>
+                                <p class="text-[11px] text-ink-soft truncate">
+                                    {{ $borrowBook->author ?? 'Penyusun Resmi' }} &bull; Tersedia: <strong class="text-emerald-700">{{ $borrowBook->physical_stock }} Eks</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Pesan Error Jika Ada --}}
+                        @if ($borrowErrorMessage)
+                            <div class="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+                                <x-app-icon name="exclamation-circle" class="w-4 h-4 shrink-0 text-rose-600" />
+                                <span>{{ $borrowErrorMessage }}</span>
+                            </div>
+                        @endif
+
+                        {{-- Form Inputs --}}
+                        <div class="space-y-3.5 text-xs">
+                            <div>
+                                <label for="borrower-name" class="block font-bold text-navy mb-1">
+                                    Nama Lengkap Siswa / Peminjam <span class="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="borrower-name"
+                                    type="text"
+                                    wire:model="borrowerName"
+                                    placeholder="Contoh: Muhammad Rizky Pratama"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                                />
+                                @error('borrowerName')
+                                    <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label for="borrower-nisn" class="block font-bold text-navy mb-1">
+                                        NISN (Nomor Induk Siswa)
+                                    </label>
+                                    <input
+                                        id="borrower-nisn"
+                                        type="text"
+                                        wire:model="borrowerNisn"
+                                        placeholder="10 digit NISN"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                                    />
+                                </div>
+                                <div>
+                                    <label for="borrower-class" class="block font-bold text-navy mb-1">
+                                        Kelas / Rombel <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input
+                                        id="borrower-class"
+                                        type="text"
+                                        wire:model="borrowerClass"
+                                        placeholder="Contoh: 7A / 8B / 9C"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                                    />
+                                    @error('borrowerClass')
+                                        <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="pickup-date" class="block font-bold text-navy mb-1">
+                                    Rencana Tanggal Pengambilan Buku <span class="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="pickup-date"
+                                    type="date"
+                                    wire:model="pickupDate"
+                                    min="{{ date('Y-m-d') }}"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                                />
+                                <span class="text-[11px] text-ink-mute block mt-1">Masa pinjam standar berlaku 7 hari kalender sejak buku diambil.</span>
+                                @error('pickupDate')
+                                    <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="borrow-notes" class="block font-bold text-navy mb-1">
+                                    Catatan Tambahan (Opsional)
+                                </label>
+                                <textarea
+                                    id="borrow-notes"
+                                    wire:model="borrowNotes"
+                                    rows="2"
+                                    placeholder="Tuliskan catatan khusus bila diperlukan..."
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium resize-none"
+                                ></textarea>
+                            </div>
+
+                            {{-- Petunjuk Prosedur --}}
+                            <div class="p-3 bg-sky-soft/60 border border-sky-100 rounded-xl text-[11px] text-navy leading-relaxed">
+                                <strong>Petunjuk:</strong> Setelah mengajukan, sistem akan menerbitkan <strong>Tiket Digital Ber-Barcode</strong>. Tunjukkan tiket tersebut kepada petugas di Ruang Perpustakaan SMPN 4 Cepu saat mengambil buku fisik.
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Footer Modal --}}
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
+                        <button
+                            type="button"
+                            wire:click="closeBorrowModal"
+                            class="btn-ghost text-xs min-h-[44px]"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="button"
+                            wire:click="submitBorrow"
+                            wire:loading.attr="disabled"
+                            class="btn-primary text-xs font-black min-h-[44px] flex items-center gap-2 !bg-emerald-600 hover:!bg-emerald-700 !text-white shadow-2xs"
+                        >
+                            <x-app-icon name="check-circle" class="w-4 h-4 text-white" />
+                            <span wire:loading.remove>Konfirmasi & Dapatkan Tiket Barcode</span>
+                            <span wire:loading>Memproses Tiket...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    @endif
+
+    {{-- 8. Modal Tiket Digital Ber-Barcode & QR Code --}}
+    @if ($showTicketModal && $activeReservation)
+        <template x-teleport="body">
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="ticket-modal-title"
+                @keydown.escape.window="$wire.closeTicketModal()"
+                class="fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 bg-navy/90 backdrop-blur-md overflow-y-auto w-full h-full m-0"
+            >
+                <div
+                    class="card max-w-lg w-full p-0 overflow-hidden shadow-2xl bg-white my-auto animate-fade-in relative z-10 border-2 border-sun-soft"
+                >
+                    {{-- Area Cetak Tiket --}}
+                    <div id="printable-library-ticket" class="p-5 sm:p-6 bg-white space-y-4">
+                        {{-- Header Kop Tiket --}}
+                        <div class="flex items-center gap-3.5 pb-3.5 border-b-2 border-dashed border-slate-200">
+                            <img
+                                src="{{ asset('images/logo.png') }}"
+                                alt="Logo SMP Negeri 4 Cepu"
+                                class="w-12 h-12 object-contain shrink-0"
+                            />
+                            <div class="min-w-0 flex-1">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-brand block leading-tight">
+                                    SMP NEGERI 4 CEPU
+                                </span>
+                                <h2 id="ticket-modal-title" class="text-sm sm:text-base font-black text-navy leading-tight">
+                                    Tiket Bukti Peminjaman Buku Fisik
+                                </h2>
+                                <span class="text-[11px] text-ink-mute font-medium block">
+                                    Unit Layanan Perpustakaan & Literasi Digital
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Kode Tiket & Status Badge --}}
+                        <div class="text-center py-2 bg-sky-soft/60 rounded-xl border border-sky-100 space-y-1">
+                            <span class="text-[10px] font-bold text-ink-mute uppercase tracking-wider block">Kode Reservasi Sirkulasi</span>
+                            <div class="text-xl sm:text-2xl font-black text-navy tracking-wider font-mono">
+                                {{ $activeReservation->reservation_code }}
+                            </div>
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-200">
+                                    &bull; Menunggu Pengambilan di Perpustakaan
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Barcode Code 128 (SVG Vektor Murni) --}}
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center shadow-2xs">
+                            <div class="w-full max-w-[320px] mx-auto overflow-hidden">
+                                {!! $activeReservation->barcode_svg !!}
+                            </div>
+                            <span class="text-[10px] text-ink-mute font-semibold block mt-1">
+                                Scan Barcode di atas saat serah terima buku di meja sirkulasi
+                            </span>
+                        </div>
+
+                        {{-- Rincian Peminjaman --}}
+                        <div class="space-y-2 text-xs divide-y divide-slate-100 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                            <div class="flex justify-between py-1">
+                                <span class="text-ink-mute font-medium">Judul Buku:</span>
+                                <strong class="text-navy text-right max-w-[240px] truncate" title="{{ $activeReservation->book?->title }}">
+                                    {{ $activeReservation->book?->title }}
+                                </strong>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-ink-mute font-medium">Nama Siswa:</span>
+                                <strong class="text-navy text-right">{{ $activeReservation->borrower_name }}</strong>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-ink-mute font-medium">Kelas / Rombel:</span>
+                                <strong class="text-navy text-right">{{ $activeReservation->borrower_class }}</strong>
+                            </div>
+                            @if ($activeReservation->borrower_nisn)
+                                <div class="flex justify-between py-1">
+                                    <span class="text-ink-mute font-medium">NISN:</span>
+                                    <strong class="text-navy text-right font-mono">{{ $activeReservation->borrower_nisn }}</strong>
+                                </div>
+                            @endif
+                            <div class="flex justify-between py-1">
+                                <span class="text-ink-mute font-medium">Rencana Ambil:</span>
+                                <strong class="text-emerald-700 text-right">{{ $activeReservation->pickup_date ? $activeReservation->pickup_date->format('d M Y') : '-' }}</strong>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-ink-mute font-medium">Tenggat Pengembalian:</span>
+                                <strong class="text-brand text-right">{{ $activeReservation->due_date ? $activeReservation->due_date->format('d M Y') : '7 hari setelah serah terima' }}</strong>
+                            </div>
+                        </div>
+
+                        {{-- Petunjuk Singkat --}}
+                        <p class="text-[11px] text-ink-mute text-center italic leading-tight">
+                            Harap membawa tiket ini dalam bentuk cetak atau tangkapan layar di gawai saat mengambil buku di Ruang Perpustakaan SMPN 4 Cepu.
+                        </p>
+                    </div>
+
+                    {{-- Tombol Aksi --}}
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                        <button
+                            type="button"
+                            onclick="window.print()"
+                            class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold min-h-[44px] px-4 cursor-pointer"
+                        >
+                            <x-app-icon name="printer" class="w-4 h-4 text-navy" />
+                            <span>Cetak Tiket</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            wire:click="closeTicketModal"
+                            class="btn-primary text-xs font-black min-h-[44px] px-6 shadow-2xs"
+                        >
+                            <span>Selesai & Tutup</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </template>
     @endif

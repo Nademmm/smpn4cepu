@@ -23,31 +23,49 @@ class BookPolicy
 
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Book') || $authUser->can('manage_library') || $authUser->can('view_admin_panel');
+        return $authUser->can('ViewAny:Book') || $authUser->can('manage_library') || $authUser->hasRole(['guru', 'staf_perpus']);
     }
 
     public function view(AuthUser $authUser, Book $book): bool
     {
-        return $authUser->can('View:Book') || $authUser->can('manage_library') || $authUser->can('view_admin_panel');
+        return $authUser->can('View:Book') || $authUser->can('manage_library') || $authUser->hasRole(['guru', 'staf_perpus']);
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Book') || $authUser->can('manage_library') || $authUser->can('view_admin_panel');
+        // Guru hanya berstatus viewer; create hanya untuk super_admin dan staf_perpus
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('Create:Book') || $authUser->can('manage_library');
     }
 
     public function update(AuthUser $authUser, Book $book): bool
     {
-        return $authUser->can('Update:Book') || $authUser->can('manage_library') || $authUser->can('view_admin_panel');
+        // Guru hanya berstatus viewer; update hanya untuk super_admin dan staf_perpus
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('Update:Book') || $authUser->can('manage_library');
     }
 
     public function delete(AuthUser $authUser, Book $book): bool
     {
-        return $authUser->can('Delete:Book') || $authUser->can('manage_library') || $authUser->can('view_admin_panel');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('Delete:Book') || $authUser->can('manage_library');
     }
 
     public function deleteAny(AuthUser $authUser): bool
     {
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
         return $authUser->can('DeleteAny:Book') || $authUser->can('manage_library');
     }
 
@@ -81,4 +99,3 @@ class BookPolicy
         return $authUser->can('Reorder:Book') || $authUser->can('manage_library');
     }
 }
-

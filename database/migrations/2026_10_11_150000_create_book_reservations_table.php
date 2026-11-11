@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('book_reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('book_id')->constrained('library_books')->cascadeOnDelete();
+            $table->unsignedBigInteger('book_id')->index();
             $table->string('reservation_code', 30)->unique()->index();
             $table->string('borrower_name')->index();
             $table->string('borrower_class', 50)->index();

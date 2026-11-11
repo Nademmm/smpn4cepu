@@ -155,15 +155,24 @@ Route::get('/perpustakaan', function () {
 
 Route::post('/perpustakaan/reservasi', function (Request $request) {
     $validated = $request->validate([
-        'book_id' => 'required|exists:library_books,id',
+        'book_id' => 'required',
         'borrower_name' => 'required|string|min:3|max:100',
         'borrower_class' => 'required|string|min:2|max:50',
         'pickup_date' => 'required|date|after_or_equal:today',
     ]);
 
-    $book = \App\Models\LibraryBook::findOrFail($validated['book_id']);
+    // Dukung Book utama (books) maupun LibraryBook lama (library_books)
+    $book = \App\Models\Book::find($validated['book_id']) ?? \App\Models\LibraryBook::find($validated['book_id']);
 
-    if ($book->available_stock <= 0) {
+    if (!$book) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Buku tidak ditemukan di pangkalan data perpustakaan.',
+        ], 404);
+    }
+
+    $stock = $book instanceof \App\Models\Book ? $book->physical_stock : $book->available_stock;
+    if ($stock <= 0) {
         return response()->json([
             'success' => false,
             'message' => 'Maaf, stok fisik buku ini sedang habis dipinjam.',
@@ -173,7 +182,7 @@ Route::post('/perpustakaan/reservasi', function (Request $request) {
     $alreadyReserved = \App\Models\BookReservation::where('book_id', $book->id)
         ->where('borrower_name', trim($validated['borrower_name']))
         ->where('borrower_class', trim($validated['borrower_class']))
-        ->whereIn('status', ['menunggu', 'diambil'])
+        ->whereIn('status', ['menunggu', 'diambil', 'dipinjam'])
         ->exists();
 
     if ($alreadyReserved) {
@@ -183,16 +192,13 @@ Route::post('/perpustakaan/reservasi', function (Request $request) {
         ], 422);
     }
 
-    $code = 'LIB-' . rand(1000, 9999) . '-' . date('Y');
-    $tries = 0;
+    $code = 'LIB-' . date('Y') . '-' . strtoupper(\Illuminate\Support\Str::random(5));
     while (\App\Models\BookReservation::where('reservation_code', $code)->exists()) {
-        $tries++;
-        if ($tries >= 10) {
-            $code = 'LIB-' . strtoupper(\Illuminate\Support\Str::random(6)) . '-' . date('Y');
-            break;
-        }
-        $code = 'LIB-' . rand(1000, 9999) . '-' . date('Y');
+        $code = 'LIB-' . date('Y') . '-' . strtoupper(\Illuminate\Support\Str::random(5));
     }
+
+    $pickupDate = \Carbon\Carbon::parse($validated['pickup_date']);
+    $dueDate = $pickupDate->copy()->addDays(7);
 
     $reservation = \App\Models\BookReservation::create([
         'book_id' => $book->id,
@@ -200,12 +206,14 @@ Route::post('/perpustakaan/reservasi', function (Request $request) {
         'borrower_name' => trim($validated['borrower_name']),
         'borrower_class' => trim($validated['borrower_class']),
         'pickup_date' => $validated['pickup_date'],
+        'due_date' => $dueDate->format('Y-m-d'),
         'status' => 'menunggu',
     ]);
 
     return response()->json([
         'success' => true,
         'reservation_code' => $reservation->reservation_code,
+        'barcode_svg' => $reservation->barcode_svg,
         'message' => 'Tiket reservasi berhasil dibuat dan terdaftar di sistem sirkulasi perpustakaan.',
     ]);
 })->middleware('throttle:120,1')->name('library.reserve');
