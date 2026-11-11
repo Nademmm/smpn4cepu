@@ -156,70 +156,56 @@ Route::get('/perpustakaan', function () {
     return view('pages.library');
 })->name('library');
 
-Route::post('/perpustakaan/reservasi', function (Request $request) {
+Route::post('/perpustakaan/reservasi', function (Request $request, \App\Services\LibraryLoanService $loanService) {
     $validated = $request->validate([
-        'book_id' => 'required',
+        'book_id' => 'required|integer',
         'borrower_name' => 'required|string|min:3|max:100',
         'borrower_class' => 'required|string|min:2|max:50',
+        'borrower_nisn' => 'nullable|string|max:20',
         'pickup_date' => 'required|date|after_or_equal:today',
+        'notes' => 'nullable|string|max:500',
     ]);
 
-    // Dukung Book utama (books) maupun LibraryBook lama (library_books)
-    $book = \App\Models\Book::find($validated['book_id']) ?? \App\Models\LibraryBook::find($validated['book_id']);
+    try {
+        $reservation = $loanService->reserve(
+            bookId: (int) $validated['book_id'],
+            name: $validated['borrower_name'],
+            class: $validated['borrower_class'],
+            nisn: $validated['borrower_nisn'] ?? null,
+            pickupDate: $validated['pickup_date'],
+            notes: $validated['notes'] ?? null,
+        );
 
-    if (!$book) {
+        return response()->json([
+            'success' => true,
+            'reservation_code' => $reservation->reservation_code,
+            'barcode_svg' => $reservation->barcode_svg,
+            'qr_svg' => $reservation->qr_svg,
+            'ticket_url' => route('library.ticket', $reservation->reservation_code),
+            'message' => 'Tiket reservasi berhasil dibuat dan terdaftar di sistem sirkulasi perpustakaan.',
+        ]);
+    } catch (\DomainException $e) {
         return response()->json([
             'success' => false,
-            'message' => 'Buku tidak ditemukan di pangkalan data perpustakaan.',
-        ], 404);
-    }
-
-    $stock = $book instanceof \App\Models\Book ? $book->physical_stock : $book->available_stock;
-    if ($stock <= 0) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Maaf, stok fisik buku ini sedang habis dipinjam.',
+            'message' => $e->getMessage(),
         ], 422);
-    }
-
-    $alreadyReserved = \App\Models\BookReservation::where('book_id', $book->id)
-        ->where('borrower_name', trim($validated['borrower_name']))
-        ->where('borrower_class', trim($validated['borrower_class']))
-        ->whereIn('status', ['menunggu', 'diambil', 'dipinjam'])
-        ->exists();
-
-    if ($alreadyReserved) {
+    } catch (\Throwable $e) {
         return response()->json([
             'success' => false,
-            'message' => 'Anda sudah memiliki tiket reservasi atau peminjaman aktif untuk buku ini.',
-        ], 422);
+            'message' => 'Gagal memproses tiket reservasi. Silakan periksa kembali data Anda.',
+        ], 500);
     }
-
-    $code = 'LIB-' . date('Y') . '-' . strtoupper(\Illuminate\Support\Str::random(5));
-    while (\App\Models\BookReservation::where('reservation_code', $code)->exists()) {
-        $code = 'LIB-' . date('Y') . '-' . strtoupper(\Illuminate\Support\Str::random(5));
-    }
-
-    $pickupDate = \Carbon\Carbon::parse($validated['pickup_date']);
-    $dueDate = $pickupDate->copy()->addDays(7);
-
-    $reservation = \App\Models\BookReservation::create([
-        'book_id' => $book->id,
-        'reservation_code' => $code,
-        'borrower_name' => trim($validated['borrower_name']),
-        'borrower_class' => trim($validated['borrower_class']),
-        'pickup_date' => $validated['pickup_date'],
-        'due_date' => $dueDate->format('Y-m-d'),
-        'status' => 'menunggu',
-    ]);
-
-    return response()->json([
-        'success' => true,
-        'reservation_code' => $reservation->reservation_code,
-        'barcode_svg' => $reservation->barcode_svg,
-        'message' => 'Tiket reservasi berhasil dibuat dan terdaftar di sistem sirkulasi perpustakaan.',
-    ]);
 })->middleware('throttle:120,1')->name('library.reserve');
+
+// Halaman Bukti Tiket Sirkulasi Ber-Barcode (Siap Cetak)
+Route::get('/perpustakaan/tiket/{code}', function (string $code, \App\Services\LibraryLoanService $loanService) {
+    $ticket = $loanService->findByCode($code);
+    if (! $ticket) {
+        abort(404, 'Tiket sirkulasi perpustakaan tidak ditemukan.');
+    }
+
+    return view('pages.library-ticket', compact('ticket'));
+})->name('library.ticket');
 
 // 9, 10, 11: Ruang Belajar Mandiri (Wajib Masuk Akun Terlebih Dahulu)
 Route::middleware('auth')->group(function () {

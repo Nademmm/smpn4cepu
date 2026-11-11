@@ -47,6 +47,12 @@ class DigitalLibrary extends Component
     public bool $showTicketModal = false;
     public ?BookReservation $activeReservation = null;
 
+    // Modal Cek Status Tiket Mandiri oleh Siswa
+    public bool $showCheckTicketModal = false;
+    public string $ticketSearchCode = '';
+    public ?BookReservation $checkedTicket = null;
+    public ?string $checkTicketErrorMessage = null;
+
     protected $queryString = [
         'search' => ['except' => ''],
         'category' => ['except' => 'semua'],
@@ -198,9 +204,9 @@ class DigitalLibrary extends Component
     }
 
     /**
-     * Kirim formulir peminjaman dan bangkitkan tiket digital ber-barcode.
+     * Kirim formulir peminjaman dan bangkitkan tiket digital ber-barcode via LibraryLoanService.
      */
-    public function submitBorrow(): void
+    public function submitBorrow(?\App\Services\LibraryLoanService $loanService = null): void
     {
         $this->borrowErrorMessage = null;
 
@@ -215,49 +221,31 @@ class DigitalLibrary extends Component
             'pickupDate.after_or_equal' => 'Tanggal pengambilan tidak boleh lewat dari hari ini.',
         ]);
 
-        $book = Book::active()->find($this->borrowBookId);
-        if (!$book || ($book->physical_stock ?? 0) <= 0) {
-            $this->borrowErrorMessage = 'Mohon maaf, stok buku fisik ini sedang kosong atau habis dipinjam.';
+        if (!$this->borrowBookId) {
+            $this->borrowErrorMessage = 'Buku belum dipilih.';
             return;
         }
 
-        // Cek jika peminjam yang sama sudah memesan buku yang sama dalam status menunggu
-        $alreadyReserved = BookReservation::where('book_id', $book->id)
-            ->where('borrower_name', trim($this->borrowerName))
-            ->where('borrower_class', trim($this->borrowerClass))
-            ->whereIn('status', ['menunggu', 'dipinjam', 'diambil'])
-            ->exists();
+        $service = $loanService ?? app(\App\Services\LibraryLoanService::class);
 
-        if ($alreadyReserved) {
-            $this->borrowErrorMessage = 'Anda sudah memiliki tiket peminjaman aktif untuk buku ini. Silakan selesaikan peminjaman sebelumnya di perpustakaan.';
-            return;
+        try {
+            $reservation = $service->reserve(
+                bookId: $this->borrowBookId,
+                name: $this->borrowerName,
+                class: $this->borrowerClass,
+                nisn: !empty($this->borrowerNisn) ? $this->borrowerNisn : null,
+                pickupDate: $this->pickupDate,
+                notes: !empty($this->borrowNotes) ? $this->borrowNotes : null,
+            );
+
+            $this->activeReservation = $reservation;
+            $this->showBorrowModal = false;
+            $this->showTicketModal = true;
+        } catch (\DomainException $e) {
+            $this->borrowErrorMessage = $e->getMessage();
+        } catch (\Throwable $e) {
+            $this->borrowErrorMessage = 'Terjadi kendala saat memproses tiket peminjaman. Silakan coba beberapa saat lagi.';
         }
-
-        // Bangkitkan kode reservasi unik, misal: LIB-2026-4892
-        $year = date('Y');
-        $code = 'LIB-' . $year . '-' . strtoupper(Str::random(5));
-        while (BookReservation::where('reservation_code', $code)->exists()) {
-            $code = 'LIB-' . $year . '-' . strtoupper(Str::random(5));
-        }
-
-        $pickupCarbon = Carbon::parse($this->pickupDate);
-        $dueDate = $pickupCarbon->copy()->addDays(7); // Masa pinjam 7 hari
-
-        $reservation = BookReservation::create([
-            'book_id' => $book->id,
-            'reservation_code' => $code,
-            'borrower_nisn' => !empty($this->borrowerNisn) ? trim($this->borrowerNisn) : null,
-            'borrower_name' => trim($this->borrowerName),
-            'borrower_class' => trim($this->borrowerClass),
-            'pickup_date' => $this->pickupDate,
-            'due_date' => $dueDate->format('Y-m-d'),
-            'status' => 'menunggu',
-            'notes' => !empty($this->borrowNotes) ? trim($this->borrowNotes) : null,
-        ]);
-
-        $this->activeReservation = $reservation;
-        $this->showBorrowModal = false;
-        $this->showTicketModal = true;
     }
 
     public function closeTicketModal(): void
@@ -265,6 +253,50 @@ class DigitalLibrary extends Component
         $this->showTicketModal = false;
         $this->activeReservation = null;
         $this->borrowBookId = null;
+    }
+
+    /**
+     * Buka modal cek tiket mandiri oleh siswa.
+     */
+    public function openCheckTicketModal(): void
+    {
+        $this->ticketSearchCode = '';
+        $this->checkedTicket = null;
+        $this->checkTicketErrorMessage = null;
+        $this->showCheckTicketModal = true;
+    }
+
+    public function closeCheckTicketModal(): void
+    {
+        $this->showCheckTicketModal = false;
+        $this->ticketSearchCode = '';
+        $this->checkedTicket = null;
+        $this->checkTicketErrorMessage = null;
+    }
+
+    /**
+     * Lacak status tiket berdasarkan kode reservasi sirkulasi.
+     */
+    public function searchTicket(?\App\Services\LibraryLoanService $loanService = null): void
+    {
+        $this->checkTicketErrorMessage = null;
+        $this->checkedTicket = null;
+
+        $code = trim($this->ticketSearchCode);
+        if (empty($code)) {
+            $this->checkTicketErrorMessage = 'Silakan masukkan kode tiket reservasi Anda (contoh: LIB-2026-ABC12).';
+            return;
+        }
+
+        $service = $loanService ?? app(\App\Services\LibraryLoanService::class);
+        $ticket = $service->findByCode($code);
+
+        if (!$ticket) {
+            $this->checkTicketErrorMessage = 'Tiket dengan kode "' . htmlspecialchars($code) . '" tidak ditemukan. Pastikan kode sesuai dengan bukti reservasi.';
+            return;
+        }
+
+        $this->checkedTicket = $ticket;
     }
 
     public function getSelectedBookProperty(): ?Book

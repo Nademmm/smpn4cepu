@@ -63,6 +63,14 @@
                 <span class="text-[10px] uppercase font-bold text-ink-mute block">Tenaga Teknis</span>
                 <span class="font-extrabold text-brand">Yaatun, A.Ma.Pust.</span>
             </div>
+            <button
+                type="button"
+                wire:click="openCheckTicketModal"
+                class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-xl shadow-2xs cursor-pointer min-h-[40px]"
+            >
+                <x-app-icon name="qr-code" class="w-4 h-4 text-white" />
+                <span>Lacak Tiket Saya</span>
+            </button>
         </div>
     </div>
 
@@ -901,14 +909,24 @@
 
                     {{-- Tombol Aksi --}}
                     <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-                        <button
-                            type="button"
-                            onclick="window.print()"
-                            class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold min-h-[44px] px-4 cursor-pointer"
-                        >
-                            <x-app-icon name="printer" class="w-4 h-4 text-navy" />
-                            <span>Cetak Tiket</span>
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onclick="window.print()"
+                                class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold min-h-[44px] px-3.5 cursor-pointer"
+                            >
+                                <x-app-icon name="printer" class="w-4 h-4 text-navy" />
+                                <span>Cetak Tiket</span>
+                            </button>
+                            <a
+                                href="{{ route('library.ticket', $activeReservation->reservation_code) }}"
+                                target="_blank"
+                                class="text-xs font-bold text-brand hover:underline inline-flex items-center gap-1"
+                            >
+                                <span>Buka Halaman Tiket</span>
+                                <x-app-icon name="arrow-top-right-on-square" class="w-3.5 h-3.5" />
+                            </a>
+                        </div>
 
                         <button
                             type="button"
@@ -916,6 +934,129 @@
                             class="btn-primary text-xs font-black min-h-[44px] px-6 shadow-2xs"
                         >
                             <span>Selesai & Tutup</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    @endif
+
+    {{-- MODAL 9: CEK STATUS TIKET MANDIRI OLEH SISWA --}}
+    @if ($showCheckTicketModal)
+        <template x-teleport="body">
+            <div
+                x-data="{ open: true }"
+                x-show="open"
+                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60 backdrop-blur-xs overflow-y-auto"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @keydown.escape.window="$wire.closeCheckTicketModal()"
+            >
+                <div
+                    class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200"
+                    @click.away="$wire.closeCheckTicketModal()"
+                >
+                    <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50 rounded-t-2xl">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-sky-100 text-brand flex items-center justify-center">
+                                <x-app-icon name="qr-code" class="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-extrabold text-navy">Lacak Tiket Sirkulasi</h3>
+                                <p class="text-[11px] text-ink-mute">Periksa status peminjaman buku fisik Anda secara mandiri</p>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            wire:click="closeCheckTicketModal"
+                            class="w-8 h-8 rounded-lg text-ink-mute hover:text-navy hover:bg-slate-200 flex items-center justify-center cursor-pointer transition-colors"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <div class="p-5 space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-navy mb-1">
+                                Kode Tiket Sirkulasi <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <input
+                                    type="text"
+                                    wire:model="ticketSearchCode"
+                                    wire:keydown.enter="searchTicket"
+                                    placeholder="Contoh: LIB-2026-ABC12"
+                                    class="w-full text-xs font-mono uppercase rounded-xl border border-slate-300 px-3.5 py-2.5 focus:border-brand focus:ring-1 focus:ring-brand outline-hidden"
+                                />
+                                <button
+                                    type="button"
+                                    wire:click="searchTicket"
+                                    class="btn-primary text-xs font-bold px-4 py-2.5 rounded-xl shrink-0 cursor-pointer"
+                                >
+                                    <span>Cari</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        @if ($checkTicketErrorMessage)
+                            <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800">
+                                {{ $checkTicketErrorMessage }}
+                            </div>
+                        @endif
+
+                        @if ($checkedTicket)
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-xs font-mono font-black text-navy">{{ $checkedTicket->reservation_code }}</span>
+                                    <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full
+                                        @if($checkedTicket->status === 'menunggu') bg-amber-100 text-amber-800 border border-amber-200
+                                        @elseif($checkedTicket->status === 'diambil') bg-blue-100 text-blue-800 border border-blue-200
+                                        @elseif($checkedTicket->status === 'selesai') bg-emerald-100 text-emerald-800 border border-emerald-200
+                                        @else bg-slate-200 text-slate-800
+                                        @endif"
+                                    >
+                                        {{ $checkedTicket->status_label }}
+                                    </span>
+                                </div>
+
+                                <div class="text-xs space-y-1.5 pt-2 border-t border-slate-200">
+                                    <div><span class="text-ink-mute">Judul Buku:</span> <strong class="text-navy">{{ $checkedTicket->book?->title ?? '-' }}</strong></div>
+                                    <div><span class="text-ink-mute">Peminjam:</span> <span class="text-slate-800 font-semibold">{{ $checkedTicket->borrower_name }} ({{ $checkedTicket->borrower_class }})</span></div>
+                                    <div><span class="text-ink-mute">Rencana Ambil:</span> <span class="text-slate-800">{{ $checkedTicket->pickup_date ? $checkedTicket->pickup_date->format('d M Y') : '-' }}</span></div>
+                                    <div><span class="text-ink-mute">Tenggat Kembali:</span> <strong class="text-brand font-bold">{{ $checkedTicket->due_date ? $checkedTicket->due_date->format('d M Y') : '-' }}</strong></div>
+                                </div>
+
+                                <div class="p-3 bg-white rounded-lg border border-slate-200 text-center">
+                                    <div class="max-w-[280px] mx-auto overflow-hidden">
+                                        {!! $checkedTicket->barcode_svg !!}
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 text-center">
+                                    <a
+                                        href="{{ route('library.ticket', $checkedTicket->reservation_code) }}"
+                                        target="_blank"
+                                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-4 py-2 inline-flex items-center gap-1.5 rounded-lg shadow-2xs"
+                                    >
+                                        <x-app-icon name="printer" class="w-4 h-4 text-navy" />
+                                        <span>Buka Bukti Tiket Lengkap</span>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end rounded-b-2xl">
+                        <button
+                            type="button"
+                            wire:click="closeCheckTicketModal"
+                            class="btn-ghost text-xs font-bold px-4 py-2"
+                        >
+                            Tutup
                         </button>
                     </div>
                 </div>

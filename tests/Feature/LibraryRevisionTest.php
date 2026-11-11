@@ -98,13 +98,30 @@ class LibraryRevisionTest extends TestCase
         $this->assertStringContainsString($reservation->reservation_code, $reservation->barcode_svg);
         $this->assertStringContainsString('<svg', $reservation->qr_svg);
 
-        // Uji coba alur serah terima buku: status beralih ke 'diambil' (stok berkurang)
-        $reservation->update(['status' => 'diambil']);
+        // Verifikasi alur stok fisik: eksemplar langsung dialokasikan saat reservasi dibuat
         $book->refresh();
         $this->assertEquals($initialStock - 1, $book->physical_stock);
 
-        // Uji coba pengembalian buku: status beralih ke 'selesai' (stok kembali)
-        $reservation->update(['status' => 'selesai']);
+        $loanService = app(\App\Services\LibraryLoanService::class);
+
+        // Uji coba alur serah terima buku fisik di meja sirkulasi: status beralih ke 'diambil'
+        $loanService->handOver($reservation);
+        $reservation->refresh();
+        $this->assertEquals('diambil', $reservation->status);
+        $this->assertNotNull($reservation->borrowed_at);
+
+        // Halaman bukti tiket siap cetak dapat diakses secara publik
+        $this->get(route('library.ticket', $reservation->reservation_code))
+            ->assertStatus(200)
+            ->assertSee($reservation->reservation_code)
+            ->assertSee($book->title);
+
+        // Uji coba pengembalian buku: status beralih ke 'selesai' dan stok fisik kembali ke katalog
+        $loanService->receiveReturn($reservation);
+        $reservation->refresh();
+        $this->assertEquals('selesai', $reservation->status);
+        $this->assertNotNull($reservation->returned_at);
+
         $book->refresh();
         $this->assertEquals($initialStock, $book->physical_stock);
     }
@@ -129,7 +146,18 @@ class LibraryRevisionTest extends TestCase
             ->assertSet('showBorrowModal', false)
             ->assertSet('showTicketModal', true);
 
-        $this->assertNotNull($component->get('activeReservation'));
+        $issuedReservation = $component->get('activeReservation');
+        $this->assertNotNull($issuedReservation);
+
+        // Uji coba pelacakan tiket mandiri oleh siswa di komponen publik
+        $component->call('openCheckTicketModal')
+            ->assertSet('showCheckTicketModal', true)
+            ->set('ticketSearchCode', $issuedReservation->reservation_code)
+            ->call('searchTicket')
+            ->assertHasNoErrors();
+
+        $this->assertNotNull($component->get('checkedTicket'));
+        $this->assertEquals($issuedReservation->reservation_code, $component->get('checkedTicket')->reservation_code);
     }
 
     /**
