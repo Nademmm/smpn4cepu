@@ -116,9 +116,12 @@ class BarcodeService
 
             // Bersihkan xml tag agar aman di-embed langsung di Blade / HTML
             $svg = preg_replace('/<\?xml[^\?]+\?>/', '', $svg);
+            // Jadikan width dan height fleksibel 100% dengan viewBox tetap terjaga
+            $svg = preg_replace('/width="\d+"/', 'width="100%"', $svg, 1);
+            $svg = preg_replace('/height="\d+"/', 'height="100%"', $svg, 1);
             return trim($svg);
         } catch (\Throwable $e) {
-            return '<svg viewBox="0 0 ' . $size . ' ' . $size . '" width="' . $size . '" height="' . $size . '"><rect width="' . $size . '" height="' . $size . '" fill="#f1f5f9"/></svg>';
+            return '<svg viewBox="0 0 ' . $size . ' ' . $size . '" width="100%" height="100%"><rect width="' . $size . '" height="' . $size . '" fill="#f1f5f9"/></svg>';
         }
     }
 }

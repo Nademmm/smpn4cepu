@@ -30,16 +30,16 @@ class ListBookReservations extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // Pemindaian Barcode & QR Code Langsung via Kamera
+            // Pemindaian QR Code Langsung via Kamera
             Action::make('cameraScan')
-                ->label('Scan Kamera Barcode')
-                ->icon('heroicon-o-camera')
+                ->label('Scan QR Code Tiket')
+                ->icon('heroicon-o-qr-code')
                 ->color('success')
-                ->modalHeading('Kamera Pemindai Barcode & QR Sirkulasi')
-                ->modalDescription('Arahkan kamera ke barcode atau QR code tiket siswa untuk serah terima atau pengembalian buku.')
+                ->modalHeading('Scanner Kamera: QR Code Sirkulasi')
+                ->modalDescription('Arahkan kamera belakang HP atau webcam ke QR Code tiket siswa.')
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Tutup Scanner')
-                ->modalWidth('2xl')
+                ->modalWidth('lg')
                 ->modalContent(fn () => view('filament.components.circulation-camera-modal')),
         ];
     }

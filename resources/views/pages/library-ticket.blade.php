@@ -10,17 +10,17 @@
             <div class="flex items-center gap-2">
                 <button
                     type="button"
-                    onclick="downloadBarcodePng('ticket-page-barcode-box', 'barcode-{{ $ticket->reservation_code }}.png')"
-                    class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-lg cursor-pointer shadow-2xs"
+                    onclick="downloadQrPng('ticket-page-qr-box', 'qr-{{ $ticket->reservation_code }}.png')"
+                    class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-lg cursor-pointer shadow-2xs min-h-[44px]"
                 >
                     <x-app-icon name="arrow-down-tray" class="w-4 h-4 text-white" />
-                    <span>Unduh Gambar Barcode (PNG)</span>
+                    <span>Unduh Gambar QR (PNG)</span>
                 </button>
 
                 <button
                     type="button"
                     onclick="window.print()"
-                    class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-lg cursor-pointer shadow-2xs"
+                    class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-lg cursor-pointer shadow-2xs min-h-[44px]"
                 >
                     <x-app-icon name="printer" class="w-4 h-4 text-navy" />
                     <span>Cetak / Simpan PDF</span>
@@ -76,42 +76,34 @@
                 @endif
             </div>
 
-            {{-- Barcode 1D & QR Code 2D --}}
+            {{-- QR Code Standar Sirkulasi Perpustakaan --}}
             <div class="p-6 bg-slate-50/60 border-b border-slate-200 text-center space-y-4">
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    {{-- 1D Barcode --}}
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs inline-block max-w-full">
-                        <div id="ticket-page-barcode-box" class="max-w-[320px] mx-auto overflow-hidden">
-                            {!! $ticket->barcode_svg !!}
-                        </div>
-                        <p class="text-[11px] text-ink-mute font-mono font-bold mt-1 tracking-wider">
-                            *{{ $ticket->reservation_code }}*
-                        </p>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs inline-flex flex-col items-center justify-center mx-auto max-w-full">
+                    <div id="ticket-page-qr-box" class="w-48 h-48 sm:w-56 sm:h-56 p-2 bg-white flex items-center justify-center">
+                        {!! $ticket->qr_svg !!}
                     </div>
-
-                    {{-- 2D QR Code Khusus Scan Kamera Cepat --}}
-                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col items-center justify-center shrink-0">
-                        <div id="ticket-page-qr-box" class="w-[110px] h-[110px] flex items-center justify-center overflow-hidden">
-                            {!! $ticket->qr_svg !!}
-                        </div>
-                        <span class="text-[10px] text-brand font-bold mt-1">Scan Kamera</span>
+                    <div class="mt-2 text-center">
+                        <span class="text-[10px] uppercase font-bold text-ink-mute tracking-wider block">Kode Sirkulasi</span>
+                        <span class="font-mono font-black text-base sm:text-lg text-navy tracking-widest block">
+                            {{ $ticket->reservation_code }}
+                        </span>
                     </div>
                 </div>
 
-                {{-- Tombol Aksi Unduh Barcode --}}
+                {{-- Tombol Aksi Unduh QR --}}
                 <div class="flex flex-wrap items-center justify-center gap-2 print:hidden">
                     <button
                         type="button"
-                        onclick="downloadBarcodePng('ticket-page-barcode-box', 'barcode-{{ $ticket->reservation_code }}.png')"
-                        class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-3.5 py-2 rounded-lg cursor-pointer shadow-2xs"
+                        onclick="downloadQrPng('ticket-page-qr-box', 'qr-{{ $ticket->reservation_code }}.png')"
+                        class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-4 py-2.5 rounded-xl cursor-pointer shadow-2xs min-h-[44px]"
                     >
                         <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
-                        <span>Unduh Barcode (PNG)</span>
+                        <span>Unduh Tiket QR (PNG)</span>
                     </button>
                     <a
                         href="{{ route('library.ticket.download-barcode', $ticket->reservation_code) }}"
-                        download="barcode-{{ $ticket->reservation_code }}.svg"
-                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5"
+                        download="qr-{{ $ticket->reservation_code }}.svg"
+                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-4 py-2.5 rounded-xl inline-flex items-center gap-1.5 min-h-[44px]"
                     >
                         <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-navy" />
                         <span>Unduh Berkas SVG</span>
@@ -119,7 +111,7 @@
                 </div>
 
                 <p class="text-xs text-ink-mute max-w-md mx-auto">
-                    Tunjukkan barcode di atas kepada staf perpustakaan untuk proses serah terima atau pengembalian buku fisik. Simpan ke galeri ponsel Anda agar tidak hilang.
+                    Tunjukkan QR Code di atas kepada staf perpustakaan untuk proses serah terima atau pengembalian buku fisik. Simpan ke galeri ponsel Anda agar tidak hilang.
                 </p>
             </div>
 
@@ -190,7 +182,7 @@
                 {{-- Ketentuan Peminjaman --}}
                 <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-ink-mute space-y-1">
                     <strong class="text-navy block font-bold mb-1">Tata Tertib Peminjaman:</strong>
-                    <p>1. Tunjukkan barcode ini kepada petugas di Ruang Perpustakaan SMPN 4 Cepu saat mengambil buku.</p>
+                    <p>1. Tunjukkan QR Code ini kepada petugas di Ruang Perpustakaan SMPN 4 Cepu saat mengambil buku.</p>
                     <p>2. Buku wajib dikembalikan selambat-lambatnya pada tanggal tenggat pengembalian dalam kondisi rapi dan utuh.</p>
                     <p>3. Jika membutuhkan perpanjangan, silakan hubungi petugas perpustakaan sebelum tanggal jatuh tempo.</p>
                 </div>
@@ -226,7 +218,7 @@
     </div>
 
     <script>
-        function downloadBarcodePng(containerId, filename) {
+        function downloadQrPng(containerId, filename) {
             const box = document.getElementById(containerId);
             if (!box) return;
             const svg = box.querySelector('svg');
@@ -239,19 +231,19 @@
 
             img.onload = function () {
                 const canvas = document.createElement('canvas');
-                const scale = 2;
-                const w = (svg.viewBox.baseVal.width || 360);
-                const h = (svg.viewBox.baseVal.height || 90);
-                canvas.width = w * scale;
-                canvas.height = h * scale;
+                const size = 512;
+                canvas.width = size;
+                canvas.height = size;
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                ctx.fillRect(0, 0, size, size);
+                // Draw QR Code centered with padding
+                const pad = 32;
+                ctx.drawImage(img, pad, pad, size - (pad * 2), size - (pad * 2));
                 URL.revokeObjectURL(url);
 
                 const link = document.createElement('a');
-                link.download = filename || 'barcode.png';
+                link.download = filename || 'tiket-qr.png';
                 link.href = canvas.toDataURL('image/png');
                 document.body.appendChild(link);
                 link.click();
@@ -259,6 +251,7 @@
             };
             img.src = url;
         }
+        window.downloadBarcodePng = downloadQrPng;
     </script>
 </x-layouts.app>
 

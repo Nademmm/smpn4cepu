@@ -889,18 +889,13 @@
                             </div>
                         </div>
 
-                        {{-- Barcode Code 128 & QR Code (SVG Vektor Murni) --}}
-                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center shadow-2xs">
-                            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                                <div class="w-full max-w-[260px] mx-auto overflow-hidden">
-                                    {!! $activeReservation->barcode_svg !!}
-                                </div>
-                                <div class="w-[85px] h-[85px] p-1 bg-white rounded-lg border border-slate-200 shrink-0 flex items-center justify-center">
-                                    {!! $activeReservation->qr_svg !!}
-                                </div>
+                        {{-- QR Code Resmi Sirkulasi (SVG Vektor Murni) --}}
+                        <div class="p-4 bg-white rounded-xl border border-slate-200 text-center shadow-2xs space-y-2">
+                            <div class="w-40 h-40 sm:w-44 sm:h-44 p-2 bg-white rounded-xl border border-slate-200 mx-auto flex items-center justify-center">
+                                {!! $activeReservation->qr_svg !!}
                             </div>
-                            <span class="text-[10px] text-ink-mute font-semibold block mt-1">
-                                Tunjukkan Barcode atau QR Code di atas saat serah terima buku di meja perpustakaan
+                            <span class="text-xs text-ink-mute font-medium block">
+                                Tunjukkan QR Code di atas saat serah terima buku di meja perpustakaan
                             </span>
                         </div>
 

@@ -208,16 +208,16 @@ Route::get('/perpustakaan/tiket/{code}', function (string $code, \App\Services\L
     return view('pages.library-ticket', compact('ticket'));
 })->name('library.ticket');
 
-// Unduh Langsung Berkas Vektor Barcode SVG
+// Unduh Langsung Berkas Vektor QR Code SVG
 Route::get('/perpustakaan/tiket/{code}/unduh-barcode', function (string $code, \App\Services\LibraryLoanService $loanService) {
     $ticket = $loanService->findByCode($code);
     if (! $ticket) {
         abort(404, 'Tiket sirkulasi perpustakaan tidak ditemukan.');
     }
 
-    return response($ticket->barcode_svg, 200, [
+    return response($ticket->qr_svg, 200, [
         'Content-Type' => 'image/svg+xml',
-        'Content-Disposition' => 'attachment; filename="barcode-' . $ticket->reservation_code . '.svg"',
+        'Content-Disposition' => 'attachment; filename="qr-' . $ticket->reservation_code . '.svg"',
         'Cache-Control' => 'no-cache, private',
     ]);
 })->name('library.ticket.download-barcode');
