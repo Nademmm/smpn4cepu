@@ -91,6 +91,10 @@ class AdminPanelProvider extends PanelProvider
                 \Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER,
                 fn () => view('filament.topbar-home-button'),
             )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::BODY_END,
+                fn () => view('filament.circulation-scanner-scripts'),
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);
