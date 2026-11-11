@@ -78,13 +78,24 @@
 
             {{-- Barcode 1D & QR Code 2D --}}
             <div class="p-6 bg-slate-50/60 border-b border-slate-200 text-center space-y-4">
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs inline-block max-w-full">
-                    <div id="ticket-page-barcode-box" class="max-w-[360px] mx-auto overflow-hidden">
-                        {!! $ticket->barcode_svg !!}
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    {{-- 1D Barcode --}}
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs inline-block max-w-full">
+                        <div id="ticket-page-barcode-box" class="max-w-[320px] mx-auto overflow-hidden">
+                            {!! $ticket->barcode_svg !!}
+                        </div>
+                        <p class="text-[11px] text-ink-mute font-mono font-bold mt-1 tracking-wider">
+                            *{{ $ticket->reservation_code }}*
+                        </p>
                     </div>
-                    <p class="text-[11px] text-ink-mute font-mono font-bold mt-1 tracking-wider">
-                        *{{ $ticket->reservation_code }}*
-                    </p>
+
+                    {{-- 2D QR Code Khusus Scan Kamera Cepat --}}
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col items-center justify-center shrink-0">
+                        <div id="ticket-page-qr-box" class="w-[110px] h-[110px] flex items-center justify-center overflow-hidden">
+                            {!! $ticket->qr_svg !!}
+                        </div>
+                        <span class="text-[10px] text-brand font-bold mt-1">Scan Kamera</span>
+                    </div>
                 </div>
 
                 {{-- Tombol Aksi Unduh Barcode --}}

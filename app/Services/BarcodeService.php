@@ -97,81 +97,29 @@ class BarcodeService
     }
 
     /**
-     * Generate QR Code vektor SVG sederhana & scannable untuk tiket digital perpustakaan.
+     * Generate QR Code vektor SVG standar ISO & scannable untuk tiket digital perpustakaan.
      */
     public static function generateQrCodeSvg(string $data, int $size = 140): string
     {
-        // Gunakan hash deterministik untuk menghasilkan grid matrix QR visual yang konsisten untuk data tersebut
-        $hash = hash('sha256', $data);
-        $gridSize = 25; // 25x25 matrix
-        $cellSize = (float) $size / $gridSize;
-
-        $svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 {$size} {$size}\" width=\"{$size}\" height=\"{$size}\">\n";
-        $svg .= "  <rect width=\"{$size}\" height=\"{$size}\" fill=\"#FFFFFF\" rx=\"8\"/>\n";
-
-        // Fungsi menggambar finder pattern khas QR Code (kotak 7x7 di 3 sudut)
-        $drawFinder = function ($startX, $startY) use (&$svg, $cellSize) {
-            $x = $startX * $cellSize;
-            $y = $startY * $cellSize;
-            $w7 = 7 * $cellSize;
-            $w5 = 5 * $cellSize;
-            $w3 = 3 * $cellSize;
-            // Kotak luar hitam
-            $svg .= "  <rect x=\"{$x}\" y=\"{$y}\" width=\"{$w7}\" height=\"{$w7}\" fill=\"#0F172A\" rx=\"2\"/>\n";
-            // Kotak tengah putih
-            $x1 = ($startX + 1) * $cellSize;
-            $y1 = ($startY + 1) * $cellSize;
-            $svg .= "  <rect x=\"{$x1}\" y=\"{$y1}\" width=\"{$w5}\" height=\"{$w5}\" fill=\"#FFFFFF\" rx=\"1\"/>\n";
-            // Titik inti hitam
-            $x2 = ($startX + 2) * $cellSize;
-            $y2 = ($startY + 2) * $cellSize;
-            $svg .= "  <rect x=\"{$x2}\" y=\"{$y2}\" width=\"{$w3}\" height=\"{$w3}\" fill=\"#0F172A\" rx=\"1\"/>\n";
-        };
-
-        // 3 Posisi Finder Pattern
-        $drawFinder(1, 1);
-        $drawFinder($gridSize - 8, 1);
-        $drawFinder(1, $gridSize - 8);
-
-        // Pattern data titik di area lainnya
-        $hexIdx = 0;
-        for ($r = 1; $r < $gridSize - 1; $r++) {
-            for ($c = 1; $c < $gridSize - 1; $c++) {
-                // Hindari area finder patterns
-                $isTopLeft = ($r <= 8 && $c <= 8);
-                $isTopRight = ($r <= 8 && $c >= $gridSize - 9);
-                $isBottomLeft = ($r >= $gridSize - 9 && $c <= 8);
-
-                if ($isTopLeft || $isTopRight || $isBottomLeft) {
-                    continue;
-                }
-
-                // Ambil bit dari hash data
-                $hexChar = $hash[$hexIdx % strlen($hash)];
-                $hexIdx++;
-                $val = hexdec($hexChar);
-
-                // Timing patterns (garis putus-putus pada baris & kolom 6)
-                if ($r === 6 || $c === 6) {
-                    if (($r + $c) % 2 === 0) {
-                        $px = $c * $cellSize;
-                        $py = $r * $cellSize;
-                        $svg .= "  <rect x=\"{$px}\" y=\"{$py}\" width=\"{$cellSize}\" height=\"{$cellSize}\" fill=\"#0F172A\"/>\n";
-                    }
-                    continue;
-                }
-
-                if ($val % 2 === 0) {
-                    $px = $c * $cellSize;
-                    $py = $r * $cellSize;
-                    $svg .= "  <rect x=\"{$px}\" y=\"{$py}\" width=\"{$cellSize}\" height=\"{$cellSize}\" fill=\"#0F172A\" rx=\"0.5\"/>\n";
-                }
-            }
+        $data = trim($data);
+        if (empty($data)) {
+            $data = 'LIB-0000-2026';
         }
 
-        $svg .= "</svg>";
+        try {
+            $renderer = new \BaconQrCode\Renderer\ImageRenderer(
+                new \BaconQrCode\Renderer\RendererStyle\RendererStyle($size, 1),
+                new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+            );
+            $writer = new \BaconQrCode\Writer($renderer);
+            $svg = $writer->writeString($data);
 
-        return $svg;
+            // Bersihkan xml tag agar aman di-embed langsung di Blade / HTML
+            $svg = preg_replace('/<\?xml[^\?]+\?>/', '', $svg);
+            return trim($svg);
+        } catch (\Throwable $e) {
+            return '<svg viewBox="0 0 ' . $size . ' ' . $size . '" width="' . $size . '" height="' . $size . '"><rect width="' . $size . '" height="' . $size . '" fill="#f1f5f9"/></svg>';
+        }
     }
 }
 

@@ -268,6 +268,112 @@ Route::middleware('auth')->group(function () {
         $history = $loanService->getBorrowerHistory(userId: $user->id, nisn: $user->nisn ?? null);
         return view('pages.library-history', compact('history', 'user'));
     })->name('library.history');
+
+    // 11c. Sirkulasi Perpustakaan: Endpoint Pemindaian Barcode via Kamera / Scanner (Admin Only)
+    Route::post('/admin/circulation/process-scan', function (Request $request, \App\Services\LibraryLoanService $loanService) {
+        $user = auth()->user();
+        if (! $user || ! $user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akses ditolak: Anda tidak memiliki izin mengelola sirkulasi perpustakaan.',
+            ], 403);
+        }
+
+        $code = trim((string) $request->input('code'));
+        $action = (string) $request->input('circulation_action', 'auto');
+
+        if (empty($code)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode tiket sirkulasi wajib diisi.',
+            ], 422);
+        }
+
+        $ticket = $loanService->findByCode($code);
+        if (! $ticket) {
+            return response()->json([
+                'success' => false,
+                'message' => "Tiket sirkulasi '{$code}' tidak ditemukan di sistem perpustakaan.",
+            ], 404);
+        }
+
+        try {
+            $message = '';
+            $actionDone = '';
+
+            if ($action === 'auto') {
+                if ($ticket->status === \App\Models\BookReservation::STATUS_PENDING) {
+                    $loanService->handOver($ticket, $user->id);
+                    $message = "Buku fisik '{$ticket->book?->title}' berhasil diserahkan kepada {$ticket->borrower_name} ({$ticket->borrower_class}).";
+                    $actionDone = 'diserahkan';
+                } elseif ($ticket->status === \App\Models\BookReservation::STATUS_BORROWED) {
+                    $loanService->receiveReturn($ticket, $user->id);
+                    $message = "Buku fisik '{$ticket->book?->title}' dari {$ticket->borrower_name} telah diterima kembali ke rak. Stok bertambah +1 eksemplar.";
+                    $actionDone = 'dikembalikan';
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Tiket {$ticket->reservation_code} saat ini berstatus '{$ticket->status_label}'. Tidak ada aksi otomatis yang dijalankan.",
+                        'ticket' => [
+                            'code' => $ticket->reservation_code,
+                            'borrower_name' => $ticket->borrower_name,
+                            'borrower_class' => $ticket->borrower_class,
+                            'book_title' => $ticket->book?->title,
+                            'status' => $ticket->status,
+                            'status_label' => $ticket->status_label,
+                        ],
+                    ]);
+                }
+            } elseif ($action === 'hand_over') {
+                $loanService->handOver($ticket, $user->id);
+                $message = "Buku fisik berhasil diserahkan kepada {$ticket->borrower_name}.";
+                $actionDone = 'diserahkan';
+            } elseif ($action === 'return') {
+                $loanService->receiveReturn($ticket, $user->id);
+                $message = "Buku fisik berhasil diterima kembali dari {$ticket->borrower_name}.";
+                $actionDone = 'dikembalikan';
+            } elseif ($action === 'renew') {
+                $loanService->renew($ticket);
+                $message = "Masa peminjaman tiket {$ticket->reservation_code} berhasil diperpanjang +7 hari.";
+                $actionDone = 'diperpanjang';
+            } else {
+                $message = "Data tiket ditemukan: {$ticket->borrower_name} ({$ticket->borrower_class}) [{$ticket->status_label}]";
+                $actionDone = 'info';
+            }
+
+            $ticket->refresh();
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'action_done' => $actionDone,
+                'ticket' => [
+                    'code' => $ticket->reservation_code,
+                    'borrower_name' => $ticket->borrower_name,
+                    'borrower_class' => $ticket->borrower_class,
+                    'borrower_nisn' => $ticket->borrower_nisn,
+                    'book_title' => $ticket->book?->title,
+                    'status' => $ticket->status,
+                    'status_label' => $ticket->status_label,
+                    'status_color' => $ticket->status_color,
+                    'pickup_date' => $ticket->pickup_date?->format('d M Y'),
+                    'due_date' => $ticket->due_date?->format('d M Y'),
+                    'is_overdue' => $ticket->is_overdue,
+                    'days_late' => $ticket->days_late,
+                ],
+            ]);
+        } catch (\DomainException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage(),
+            ], 500);
+        }
+    })->name('admin.circulation.process-scan');
 });
 
 // 12. Berita & Informasi

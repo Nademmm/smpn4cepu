@@ -253,4 +253,63 @@ class LibraryRevisionTest extends TestCase
             ->assertHasNoErrors()
             ->assertSet('checkTicketErrorMessage', null);
     }
+
+    /**
+     * Test 7: Endpoint Pemindaian Barcode Kamera Sirkulasi (/admin/circulation/process-scan)
+     */
+    public function test_camera_scan_endpoint_processes_circulation_automatically(): void
+    {
+        $perpus = User::where('email', 'perpus@smpn4cepu.sch.id')->first();
+        $this->assertNotNull($perpus);
+
+        $book = Book::where('physical_stock', '>', 0)->first();
+        $this->assertNotNull($book);
+        $initialStock = $book->physical_stock;
+
+        $loanService = app(\App\Services\LibraryLoanService::class);
+        $ticket = $loanService->reserve(
+            bookId: $book->id,
+            name: 'Ahmad Siswa Kamera',
+            class: '7A',
+            nisn: '1234567890',
+            pickupDate: now()->format('Y-m-d')
+        );
+
+        $this->assertEquals(BookReservation::STATUS_PENDING, $ticket->status);
+
+        // 1. Scan Pertama: Penyerahan Buku ke Siswa (Status berubah jadi 'diambil')
+        $response1 = $this->actingAs($perpus)->postJson(route('admin.circulation.process-scan'), [
+            'code' => $ticket->reservation_code,
+            'circulation_action' => 'auto',
+        ]);
+
+        $response1->assertStatus(200);
+        $response1->assertJsonPath('success', true);
+        $response1->assertJsonPath('action_done', 'diserahkan');
+        $response1->assertJsonPath('ticket.status', BookReservation::STATUS_BORROWED);
+
+        // 2. Scan Kedua: Pengembalian Buku oleh Siswa (Status berubah jadi 'selesai')
+        $response2 = $this->actingAs($perpus)->postJson(route('admin.circulation.process-scan'), [
+            'code' => $ticket->reservation_code,
+            'circulation_action' => 'auto',
+        ]);
+
+        $response2->assertStatus(200);
+        $response2->assertJsonPath('success', true);
+        $response2->assertJsonPath('action_done', 'dikembalikan');
+        $response2->assertJsonPath('ticket.status', BookReservation::STATUS_RETURNED);
+
+        // Stok fisik buku harus kembali seperti semula
+        $book->refresh();
+        $this->assertEquals($initialStock, $book->physical_stock);
+
+        // 3. Verifikasi QR Code dan Barcode SVG tergenerate
+        $qrSvg = BarcodeService::generateQrCodeSvg($ticket->reservation_code);
+        $this->assertStringContainsString('<svg', $qrSvg);
+        $this->assertStringContainsString('</svg>', $qrSvg);
+
+        $barcodeSvg = BarcodeService::generateCode128Svg($ticket->reservation_code);
+        $this->assertStringContainsString('<svg', $barcodeSvg);
+        $this->assertStringContainsString('</svg>', $barcodeSvg);
+    }
 }

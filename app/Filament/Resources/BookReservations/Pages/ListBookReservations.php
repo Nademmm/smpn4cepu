@@ -23,13 +23,25 @@ class ListBookReservations extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // Aksi Cepat Scan Barcode / Input Kode Tiket di Meja Sirkulasi
+            // Aksi 1: Pemindaian Cepat Menggunakan Kamera Langsung (Webcam / HP)
+            Action::make('cameraScan')
+                ->label('Scan Kamera Barcode')
+                ->icon('heroicon-o-camera')
+                ->color('success')
+                ->modalHeading('Kamera Pemindai Barcode & QR Sirkulasi')
+                ->modalDescription('Arahkan kamera ke barcode atau QR code tiket siswa untuk serah terima atau pengembalian buku.')
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Tutup Scanner')
+                ->modalWidth('2xl')
+                ->modalContent(fn () => view('filament.components.circulation-camera-modal')),
+
+            // Aksi 2: Input Manual / Scanner USB Fisik
             Action::make('quickScan')
-                ->label('Scan Barcode / Cek Tiket')
+                ->label('Input Manual / Scanner USB')
                 ->icon('heroicon-o-qr-code')
-                ->color('primary')
+                ->color('gray')
                 ->modalHeading('Pindai Barcode / Verifikasi Tiket Sirkulasi')
-                ->modalDescription('Gunakan pemindai barcode USB/kamera atau ketikkan kode tiket reservasi (contoh: LIB-2026-ABC12).')
+                ->modalDescription('Gunakan pemindai barcode USB atau ketikkan kode tiket reservasi (contoh: LIB-2026-ABC12).')
                 ->modalSubmitActionLabel('Proses Sirkulasi')
                 ->form([
                     TextInput::make('code')
