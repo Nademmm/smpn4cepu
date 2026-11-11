@@ -173,7 +173,9 @@
                     this.isStarting = false;
                     const msg = (err && err.message) ? err.message : String(err || '');
 
-                    if (msg.includes('NotAllowedError') || msg.includes('Permission denied') || msg.includes('PermissionDismissedError')) {
+                    if (msg.includes('Permissions policy') || msg.includes('camera is not allowed in this document') || msg.includes('PermissionPolicyViolation')) {
+                        this.permissionError = 'Akses kamera dibatasi oleh Permissions Policy (misal di tab preview editor atau HTTP IP lokal). Silakan buka di Google Chrome utama pada http://localhost:8000 atau gunakan tombol Foto via Kamera HP di bawah.';
+                    } else if (msg.includes('NotAllowedError') || msg.includes('Permission denied') || msg.includes('PermissionDismissedError')) {
                         this.permissionError = 'Izin kamera belum diberikan. Klik ikon gembok di sebelah kiri bilah URL peramban, ubah Kamera menjadi "Izinkan", lalu klik Nyalakan Kamera di bawah.';
                     } else if (msg.includes('NotFoundError') || msg.includes('DevicesNotFoundError')) {
                         this.permissionError = 'Tidak ada perangkat kamera yang terdeteksi di perangkat Anda.';
