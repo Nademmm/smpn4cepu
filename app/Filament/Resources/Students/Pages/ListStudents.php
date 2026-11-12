@@ -4,12 +4,17 @@ namespace App\Filament\Resources\Students\Pages;
 
 use App\Filament\Resources\Students\StudentResource;
 use App\Models\User;
+use App\Services\StudentImportService;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ListStudents extends ListRecords
 {
@@ -18,6 +23,95 @@ class ListStudents extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            // 1. Tombol Unduh Template Excel / CSV
+            Action::make('downloadTemplate')
+                ->label('Unduh Template')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('gray')
+                ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
+                ->action(function (): StreamedResponse {
+                    $csvContent = StudentImportService::getTemplateCsv();
+                    return response()->streamDownload(function () use ($csvContent) {
+                        echo $csvContent;
+                    }, 'template_import_siswa_smpn4cepu.csv', [
+                        'Content-Type' => 'text/csv; charset=UTF-8',
+                    ]);
+                }),
+
+            // 2. Tombol Import Massal Excel / CSV
+            Action::make('importExcel')
+                ->label('Import Excel / CSV')
+                ->icon('heroicon-o-document-arrow-up')
+                ->color('success')
+                ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
+                ->modalHeading('Import Akun Siswa Massal dari Excel / CSV')
+                ->modalDescription('Unggah berkas Excel (.xlsx) atau CSV daftar siswa. Mendukung format ekspor Dapodik resmi (multi-sheet per rombel) maupun format template tabular CSV.')
+                ->modalSubmitActionLabel('Mulai Proses Impor')
+                ->form([
+                    FileUpload::make('attachment')
+                        ->label('Pilih Berkas Excel (.xlsx) / CSV')
+                        ->disk('local')
+                        ->directory('temp_imports')
+                        ->acceptedFileTypes([
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'text/csv',
+                            'text/plain',
+                            'application/csv',
+                        ])
+                        ->required()
+                        ->helperText('Format yang didukung: .xlsx atau .csv. Maksimal ukuran berkas 20 MB.'),
+
+                    TextInput::make('academic_year')
+                        ->label('Tahun Ajaran Rombel')
+                        ->default('2026/2027')
+                        ->required()
+                        ->helperText('Tahun ajaran untuk sinkronisasi data statistik rombel siswa.'),
+
+                    TextInput::make('default_password')
+                        ->label('Password Default Akun Siswa Baru')
+                        ->default('password123')
+                        ->required()
+                        ->helperText('Password default bagi siswa yang baru pertama kali didaftarkan akunnya.'),
+                ])
+                ->action(function (array $data, StudentImportService $importService): void {
+                    $relativePath = $data['attachment'] ?? null;
+                    if (! $relativePath || ! Storage::disk('local')->exists($relativePath)) {
+                        Notification::make()
+                            ->title('Gagal Membaca Berkas')
+                            ->body('Berkas yang diunggah tidak ditemukan pada server.')
+                            ->danger()
+                            ->send();
+                        return;
+                    }
+
+                    $fullPath = Storage::disk('local')->path($relativePath);
+                    $academicYear = $data['academic_year'] ?? '2026/2027';
+                    $defaultPassword = $data['default_password'] ?? 'password123';
+
+                    $result = $importService->import($fullPath, $academicYear, $defaultPassword);
+
+                    Storage::disk('local')->delete($relativePath);
+
+                    if ($result['success']) {
+                        $msg = "Berhasil mengimpor {$result['imported']} akun siswa baru dan memperbarui {$result['updated']} siswa di {$result['classes_count']} rombel.";
+                        if (! empty($result['errors'])) {
+                            $msg .= ' Catatan: ' . implode(', ', array_slice($result['errors'], 0, 3));
+                        }
+
+                        Notification::make()
+                            ->title('Impor Siswa Berhasil')
+                            ->body($msg)
+                            ->success()
+                            ->send();
+                    } else {
+                        Notification::make()
+                            ->title('Impor Siswa Gagal')
+                            ->body(implode(', ', $result['errors']))
+                            ->danger()
+                            ->send();
+                    }
+                }),
+
             CreateAction::make()
                 ->label('Tambah Siswa Baru')
                 ->icon('heroicon-o-user-plus'),
