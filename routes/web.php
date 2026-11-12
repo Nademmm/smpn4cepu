@@ -270,14 +270,23 @@ Route::middleware('auth')->group(function () {
                 ->get();
         });
 
-        $myAttempts = \App\Models\QuizAttempt::with('bank.subject')
-            ->where('user_id', Auth::id())
-            ->orderByDesc('created_at')
-            ->limit(6)
-            ->get();
+        $allAttempts = collect();
+        $myAttempts = collect();
+        if (Auth::check()) {
+            $allAttempts = \App\Models\QuizAttempt::with('bank.subject')
+                ->where('user_id', Auth::id())
+                ->orderByDesc('created_at')
+                ->get();
+            $myAttempts = $allAttempts->take(6);
+        }
 
-        return view('pages.quizzes', compact('questionBanks', 'myAttempts'));
+        return view('pages.quizzes', compact('questionBanks', 'myAttempts', 'allAttempts'));
     })->name('quizzes');
+
+    // 10b. Akses Cepat Riwayat Belajar Siswa
+    Route::get('/belajar/riwayat-belajar', function () {
+        return redirect()->to(route('quizzes') . '#riwayat');
+    })->name('learning.history');
 
     // 11. Pengerjaan Kuis
     Route::get('/belajar/latihan-soal/{id}', function (int $id) {

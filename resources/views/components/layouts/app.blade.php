@@ -423,33 +423,94 @@
                             <span>Masuk Portal</span>
                         </a>
                     @else
-                        <div class="hidden sm:flex items-center gap-2.5 bg-cream/80 border border-sun-soft/80 px-3 py-1.5 rounded-full">
-                            <div class="flex items-center gap-2">
+                        {{-- Dropdown Menu Akun Pengguna Terotentikasi (Profil, Riwayat Belajar, Peminjaman Saya, Keluar) --}}
+                        <div x-data="{ userMenuOpen: false }" class="relative hidden sm:block">
+                            <button
+                                type="button"
+                                @click="userMenuOpen = !userMenuOpen"
+                                :aria-expanded="userMenuOpen.toString()"
+                                class="flex items-center gap-2.5 bg-cream/90 hover:bg-cream border border-sun-soft/90 px-3 py-1.5 rounded-full text-navy transition-all cursor-pointer shadow-2xs hover:shadow-xs"
+                            >
                                 <div class="w-7 h-7 rounded-full bg-brand text-white text-xs font-black flex items-center justify-center shrink-0">
                                     {{ strtoupper(substr($currentUser->name, 0, 1)) }}
                                 </div>
-                                <span class="text-xs font-black text-navy max-w-[120px] truncate">{{ $currentUser->name }}</span>
-                            </div>
-                            @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
-                                <a href="{{ url('/admin') }}" class="px-2.5 py-1 text-[11px] font-extrabold bg-brand text-white rounded-full hover:bg-brand-dark transition-colors">
-                                    Admin
-                                </a>
-                            @endif
-                            <button
-                                type="button"
-                                @click="$dispatch('open-change-password-modal')"
-                                title="Ganti kata sandi akun"
-                                aria-label="Ganti kata sandi akun"
-                                class="p-1 rounded-full text-ink-mute hover:text-brand hover:bg-sky-soft transition-colors cursor-pointer"
-                            >
-                                <x-app-icon name="key" class="w-4 h-4" />
+                                <span class="text-xs font-black max-w-[120px] truncate">{{ $currentUser->name }}</span>
+                                <x-app-icon name="chevron-down" class="w-3.5 h-3.5 text-ink-mute transition-transform" ::class="userMenuOpen ? 'rotate-180' : ''" />
                             </button>
-                            <form action="{{ route('logout') }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" title="Keluar dari akun" aria-label="Keluar dari akun" class="p-1 rounded-full text-ink-mute hover:text-rose-600 hover:bg-rose-50 transition-colors">
-                                    <x-app-icon name="logout" class="w-4 h-4" />
-                                </button>
-                            </form>
+
+                            <div
+                                x-show="userMenuOpen"
+                                @click.outside="userMenuOpen = false"
+                                x-cloak
+                                x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 translate-y-1"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="opacity-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 translate-y-1"
+                                class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-sand/80 py-2 z-50 divide-y divide-sand/50"
+                            >
+                                <div class="px-4 py-2.5">
+                                    <span class="text-[10px] font-bold text-ink-mute uppercase tracking-wider block">Akun Masuk</span>
+                                    <p class="text-xs font-black text-navy truncate leading-tight">{{ $currentUser->name }}</p>
+                                    <p class="text-[11px] text-ink-soft truncate font-medium mt-0.5">
+                                        {{ $currentUser->email }}{{ $currentUser->student_class ? ' · ' . $currentUser->student_class : '' }}
+                                    </p>
+                                </div>
+
+                                <div class="py-1 text-xs">
+                                    <button
+                                        type="button"
+                                        @click="userMenuOpen = false; $dispatch('open-change-password-modal')"
+                                        class="w-full text-left px-4 py-2 text-navy hover:bg-sky-soft hover:text-brand font-bold flex items-center gap-2.5 transition-colors cursor-pointer"
+                                    >
+                                        <x-app-icon name="user" class="w-4 h-4 text-brand shrink-0" />
+                                        <span>Profil & Kata Sandi</span>
+                                    </button>
+
+                                    <a
+                                        href="{{ route('quizzes') }}#riwayat"
+                                        @click="userMenuOpen = false"
+                                        class="px-4 py-2 text-navy hover:bg-sky-soft hover:text-brand font-bold flex items-center gap-2.5 transition-colors"
+                                    >
+                                        <x-app-icon name="chart-bar" class="w-4 h-4 text-brand shrink-0" />
+                                        <span>Riwayat Belajar</span>
+                                    </a>
+
+                                    <a
+                                        href="{{ route('library.history') }}"
+                                        @click="userMenuOpen = false"
+                                        class="px-4 py-2 text-navy hover:bg-sky-soft hover:text-brand font-bold flex items-center gap-2.5 transition-colors"
+                                    >
+                                        <x-app-icon name="book" class="w-4 h-4 text-brand shrink-0" />
+                                        <span>Peminjaman Saya</span>
+                                    </a>
+
+                                    @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
+                                        <a
+                                            href="{{ url('/admin') }}"
+                                            @click="userMenuOpen = false"
+                                            class="px-4 py-2 text-brand hover:bg-sky-soft font-extrabold flex items-center gap-2.5 transition-colors"
+                                        >
+                                            <x-app-icon name="shield" class="w-4 h-4 text-brand shrink-0" />
+                                            <span>Panel Dashboard Admin</span>
+                                        </a>
+                                    @endif
+                                </div>
+
+                                <div class="py-1">
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button
+                                            type="submit"
+                                            class="w-full text-left px-4 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                                        >
+                                            <x-app-icon name="logout" class="w-4 h-4 text-rose-600 shrink-0" />
+                                            <span>Keluar</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     @endif
 
@@ -645,37 +706,66 @@
                         <span>Masuk Portal Sekolah</span>
                     </a>
                 @else
-                    <div class="p-3.5 rounded-2xl bg-sky-soft/60 border border-brand/20 space-y-3">
-                        <div class="flex items-center gap-3">
+                    <div class="p-4 rounded-2xl bg-white border border-sand shadow-2xs space-y-3">
+                        <div class="flex items-center gap-3 pb-2.5 border-b border-sand/60">
                             <div class="w-9 h-9 rounded-full bg-brand text-white text-xs font-black flex items-center justify-center shrink-0">
                                 {{ strtoupper(substr($currentUser->name, 0, 1)) }}
                             </div>
-                            <div>
-                                <span class="text-xs font-bold text-ink-mute uppercase block">Akun Aktif</span>
-                                <h4 class="text-sm font-black text-navy leading-tight">{{ $currentUser->name }}</h4>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-black text-navy leading-tight truncate">{{ $currentUser->name }}</h4>
+                                <p class="text-[11px] text-ink-soft truncate">
+                                    {{ $currentUser->email }}{{ $currentUser->student_class ? ' · ' . $currentUser->student_class : '' }}
+                                </p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 pt-1 border-t border-brand/10">
-                            @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
-                                <a href="{{ url('/admin') }}" class="flex-1 py-2 text-center text-xs font-extrabold bg-brand text-white rounded-xl hover:bg-brand-dark transition-colors">
-                                    Panel Admin
-                                </a>
-                            @else
-                                <a href="{{ route('quizzes') }}" class="flex-1 py-2 text-center text-xs font-extrabold bg-brand text-white rounded-xl hover:bg-brand-dark transition-colors">
-                                    Latihan Saya
-                                </a>
-                            @endif
+
+                        {{-- Menu Akun Mobile: Profil, Riwayat belajar, Peminjaman saya, Keluar --}}
+                        <div class="grid grid-cols-1 gap-1 text-xs">
                             <button
                                 type="button"
                                 @click="mobileMenuOpen = false; $dispatch('open-change-password-modal')"
-                                class="px-3 py-2 text-xs font-bold text-navy bg-white border border-sun-soft hover:bg-cream rounded-xl transition-colors cursor-pointer"
+                                class="w-full text-left px-3 py-2 rounded-xl text-navy hover:bg-sky-soft hover:text-brand font-bold flex items-center gap-2.5 transition-colors cursor-pointer"
                             >
-                                Ganti Sandi
+                                <x-app-icon name="user" class="w-4 h-4 text-brand shrink-0" />
+                                <span>Profil & Kata Sandi</span>
                             </button>
-                            <form action="{{ route('logout') }}" method="POST" class="inline">
+
+                            <a
+                                href="{{ route('quizzes') }}#riwayat"
+                                @click="mobileMenuOpen = false"
+                                class="px-3 py-2 rounded-xl text-navy hover:bg-sky-soft hover:text-brand font-bold flex items-center gap-2.5 transition-colors"
+                            >
+                                <x-app-icon name="chart-bar" class="w-4 h-4 text-brand shrink-0" />
+                                <span>Riwayat Belajar</span>
+                            </a>
+
+                            <a
+                                href="{{ route('library.history') }}"
+                                @click="mobileMenuOpen = false"
+                                class="px-3 py-2 rounded-xl text-navy hover:bg-sky-soft hover:text-brand font-bold flex items-center gap-2.5 transition-colors"
+                            >
+                                <x-app-icon name="book" class="w-4 h-4 text-brand shrink-0" />
+                                <span>Peminjaman Saya</span>
+                            </a>
+
+                            @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
+                                <a
+                                    href="{{ url('/admin') }}"
+                                    @click="mobileMenuOpen = false"
+                                    class="px-3 py-2 rounded-xl text-brand hover:bg-sky-soft font-extrabold flex items-center gap-2.5 transition-colors"
+                                >
+                                    <x-app-icon name="shield" class="w-4 h-4 text-brand shrink-0" />
+                                    <span>Panel Admin</span>
+                                </a>
+                            @endif
+
+                            <form action="{{ route('logout') }}" method="POST" class="pt-1 border-t border-sand/40">
                                 @csrf
-                                <button type="submit" class="px-3 py-2 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors border border-rose-200 inline-flex items-center gap-1.5">
-                                    <x-app-icon name="logout" class="w-3.5 h-3.5 text-rose-600" />
+                                <button
+                                    type="submit"
+                                    class="w-full text-left px-3 py-2 rounded-xl text-rose-700 hover:bg-rose-50 font-bold flex items-center gap-2.5 transition-colors cursor-pointer"
+                                >
+                                    <x-app-icon name="logout" class="w-4 h-4 text-rose-600 shrink-0" />
                                     <span>Keluar</span>
                                 </button>
                             </form>
@@ -868,6 +958,24 @@
                     >
                         <x-app-icon name="x" class="w-4 h-4" />
                     </button>
+                </div>
+
+                {{-- Profil Singkat Pengguna --}}
+                <div class="p-3 bg-sky-soft/70 rounded-xl border border-brand/20 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-brand text-white text-sm font-black flex items-center justify-center shrink-0">
+                        {{ strtoupper(substr($currentUser->name, 0, 1)) }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-1">
+                            <h4 class="text-xs font-black text-navy truncate">{{ $currentUser->name }}</h4>
+                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-brand text-white shrink-0">
+                                {{ $currentUser->student_class ?: ($currentUser->roles->first()?->name ?? 'Pengguna') }}
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-ink-soft truncate mt-0.5">
+                            {{ $currentUser->email }}{{ $currentUser->nisn ? ' · NISN: ' . $currentUser->nisn : '' }}
+                        </p>
+                    </div>
                 </div>
 
                 <form action="{{ route('password.update') }}" method="POST" class="space-y-3.5 text-xs">

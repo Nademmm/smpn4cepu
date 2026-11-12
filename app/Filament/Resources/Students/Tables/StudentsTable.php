@@ -143,6 +143,7 @@ class StudentsTable
                         ->label('Pindah Kelas / Rombel Massal')
                         ->icon('heroicon-o-arrows-right-left')
                         ->color('primary')
+                        ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
                         ->form([
                             Select::make('target_class')
                                 ->label('Pilih Kelas / Rombel Tujuan')
@@ -176,6 +177,7 @@ class StudentsTable
                         ->label('Reset Password ke Default (password123)')
                         ->icon('heroicon-o-key')
                         ->color('warning')
+                        ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
                         ->requiresConfirmation()
                         ->action(function (Collection $records): void {
                             $hashed = Hash::make('password123', ['rounds' => 10]);
@@ -188,7 +190,8 @@ class StudentsTable
                         })
                         ->deselectRecordsAfterCompletion(),
 
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
                 ]),
             ]);
     }

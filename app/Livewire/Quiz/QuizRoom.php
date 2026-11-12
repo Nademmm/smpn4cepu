@@ -95,6 +95,7 @@ class QuizRoom extends Component
         if (Auth::check()) {
             $this->studentName = Auth::user()->name;
             $this->studentClass = $this->normalizeCohort((string) Auth::user()->student_class, $this->gradeLevel);
+            $this->restoreProgressFromSession();
         } else {
             $this->studentClass = 'Kelas ' . $this->gradeLevel;
         }
@@ -178,6 +179,98 @@ class QuizRoom extends Component
         $this->participantIdentifier = trim($this->studentName) . ' (' . $cohort . ')';
         $this->hasStarted = true;
         $this->startedAt = now();
+        $this->saveProgressToSession();
+    }
+
+    public function updatedAnswers(): void
+    {
+        $this->saveProgressToSession();
+    }
+
+    public function getRemainingSecondsProperty(): int
+    {
+        if (! $this->hasStarted || ! $this->startedAt) {
+            return $this->durationSeconds;
+        }
+
+        $elapsed = (int) $this->startedAt->diffInSeconds(now());
+        return max(0, $this->durationSeconds - $elapsed);
+    }
+
+    public function retryQuiz(): void
+    {
+        $this->clearProgressSession();
+        $this->hasStarted = false;
+        $this->isFinished = false;
+        $this->resultSummary = null;
+        $this->answers = [];
+        $this->questions = [];
+        $this->startedAt = null;
+        $this->quizPassword = '';
+        $this->authErrorMessage = '';
+    }
+
+    protected function getSessionProgressKey(): string
+    {
+        return 'active_quiz_progress_' . (Auth::id() ?: 'guest') . '_' . $this->bankId;
+    }
+
+    protected function saveProgressToSession(): void
+    {
+        if (! Auth::check() || ! $this->hasStarted || $this->isFinished) {
+            return;
+        }
+
+        session()->put($this->getSessionProgressKey(), [
+            'bank_id' => $this->bankId,
+            'started_at' => $this->startedAt?->toIso8601String(),
+            'questions' => $this->questions,
+            'questions_count' => $this->questionsCount,
+            'answers' => $this->answers,
+            'participant_identifier' => $this->participantIdentifier,
+            'student_name' => $this->studentName,
+            'student_class' => $this->studentClass,
+            'duration_seconds' => $this->durationSeconds,
+        ]);
+    }
+
+    protected function restoreProgressFromSession(): void
+    {
+        $key = $this->getSessionProgressKey();
+        if (! session()->has($key)) {
+            return;
+        }
+
+        $data = session()->get($key);
+        if (empty($data['questions']) || empty($data['started_at'])) {
+            session()->forget($key);
+            return;
+        }
+
+        $startedAt = Carbon::parse($data['started_at']);
+        $durationSeconds = (int) ($data['duration_seconds'] ?? $this->durationSeconds);
+        $elapsed = (int) $startedAt->diffInSeconds(now());
+
+        // Jika alokasi waktu sudah habis (dengan toleransi 120 detik), bersihkan sesi
+        if ($elapsed > ($durationSeconds + 120)) {
+            session()->forget($key);
+            return;
+        }
+
+        $this->participantIdentifier = (string) ($data['participant_identifier'] ?? '');
+        $this->studentName = (string) ($data['student_name'] ?? (Auth::user()?->name ?? ''));
+        $this->studentClass = (string) ($data['student_class'] ?? '');
+        $this->startedAt = $startedAt;
+        $this->durationSeconds = $durationSeconds;
+        $this->questions = $data['questions'];
+        $this->questionsCount = (int) ($data['questions_count'] ?? count($this->questions));
+        $this->answers = $data['answers'] ?? [];
+        $this->hasStarted = true;
+    }
+
+    protected function clearProgressSession(): void
+    {
+        session()->forget($this->getSessionProgressKey());
     }
 
     public function submitQuiz(QuizAssessmentService $assessmentService): void
@@ -205,6 +298,7 @@ class QuizRoom extends Component
 
             $this->resultSummary = $summary;
             $this->isFinished = true;
+            $this->clearProgressSession();
         } catch (\Throwable $e) {
             Log::error('Gagal menyimpan hasil kuis: ' . $e->getMessage(), [
                 'bank_id' => $this->bankId,

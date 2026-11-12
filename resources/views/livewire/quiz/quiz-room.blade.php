@@ -178,18 +178,44 @@
 
         <div
             x-data="{
-                currentIndex: 0,
+                currentIndex: parseInt(localStorage.getItem('quiz_idx_{{ $bankId }}') || 0),
                 total: {{ $totalQuestions }},
                 confirmFinish: false,
-                selectedAnswers: @entangle('answers'),
-                timeLeft: {{ $durationSeconds }},
+                selectedAnswers: @entangle('answers').live,
+                timeLeft: {{ $this->remainingSeconds }},
                 timer: null,
                 init() {
+                    if (this.currentIndex >= this.total || this.currentIndex < 0) {
+                        this.currentIndex = 0;
+                    }
+                    try {
+                        const local = JSON.parse(localStorage.getItem('quiz_ans_{{ $bankId }}') || '{}');
+                        if (local && typeof local === 'object' && Object.keys(local).length > 0) {
+                            this.selectedAnswers = Object.assign({}, local, this.selectedAnswers);
+                        }
+                    } catch (e) {}
+
+                    this.$watch('selectedAnswers', (val) => {
+                        try {
+                            localStorage.setItem('quiz_ans_{{ $bankId }}', JSON.stringify(val));
+                        } catch (e) {}
+                    });
+
+                    this.$watch('currentIndex', (val) => {
+                        try {
+                            localStorage.setItem('quiz_idx_{{ $bankId }}', String(val));
+                        } catch (e) {}
+                    });
+
                     this.timer = setInterval(() => {
                         if (this.timeLeft > 0) {
                             this.timeLeft--;
                         } else {
                             clearInterval(this.timer);
+                            try {
+                                localStorage.removeItem('quiz_idx_{{ $bankId }}');
+                                localStorage.removeItem('quiz_ans_{{ $bankId }}');
+                            } catch (e) {}
                             $wire.submitQuiz();
                         }
                     }, 1000);
@@ -366,8 +392,14 @@
                             </button>
                             <button
                                 type="button"
-                                @click="clearInterval(timer)"
-                                wire:click="submitQuiz"
+                                @click="
+                                    clearInterval(timer);
+                                    try {
+                                        localStorage.removeItem('quiz_idx_{{ $bankId }}');
+                                        localStorage.removeItem('quiz_ans_{{ $bankId }}');
+                                    } catch (e) {}
+                                    $wire.submitQuiz();
+                                "
                                 wire:loading.attr="disabled"
                                 class="btn-primary text-xs"
                             >
@@ -437,9 +469,36 @@
                     <span>Hasil latihan ini telah tersimpan secara permanen pada portofolio akun belajar Anda.</span>
                 </div>
 
-                <div class="pt-4 border-t-2 border-sun-soft flex justify-center gap-3">
-                    <a href="{{ route('quizzes') }}" class="btn-primary text-xs">
-                        Pilih Latihan Lain
+                <div class="pt-4 border-t-2 border-sun-soft flex flex-wrap items-center justify-center gap-3">
+                    <a
+                        href="{{ route('materials') }}"
+                        class="btn-secondary text-xs inline-flex items-center gap-2 min-h-[42px]"
+                    >
+                        <x-app-icon name="book" class="w-4 h-4" />
+                        <span>Pelajari Materi Terkait</span>
+                    </a>
+
+                    <button
+                        type="button"
+                        wire:click="retryQuiz"
+                        @click="
+                            try {
+                                localStorage.removeItem('quiz_idx_{{ $bankId }}');
+                                localStorage.removeItem('quiz_ans_{{ $bankId }}');
+                            } catch (e) {}
+                        "
+                        class="btn-primary text-xs inline-flex items-center gap-2 min-h-[42px]"
+                    >
+                        <x-app-icon name="refresh" class="w-4 h-4" />
+                        <span>Ulangi Latihan</span>
+                    </button>
+
+                    <a
+                        href="{{ route('quizzes') }}"
+                        class="btn-ghost text-xs inline-flex items-center gap-2 min-h-[42px]"
+                    >
+                        <x-app-icon name="arrow-left" class="w-3.5 h-3.5" />
+                        <span>Kembali ke Daftar</span>
                     </a>
                 </div>
             </x-card>
