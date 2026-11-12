@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -28,7 +29,7 @@ class ListStudents extends ListRecords
                 ->label('Unduh Template')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('gray')
-                ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
+                ->visible(fn (): bool => Auth::user()?->hasRole('super_admin') ?? false)
                 ->action(function (): StreamedResponse {
                     $csvContent = StudentImportService::getTemplateCsv();
                     return response()->streamDownload(function () use ($csvContent) {
@@ -43,7 +44,7 @@ class ListStudents extends ListRecords
                 ->label('Import Excel / CSV')
                 ->icon('heroicon-o-document-arrow-up')
                 ->color('success')
-                ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
+                ->visible(fn (): bool => Auth::user()?->hasRole('super_admin') ?? false)
                 ->modalHeading('Import Akun Siswa Massal dari Excel / CSV')
                 ->modalDescription('Unggah berkas Excel (.xlsx) atau CSV daftar siswa. Mendukung format ekspor Dapodik resmi (multi-sheet per rombel) maupun format template tabular CSV.')
                 ->modalSubmitActionLabel('Mulai Proses Impor')
