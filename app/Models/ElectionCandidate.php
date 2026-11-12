@@ -15,6 +15,8 @@ class ElectionCandidate extends Model
         'mission',
         'photo_path',
         'total_votes_cached',
+        'period_year',
+        'status',
     ];
 
     protected function casts(): array

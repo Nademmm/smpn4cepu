@@ -79,3 +79,4 @@ class ActivityLogTest extends TestCase
         $this->actingAs($student)->get('/admin/activity-logs')->assertStatus(403);
     }
 }
+

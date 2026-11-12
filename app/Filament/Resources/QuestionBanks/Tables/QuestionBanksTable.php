@@ -2,17 +2,32 @@
 
 namespace App\Filament\Resources\QuestionBanks\Tables;
 
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionBanksTable
 {
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -90,14 +105,27 @@ class QuestionBanksTable
                     ->label('Filter Mata Pelajaran')
                     ->relationship('subject', 'name')
                     ->preload(),
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->modalHeading('Pindahkan Paket Soal ke Tong Sampah?')
+                    ->modalDescription('Paket soal dan butir pertanyaan ini akan dinonaktifkan dari portal siswa dan dipindahkan ke Daftar Terhapus. Riwayat nilai kuis siswa tetap aman dan data dapat dipulihkan kapan saja sebelum masa retensi permanen.'),
+                RestoreAction::make()
+                    ->label('Pulihkan')
+                    ->modalHeading('Pulihkan Paket Soal?')
+                    ->modalDescription('Paket soal dan seluruh butir pertanyaan terkait akan dikembalikan ke status aktif dan dapat diakses kembali oleh siswa.'),
+                ForceDeleteAction::make()
+                    ->label('Hapus Permanen')
+                    ->visible(fn (): bool => static::isSuperAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
+                    ForceDeleteBulkAction::make()
+                        ->visible(fn (): bool => static::isSuperAdmin()),
                 ]),
             ]);
     }

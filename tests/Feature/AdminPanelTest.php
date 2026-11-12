@@ -66,6 +66,7 @@ class AdminPanelTest extends TestCase
             '/admin/election-votes',
             '/admin/subjects',
             '/admin/subjects/create',
+            '/admin/system-backups',
             '/admin/users',
             '/admin/users/create',
             '/admin/shield/roles',
@@ -95,6 +96,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($guru)->get('/admin/subjects')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/users')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/activity-logs')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/system-backups')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/election-candidates')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/election-votes')->assertStatus(403);
 
@@ -106,6 +108,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($perpus)->get('/admin/book-reservations')->assertStatus(200);
         $this->actingAs($perpus)->get('/admin/users')->assertStatus(403);
         $this->actingAs($perpus)->get('/admin/activity-logs')->assertStatus(403);
+        $this->actingAs($perpus)->get('/admin/system-backups')->assertStatus(403);
         $this->actingAs($perpus)->get('/admin/students')->assertStatus(403);
 
         $pilketos = User::where('email', 'pilketos@smpn4cepu.sch.id')->first();
@@ -115,6 +118,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($pilketos)->get('/admin/election-votes')->assertStatus(200);
         $this->actingAs($pilketos)->get('/admin/users')->assertStatus(403);
         $this->actingAs($pilketos)->get('/admin/activity-logs')->assertStatus(403);
+        $this->actingAs($pilketos)->get('/admin/system-backups')->assertStatus(403);
         $this->actingAs($pilketos)->get('/admin/students')->assertStatus(403);
 
         $operator = User::where('email', 'operator@smpn4cepu.sch.id')->first();
@@ -127,6 +131,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($operator)->get('/admin/subjects')->assertStatus(200);
         $this->actingAs($operator)->get('/admin/users')->assertStatus(403);
         $this->actingAs($operator)->get('/admin/activity-logs')->assertStatus(403);
+        $this->actingAs($operator)->get('/admin/system-backups')->assertStatus(403);
         $this->actingAs($operator)->get('/admin/school-settings')->assertStatus(403);
         $this->actingAs($operator)->get('/admin/books')->assertStatus(403);
         $this->actingAs($operator)->get('/admin/election-candidates')->assertStatus(403);
@@ -139,6 +144,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($waliKelas)->get('/admin/student-statistics')->assertStatus(200);
         $this->actingAs($waliKelas)->get('/admin/users')->assertStatus(403);
         $this->actingAs($waliKelas)->get('/admin/activity-logs')->assertStatus(403);
+        $this->actingAs($waliKelas)->get('/admin/system-backups')->assertStatus(403);
         $this->actingAs($waliKelas)->get('/admin/academic-years')->assertStatus(403);
         $this->actingAs($waliKelas)->get('/admin/school-settings')->assertStatus(403);
         $this->actingAs($waliKelas)->get('/admin/books')->assertStatus(403);

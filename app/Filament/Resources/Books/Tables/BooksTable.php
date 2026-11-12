@@ -8,7 +8,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -112,7 +114,15 @@ class BooksTable
                     ->color('info')
                     ->url(fn ($record) => route('library', ['buku' => $record->slug]), shouldOpenInNewTab: true),
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->modalHeading('Pindahkan Buku ke Tong Sampah?')
+                    ->modalDescription('Katalog buku ini akan disembunyikan dari portal perpustakaan dan dipindahkan ke Daftar Terhapus. Riwayat sirkulasi dan peminjaman tetap tersimpan aman dan data dapat dipulihkan kapan saja sebelum masa retensi permanen.'),
+                RestoreAction::make()
+                    ->label('Pulihkan')
+                    ->modalHeading('Pulihkan Katalog Buku?')
+                    ->modalDescription('Katalog buku fisik akan dikembalikan ke status aktif dan dapat kembali dipinjam oleh siswa.'),
+                ForceDeleteAction::make()
+                    ->label('Hapus Permanen'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

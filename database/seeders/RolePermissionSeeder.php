@@ -48,6 +48,7 @@ class RolePermissionSeeder extends Seeder
             'StaffMember',
             'StudentStatistic',
             'Subject',
+            'SystemBackup',
             'User',
         ];
 
@@ -122,6 +123,7 @@ class RolePermissionSeeder extends Seeder
             $q->where('name', 'not like', '%Role%')
               ->where('name', 'not like', '%SchoolSetting%')
               ->where('name', 'not like', '%ActivityLog%')
+              ->where('name', 'not like', '%SystemBackup%')
               ->where('name', 'not like', '%Book%')
               ->where('name', 'not like', '%LibraryBook%')
               ->where('name', 'not like', '%BookReservation%')

@@ -184,6 +184,14 @@ class ListStudents extends ListRecords
             'female' => Tab::make('Putri (P)')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('gender', 'P'))
                 ->badge(fn (): int => User::whereNotNull('nisn')->where('student_class', 'not like', 'Kelas %')->where('gender', 'P')->count()),
+
+            'alumni' => Tab::make('Arsip Alumni (Lulus)')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'alumni'))
+                ->badge(fn (): int => User::where('status', 'alumni')->count()),
+
+            'mutasi' => Tab::make('Arsip Mutasi Keluar')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'mutasi_keluar'))
+                ->badge(fn (): int => User::where('status', 'mutasi_keluar')->count()),
         ];
     }
 }

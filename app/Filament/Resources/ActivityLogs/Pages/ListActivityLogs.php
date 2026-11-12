@@ -55,3 +55,4 @@ class ListActivityLogs extends ListRecords
         ];
     }
 }
+
