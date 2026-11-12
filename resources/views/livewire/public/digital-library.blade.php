@@ -62,14 +62,24 @@
                     </div>
 
                     {{-- Profil Staf Pengelola Perpustakaan --}}
-                    <div class="flex flex-wrap items-center gap-2 pt-0.5 text-xs">
-                        <div class="px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-2xs">
-                            <span class="text-[9px] uppercase font-bold text-ink-mute block leading-none mb-1 tracking-wider">Penanggung Jawab</span>
-                            <span class="text-xs font-extrabold text-navy leading-none">Laeli Hasanah, S.Pd.</span>
+                    <div class="flex flex-wrap items-center gap-2.5 pt-0.5 text-xs">
+                        <div class="px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-2xs flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-lg bg-navy/10 text-navy flex items-center justify-center shrink-0">
+                                <x-app-icon name="user" class="w-3.5 h-3.5" />
+                            </div>
+                            <div>
+                                <span class="text-[9px] uppercase font-bold text-ink-mute block leading-none mb-1 tracking-wider">Kepala Perpustakaan</span>
+                                <span class="text-xs font-extrabold text-navy leading-none">Laeli Hasanah, S.Pd.</span>
+                            </div>
                         </div>
-                        <div class="px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-2xs">
-                            <span class="text-[9px] uppercase font-bold text-ink-mute block leading-none mb-1 tracking-wider">Tenaga Teknis</span>
-                            <span class="text-xs font-extrabold text-brand leading-none">Yaatun, A.Ma.Pust.</span>
+                        <div class="px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-2xs flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-lg bg-brand/10 text-brand flex items-center justify-center shrink-0">
+                                <x-app-icon name="book" class="w-3.5 h-3.5" />
+                            </div>
+                            <div>
+                                <span class="text-[9px] uppercase font-bold text-ink-mute block leading-none mb-1 tracking-wider">Pustakawan</span>
+                                <span class="text-xs font-extrabold text-brand leading-none">Yaatun, A.Ma.Pust.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -931,10 +941,16 @@
                             </div>
                         </div>
 
-                        {{-- Petunjuk Singkat --}}
-                        <p class="text-[11px] text-ink-mute text-center italic leading-tight">
-                            Harap membawa tiket ini dalam bentuk cetak atau tangkapan layar di gawai saat mengambil buku di Ruang Perpustakaan SMPN 4 Cepu.
-                        </p>
+                        {{-- Petunjuk Singkat & Pengelola Perpustakaan --}}
+                        <div class="space-y-2 pt-1 border-t border-slate-100">
+                            <p class="text-[11px] text-ink-mute text-center italic leading-tight">
+                                Harap membawa tiket ini dalam bentuk cetak atau tangkapan layar di gawai saat mengambil buku di Ruang Perpustakaan SMPN 4 Cepu.
+                            </p>
+                            <div class="pt-2 border-t border-dashed border-slate-200 flex flex-wrap items-center justify-between gap-2 text-[10.5px]">
+                                <span class="text-slate-600">Kepala Perpustakaan: <strong class="text-navy font-bold">Laeli Hasanah, S.Pd.</strong></span>
+                                <span class="text-slate-600">Pustakawan: <strong class="text-brand font-bold">Yaatun, A.Ma.Pust.</strong></span>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- Tombol Aksi --}}

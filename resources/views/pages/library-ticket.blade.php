@@ -186,6 +186,20 @@
                     <p>2. Buku wajib dikembalikan selambat-lambatnya pada tanggal tenggat pengembalian dalam kondisi rapi dan utuh.</p>
                     <p>3. Jika membutuhkan perpanjangan, silakan hubungi petugas perpustakaan sebelum tanggal jatuh tempo.</p>
                 </div>
+
+                {{-- Pengelola Perpustakaan / Tanda Tangan Sirkulasi --}}
+                <div class="pt-4 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-center text-xs">
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/90 shadow-2xs">
+                        <span class="text-[10px] uppercase font-bold text-ink-mute block mb-1 tracking-wider">Kepala Perpustakaan</span>
+                        <strong class="text-navy font-extrabold text-xs block">Laeli Hasanah, S.Pd.</strong>
+                        <span class="text-[10.5px] text-slate-500 font-mono block mt-0.5">NIP. 19770326 202421 2 004</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/90 shadow-2xs">
+                        <span class="text-[10px] uppercase font-bold text-ink-mute block mb-1 tracking-wider">Pustakawan</span>
+                        <strong class="text-brand font-extrabold text-xs block">Yaatun, A.Ma.Pust.</strong>
+                        <span class="text-[10.5px] text-slate-500 font-mono block mt-0.5">NIP. 19910628 202321 2 024</span>
+                    </div>
+                </div>
             </div>
 
             {{-- Footer Aksi --}}

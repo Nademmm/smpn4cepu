@@ -80,7 +80,7 @@ Komposisi resmi sekolah terdiri dari 29 Guru (20 PNS, 8 PPPK, 1 Honorer) dan 4 T
 | 27 | Brilliani Dyah Sekartaji, S.Pd. | 19970519 202521 2 011 | Golongan IX | Guru Ahli Pertama | PPPK |
 | 28 | Dhea Eristania Dewi, S.Pd. | 19981225 202521 2 015 | Golongan IX | Guru Ahli Pertama | PPPK |
 | 29 | Ahmad Yusron Auladi, S.Pd. | - | - | Guru / Tenaga Honorer | Honorer |
-| 30 | Yaatun, A.Ma.Pust. | 19910628 202321 2 024 | Golongan VII | Tenaga Teknis Pustakawan | PPPK |
+| 30 | Yaatun, A.Ma.Pust. | 19910628 202321 2 024 | Golongan VII | Pustakawan | PPPK |
 | 31 | Ninik Yuliastutik | 19690726 202521 2 004 | - | Staf Tenaga Kependidikan | PPPK |
 | 32 | Hermayanti, S.P. | 19780913 202521 2 004 | - | Staf Tenaga Kependidikan | PPPK |
 | 33 | Dyah Dhirta Sukmasari | 19870130 202521 2 006 | - | Staf Tenaga Kependidikan | PPPK |

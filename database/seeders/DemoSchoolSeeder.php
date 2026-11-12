@@ -275,7 +275,7 @@ class DemoSchoolSeeder extends Seeder
             [
                 'nip' => '199106282023212024',
                 'name' => 'Yaatun, A.Ma.Pust.',
-                'position' => 'Teknis Pustakawan',
+                'position' => 'Pustakawan',
                 'employment_status' => EmploymentStatus::PPPK,
                 'photo_path' => null,
                 'display_order' => 30,
