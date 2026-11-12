@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\AcademicYear;
+use App\Models\ActivityLog;
 use App\Models\StudentAcademicHistory;
 use App\Models\StudentStatistic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use RuntimeException;
@@ -156,6 +158,24 @@ class AcademicYearService
                 $savedCount++;
             }
         });
+
+        /** @var User|null $actor */
+        $actor = Auth::user();
+        $actorName = $actor?->name ?? 'Operator';
+
+        ActivityLog::record(
+            action: 'save_promotion_draft',
+            description: "{$actorName} menyimpan draf pemetaan kenaikan kelas rombel {$sourceClass} ke {$defaultAction} pada Tahun Ajaran {$targetYear->name} ({$savedCount} siswa).",
+            reason: 'Penyusunan pemetaan kenaikan kelas persiapan',
+            subject: $targetYear,
+            properties: [
+                'target_year' => $targetYear->name,
+                'source_class' => $sourceClass,
+                'default_action' => $defaultAction,
+                'saved_count' => $savedCount,
+            ],
+            module: 'Tahun Ajaran'
+        );
 
         return [
             'success' => true,
@@ -346,6 +366,26 @@ class AcademicYearService
 
             // 4. Sinkronkan statistik rombel untuk tahun ajaran baru
             User::syncAllRombelStatistics($targetYear->name);
+
+            /** @var User|null $actor */
+            $actor = Auth::user();
+            $actorName = $actor?->name ?? 'Administrator';
+            $previousYearName = $previousActiveYear?->name ?? '-';
+
+            ActivityLog::record(
+                action: 'activate_academic_year',
+                description: "{$actorName} mengaktifkan Tahun Ajaran {$targetYear->name} dan menutup Tahun Ajaran {$previousYearName}.",
+                reason: "Aktivasi kalender akademik resmi: {$updatedCount} siswa naik kelas/diperbarui, {$alumniCount} alumni lulus, dan {$mutasiCount} mutasi.",
+                subject: $targetYear,
+                properties: [
+                    'previous_year' => $previousYearName,
+                    'new_active_year' => $targetYear->name,
+                    'students_updated' => $updatedCount,
+                    'alumni_count' => $alumniCount,
+                    'mutasi_count' => $mutasiCount,
+                ],
+                module: 'Tahun Ajaran'
+            );
 
             return [
                 'success' => true,

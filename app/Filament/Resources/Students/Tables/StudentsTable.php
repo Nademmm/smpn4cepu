@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Students\Tables;
 
+use App\Models\ActivityLog;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
@@ -10,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -154,6 +156,72 @@ class StudentsTable
                     ]),
             ])
             ->recordActions([
+                Action::make('moveStudentClass')
+                    ->label('Pindah Rombel')
+                    ->icon('heroicon-o-arrows-right-left')
+                    ->color('info')
+                    ->visible(fn (): bool => static::canManageStudents())
+                    ->modalHeading(fn (User $record): string => "Pindahkan Rombel Siswa: {$record->name}")
+                    ->form([
+                        Select::make('target_class')
+                            ->label('Pilih Rombel Tujuan')
+                            ->options($classOptions)
+                            ->default(fn (User $record): ?string => $record->student_class)
+                            ->required()
+                            ->searchable(),
+
+                        TextInput::make('reason')
+                            ->label('Alasan Pemindahan')
+                            ->placeholder('Contoh: penyesuaian pembagian kelas')
+                            ->default('penyesuaian pembagian kelas')
+                            ->required()
+                            ->maxLength(255)
+                            ->helperText('Alasan pemindahan akan dicatat ke dalam log aktivitas sistem.'),
+                    ])
+                    ->action(function (User $record, array $data): void {
+                        $oldClass = $record->student_class ?: '-';
+                        $newClass = $data['target_class'];
+                        $reason = trim((string) ($data['reason'] ?? 'penyesuaian pembagian kelas'));
+
+                        if ($oldClass === $newClass) {
+                            Notification::make()
+                                ->title("Siswa {$record->name} sudah berada di rombel {$newClass}")
+                                ->warning()
+                                ->send();
+                            return;
+                        }
+
+                        $record->update(['student_class' => $newClass]);
+
+                        if ($oldClass !== '-') {
+                            User::syncSingleRombelStatistic((string) $oldClass);
+                        }
+                        User::syncSingleRombelStatistic((string) $newClass);
+
+                        /** @var User|null $actor */
+                        $actor = Auth::user();
+                        $actorName = $actor?->name ?? 'Operator';
+
+                        ActivityLog::record(
+                            action: 'move_class',
+                            description: "{$actorName} memindahkan Siswa {$record->name} dari rombel {$oldClass} ke {$newClass}.",
+                            reason: $reason,
+                            subject: $record,
+                            properties: [
+                                'from_class' => $oldClass,
+                                'to_class' => $newClass,
+                                'student_name' => $record->name,
+                                'nisn' => $record->nisn,
+                            ],
+                            module: 'Kesiswaan'
+                        );
+
+                        Notification::make()
+                            ->title("Berhasil memindahkan Siswa {$record->name} ke rombel {$newClass}")
+                            ->success()
+                            ->send();
+                    }),
+
                 EditAction::make()
                     ->label('Edit')
                     ->visible(fn (): bool => static::canManageStudents()),
@@ -170,6 +238,22 @@ class StudentsTable
                         $record->update([
                             'password' => Hash::make('password123', ['rounds' => 10]),
                         ]);
+
+                        /** @var User|null $actor */
+                        $actor = Auth::user();
+                        $actorName = $actor?->name ?? 'Operator';
+
+                        ActivityLog::record(
+                            action: 'reset_password',
+                            description: "{$actorName} mereset kata sandi akun Siswa {$record->name} (NISN: {$record->nisn}).",
+                            reason: 'Reset kata sandi default ke password123',
+                            subject: $record,
+                            properties: [
+                                'nisn' => $record->nisn,
+                                'name' => $record->name,
+                            ],
+                            module: 'Keamanan & Akun'
+                        );
 
                         Notification::make()
                             ->title("Sandi {$record->name} berhasil direset ke: password123")
@@ -194,9 +278,18 @@ class StudentsTable
                                 ->options($classOptions)
                                 ->required()
                                 ->searchable(),
+
+                            TextInput::make('reason')
+                                ->label('Alasan Pemindahan')
+                                ->placeholder('Contoh: penyesuaian pembagian kelas')
+                                ->default('penyesuaian pembagian kelas')
+                                ->required()
+                                ->maxLength(255)
+                                ->helperText('Alasan pemindahan akan dicatat ke dalam log aktivitas sistem.'),
                         ])
                         ->action(function (Collection $records, array $data): void {
                             $targetClass = $data['target_class'];
+                            $reason = trim((string) ($data['reason'] ?? 'penyesuaian pembagian kelas'));
                             $affectedClasses = [$targetClass];
 
                             foreach ($records as $student) {
@@ -209,6 +302,22 @@ class StudentsTable
                             foreach (array_unique($affectedClasses) as $cls) {
                                 User::syncSingleRombelStatistic((string) $cls);
                             }
+
+                            /** @var User|null $actor */
+                            $actor = Auth::user();
+                            $actorName = $actor?->name ?? 'Operator';
+
+                            ActivityLog::record(
+                                action: 'bulk_move_class',
+                                description: "{$actorName} memindahkan {$records->count()} siswa ke rombel {$targetClass}.",
+                                reason: $reason,
+                                properties: [
+                                    'target_class' => $targetClass,
+                                    'student_count' => $records->count(),
+                                    'students' => $records->pluck('name')->slice(0, 10)->toArray(),
+                                ],
+                                module: 'Kesiswaan'
+                            );
 
                             Notification::make()
                                 ->title($records->count() . " siswa berhasil dipindahkan ke Kelas {$targetClass}")

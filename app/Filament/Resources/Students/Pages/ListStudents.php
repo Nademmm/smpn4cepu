@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Students\Pages;
 
 use App\Filament\Resources\Students\StudentResource;
+use App\Models\ActivityLog;
 use App\Models\User;
 use App\Services\StudentImportService;
 use Filament\Actions\Action;
@@ -102,6 +103,23 @@ class ListStudents extends ListRecords
                     Storage::disk('local')->delete($relativePath);
 
                     if ($result['success']) {
+                        /** @var User|null $actor */
+                        $actor = Auth::user();
+                        $actorName = $actor?->name ?? 'Operator';
+
+                        ActivityLog::record(
+                            action: 'import_students',
+                            description: "{$actorName} mengimpor {$result['imported']} akun siswa baru dan memperbarui {$result['updated']} data siswa di {$result['classes_count']} rombel.",
+                            reason: "Impor massal berkas Excel/CSV untuk Tahun Ajaran {$academicYear}",
+                            properties: [
+                                'academic_year' => $academicYear,
+                                'imported' => $result['imported'],
+                                'updated' => $result['updated'],
+                                'classes_count' => $result['classes_count'],
+                            ],
+                            module: 'Kesiswaan'
+                        );
+
                         $msg = "Berhasil mengimpor {$result['imported']} akun siswa baru dan memperbarui {$result['updated']} siswa di {$result['classes_count']} rombel.";
                         if (! empty($result['errors'])) {
                             $msg .= ' Catatan: ' . implode(', ', array_slice($result['errors'], 0, 3));
