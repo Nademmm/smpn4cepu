@@ -12,7 +12,7 @@
         x-on:change="scanPhotoFile($event.target.files[0])"
     />
 
-    {{-- Input 2: Unggah Berkas Gambar / Screenshot dari Galeri atau File Picker --}}
+    {{-- Input 2: Unggah Berkas Gambar / Screenshot dari Galeri --}}
     <input
         type="file"
         accept="image/*"
@@ -21,85 +21,215 @@
         x-on:change="scanPhotoFile($event.target.files[0])"
     />
 
-    {{-- KARTU 1: CARA TERMUDAH DI HP (KAMERA NATIVE SHUTTER) --}}
-    <div style="background: #f0fdf4; border: 2px solid #86efac; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 38px; height: 38px; border-radius: 10px; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
+    {{-- NAVIGASI TAB METODE PEMINDAIAN --}}
+    <div style="display: flex; gap: 6px; padding: 4px; background: #f1f5f9; border-radius: 12px; border: 1px solid #e2e8f0;">
+        <button
+            type="button"
+            x-on:click="activeTab = 'photo'; stopLiveCamera();"
+            style="flex: 1; padding: 8px 12px; border: none; border-radius: 9px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease;"
+            :style="activeTab === 'photo' ? 'background: #ffffff; color: #059669; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'background: transparent; color: #64748b;'"
+        >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+            </svg>
+            <span>Foto Kamera HP</span>
+        </button>
+
+        <button
+            type="button"
+            x-on:click="activeTab = 'live'; startLiveCamera();"
+            style="flex: 1; padding: 8px 12px; border: none; border-radius: 9px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease;"
+            :style="activeTab === 'live' ? 'background: #ffffff; color: #0284c7; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'background: transparent; color: #64748b;'"
+        >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"/>
+            </svg>
+            <span>Video Live Scanner</span>
+        </button>
+
+        <button
+            type="button"
+            x-on:click="activeTab = 'manual'; stopLiveCamera();"
+            style="flex: 1; padding: 8px 12px; border: none; border-radius: 9px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease;"
+            :style="activeTab === 'manual' ? 'background: #ffffff; color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'background: transparent; color: #64748b;'"
+        >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"/>
+            </svg>
+            <span>Ketik / Alat Barcode</span>
+        </button>
+    </div>
+
+    {{-- TAB 1: AMBIL FOTO KAMERA HP (SANGAT MUDAH & BEBAS DARI KENDALA WEBRTC) --}}
+    <div x-show="activeTab === 'photo'" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #f0fdf4; border: 2px solid #86efac; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.35);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
                     </svg>
                 </div>
                 <div>
-                    <h4 style="font-size: 13.5px; font-weight: 800; color: #065f46; margin: 0;">Cara 1: Foto Langsung via Kamera HP</h4>
-                    <p style="font-size: 11.5px; color: #166534; margin: 2px 0 0 0;">Langsung membuka aplikasi kamera bawaan HP tanpa terkendala perizinan WebRTC.</p>
+                    <h4 style="font-size: 14px; font-weight: 800; color: #065f46; margin: 0;">Pindai QR Code via Kamera HP</h4>
+                    <p style="font-size: 12px; color: #166534; margin: 3px 0 0 0; line-height: 1.4;">
+                        Tekan tombol di bawah untuk membuka kamera bawaan ponsel Anda, arahkan ke tiket, lalu jepret foto.
+                    </p>
                 </div>
             </div>
-        </div>
 
-        <button
-            type="button"
-            x-on:click="$refs.nativeCameraInput.click()"
-            style="width: 100%; padding: 12px 18px; background: #059669; color: #ffffff; border: none; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35); min-height: 46px; transition: background 0.15s ease;"
-        >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
-            </svg>
-            <span>Buka Kamera &amp; Foto Tiket</span>
-        </button>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button
+                    type="button"
+                    x-on:click="$refs.nativeCameraInput.click()"
+                    style="width: 100%; padding: 13px 20px; background: #059669; color: #ffffff; border: none; border-radius: 11px; font-size: 13.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 3px 10px rgba(5, 150, 105, 0.4); min-height: 48px; transition: background 0.15s ease;"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+                    </svg>
+                    <span>Buka Kamera &amp; Foto Tiket</span>
+                </button>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                    <button
+                        type="button"
+                        x-on:click="$refs.fileUploadInput.click()"
+                        style="flex: 1; padding: 9px 14px; background: #ffffff; color: #047857; border: 1px solid #a7f3d0; border-radius: 9px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
+                        </svg>
+                        <span>Pilih Gambar dari Galeri</span>
+                    </button>
+                </div>
+            </div>
+
+            {{-- PRATINJAU FOTO TERAKHIR --}}
+            <template x-if="previewImage">
+                <div style="background: #ffffff; border: 1px solid #d1fae5; border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 12px;">
+                    <img :src="previewImage" alt="Foto tiket" style="width: 54px; height: 54px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1;" />
+                    <div style="flex: 1;">
+                        <span style="font-size: 11px; font-weight: 800; color: #047857; text-transform: uppercase;">Foto Terunggah</span>
+                        <p style="font-size: 11.5px; color: #475569; margin: 2px 0 0 0;">Sedang dianalisis dengan mesin dekoder multi-resolusi.</p>
+                    </div>
+                    <button
+                        type="button"
+                        x-on:click="$refs.nativeCameraInput.click()"
+                        style="padding: 6px 10px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 7px; color: #059669; font-size: 11px; font-weight: 800; cursor: pointer;"
+                    >
+                        Foto Ulang
+                    </button>
+                </div>
+            </template>
+        </div>
     </div>
 
-    {{-- KARTU 2: UNGGAH GAMBAR / PASTE CLIPBOARD (CTRL + V) --}}
-    <div
-        style="border: 2px dashed #cbd5e1; border-radius: 14px; padding: 14px; background: #f8fafc; text-align: center; cursor: pointer; transition: all 0.2s ease;"
-        :style="dragOver ? 'border-color: #0284c7; background: #f0f9ff;' : ''"
-        x-on:click="$refs.fileUploadInput.click()"
-        x-on:dragover.prevent="dragOver = true"
-        x-on:dragleave.prevent="dragOver = false"
-        x-on:drop.prevent="handleDrop($event)"
-    >
-        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #0284c7; margin-bottom: 4px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
-            </svg>
-            <span style="font-size: 13px; font-weight: 800; color: #0369a1;">Cara 2: Pilih Gambar QR atau Tempel (Ctrl + V)</span>
-        </div>
-        <p style="font-size: 11.5px; color: #64748b; margin: 0;">
-            Klik untuk memilih berkas dari galeri, drag-and-drop, atau tekan <strong>Ctrl + V</strong> jika Anda menyalin gambar tiket dari WhatsApp / chat siswa.
-        </p>
-    </div>
+    {{-- TAB 2: LIVE STREAM VIDEO KAMERA --}}
+    <div x-show="activeTab === 'live'" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #0f172a; border-radius: 14px; padding: 12px; color: #ffffff; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; min-height: 220px; justify-content: center;">
+            <template x-if="isLiveActive">
+                <div style="width: 100%; position: relative; border-radius: 10px; overflow: hidden;">
+                    <video
+                        x-ref="liveVideoEl"
+                        playsinline
+                        muted
+                        autoplay
+                        style="width: 100%; max-height: 280px; object-fit: cover; border-radius: 10px; display: block;"
+                    ></video>
+                    <div class="qr-laser-line"></div>
+                    <div style="position: absolute; bottom: 8px; left: 0; right: 0; text-align: center;">
+                        <span style="padding: 4px 10px; background: rgba(0,0,0,0.7); color: #86efac; font-size: 11px; font-weight: 800; border-radius: 20px;">
+                            Posisikan QR Code di dalam kamera
+                        </span>
+                    </div>
+                </div>
+            </template>
 
-    {{-- KARTU 3: SCANNER BARCODE GUN USB / KETIK MANUAL --}}
-    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #334155;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; color: #64748b;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h3.75m0 3.75h3.75m-3.75 0V20.25m-3.75-6.75v3.75"/>
-            </svg>
-            <span>Cara 3: Input Cepat / Alat Barcode Scanner USB</span>
+            <template x-if="!isLiveActive && !liveError">
+                <div style="text-align: center; padding: 20px 10px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 38px; height: 38px; color: #38bdf8; margin: 0 auto 10px auto;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"/>
+                    </svg>
+                    <p style="font-size: 13px; font-weight: 700; margin: 0 0 6px 0;">Kamera Video Langsung (Webcam / Laptop)</p>
+                    <p style="font-size: 11.5px; color: #94a3b8; margin: 0 0 14px 0; max-width: 320px;">
+                        Pindai secara kontinu tanpa perlu menekan tombol shutter foto.
+                    </p>
+                    <button
+                        type="button"
+                        x-on:click="startLiveCamera()"
+                        style="padding: 10px 18px; background: #0284c7; color: #ffffff; border: none; border-radius: 9px; font-size: 12.5px; font-weight: 800; cursor: pointer;"
+                    >
+                        Nyalakan Kamera Video
+                    </button>
+                </div>
+            </template>
+
+            <template x-if="liveError">
+                <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #f87171; border-radius: 10px; padding: 12px; text-align: center;">
+                    <p style="font-size: 12px; color: #fca5a5; margin: 0 0 10px 0;" x-text="liveError"></p>
+                    <button
+                        type="button"
+                        x-on:click="activeTab = 'photo'"
+                        style="padding: 8px 14px; background: #059669; color: #ffffff; border: none; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer;"
+                    >
+                        Gunakan Tab Foto Kamera HP
+                    </button>
+                </div>
+            </template>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <input
-                type="text"
-                x-model="manualCode"
-                x-on:keydown.enter.prevent="process(manualCode)"
-                placeholder="Ketik kode tiket (contoh: RSXSD / LIB-2026-RSXSD) atau NISN"
-                style="flex: 1; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 12.5px; background: #ffffff; color: #0f172a; outline: none; min-height: 42px; box-sizing: border-box;"
-            />
+        <template x-if="isLiveActive">
             <button
                 type="button"
-                x-on:click="process(manualCode)"
-                style="padding: 10px 18px; background: #0f172a; color: #ffffff; border: none; border-radius: 10px; font-size: 12.5px; font-weight: 800; cursor: pointer; white-space: nowrap; min-height: 42px; transition: background 0.15s ease;"
+                x-on:click="stopLiveCamera()"
+                style="padding: 8px 14px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 9px; color: #b91c1c; font-size: 12px; font-weight: 800; cursor: pointer;"
             >
-                Proses Tiket
+                Matikan Kamera Video
             </button>
+        </template>
+    </div>
+
+    {{-- TAB 3: INPUT CEPAT / SCANNER GUN / TEMPEL (CTRL + V) --}}
+    <div x-show="activeTab === 'manual'" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <input
+                    type="text"
+                    x-model="manualCode"
+                    x-on:keydown.enter.prevent="process(manualCode)"
+                    placeholder="Ketik kode tiket (contoh: RSXSD / LIB-2026-RSXSD) atau NISN"
+                    style="flex: 1; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 12.5px; background: #ffffff; color: #0f172a; outline: none; min-height: 42px; box-sizing: border-box;"
+                />
+                <button
+                    type="button"
+                    x-on:click="process(manualCode)"
+                    style="padding: 10px 18px; background: #0f172a; color: #ffffff; border: none; border-radius: 10px; font-size: 12.5px; font-weight: 800; cursor: pointer; white-space: nowrap; min-height: 42px;"
+                >
+                    Proses Tiket
+                </button>
+            </div>
+            <span style="font-size: 11px; color: #64748b;">
+                Mendukung alat scanner barcode gun USB fisik (arahkan gun ke tiket lalu tekan picu).
+            </span>
         </div>
-        <span style="font-size: 11px; color: #64748b;">
-            Mendukung alat scanner barcode gun USB (arahkan ke tiket lalu pencet picu gun).
-        </span>
+
+        <div
+            style="border: 2px dashed #cbd5e1; border-radius: 14px; padding: 14px; background: #f8fafc; text-align: center; cursor: pointer;"
+            :style="dragOver ? 'border-color: #0284c7; background: #f0f9ff;' : ''"
+            x-on:click="$refs.fileUploadInput.click()"
+            x-on:dragover.prevent="dragOver = true"
+            x-on:dragleave.prevent="dragOver = false"
+            x-on:drop.prevent="handleDrop($event)"
+        >
+            <span style="font-size: 12.5px; font-weight: 800; color: #0369a1; display: block; margin-bottom: 3px;">
+                Tempel Gambar (Ctrl + V) atau Lepas Berkas di Sini
+            </span>
+            <p style="font-size: 11.5px; color: #64748b; margin: 0;">
+                Klik untuk memilih berkas dari komputer / galeri atau tekan <strong>Ctrl + V</strong> jika Anda menyalin gambar tiket.
+            </p>
+        </div>
     </div>
 
     {{-- INDIKATOR LOADING SAAT MEMPROSES --}}
