@@ -3,12 +3,22 @@
 namespace App\Filament\Resources\ElectionCandidates\Pages;
 
 use App\Filament\Resources\ElectionCandidates\ElectionCandidateResource;
+use App\Models\User;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Auth;
 
 class ListElectionCandidates extends ListRecords
 {
     protected static string $resource = ElectionCandidateResource::class;
+
+    protected function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
 
     protected function getHeaderActions(): array
     {
@@ -20,8 +30,8 @@ class ListElectionCandidates extends ListRecords
                 ->label('Reset Kotak Suara')
                 ->icon('heroicon-o-arrow-path')
                 ->color('danger')
-                ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
-                ->authorize(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
+                ->visible(fn (): bool => $this->isSuperAdmin())
+                ->authorize(fn (): bool => $this->isSuperAdmin())
                 ->requiresConfirmation()
                 ->modalHeading('Kosongkan Seluruh Kotak Suara?')
                 ->modalDescription('Tindakan ini akan menghapus semua suara masuk dan riwayat perangkat pemilih. Seluruh kandidat akan kembali ke 0 suara sehingga simulasi atau hari pemilihan dapat dimulai dari awal.')

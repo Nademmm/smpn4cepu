@@ -14,3 +14,4 @@ class EditAcademicYear extends EditRecord
         return $this->getResource()::getUrl('index');
     }
 }
+

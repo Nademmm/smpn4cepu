@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\QuestionBanks\Schemas;
 
+use App\Models\User;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionBankForm
 {
@@ -20,7 +22,12 @@ class QuestionBankForm
                 Select::make('subject_id')
                     ->label('Mata Pelajaran')
                     ->relationship('subject', 'name')
-                    ->default(fn () => auth()->user()?->subjects()->first()?->id)
+                    ->default(function () {
+                        /** @var User|null $user */
+                        $user = Auth::user();
+
+                        return $user instanceof User ? $user->subjects()->first()?->id : null;
+                    })
                     ->searchable()
                     ->preload()
                     ->required(),

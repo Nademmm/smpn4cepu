@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\QuizAttempts\Tables;
 
 use App\Filament\Resources\Students\Schemas\StudentForm;
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -13,9 +14,18 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class QuizAttemptsTable
 {
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -113,13 +123,13 @@ class QuizAttemptsTable
                     ->label('Detail & Koreksi'),
                 DeleteAction::make()
                     ->label('Reset')
-                    ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
+                    ->visible(fn (): bool => static::isSuperAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->label('Hapus / Reset Nilai Terpilih')
-                        ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
+                        ->visible(fn (): bool => static::isSuperAdmin()),
                 ]),
             ]);
     }

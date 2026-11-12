@@ -16,9 +16,18 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class AcademicYearsTable
 {
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function configure(Table $table): Table
     {
         $allRombelOptions = [
@@ -231,10 +240,11 @@ class AcademicYearsTable
                     }),
 
                 EditAction::make()
-                    ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
+                    ->visible(fn (): bool => static::isSuperAdmin()),
 
                 DeleteAction::make()
-                    ->visible(fn (AcademicYear $record): bool => ! $record->isActive() && auth()->user()?->hasRole('super_admin') ?? false),
+                    ->visible(fn (AcademicYear $record): bool => ! $record->isActive() && static::isSuperAdmin()),
             ]);
     }
 }
+

@@ -83,3 +83,4 @@ class AcademicYear extends Model
         return self::where('status', 'persiapan')->latest('id')->first();
     }
 }
+

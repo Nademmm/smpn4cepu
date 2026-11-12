@@ -8,6 +8,7 @@ use App\Filament\Resources\QuizAttempts\RelationManagers\AnswersRelationManager;
 use App\Filament\Resources\QuizAttempts\Schemas\QuizAttemptForm;
 use App\Filament\Resources\QuizAttempts\Tables\QuizAttemptsTable;
 use App\Models\QuizAttempt;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class QuizAttemptResource extends Resource
@@ -23,6 +25,14 @@ class QuizAttemptResource extends Resource
     protected static ?string $model = QuizAttempt::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
+
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
 
     public static function getNavigationLabel(): string
     {
@@ -66,7 +76,8 @@ class QuizAttemptResource extends Resource
 
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
         if (! $user) {
             return Response::deny();
@@ -86,12 +97,12 @@ class QuizAttemptResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function canDeleteAny(): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function form(Schema $schema): Schema

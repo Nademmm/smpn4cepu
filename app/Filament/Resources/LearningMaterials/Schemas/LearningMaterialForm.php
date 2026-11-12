@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LearningMaterials\Schemas;
 
+use App\Models\User;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class LearningMaterialForm
@@ -21,7 +23,12 @@ class LearningMaterialForm
                 Select::make('subject_id')
                     ->label('Mata Pelajaran')
                     ->relationship('subject', 'name')
-                    ->default(fn () => auth()->user()?->subjects()->first()?->id)
+                    ->default(function () {
+                        /** @var User|null $user */
+                        $user = Auth::user();
+
+                        return $user instanceof User ? $user->subjects()->first()?->id : null;
+                    })
                     ->searchable()
                     ->preload()
                     ->required(),

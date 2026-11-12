@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class StudentResource extends Resource
@@ -29,36 +30,44 @@ class StudentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
-        $allowed = auth()->user()?->hasRole('super_admin') ?? false;
+        $allowed = static::isSuperAdmin();
 
         return $allowed ? Response::allow() : Response::deny();
     }
 
     public static function canViewAny(): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function canEdit(Model $record): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function canDelete(Model $record): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function canDeleteAny(): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function getEloquentQuery(): Builder

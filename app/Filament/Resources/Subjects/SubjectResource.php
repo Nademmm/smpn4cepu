@@ -8,17 +8,27 @@ use App\Filament\Resources\Subjects\Pages\ListSubjects;
 use App\Filament\Resources\Subjects\Schemas\SubjectForm;
 use App\Filament\Resources\Subjects\Tables\SubjectsTable;
 use App\Models\Subject;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -61,7 +71,7 @@ class SubjectResource extends Resource
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->hasRole('super_admin') ?? false;
+        return static::isSuperAdmin();
     }
 
     public static function form(Schema $schema): Schema

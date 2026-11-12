@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Posts\Schemas;
 
 use App\Enums\PostCategory;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -13,6 +14,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PostForm
@@ -38,7 +40,11 @@ class PostForm
                     ->searchable()
                     ->preload()
                     ->default(fn () => auth()->id())
-                    ->disabled(fn () => !auth()->user()?->hasRole('super_admin'))
+                    ->disabled(function (): bool {
+                        $user = Auth::user();
+
+                        return ! ($user instanceof User && $user->hasRole('super_admin'));
+                    })
                     ->dehydrated()
                     ->required(),
 

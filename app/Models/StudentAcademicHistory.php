@@ -52,3 +52,4 @@ class StudentAcademicHistory extends Model
         return $query->where('status', 'lulus');
     }
 }
+
