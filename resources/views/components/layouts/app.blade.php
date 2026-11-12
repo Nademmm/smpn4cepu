@@ -310,7 +310,7 @@
 
                     {{-- 3. Dropdown Belajar --}}
                     <div class="relative py-2" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.outside="open = false" @keydown.escape.window="open = false">
-                        <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="true" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
+                        <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="true" class="px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors font-bold {{ request()->is('belajar*') || request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'bg-sky-soft text-brand font-black' : 'text-navy hover:text-brand' }}">
                             <span>Belajar</span>
                             <x-app-icon name="chevron-down" class="w-4 h-4 transition-transform" ::class="{ 'rotate-180': open }" />
                         </button>
@@ -458,7 +458,7 @@
             x-show="mobileMenuOpen"
             x-cloak
             x-data="{
-                activeSection: '{{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'profil' : (request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'belajar' : (request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'kesiswaan' : (request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'informasi' : ''))) }}'
+                activeSection: '{{ request()->is('profil*') || request()->routeIs('facilities') || request()->routeIs('staff') || request()->routeIs('student-stats') || request()->routeIs('achievements') ? 'profil' : (request()->is('belajar*') || request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'belajar' : (request()->is('pilketos*') || request()->routeIs('gallery') || request()->routeIs('extracurriculars') ? 'kesiswaan' : (request()->routeIs('posts*') || request()->routeIs('downloads') || request()->routeIs('contact') ? 'informasi' : ''))) }}'
             }"
             class="lg:hidden border-t-2 border-sun-soft bg-white px-4 py-4 space-y-2 shadow-xl max-h-[85vh] overflow-y-auto"
         >
@@ -514,7 +514,7 @@
             </div>
 
             {{-- 3. Ruang Belajar (Accordion) --}}
-            <div class="rounded-2xl border-2 {{ request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
+            <div class="rounded-2xl border-2 {{ request()->is('belajar*') || request()->is('materi*') || request()->is('latihan-soal*') || request()->routeIs('library') ? 'border-brand/40 bg-sky-soft/30' : 'border-sun-soft/70 bg-white' }} overflow-hidden">
                 <button
                     type="button"
                     @click="activeSection = (activeSection === 'belajar' ? '' : 'belajar')"

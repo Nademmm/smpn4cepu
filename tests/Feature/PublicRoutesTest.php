@@ -19,12 +19,12 @@ class PublicRoutesTest extends TestCase
             '/profil',
             '/profil/prestasi',
             '/profil/fasilitas',
-            '/guru-staf',
-            '/rekap-siswa',
+            '/profil/guru-staf',
+            '/profil/rekap-siswa',
             '/kesiswaan/ekstrakurikuler',
             '/pilketos',
             '/pilketos/live-count',
-            '/perpustakaan',
+            '/belajar/perpustakaan',
             '/berita',
             '/galeri',
             '/unduhan',
@@ -41,12 +41,20 @@ class PublicRoutesTest extends TestCase
 
     public function test_materials_and_quizzes_redirect_guest_to_login(): void
     {
-        $this->get('/materi')->assertRedirect('/login');
-        $this->get('/latihan-soal')->assertRedirect('/login');
+        $this->get('/belajar/materi')->assertRedirect('/login');
+        $this->get('/belajar/latihan-soal')->assertRedirect('/login');
+
+        // Pengalihan ramah SEO 301 untuk URL lama
+        $this->get('/materi')->assertRedirect('/belajar/materi');
+        $this->get('/latihan-soal')->assertRedirect('/belajar/latihan-soal');
+        $this->get('/guru-staf')->assertRedirect('/profil/guru-staf');
+        $this->get('/rekap-siswa')->assertRedirect('/profil/rekap-siswa');
+        $this->get('/perpustakaan')->assertRedirect('/belajar/perpustakaan');
 
         $bank = QuestionBank::where('is_active', true)->first();
         if ($bank) {
-            $this->get('/latihan-soal/' . $bank->id)->assertRedirect('/login');
+            $this->get('/belajar/latihan-soal/' . $bank->id)->assertRedirect('/login');
+            $this->get('/latihan-soal/' . $bank->id)->assertRedirect('/belajar/latihan-soal/' . $bank->id);
         }
     }
 
@@ -61,12 +69,12 @@ class PublicRoutesTest extends TestCase
         );
         $user->assignRole('siswa');
 
-        $this->actingAs($user)->get('/materi')->assertStatus(200);
-        $this->actingAs($user)->get('/latihan-soal')->assertStatus(200);
+        $this->actingAs($user)->get('/belajar/materi')->assertStatus(200);
+        $this->actingAs($user)->get('/belajar/latihan-soal')->assertStatus(200);
 
         $bank = QuestionBank::where('is_active', true)->first();
         if ($bank) {
-            $this->actingAs($user)->get('/latihan-soal/' . $bank->id)->assertStatus(200);
+            $this->actingAs($user)->get('/belajar/latihan-soal/' . $bank->id)->assertStatus(200);
         }
     }
 
@@ -75,9 +83,22 @@ class PublicRoutesTest extends TestCase
         $book = LibraryBook::where('available_stock', '>', 0)->first();
         $this->assertNotNull($book);
 
-        $response = $this->postJson('/perpustakaan/reservasi', [
+        // Uji endpoint kanonikal baru
+        $responseNew = $this->postJson('/belajar/perpustakaan/reservasi', [
             'book_id' => $book->id,
             'borrower_name' => 'Ahmad Fauzi',
+            'borrower_class' => '8A',
+            'pickup_date' => now()->addDay()->toDateString(),
+        ]);
+
+        $responseNew->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJsonStructure(['success', 'reservation_code', 'message']);
+
+        // Uji kompatibilitas endpoint lama
+        $response = $this->postJson('/perpustakaan/reservasi', [
+            'book_id' => $book->id,
+            'borrower_name' => 'Ahmad Fauzi 2',
             'borrower_class' => '8A',
             'pickup_date' => now()->addDay()->toDateString(),
         ]);
@@ -178,7 +199,7 @@ class PublicRoutesTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertRedirect('/latihan-soal');
+        $response->assertRedirect('/belajar/latihan-soal');
         $this->assertAuthenticatedAs($student);
     }
 

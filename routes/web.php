@@ -97,12 +97,16 @@ Route::get('/profil/fasilitas', function () {
 })->name('facilities');
 
 // 4. Direktori Guru & Tendik (Livewire)
-Route::get('/guru-staf', function () {
+Route::get('/profil/guru-staf', function () {
     return view('pages.staff');
 })->name('staff');
 
+// Pengalihan ramah SEO (301) dari URL lama ke rute kanonikal /profil/guru-staf
+Route::redirect('/guru-staf', '/profil/guru-staf', 301);
+Route::redirect('/guru-dan-staf', '/profil/guru-staf', 301);
+
 // 5. Statistik Rombel Siswa
-Route::get('/rekap-siswa', function () {
+Route::get('/profil/rekap-siswa', function () {
     $data = Cache::remember('public_student_stats_v1', 600, function () {
         $latestYear = StudentStatistic::max('academic_year');
         $stats = StudentStatistic::when($latestYear, fn ($q) => $q->where('academic_year', $latestYear))
@@ -141,6 +145,10 @@ Route::get('/rekap-siswa', function () {
     return view('pages.student-stats', $data);
 })->name('student-stats');
 
+// Pengalihan ramah SEO (301) dari URL lama ke rute kanonikal /profil/rekap-siswa
+Route::redirect('/rekap-siswa', '/profil/rekap-siswa', 301);
+Route::redirect('/statistik-siswa', '/profil/rekap-siswa', 301);
+
 // 6. Bilik Suara E-Voting Pilketos (Livewire)
 Route::get('/pilketos', function () {
     return view('pages.pilketos');
@@ -151,12 +159,15 @@ Route::get('/pilketos/live-count', function () {
     return view('pages.pilketos-live');
 })->name('pilketos.live');
 
-// 8. Perpustakaan Digital (Katalog OPAC Modern)
-Route::get('/perpustakaan', function () {
+// Index Ruang Belajar (Otomatis diarahkan ke materi pembelajaran)
+Route::redirect('/belajar', '/belajar/materi', 301);
+
+// 8. Perpustakaan Digital (Katalog OPAC Modern di bawah /belajar/perpustakaan)
+Route::get('/belajar/perpustakaan', function () {
     return view('pages.library');
 })->name('library');
 
-Route::post('/perpustakaan/reservasi', function (Request $request, \App\Services\LibraryLoanService $loanService) {
+$reservationHandler = function (Request $request, \App\Services\LibraryLoanService $loanService) {
     $validated = $request->validate([
         'book_id' => 'required|integer',
         'borrower_name' => 'required|string|min:3|max:100',
@@ -196,10 +207,13 @@ Route::post('/perpustakaan/reservasi', function (Request $request, \App\Services
             'message' => 'Gagal memproses tiket reservasi. Silakan periksa kembali data Anda.',
         ], 500);
     }
-})->middleware('throttle:120,1')->name('library.reserve');
+};
+
+Route::post('/belajar/perpustakaan/reservasi', $reservationHandler)->middleware('throttle:120,1')->name('library.reserve');
+Route::post('/perpustakaan/reservasi', $reservationHandler)->middleware('throttle:120,1');
 
 // Halaman Bukti Tiket Sirkulasi Ber-Barcode (Siap Cetak)
-Route::get('/perpustakaan/tiket/{code}', function (string $code, \App\Services\LibraryLoanService $loanService) {
+Route::get('/belajar/perpustakaan/tiket/{code}', function (string $code, \App\Services\LibraryLoanService $loanService) {
     $ticket = $loanService->findByCode($code);
     if (! $ticket) {
         abort(404, 'Tiket sirkulasi perpustakaan tidak ditemukan.');
@@ -209,7 +223,7 @@ Route::get('/perpustakaan/tiket/{code}', function (string $code, \App\Services\L
 })->name('library.ticket');
 
 // Unduh Langsung Berkas Vektor QR Code SVG
-Route::get('/perpustakaan/tiket/{code}/unduh-barcode', function (string $code, \App\Services\LibraryLoanService $loanService) {
+Route::get('/belajar/perpustakaan/tiket/{code}/unduh-barcode', function (string $code, \App\Services\LibraryLoanService $loanService) {
     $ticket = $loanService->findByCode($code);
     if (! $ticket) {
         abort(404, 'Tiket sirkulasi perpustakaan tidak ditemukan.');
@@ -222,10 +236,21 @@ Route::get('/perpustakaan/tiket/{code}/unduh-barcode', function (string $code, \
     ]);
 })->name('library.ticket.download-barcode');
 
+// Pengalihan ramah SEO (301) dari URL lama perpustakaan ke /belajar/perpustakaan/...
+Route::redirect('/perpustakaan', '/belajar/perpustakaan', 301);
+Route::redirect('/perpustakaan/tiket/{code}', '/belajar/perpustakaan/tiket/{code}', 301);
+Route::redirect('/perpustakaan/tiket/{code}/unduh-barcode', '/belajar/perpustakaan/tiket/{code}/unduh-barcode', 301);
+Route::redirect('/perpustakaan/riwayat', '/belajar/perpustakaan/riwayat', 301);
+
+// Pengalihan ramah SEO (301) dari URL lama ke rute kanonikal /belajar/...
+Route::redirect('/materi', '/belajar/materi', 301);
+Route::redirect('/latihan-soal', '/belajar/latihan-soal', 301);
+Route::get('/latihan-soal/{id}', fn ($id) => redirect('/belajar/latihan-soal/' . $id, 301));
+
 // 9, 10, 11: Ruang Belajar Mandiri (Wajib Masuk Akun Terlebih Dahulu)
 Route::middleware('auth')->group(function () {
     // 9. Materi Pelajaran
-    Route::get('/materi', function () {
+    Route::get('/belajar/materi', function () {
         $materials = Cache::remember('public_active_materials_v1', 300, function () {
             return LearningMaterial::with(['subject', 'author'])
                 ->where('is_active', true)
@@ -236,7 +261,7 @@ Route::middleware('auth')->group(function () {
     })->name('materials');
 
     // 10. Daftar Kuis Bank Soal
-    Route::get('/latihan-soal', function () {
+    Route::get('/belajar/latihan-soal', function () {
         $questionBanks = Cache::remember('public_active_question_banks_v1', 300, function () {
             return QuestionBank::with('subject')
                 ->withCount('questions')
@@ -255,7 +280,7 @@ Route::middleware('auth')->group(function () {
     })->name('quizzes');
 
     // 11. Pengerjaan Kuis
-    Route::get('/latihan-soal/{id}', function (int $id) {
+    Route::get('/belajar/latihan-soal/{id}', function (int $id) {
         $bank = QuestionBank::with('subject')
             ->where('is_active', true)
             ->findOrFail($id);
@@ -263,7 +288,7 @@ Route::middleware('auth')->group(function () {
     })->name('quiz.play');
 
     // 11b. Riwayat Sirkulasi Peminjaman Buku Akun Siswa
-    Route::get('/perpustakaan/riwayat', function (\App\Services\LibraryLoanService $loanService) {
+    Route::get('/belajar/perpustakaan/riwayat', function (\App\Services\LibraryLoanService $loanService) {
         $user = Auth::user();
         $history = $loanService->getBorrowerHistory(userId: $user->id, nisn: $user->nisn ?? null);
         return view('pages.library-history', compact('history', 'user'));

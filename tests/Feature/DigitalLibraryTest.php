@@ -48,10 +48,14 @@ class DigitalLibraryTest extends TestCase
 
     public function test_digital_library_page_renders_successfully(): void
     {
-        $response = $this->get('/perpustakaan');
+        $response = $this->get('/belajar/perpustakaan');
         $response->assertStatus(200);
         $response->assertSee('Perpustakaan Digital');
         $response->assertSeeLivewire(DigitalLibrary::class);
+
+        // Verifikasi rute lama /perpustakaan dialihkan secara 301 ke /belajar/perpustakaan
+        $legacy = $this->get('/perpustakaan');
+        $legacy->assertRedirect('/belajar/perpustakaan');
     }
 
     public function test_digital_library_component_displays_books_and_stats(): void
