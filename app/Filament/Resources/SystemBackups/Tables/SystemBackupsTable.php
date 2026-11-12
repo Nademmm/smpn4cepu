@@ -11,6 +11,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -101,7 +102,10 @@ class SystemBackupsTable
                             return null;
                         }
 
-                        return Storage::disk($record->disk)->download($record->filepath, $record->filename);
+                        /** @var FilesystemAdapter $storage */
+                        $storage = Storage::disk($record->disk);
+
+                        return $storage->download($record->filepath, $record->filename);
                     }),
 
                 Action::make('testRecovery')
@@ -150,3 +154,4 @@ class SystemBackupsTable
             ]);
     }
 }
+
