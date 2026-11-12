@@ -8,17 +8,59 @@ use App\Filament\Resources\StudentStatistics\Pages\ListStudentStatistics;
 use App\Filament\Resources\StudentStatistics\Schemas\StudentStatisticForm;
 use App\Filament\Resources\StudentStatistics\Tables\StudentStatisticsTable;
 use App\Models\StudentStatistic;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class StudentStatisticResource extends Resource
 {
     protected static ?string $model = StudentStatistic::class;
 
     protected static ?string $recordTitleAttribute = 'academic_year';
+
+    public static function canManageStatistics(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
+    public static function canViewStatistics(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah', 'wali_kelas']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canViewStatistics();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageStatistics();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageStatistics();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
 
     public static function getGloballySearchableAttributes(): array
     {

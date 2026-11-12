@@ -34,6 +34,14 @@ class AcademicYearResource extends Resource
         return $user instanceof User && $user->hasRole('super_admin');
     }
 
+    public static function canManageAcademicYears(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     public static function getNavigationGroup(): ?string
@@ -63,17 +71,17 @@ class AcademicYearResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageAcademicYears();
     }
 
     public static function canCreate(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageAcademicYears();
     }
 
     public static function canEdit(Model $record): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageAcademicYears();
     }
 
     public static function canDelete(Model $record): bool

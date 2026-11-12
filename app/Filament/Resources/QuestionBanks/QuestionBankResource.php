@@ -8,18 +8,49 @@ use App\Filament\Resources\QuestionBanks\Pages\ListQuestionBanks;
 use App\Filament\Resources\QuestionBanks\Schemas\QuestionBankForm;
 use App\Filament\Resources\QuestionBanks\Tables\QuestionBanksTable;
 use App\Models\QuestionBank;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionBankResource extends Resource
 {
     protected static ?string $model = QuestionBank::class;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function canManageAcademics(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'guru']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManageAcademics();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageAcademics();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageAcademics();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManageAcademics();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -86,9 +117,10 @@ class QuestionBankResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
-        if ($user && $user->hasRole('guru') && !$user->hasRole('super_admin')) {
+        if ($user instanceof User && $user->hasRole('guru') && ! $user->hasRole('super_admin')) {
             $query->where('created_by', $user->id);
         }
 

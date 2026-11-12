@@ -8,19 +8,50 @@ use App\Filament\Resources\LearningMaterials\Pages\ListLearningMaterials;
 use App\Filament\Resources\LearningMaterials\Schemas\LearningMaterialForm;
 use App\Filament\Resources\LearningMaterials\Tables\LearningMaterialsTable;
 use App\Models\LearningMaterial;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class LearningMaterialResource extends Resource
 {
     protected static ?string $model = LearningMaterial::class;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function canManageAcademics(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'guru']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManageAcademics();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageAcademics();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageAcademics();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManageAcademics();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -96,9 +127,10 @@ class LearningMaterialResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
-        if ($user && $user->hasRole('guru') && !$user->hasRole('super_admin')) {
+        if ($user instanceof User && $user->hasRole('guru') && ! $user->hasRole('super_admin')) {
             $query->where('created_by', $user->id);
         }
 

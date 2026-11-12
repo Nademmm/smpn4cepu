@@ -8,17 +8,48 @@ use App\Filament\Resources\ElectionCandidates\Pages\ListElectionCandidates;
 use App\Filament\Resources\ElectionCandidates\Schemas\ElectionCandidateForm;
 use App\Filament\Resources\ElectionCandidates\Tables\ElectionCandidatesTable;
 use App\Models\ElectionCandidate;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ElectionCandidateResource extends Resource
 {
     protected static ?string $model = ElectionCandidate::class;
 
     protected static ?string $recordTitleAttribute = 'candidate_name';
+
+    public static function canManagePilketos(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'panitia_pilketos']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManagePilketos();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManagePilketos();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManagePilketos();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManagePilketos();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {

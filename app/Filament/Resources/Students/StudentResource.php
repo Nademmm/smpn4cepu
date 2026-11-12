@@ -30,44 +30,54 @@ class StudentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
-    public static function isSuperAdmin(): bool
+    public static function canManageStudents(): bool
     {
         /** @var User|null $user */
         $user = Auth::user();
 
-        return $user instanceof User && $user->hasRole('super_admin');
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
+    public static function canViewStudents(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah', 'wali_kelas']);
     }
 
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
-        $allowed = static::isSuperAdmin();
+        $actionName = is_string($action) ? $action : ($action->name ?? (string) $action);
+        $isViewAction = in_array(strtolower((string) $actionName), ['viewany', 'view', 'index'], true);
+        $allowed = $isViewAction ? static::canViewStudents() : static::canManageStudents();
 
         return $allowed ? Response::allow() : Response::deny();
     }
 
     public static function canViewAny(): bool
     {
-        return static::isSuperAdmin();
+        return static::canViewStudents();
     }
 
     public static function canCreate(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageStudents();
     }
 
     public static function canEdit(Model $record): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageStudents();
     }
 
     public static function canDelete(Model $record): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageStudents();
     }
 
     public static function canDeleteAny(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageStudents();
     }
 
     public static function getEloquentQuery(): Builder

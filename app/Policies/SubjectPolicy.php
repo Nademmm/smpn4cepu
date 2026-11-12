@@ -23,22 +23,22 @@ class SubjectPolicy
 
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->hasRole('super_admin');
+        return method_exists($authUser, 'hasAnyRole') && $authUser->hasAnyRole(['super_admin', 'operator_sekolah']);
     }
 
     public function view(AuthUser $authUser, Subject $subject): bool
     {
-        return $authUser->hasRole('super_admin');
+        return method_exists($authUser, 'hasAnyRole') && $authUser->hasAnyRole(['super_admin', 'operator_sekolah']);
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->hasRole('super_admin');
+        return method_exists($authUser, 'hasAnyRole') && $authUser->hasAnyRole(['super_admin', 'operator_sekolah']);
     }
 
     public function update(AuthUser $authUser, Subject $subject): bool
     {
-        return $authUser->hasRole('super_admin');
+        return method_exists($authUser, 'hasAnyRole') && $authUser->hasAnyRole(['super_admin', 'operator_sekolah']);
     }
 
     public function delete(AuthUser $authUser, Subject $subject): bool

@@ -20,6 +20,14 @@ use Illuminate\Support\Facades\Auth;
 
 class AcademicYearsTable
 {
+    public static function canManageAcademicYears(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
     public static function isSuperAdmin(): bool
     {
         /** @var User|null $user */
@@ -240,7 +248,7 @@ class AcademicYearsTable
                     }),
 
                 EditAction::make()
-                    ->visible(fn (): bool => static::isSuperAdmin()),
+                    ->visible(fn (): bool => static::canManageAcademicYears()),
 
                 DeleteAction::make()
                     ->visible(fn (AcademicYear $record): bool => ! $record->isActive() && static::isSuperAdmin()),

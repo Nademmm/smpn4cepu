@@ -7,17 +7,48 @@ use App\Filament\Resources\SchoolSettings\Pages\ListSchoolSettings;
 use App\Filament\Resources\SchoolSettings\Schemas\SchoolSettingForm;
 use App\Filament\Resources\SchoolSettings\Tables\SchoolSettingsTable;
 use App\Models\SchoolSetting;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class SchoolSettingResource extends Resource
 {
     protected static ?string $model = SchoolSetting::class;
 
     protected static ?string $recordTitleAttribute = 'principal_name';
+
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 

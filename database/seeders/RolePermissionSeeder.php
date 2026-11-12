@@ -16,13 +16,16 @@ class RolePermissionSeeder extends Seeder
 
         // 1. Buat Roles Resmi
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+        $operatorRole = Role::firstOrCreate(['name' => 'operator_sekolah']);
         $guruRole = Role::firstOrCreate(['name' => 'guru']);
+        $waliKelasRole = Role::firstOrCreate(['name' => 'wali_kelas']);
         $stafPerpusRole = Role::firstOrCreate(['name' => 'staf_perpus']);
         $panitiaPilketosRole = Role::firstOrCreate(['name' => 'panitia_pilketos']);
         $siswaRole = Role::firstOrCreate(['name' => 'siswa']);
 
         // 2. Buat Shield Permissions untuk Semua Entity Filament & Widget secara langsung (bebas hang CLI)
         $entities = [
+            'AcademicYear',
             'Achievement',
             'Book',
             'BookReservation',
@@ -34,6 +37,7 @@ class RolePermissionSeeder extends Seeder
             'LibraryBook',
             'Post',
             'QuestionBank',
+            'QuizAttempt',
             'Role',
             'SchoolDocument',
             'SchoolFacility',
@@ -94,7 +98,36 @@ class RolePermissionSeeder extends Seeder
         // A. Super Admin: Seluruh Hak Akses Penuh
         $superAdminRole->syncPermissions(Permission::all());
 
-        // B. Guru: Khusus kelola Materi Pembelajaran, Bank Soal, dan Rekap Nilai Kuis Siswa
+        // B. Operator Sekolah: Mengelola siswa, rombel, tahun ajaran, profil guru & konten sekolah
+        // Batasan: Tidak otomatis mengubah pengaturan sistem atau seluruh nilai
+        $operatorPermissions = Permission::where(function ($q) {
+            $q->where('name', 'like', '%User%')
+              ->orWhere('name', 'like', '%StudentStatistic%')
+              ->orWhere('name', 'like', '%AcademicYear%')
+              ->orWhere('name', 'like', '%StaffMember%')
+              ->orWhere('name', 'like', '%Post%')
+              ->orWhere('name', 'like', '%Achievement%')
+              ->orWhere('name', 'like', '%SchoolDocument%')
+              ->orWhere('name', 'like', '%SchoolFacility%')
+              ->orWhere('name', 'like', '%Extracurricular%')
+              ->orWhere('name', 'like', '%GalleryPhoto%')
+              ->orWhere('name', 'like', '%ContactMessage%')
+              ->orWhereIn('name', ['ViewAny:QuizAttempt', 'View:QuizAttempt', 'ViewAny:Subject', 'View:Subject'])
+              ->orWhere('name', 'view_admin_panel')
+              ->orWhere('name', 'View:SchoolOverviewWidget');
+        })->where(function ($q) {
+            $q->where('name', 'not like', '%Role%')
+              ->where('name', 'not like', '%SchoolSetting%')
+              ->where('name', 'not like', '%Book%')
+              ->where('name', 'not like', '%LibraryBook%')
+              ->where('name', 'not like', '%BookReservation%')
+              ->where('name', 'not like', '%ElectionCandidate%')
+              ->where('name', 'not like', '%ElectionVote%');
+        })->get();
+        $operatorRole->syncPermissions($operatorPermissions);
+
+        // C. Guru Mapel: Khusus kelola Materi Pembelajaran, Bank Soal, dan Rekap Nilai Kuis
+        // Batasan: Tidak menghapus siswa atau mengelola perpustakaan tanpa tugas tambahan
         $guruPermissions = Permission::where(function ($q) {
             $q->where('name', 'like', '%LearningMaterial%')
               ->orWhere('name', 'like', '%QuestionBank%')
@@ -106,7 +139,21 @@ class RolePermissionSeeder extends Seeder
         })->get();
         $guruRole->syncPermissions($guruPermissions);
 
-        // C. Staf Perpustakaan: Khusus Buku & Katalog Perpustakaan serta Reservasi
+        // D. Wali Kelas: Melihat siswa dan rekap pembelajaran kelas binaannya
+        // Batasan: Perubahan identitas utama siswa mengikuti izin khusus
+        $waliKelasPermissions = Permission::where(function ($q) {
+            $q->whereIn('name', [
+                'ViewAny:User', 'View:User',
+                'ViewAny:QuizAttempt', 'View:QuizAttempt',
+                'ViewAny:StudentStatistic', 'View:StudentStatistic',
+                'view_admin_panel',
+                'View:SchoolOverviewWidget',
+            ]);
+        })->get();
+        $waliKelasRole->syncPermissions($waliKelasPermissions);
+
+        // E. Staf Perpustakaan: Khusus Buku & Katalog Perpustakaan serta Reservasi & Sirkulasi
+        // Batasan: Tidak mengubah data akademik
         $stafPerpusPermissions = Permission::where(function ($q) {
             $q->where('name', 'like', '%Book%')
               ->orWhere('name', 'like', '%LibraryBook%')
@@ -117,7 +164,8 @@ class RolePermissionSeeder extends Seeder
         })->get();
         $stafPerpusRole->syncPermissions($stafPerpusPermissions);
 
-        // D. Panitia Pilketos: Khusus Kandidat Pilketos & Live Chart Suara
+        // F. Panitia Pilketos: Khusus Kandidat Pilketos & Live Chart Suara
+        // Batasan: Tidak mengubah siswa, nilai, atau transaksi perpustakaan
         $panitiaPilketosPermissions = Permission::where(function ($q) {
             $q->where('name', 'like', '%ElectionCandidate%')
               ->orWhere('name', 'like', '%pilketos%')
@@ -127,7 +175,7 @@ class RolePermissionSeeder extends Seeder
         })->get();
         $panitiaPilketosRole->syncPermissions($panitiaPilketosPermissions);
 
-        // 4. Akun Default Super Admin
+        // 5. Akun Default Super Admin
         $admin = User::firstOrCreate(
             ['email' => 'admin@smpn4cepu.sch.id'],
             [
@@ -139,7 +187,19 @@ class RolePermissionSeeder extends Seeder
         );
         $admin->syncRoles([$superAdminRole]);
 
-        // 5. Akun Default Guru
+        // 6. Akun Default Operator Sekolah
+        $operator = User::firstOrCreate(
+            ['email' => 'operator@smpn4cepu.sch.id'],
+            [
+                'name' => 'Operator Sekolah SMPN 4 Cepu',
+                'password' => bcrypt('OperatorCepu2026!'),
+                'nip' => '198804042012011004',
+                'email_verified_at' => now(),
+            ]
+        );
+        $operator->syncRoles([$operatorRole]);
+
+        // 7. Akun Default Guru Mapel
         $guru = User::firstOrCreate(
             ['email' => 'guru@smpn4cepu.sch.id'],
             [
@@ -151,7 +211,19 @@ class RolePermissionSeeder extends Seeder
         );
         $guru->syncRoles([$guruRole]);
 
-        // 6. Akun Default Staf Perpus
+        // 8. Akun Default Wali Kelas
+        $waliKelas = User::firstOrCreate(
+            ['email' => 'walikelas@smpn4cepu.sch.id'],
+            [
+                'name' => 'Sri Wahyuni, S.Pd. (Wali Kelas 7A)',
+                'password' => bcrypt('WaliKelas2026!'),
+                'nip' => '198903032014022003',
+                'email_verified_at' => now(),
+            ]
+        );
+        $waliKelas->syncRoles([$waliKelasRole]);
+
+        // 9. Akun Default Staf Perpus
         $perpus = User::firstOrCreate(
             ['email' => 'perpus@smpn4cepu.sch.id'],
             [
@@ -163,7 +235,7 @@ class RolePermissionSeeder extends Seeder
         );
         $perpus->syncRoles([$stafPerpusRole]);
 
-        // 7. Akun Default Panitia Pilketos
+        // 10. Akun Default Panitia Pilketos
         $pilketos = User::firstOrCreate(
             ['email' => 'pilketos@smpn4cepu.sch.id'],
             [

@@ -8,17 +8,48 @@ use App\Filament\Resources\StaffMembers\Pages\ListStaffMembers;
 use App\Filament\Resources\StaffMembers\Schemas\StaffMemberForm;
 use App\Filament\Resources\StaffMembers\Tables\StaffMembersTable;
 use App\Models\StaffMember;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class StaffMemberResource extends Resource
 {
     protected static ?string $model = StaffMember::class;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function canManageStaff(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManageStaff();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageStaff();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageStaff();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManageStaff();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {

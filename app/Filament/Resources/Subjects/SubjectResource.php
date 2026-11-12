@@ -69,7 +69,33 @@ class SubjectResource extends Resource
         return 1;
     }
 
+    public static function canManageSubjects(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
+    }
+
     public static function canCreate(): bool
+    {
+        return static::canManageSubjects();
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return static::canManageSubjects();
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return static::isSuperAdmin();
     }

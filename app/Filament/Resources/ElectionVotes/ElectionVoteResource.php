@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ElectionVotes;
 use App\Filament\Resources\ElectionVotes\Pages\ListElectionVotes;
 use App\Filament\Resources\ElectionVotes\Tables\ElectionVotesTable;
 use App\Models\ElectionVote;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -12,11 +13,25 @@ use Filament\Tables\Table;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class ElectionVoteResource extends Resource
 {
     protected static ?string $model = ElectionVote::class;
+
+    public static function canManagePilketos(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'panitia_pilketos']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManagePilketos();
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxArrowDown;
 
@@ -62,13 +77,7 @@ class ElectionVoteResource extends Resource
 
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
-        $user = auth()->user();
-
-        if (! $user) {
-            return Response::deny();
-        }
-
-        if ($user->hasAnyRole(['super_admin', 'panitia_pilketos'])) {
+        if (static::canManagePilketos()) {
             return Response::allow();
         }
 

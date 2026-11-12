@@ -13,12 +13,42 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::isSuperAdmin();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {

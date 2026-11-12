@@ -112,5 +112,30 @@ class AdminPanelTest extends TestCase
         $this->actingAs($pilketos)->get('/admin/election-votes')->assertStatus(200);
         $this->actingAs($pilketos)->get('/admin/users')->assertStatus(403);
         $this->actingAs($pilketos)->get('/admin/students')->assertStatus(403);
+
+        $operator = User::where('email', 'operator@smpn4cepu.sch.id')->first();
+        $this->assertNotNull($operator);
+        $this->flushSession();
+        $this->actingAs($operator)->get('/admin/students')->assertStatus(200);
+        $this->actingAs($operator)->get('/admin/academic-years')->assertStatus(200);
+        $this->actingAs($operator)->get('/admin/staff-members')->assertStatus(200);
+        $this->actingAs($operator)->get('/admin/student-statistics')->assertStatus(200);
+        $this->actingAs($operator)->get('/admin/subjects')->assertStatus(200);
+        $this->actingAs($operator)->get('/admin/users')->assertStatus(403);
+        $this->actingAs($operator)->get('/admin/school-settings')->assertStatus(403);
+        $this->actingAs($operator)->get('/admin/books')->assertStatus(403);
+        $this->actingAs($operator)->get('/admin/election-candidates')->assertStatus(403);
+
+        $waliKelas = User::where('email', 'walikelas@smpn4cepu.sch.id')->first();
+        $this->assertNotNull($waliKelas);
+        $this->flushSession();
+        $this->actingAs($waliKelas)->get('/admin/students')->assertStatus(200);
+        $this->actingAs($waliKelas)->get('/admin/quiz-attempts')->assertStatus(200);
+        $this->actingAs($waliKelas)->get('/admin/student-statistics')->assertStatus(200);
+        $this->actingAs($waliKelas)->get('/admin/users')->assertStatus(403);
+        $this->actingAs($waliKelas)->get('/admin/academic-years')->assertStatus(403);
+        $this->actingAs($waliKelas)->get('/admin/school-settings')->assertStatus(403);
+        $this->actingAs($waliKelas)->get('/admin/books')->assertStatus(403);
+        $this->actingAs($waliKelas)->get('/admin/election-candidates')->assertStatus(403);
     }
 }

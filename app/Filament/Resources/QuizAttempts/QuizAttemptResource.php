@@ -83,11 +83,19 @@ class QuizAttemptResource extends Resource
             return Response::deny();
         }
 
-        if ($user->hasAnyRole(['super_admin', 'guru'])) {
+        if ($user->hasAnyRole(['super_admin', 'guru', 'wali_kelas', 'operator_sekolah'])) {
             return Response::allow();
         }
 
-        return Response::deny('Hanya Administrator dan Guru yang dapat mengakses Rekap Nilai Kuis Siswa.');
+        return Response::deny('Hanya Guru, Wali Kelas, dan Administrator yang dapat mengakses Rekap Nilai Kuis Siswa.');
+    }
+
+    public static function canViewAny(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'guru', 'wali_kelas', 'operator_sekolah']);
     }
 
     public static function canCreate(): bool

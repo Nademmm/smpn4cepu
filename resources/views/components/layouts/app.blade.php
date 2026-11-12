@@ -487,7 +487,7 @@
                                         <span>Peminjaman Saya</span>
                                     </a>
 
-                                    @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
+                                    @if($currentUser->hasAnyRole(['super_admin', 'operator_sekolah', 'guru', 'wali_kelas', 'staf_perpus', 'panitia_pilketos']))
                                         <a
                                             href="{{ url('/admin') }}"
                                             @click="userMenuOpen = false"
@@ -777,7 +777,7 @@
                                     <span>Peminjaman Saya</span>
                                 </a>
 
-                                @if($currentUser->hasAnyRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))
+                                @if($currentUser->hasAnyRole(['super_admin', 'operator_sekolah', 'guru', 'wali_kelas', 'staf_perpus', 'panitia_pilketos']))
                                     <a
                                         href="{{ url('/admin') }}"
                                         @click="mobileMenuOpen = false"

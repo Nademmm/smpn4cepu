@@ -8,13 +8,16 @@ use App\Filament\Resources\LibraryBooks\Pages\ListLibraryBooks;
 use App\Filament\Resources\LibraryBooks\Schemas\LibraryBookForm;
 use App\Filament\Resources\LibraryBooks\Tables\LibraryBooksTable;
 use App\Models\LibraryBook;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class LibraryBookResource extends Resource
 {
@@ -23,6 +26,34 @@ class LibraryBookResource extends Resource
     protected static bool $shouldRegisterNavigation = false;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function canManageLibrary(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'staf_perpus']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManageLibrary();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -62,16 +93,6 @@ class LibraryBookResource extends Resource
     public static function getNavigationSort(): ?int
     {
         return 4;
-    }
-
-    public static function canCreate(): bool
-    {
-        $user = auth()->user();
-        if ($user && $user->hasRole('guru') && ! $user->hasRole(['super_admin', 'staf_perpus'])) {
-            return false;
-        }
-
-        return parent::canCreate();
     }
 
     public static function form(Schema $schema): Schema

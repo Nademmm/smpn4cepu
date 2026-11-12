@@ -8,6 +8,7 @@ use App\Filament\Resources\Books\Pages\ListBooks;
 use App\Filament\Resources\Books\Schemas\BookForm;
 use App\Filament\Resources\Books\Tables\BooksTable;
 use App\Models\Book;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,12 +17,41 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class BookResource extends Resource
 {
     protected static ?string $model = Book::class;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function canManageLibrary(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'staf_perpus']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManageLibrary();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -62,16 +92,6 @@ class BookResource extends Resource
     public static function getNavigationSort(): ?int
     {
         return 1;
-    }
-
-    public static function canCreate(): bool
-    {
-        $user = auth()->user();
-        if ($user && $user->hasRole('guru') && ! $user->hasRole(['super_admin', 'staf_perpus'])) {
-            return false;
-        }
-
-        return parent::canCreate();
     }
 
     public static function form(Schema $schema): Schema

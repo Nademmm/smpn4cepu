@@ -21,11 +21,12 @@ class ListStudents extends ListRecords
 {
     protected static string $resource = StudentResource::class;
 
-    protected function isSuperAdmin(): bool
+    protected function canManageStudents(): bool
     {
+        /** @var User|null $user */
         $user = Auth::user();
 
-        return $user instanceof User && $user->hasRole('super_admin');
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
     }
 
     protected function getHeaderActions(): array
@@ -36,7 +37,7 @@ class ListStudents extends ListRecords
                 ->label('Unduh Template')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('gray')
-                ->visible(fn (): bool => $this->isSuperAdmin())
+                ->visible(fn (): bool => $this->canManageStudents())
                 ->action(function (): StreamedResponse {
                     $csvContent = StudentImportService::getTemplateCsv();
                     return response()->streamDownload(function () use ($csvContent) {
@@ -51,7 +52,7 @@ class ListStudents extends ListRecords
                 ->label('Import Excel / CSV')
                 ->icon('heroicon-o-document-arrow-up')
                 ->color('success')
-                ->visible(fn (): bool => $this->isSuperAdmin())
+                ->visible(fn (): bool => $this->canManageStudents())
                 ->modalHeading('Import Akun Siswa Massal dari Excel / CSV')
                 ->modalDescription('Unggah berkas Excel (.xlsx) atau CSV daftar siswa. Mendukung format ekspor Dapodik resmi (multi-sheet per rombel) maupun format template tabular CSV.')
                 ->modalSubmitActionLabel('Mulai Proses Impor')
@@ -128,6 +129,7 @@ class ListStudents extends ListRecords
                 ->label('Sinkronkan Rekap Rombel')
                 ->icon('heroicon-o-arrow-path')
                 ->color('info')
+                ->visible(fn (): bool => $this->canManageStudents())
                 ->action(function (): void {
                     $synced = User::syncAllRombelStatistics('2026/2027');
 

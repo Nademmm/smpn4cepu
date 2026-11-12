@@ -20,12 +20,12 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentsTable
 {
-    public static function isSuperAdmin(): bool
+    public static function canManageStudents(): bool
     {
         /** @var User|null $user */
         $user = Auth::user();
 
-        return $user instanceof User && $user->hasRole('super_admin');
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'operator_sekolah']);
     }
 
     public static function configure(Table $table): Table
@@ -156,13 +156,13 @@ class StudentsTable
             ->recordActions([
                 EditAction::make()
                     ->label('Edit')
-                    ->visible(fn (): bool => static::isSuperAdmin()),
+                    ->visible(fn (): bool => static::canManageStudents()),
 
                 Action::make('resetPassword')
                     ->label('Reset Sandi')
                     ->icon('heroicon-o-key')
                     ->color('warning')
-                    ->visible(fn (): bool => static::isSuperAdmin())
+                    ->visible(fn (): bool => static::canManageStudents())
                     ->requiresConfirmation()
                     ->modalHeading('Reset Kata Sandi Siswa?')
                     ->modalDescription(fn (User $record): string => "Kata sandi untuk {$record->name} (NISN: {$record->nisn}) akan dikembalikan ke default: password123")
@@ -179,7 +179,7 @@ class StudentsTable
 
                 DeleteAction::make()
                     ->label('Hapus')
-                    ->visible(fn (): bool => static::isSuperAdmin()),
+                    ->visible(fn (): bool => static::canManageStudents()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -187,7 +187,7 @@ class StudentsTable
                         ->label('Pindah Kelas / Rombel Massal')
                         ->icon('heroicon-o-arrows-right-left')
                         ->color('primary')
-                        ->visible(fn (): bool => static::isSuperAdmin())
+                        ->visible(fn (): bool => static::canManageStudents())
                         ->form([
                             Select::make('target_class')
                                 ->label('Pilih Kelas / Rombel Tujuan')
@@ -221,7 +221,7 @@ class StudentsTable
                         ->label('Petakan ke Tahun Ajaran Baru (Persiapan)')
                         ->icon('heroicon-o-academic-cap')
                         ->color('success')
-                        ->visible(fn (): bool => static::isSuperAdmin())
+                        ->visible(fn (): bool => static::canManageStudents())
                         ->form([
                             Select::make('academic_year_id')
                                 ->label('Pilih Tahun Ajaran Persiapan')
@@ -271,7 +271,7 @@ class StudentsTable
                         ->label('Reset Password ke Default (password123)')
                         ->icon('heroicon-o-key')
                         ->color('warning')
-                        ->visible(fn (): bool => static::isSuperAdmin())
+                        ->visible(fn (): bool => static::canManageStudents())
                         ->requiresConfirmation()
                         ->action(function (Collection $records): void {
                             $hashed = Hash::make('password123', ['rounds' => 10]);
@@ -285,7 +285,7 @@ class StudentsTable
                         ->deselectRecordsAfterCompletion(),
 
                     DeleteBulkAction::make()
-                        ->visible(fn (): bool => static::isSuperAdmin()),
+                        ->visible(fn (): bool => static::canManageStudents()),
                 ]),
             ]);
     }

@@ -7,17 +7,48 @@ use App\Filament\Resources\BookReservations\Pages\ListBookReservations;
 use App\Filament\Resources\BookReservations\Schemas\BookReservationForm;
 use App\Filament\Resources\BookReservations\Tables\BookReservationsTable;
 use App\Models\BookReservation;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class BookReservationResource extends Resource
 {
     protected static ?string $model = BookReservation::class;
 
     protected static ?string $recordTitleAttribute = 'reservation_code';
+
+    public static function canManageLibrary(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasAnyRole(['super_admin', 'staf_perpus']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canManageLibrary();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canManageLibrary();
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
