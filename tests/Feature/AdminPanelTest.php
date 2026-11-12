@@ -74,7 +74,7 @@ class AdminPanelTest extends TestCase
 
         foreach ($resources as $uri) {
             $response = $this->actingAs($admin)->get($uri);
-            $response->assertStatus(200, "Failed asserting 200 OK on {$uri}");
+            $this->assertSame(200, $response->getStatusCode(), "Failed asserting 200 OK on {$uri}");
         }
     }
 
