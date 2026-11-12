@@ -24,17 +24,14 @@ class ListBookReservations extends ListRecords
     {
         return [
             Action::make('scanQr')
-                ->label('Scan QR Tiket')
-                ->icon('heroicon-m-camera')
+                ->label('Scan / Validasi Tiket QR')
+                ->icon('heroicon-m-qr-code')
                 ->color('success')
-                ->extraAttributes([
-                    'x-on:click' => 'window.dispatchEvent(new CustomEvent("start-circulation-camera"))',
-                ])
-                ->modalHeading('Pemindai QR Code Tiket Sirkulasi')
-                ->modalDescription(null)
+                ->modalHeading('Validasi & Scan Tiket Sirkulasi')
+                ->modalDescription('Pindai tiket peminjaman siswa untuk serah terima atau pengembalian buku fisik.')
                 ->modalSubmitAction(false)
-                ->modalCancelActionLabel('Tutup Scanner')
-                ->modalWidth('md')
+                ->modalCancelActionLabel('Tutup')
+                ->modalWidth('lg')
                 ->modalContent(fn () => view('filament.components.circulation-camera-modal')),
         ];
     }

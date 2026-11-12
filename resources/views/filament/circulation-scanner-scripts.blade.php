@@ -1,244 +1,65 @@
 <script src="{{ asset('vendor/jsqr/jsQR.js') }}"></script>
 <style>
-@keyframes qrLaserMove {
-    0% { top: 18%; opacity: 0.3; }
-    50% { top: 78%; opacity: 1; }
-    100% { top: 18%; opacity: 0.3; }
+@keyframes qrPulseRing {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.03); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.8; }
 }
-.qr-scanner-laser {
-    position: absolute;
-    left: 12%;
-    right: 12%;
-    height: 2px;
-    background: #10b981;
-    box-shadow: 0 0 10px #10b981, 0 0 18px #10b981;
-    animation: qrLaserMove 2.2s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 10;
-}
-@keyframes qrSpinAnim {
-    to { transform: rotate(360deg); }
-}
-.qr-spinner-circle {
-    width: 32px;
-    height: 32px;
-    border: 3px solid #10b981;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: qrSpinAnim 0.75s linear infinite;
+.qr-pulse-card {
+    animation: qrPulseRing 2.5s ease-in-out infinite;
 }
 </style>
 <script>
 (function () {
-    // Normalisasi WebRTC getUserMedia untuk kompatibilitas lintas peramban
-    if (typeof window !== 'undefined') {
-        if (!navigator.mediaDevices) {
-            navigator.mediaDevices = {};
-        }
-        if (!navigator.mediaDevices.getUserMedia) {
-            const legacyGetUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-            if (legacyGetUserMedia) {
-                navigator.mediaDevices.getUserMedia = function (constraints) {
-                    return new Promise(function (resolve, reject) {
-                        legacyGetUserMedia.call(navigator, constraints, resolve, reject);
-                    });
-                };
-            }
-        }
-    }
-
     function circulationScannerComponent() {
         return {
-            stream: null,
-            video: null,
-            canvas: null,
-            ctx: null,
-            animId: null,
-            isRunning: false,
-            isStarting: false,
             isProcessing: false,
             errorMessage: null,
-            statusText: 'Kamera siap diaktifkan',
+            statusText: 'Siap memproses tiket sirkulasi',
             lastScannedCode: '',
             lastScannedAt: 0,
             lastResult: null,
+            manualCode: '',
+            dragOver: false,
 
             init() {
-                this.$nextTick(() => {
-                    this.video = this.$el.querySelector('video');
-                    this.canvas = this.$el.querySelector('canvas');
-                    if (this.canvas) {
-                        this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
+                // Dengarkan clipboard paste (Ctrl + V) saat modal aktif
+                this._pasteHandler = (e) => {
+                    const items = (e.clipboardData || window.clipboardData)?.items;
+                    if (!items) return;
+                    for (let i = 0; i < items.length; i++) {
+                        if (items[i].type.indexOf('image') !== -1) {
+                            const file = items[i].getAsFile();
+                            if (file) {
+                                this.scanPhotoFile(file);
+                                break;
+                            }
+                        }
                     }
-                    // Jalankan kamera jika elemen terlihat di layar
-                    if (this.$el.offsetParent !== null || this.$el.clientHeight > 0) {
-                        this.start();
-                    }
-                });
+                };
+                window.addEventListener('paste', this._pasteHandler);
             },
 
             destroy() {
-                this.stop();
+                if (this._pasteHandler) {
+                    window.removeEventListener('paste', this._pasteHandler);
+                }
             },
 
-            async start() {
-                if (this.isRunning || this.isProcessing) return;
-                this.isStarting = true;
-                this.errorMessage = null;
-                this.statusText = 'Menghubungkan ke sensor kamera...';
-
-                // Periksa apakah peramban mendukung getUserMedia
-                const hasWebRTC = !!(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function');
-
-                if (!hasWebRTC) {
-                    this.isStarting = false;
-                    this.isRunning = false;
-                    this.errorMessage = 'Peramban membatasi streaming kamera langsung di koneksi ini (karena HTTP lokal). Silakan gunakan tombol Buka Kamera HP di bawah.';
-                    this.statusText = 'Streaming langsung tidak didukung';
-                    return;
-                }
-
+            playBeep() {
                 try {
-                    if (this.stream) {
-                        this.stream.getTracks().forEach(t => t.stop());
-                        this.stream = null;
-                    }
-
-                    let stream = null;
-
-                    // Percobaan 1: Kamera belakang ponsel (environment)
-                    try {
-                        stream = await navigator.mediaDevices.getUserMedia({
-                            video: {
-                                facingMode: { ideal: 'environment' },
-                                width: { ideal: 1280 },
-                                height: { ideal: 720 }
-                            },
-                            audio: false
-                        });
-                    } catch (e1) {
-                        // Percobaan 2: Kamera depan atau tanpa batasan resolusi
-                        try {
-                            stream = await navigator.mediaDevices.getUserMedia({
-                                video: { facingMode: 'environment' },
-                                audio: false
-                            });
-                        } catch (e2) {
-                            // Percobaan 3: Sembarang kamera aktif (webcam laptop / PC)
-                            stream = await navigator.mediaDevices.getUserMedia({
-                                video: true,
-                                audio: false
-                            });
-                        }
-                    }
-
-                    this.stream = stream;
-
-                    if (!this.video) {
-                        this.video = this.$el.querySelector('video');
-                    }
-
-                    if (this.video) {
-                        this.video.srcObject = stream;
-                        this.video.setAttribute('playsinline', 'true');
-                        this.video.setAttribute('autoplay', 'true');
-                        this.video.setAttribute('muted', 'true');
-                        this.video.onloadedmetadata = () => {
-                            this.video.play().catch(() => {});
-                        };
-                        try {
-                            await this.video.play();
-                        } catch (playErr) {}
-                    }
-
-                    this.isStarting = false;
-                    this.isRunning = true;
-                    this.errorMessage = null;
-                    this.statusText = 'Arahkan kamera ke QR Code tiket siswa';
-                    this.loop();
-
-                } catch (err) {
-                    this.isStarting = false;
-                    this.isRunning = false;
-                    const errName = err.name || '';
-                    const errMsg = err.message || '';
-
-                    if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError' || errMsg.includes('Permission') || errMsg.includes('policy')) {
-                        this.errorMessage = 'Izin kamera belum aktif. Silakan klik ikon gembok peramban di bilah alamat, lalu ubah izin kamera menjadi "Izinkan", atau gunakan tombol Kamera HP di bawah.';
-                    } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
-                        this.errorMessage = 'Tidak ditemukan perangkat kamera yang terpasang pada perangkat ini.';
-                    } else if (errName === 'NotReadableError' || errName === 'TrackStartError') {
-                        this.errorMessage = 'Kamera sedang dipakai oleh program atau aplikasi lain.';
-                    } else {
-                        this.errorMessage = 'Gagal mengakses kamera: ' + (errMsg || errName);
-                    }
-                    this.statusText = 'Kamera tidak aktif';
-                }
-            },
-
-            stop() {
-                if (this.animId) {
-                    cancelAnimationFrame(this.animId);
-                    this.animId = null;
-                }
-                if (this.stream) {
-                    this.stream.getTracks().forEach(t => t.stop());
-                    this.stream = null;
-                }
-                if (this.video) {
-                    this.video.srcObject = null;
-                }
-                this.isRunning = false;
-                this.isStarting = false;
-            },
-
-            loop() {
-                const tick = async () => {
-                    if (!this.isRunning) return;
-
-                    if (this.video && this.video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && !this.isProcessing) {
-                        const code = await this.detect();
-                        if (code) {
-                            this.onDetected(code);
-                        }
-                    }
-
-                    if (this.isRunning) {
-                        this.animId = requestAnimationFrame(tick);
-                    }
-                };
-                this.animId = requestAnimationFrame(tick);
-            },
-
-            async detect() {
-                // 1. Coba BarcodeDetector native bawaan peramban (Chromium / Android)
-                if ('BarcodeDetector' in window) {
-                    try {
-                        const detector = new BarcodeDetector({ formats: ['qr_code'] });
-                        const barcodes = await detector.detect(this.video);
-                        if (barcodes.length > 0 && barcodes[0].rawValue) {
-                            return barcodes[0].rawValue;
-                        }
-                    } catch (e) {}
-                }
-
-                // 2. jsQR universal fallback
-                if (typeof jsQR === 'function' && this.canvas && this.ctx && this.video.videoWidth > 0) {
-                    const w = this.video.videoWidth;
-                    const h = this.video.videoHeight;
-                    if (this.canvas.width !== w || this.canvas.height !== h) {
-                        this.canvas.width = w;
-                        this.canvas.height = h;
-                    }
-                    this.ctx.drawImage(this.video, 0, 0, w, h);
-                    const imgData = this.ctx.getImageData(0, 0, w, h);
-                    const result = jsQR(imgData.data, w, h, { inversionAttempts: 'dontInvert' });
-                    if (result && result.data) {
-                        return result.data;
-                    }
-                }
-
-                return null;
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.18);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.18);
+                } catch (e) {}
             },
 
             onDetected(rawCode) {
@@ -256,26 +77,12 @@
                 this.process(code);
             },
 
-            playBeep() {
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(880, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.15);
-                } catch (e) {}
-            },
-
             process(code) {
-                if (this.isProcessing) return;
+                const cleanCode = (code || '').trim();
+                if (!cleanCode || this.isProcessing) return;
+
                 this.isProcessing = true;
-                this.statusText = 'Memproses tiket: ' + code;
+                this.statusText = 'Memproses tiket: ' + cleanCode;
 
                 const tokenMeta = document.querySelector('meta[name="csrf-token"]');
                 const csrfToken = (tokenMeta ? tokenMeta.getAttribute('content') : '') || '{{ csrf_token() }}';
@@ -288,7 +95,7 @@
                         'X-CSRF-TOKEN': csrfToken
                     },
                     body: JSON.stringify({
-                        code: code,
+                        code: cleanCode,
                         circulation_action: 'auto'
                     })
                 })
@@ -297,6 +104,7 @@
                     this.isProcessing = false;
                     this.lastResult = data;
                     this.statusText = data.success ? 'Berhasil memproses tiket' : 'Gagal memproses tiket';
+                    this.manualCode = '';
 
                     if (window.Livewire) {
                         Livewire.dispatch('refresh');
@@ -321,21 +129,23 @@
                 reader.onload = (e) => {
                     const img = new Image();
                     img.onload = () => {
-                        let c = this.canvas;
-                        let cx = this.ctx;
-                        if (!c) {
-                            c = document.createElement('canvas');
-                            cx = c.getContext('2d');
-                        }
-                        c.width = img.width;
-                        c.height = img.height;
-                        cx.drawImage(img, 0, 0);
-                        const imgData = cx.getImageData(0, 0, img.width, img.height);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                        ctx.drawImage(img, 0, 0);
+                        const imgData = ctx.getImageData(0, 0, img.width, img.height);
 
                         let code = null;
+
+                        // 1. Dekode dengan pustaka jsQR lokal
                         if (typeof jsQR === 'function') {
-                            const res = jsQR(imgData.data, img.width, img.height);
-                            if (res && res.data) code = res.data;
+                            const res = jsQR(imgData.data, img.width, img.height, {
+                                inversionAttempts: 'attemptBoth'
+                            });
+                            if (res && res.data) {
+                                code = res.data;
+                            }
                         }
 
                         if (code) {
@@ -344,7 +154,7 @@
                             this.isProcessing = false;
                             this.lastResult = {
                                 success: false,
-                                message: 'QR Code tidak terdeteksi pada foto. Pastikan gambar jelas, terang, dan tidak buram.'
+                                message: 'QR Code tidak terdeteksi pada gambar. Pastikan posisi tiket tegak, terang, dan tidak buram.'
                             };
                             this.statusText = 'QR Code tidak terdeteksi';
                         }
@@ -352,6 +162,14 @@
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
+            },
+
+            handleDrop(e) {
+                this.dragOver = false;
+                const files = e.dataTransfer?.files;
+                if (files && files.length > 0) {
+                    this.scanPhotoFile(files[0]);
+                }
             }
         };
     }
