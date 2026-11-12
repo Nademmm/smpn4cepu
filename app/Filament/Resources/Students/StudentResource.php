@@ -31,9 +31,14 @@ class StudentResource extends Resource
 
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
-        $allowed = auth()->user()?->hasAnyRole(['super_admin', 'guru']) ?? false;
+        $allowed = auth()->user()?->hasRole('super_admin') ?? false;
 
         return $allowed ? Response::allow() : Response::deny();
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->hasRole('super_admin') ?? false;
     }
 
     public static function getEloquentQuery(): Builder

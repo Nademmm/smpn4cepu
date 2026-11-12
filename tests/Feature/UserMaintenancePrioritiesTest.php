@@ -102,6 +102,10 @@ class UserMaintenancePrioritiesTest extends TestCase
         // Guru dilarang membuat mata pelajaran (hanya super_admin)
         $this->actingAs($guru)->get('/admin/subjects/create')->assertStatus(403);
 
+        // Data Peserta Didik (Siswa) berhenti di admin saja (guru tidak memiliki akses)
+        $this->actingAs($guru)->get('/admin/students')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/students/create')->assertStatus(403);
+
         // Guru tetap bisa mengakses pembelajaran dan melihat nilai kuis
         $this->actingAs($guru)->get('/admin/learning-materials')->assertStatus(200);
         $this->actingAs($guru)->get('/admin/question-banks')->assertStatus(200);
@@ -123,3 +127,4 @@ class UserMaintenancePrioritiesTest extends TestCase
         $this->assertTrue($guru->subjects->contains($subject));
     }
 }
+

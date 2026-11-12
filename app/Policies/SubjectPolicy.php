@@ -23,12 +23,12 @@ class SubjectPolicy
 
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Subject') || $authUser->hasRole(['super_admin', 'guru']);
+        return $authUser->hasRole('super_admin');
     }
 
     public function view(AuthUser $authUser, Subject $subject): bool
     {
-        return $authUser->can('View:Subject') || $authUser->hasRole(['super_admin', 'guru']);
+        return $authUser->hasRole('super_admin');
     }
 
     public function create(AuthUser $authUser): bool

@@ -94,20 +94,13 @@ class RolePermissionSeeder extends Seeder
         // A. Super Admin: Seluruh Hak Akses Penuh
         $superAdminRole->syncPermissions(Permission::all());
 
-        // B. Guru: Fokus utama pada Materi Pembelajaran, Bank Soal/Kuis, Mata Pelajaran, serta viewer untuk Buku & Berita
+        // B. Guru: Khusus kelola Materi Pembelajaran, Bank Soal, dan Rekap Nilai Kuis Siswa
         $guruPermissions = Permission::where(function ($q) {
             $q->where('name', 'like', '%LearningMaterial%')
               ->orWhere('name', 'like', '%QuestionBank%')
               ->orWhereIn('name', [
-                  'ViewAny:Subject', 'View:Subject',
-                  'ViewAny:Post', 'View:Post',
-                  'ViewAny:Book', 'View:Book',
-                  'ViewAny:BookReservation', 'View:BookReservation', 'Update:BookReservation',
-                  'ViewAny:LibraryBook', 'View:LibraryBook',
-                  'ViewAny:Student', 'View:Student',
                   'ViewAny:QuizAttempt', 'View:QuizAttempt',
               ])
-              ->orWhere('name', 'like', '%academic%')
               ->orWhere('name', 'view_admin_panel')
               ->orWhere('name', 'View:SchoolOverviewWidget');
         })->get();

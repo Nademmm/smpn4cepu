@@ -87,8 +87,11 @@ class AdminPanelTest extends TestCase
         $this->flushSession();
         $this->actingAs($guru)->get('/admin/learning-materials')->assertStatus(200);
         $this->actingAs($guru)->get('/admin/question-banks')->assertStatus(200);
-        $this->actingAs($guru)->get('/admin/students')->assertStatus(200);
         $this->actingAs($guru)->get('/admin/quiz-attempts')->assertStatus(200);
+        $this->actingAs($guru)->get('/admin/students')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/books')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/library-books')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/subjects')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/users')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/election-candidates')->assertStatus(403);
         $this->actingAs($guru)->get('/admin/election-votes')->assertStatus(403);

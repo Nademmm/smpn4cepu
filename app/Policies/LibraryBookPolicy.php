@@ -23,12 +23,20 @@ class LibraryBookPolicy
 
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:LibraryBook');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('ViewAny:LibraryBook') || $authUser->hasRole('staf_perpus');
     }
 
     public function view(AuthUser $authUser, LibraryBook $libraryBook): bool
     {
-        return $authUser->can('View:LibraryBook');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('View:LibraryBook') || $authUser->hasRole('staf_perpus');
     }
 
     public function create(AuthUser $authUser): bool

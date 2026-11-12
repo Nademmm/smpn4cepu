@@ -29,3 +29,4 @@ class PasswordController extends Controller
         return back()->with('password_status', 'Kata sandi Anda berhasil diperbarui.');
     }
 }
+

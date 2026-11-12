@@ -23,12 +23,20 @@ class PostPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Post') || $authUser->hasRole(['guru', 'super_admin']);
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return false;
+        }
+
+        return $authUser->can('ViewAny:Post') || $authUser->hasRole('super_admin');
     }
 
     public function view(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('View:Post') || $authUser->hasRole(['guru', 'super_admin']);
+        if ($authUser->hasRole('guru') && !$authUser->hasRole('super_admin')) {
+            return false;
+        }
+
+        return $authUser->can('View:Post') || $authUser->hasRole('super_admin');
     }
 
     public function create(AuthUser $authUser): bool

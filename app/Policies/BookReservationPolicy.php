@@ -12,24 +12,49 @@ class BookReservationPolicy
 {
     use HandlesAuthorization;
     
+    public function before(AuthUser $user, string $ability): ?bool
+    {
+        if (method_exists($user, 'hasRole') && $user->hasRole('super_admin')) {
+            return true;
+        }
+
+        return null;
+    }
+
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:BookReservation');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('ViewAny:BookReservation') || $authUser->hasRole('staf_perpus');
     }
 
     public function view(AuthUser $authUser, BookReservation $bookReservation): bool
     {
-        return $authUser->can('View:BookReservation');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('View:BookReservation') || $authUser->hasRole('staf_perpus');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:BookReservation');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('Create:BookReservation') || $authUser->hasRole('staf_perpus');
     }
 
     public function update(AuthUser $authUser, BookReservation $bookReservation): bool
     {
-        return $authUser->can('Update:BookReservation');
+        if ($authUser->hasRole('guru') && !$authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return $authUser->can('Update:BookReservation') || $authUser->hasRole('staf_perpus');
     }
 
     public function delete(AuthUser $authUser, BookReservation $bookReservation): bool
