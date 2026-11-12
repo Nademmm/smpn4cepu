@@ -96,12 +96,14 @@ class QuizAttemptsTable
                 EditAction::make()
                     ->label('Detail & Koreksi'),
                 DeleteAction::make()
-                    ->label('Reset'),
+                    ->label('Reset')
+                    ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->label('Hapus / Reset Nilai Terpilih'),
+                        ->label('Hapus / Reset Nilai Terpilih')
+                        ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
                 ]),
             ]);
     }

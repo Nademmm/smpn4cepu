@@ -111,12 +111,14 @@ class StudentsTable
             ])
             ->recordActions([
                 EditAction::make()
-                    ->label('Edit'),
+                    ->label('Edit')
+                    ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
 
                 Action::make('resetPassword')
                     ->label('Reset Sandi')
                     ->icon('heroicon-o-key')
                     ->color('warning')
+                    ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
                     ->requiresConfirmation()
                     ->modalHeading('Reset Kata Sandi Siswa?')
                     ->modalDescription(fn (User $record): string => "Kata sandi untuk {$record->name} (NISN: {$record->nisn}) akan dikembalikan ke default: password123")
@@ -132,7 +134,8 @@ class StudentsTable
                     }),
 
                 DeleteAction::make()
-                    ->label('Hapus'),
+                    ->label('Hapus')
+                    ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

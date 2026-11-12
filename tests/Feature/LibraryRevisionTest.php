@@ -168,9 +168,9 @@ class LibraryRevisionTest extends TestCase
         $guru = User::where('email', 'guru@smpn4cepu.sch.id')->first();
         $this->assertNotNull($guru);
 
-        // 1. Guru bisa melihat katalog buku dan antrean reservasi sirkulasi di Filament
-        $this->actingAs($guru)->get('/admin/books')->assertStatus(200);
-        $this->actingAs($guru)->get('/admin/book-reservations')->assertStatus(200);
+        // 1. Guru dilarang mengelola katalog buku dan antrean sirkulasi di Filament (hanya admin & pustakawan)
+        $this->actingAs($guru)->get('/admin/books')->assertStatus(403);
+        $this->actingAs($guru)->get('/admin/book-reservations')->assertStatus(403);
 
         // 2. Guru TIDAK BISA mengakses form tambah buku fisik (403 Forbidden)
         $this->actingAs($guru)->get('/admin/books/create')->assertStatus(403);
