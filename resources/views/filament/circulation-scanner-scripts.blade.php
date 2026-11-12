@@ -30,6 +30,23 @@
 </style>
 <script>
 (function () {
+    // Normalisasi WebRTC getUserMedia untuk kompatibilitas lintas peramban
+    if (typeof window !== 'undefined') {
+        if (!navigator.mediaDevices) {
+            navigator.mediaDevices = {};
+        }
+        if (!navigator.mediaDevices.getUserMedia) {
+            const legacyGetUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+            if (legacyGetUserMedia) {
+                navigator.mediaDevices.getUserMedia = function (constraints) {
+                    return new Promise(function (resolve, reject) {
+                        legacyGetUserMedia.call(navigator, constraints, resolve, reject);
+                    });
+                };
+            }
+        }
+    }
+
     function circulationScannerComponent() {
         return {
             stream: null,
@@ -38,13 +55,13 @@
             ctx: null,
             animId: null,
             isRunning: false,
+            isStarting: false,
             isProcessing: false,
             errorMessage: null,
-            statusText: 'Membuka kamera...',
+            statusText: 'Kamera siap diaktifkan',
             lastScannedCode: '',
             lastScannedAt: 0,
             lastResult: null,
-            manualCode: '',
 
             init() {
                 this.$nextTick(() => {
@@ -53,7 +70,10 @@
                     if (this.canvas) {
                         this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
                     }
-                    this.start();
+                    // Jalankan kamera jika elemen terlihat di layar
+                    if (this.$el.offsetParent !== null || this.$el.clientHeight > 0) {
+                        this.start();
+                    }
                 });
             },
 
@@ -62,54 +82,95 @@
             },
 
             async start() {
-                if (this.isRunning) return;
+                if (this.isRunning || this.isProcessing) return;
+                this.isStarting = true;
                 this.errorMessage = null;
-                this.statusText = 'Menghubungkan ke kamera...';
+                this.statusText = 'Menghubungkan ke sensor kamera...';
 
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    this.errorMessage = 'Akses video streaming langsung dibatasi oleh peramban. Silakan gunakan tombol Ambil Foto Kamera HP di bawah.';
+                // Periksa apakah peramban mendukung getUserMedia
+                const hasWebRTC = !!(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function');
+
+                if (!hasWebRTC) {
+                    this.isStarting = false;
+                    this.isRunning = false;
+                    this.errorMessage = 'Peramban membatasi streaming kamera langsung di koneksi ini (karena HTTP lokal). Silakan gunakan tombol Buka Kamera HP di bawah.';
                     this.statusText = 'Streaming langsung tidak didukung';
                     return;
                 }
 
                 try {
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(t => t.stop());
+                        this.stream = null;
+                    }
+
                     let stream = null;
+
                     // Percobaan 1: Kamera belakang ponsel (environment)
                     try {
                         stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: { ideal: 'environment' } },
+                            video: {
+                                facingMode: { ideal: 'environment' },
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 }
+                            },
                             audio: false
                         });
                     } catch (e1) {
-                        // Percobaan 2: Kamera webcam laptop / desktop umum
-                        stream = await navigator.mediaDevices.getUserMedia({
-                            video: true,
-                            audio: false
-                        });
+                        // Percobaan 2: Kamera depan atau tanpa batasan resolusi
+                        try {
+                            stream = await navigator.mediaDevices.getUserMedia({
+                                video: { facingMode: 'environment' },
+                                audio: false
+                            });
+                        } catch (e2) {
+                            // Percobaan 3: Sembarang kamera aktif (webcam laptop / PC)
+                            stream = await navigator.mediaDevices.getUserMedia({
+                                video: true,
+                                audio: false
+                            });
+                        }
                     }
 
                     this.stream = stream;
+
                     if (!this.video) {
                         this.video = this.$el.querySelector('video');
                     }
+
                     if (this.video) {
                         this.video.srcObject = stream;
-                        await this.video.play();
+                        this.video.setAttribute('playsinline', 'true');
+                        this.video.setAttribute('autoplay', 'true');
+                        this.video.setAttribute('muted', 'true');
+                        this.video.onloadedmetadata = () => {
+                            this.video.play().catch(() => {});
+                        };
+                        try {
+                            await this.video.play();
+                        } catch (playErr) {}
                     }
 
+                    this.isStarting = false;
                     this.isRunning = true;
                     this.errorMessage = null;
                     this.statusText = 'Arahkan kamera ke QR Code tiket siswa';
                     this.loop();
+
                 } catch (err) {
+                    this.isStarting = false;
                     this.isRunning = false;
                     const errName = err.name || '';
-                    if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
-                        this.errorMessage = 'Izin kamera belum aktif. Silakan izinkan akses kamera di ikon gembok peramban.';
-                    } else if (errName === 'NotFoundError') {
-                        this.errorMessage = 'Tidak ditemukan perangkat kamera di perangkat Anda.';
+                    const errMsg = err.message || '';
+
+                    if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError' || errMsg.includes('Permission') || errMsg.includes('policy')) {
+                        this.errorMessage = 'Izin kamera belum aktif. Silakan klik ikon gembok peramban di bilah alamat, lalu ubah izin kamera menjadi "Izinkan", atau gunakan tombol Kamera HP di bawah.';
+                    } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
+                        this.errorMessage = 'Tidak ditemukan perangkat kamera yang terpasang pada perangkat ini.';
+                    } else if (errName === 'NotReadableError' || errName === 'TrackStartError') {
+                        this.errorMessage = 'Kamera sedang dipakai oleh program atau aplikasi lain.';
                     } else {
-                        this.errorMessage = 'Gagal membuka kamera: ' + (err.message || errName);
+                        this.errorMessage = 'Gagal mengakses kamera: ' + (errMsg || errName);
                     }
                     this.statusText = 'Kamera tidak aktif';
                 }
@@ -128,6 +189,7 @@
                     this.video.srcObject = null;
                 }
                 this.isRunning = false;
+                this.isStarting = false;
             },
 
             loop() {
@@ -149,7 +211,7 @@
             },
 
             async detect() {
-                // 1. Coba BarcodeDetector bawaan Chromium
+                // 1. Coba BarcodeDetector native bawaan peramban (Chromium / Android)
                 if ('BarcodeDetector' in window) {
                     try {
                         const detector = new BarcodeDetector({ formats: ['qr_code'] });
@@ -160,7 +222,7 @@
                     } catch (e) {}
                 }
 
-                // 2. jsQR fallback via canvas
+                // 2. jsQR universal fallback
                 if (typeof jsQR === 'function' && this.canvas && this.ctx && this.video.videoWidth > 0) {
                     const w = this.video.videoWidth;
                     const h = this.video.videoHeight;
@@ -235,7 +297,6 @@
                     this.isProcessing = false;
                     this.lastResult = data;
                     this.statusText = data.success ? 'Berhasil memproses tiket' : 'Gagal memproses tiket';
-                    this.manualCode = '';
 
                     if (window.Livewire) {
                         Livewire.dispatch('refresh');
@@ -283,7 +344,7 @@
                             this.isProcessing = false;
                             this.lastResult = {
                                 success: false,
-                                message: 'QR Code tidak terdeteksi pada foto. Pastikan gambar jelas dan tidak buram.'
+                                message: 'QR Code tidak terdeteksi pada foto. Pastikan gambar jelas, terang, dan tidak buram.'
                             };
                             this.statusText = 'QR Code tidak terdeteksi';
                         }

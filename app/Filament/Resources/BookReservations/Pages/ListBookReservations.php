@@ -27,6 +27,9 @@ class ListBookReservations extends ListRecords
                 ->label('Scan QR Tiket')
                 ->icon('heroicon-m-camera')
                 ->color('success')
+                ->extraAttributes([
+                    'x-on:click' => 'window.dispatchEvent(new CustomEvent("start-circulation-camera"))',
+                ])
                 ->modalHeading('Pemindai QR Code Tiket Sirkulasi')
                 ->modalDescription(null)
                 ->modalSubmitAction(false)

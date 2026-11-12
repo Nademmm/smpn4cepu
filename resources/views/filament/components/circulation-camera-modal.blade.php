@@ -1,8 +1,9 @@
 <div
     x-data="circulationScanner()"
+    x-on:start-circulation-camera.window="setTimeout(() => start(), 150)"
     style="display: flex; flex-direction: column; gap: 14px; width: 100%; color: #0f172a; box-sizing: border-box;"
 >
-    {{-- Input file tersembunyi untuk fallback shutter kamera HP --}}
+    {{-- Input file tersembunyi untuk fallback shutter kamera ponsel --}}
     <input
         type="file"
         accept="image/*"
@@ -13,8 +14,8 @@
     />
 
     {{-- Kotak Viewfinder Kamera --}}
-    <div style="position: relative; width: 100%; height: 310px; background: #020617; border: 2px solid #334155; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 12px rgba(0,0,0,0.7);">
-        {{-- Video Element Native --}}
+    <div style="position: relative; width: 100%; height: 320px; background: #020617; border: 2px solid #334155; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 14px rgba(0,0,0,0.7);">
+        {{-- Video Element Native WebRTC --}}
         <video
             autoplay
             playsinline
@@ -31,51 +32,51 @@
         {{-- 4 Sudut Bidik (Reticle Hijau) --}}
         <div x-show="isRunning && !isProcessing" style="position: absolute; top: 32px; bottom: 32px; left: 32px; right: 32px; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; z-index: 5;">
             <div style="display: flex; justify-content: space-between;">
-                <div style="width: 26px; height: 26px; border-top: 3px solid #10b981; border-left: 3px solid #10b981; border-top-left-radius: 8px;"></div>
-                <div style="width: 26px; height: 26px; border-top: 3px solid #10b981; border-right: 3px solid #10b981; border-top-right-radius: 8px;"></div>
+                <div style="width: 28px; height: 28px; border-top: 3px solid #10b981; border-left: 3px solid #10b981; border-top-left-radius: 8px;"></div>
+                <div style="width: 28px; height: 28px; border-top: 3px solid #10b981; border-right: 3px solid #10b981; border-top-right-radius: 8px;"></div>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <div style="width: 26px; height: 26px; border-bottom: 3px solid #10b981; border-left: 3px solid #10b981; border-bottom-left-radius: 8px;"></div>
-                <div style="width: 26px; height: 26px; border-bottom: 3px solid #10b981; border-right: 3px solid #10b981; border-bottom-right-radius: 8px;"></div>
+                <div style="width: 28px; height: 28px; border-bottom: 3px solid #10b981; border-left: 3px solid #10b981; border-bottom-left-radius: 8px;"></div>
+                <div style="width: 28px; height: 28px; border-bottom: 3px solid #10b981; border-right: 3px solid #10b981; border-bottom-right-radius: 8px;"></div>
             </div>
         </div>
 
-        {{-- Layar Fallback Saat Kamera Belum Nyala / Izin Ditolak --}}
+        {{-- Layar Saat Kamera Belum Aktif atau Memerlukan Klik Pengguna --}}
         <div x-show="!isRunning && !isProcessing" style="position: absolute; inset: 0; background: rgba(2, 6, 23, 0.94); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; gap: 12px; z-index: 15;">
-            <div style="width: 50px; height: 50px; border-radius: 50%; background: #1e293b; display: flex; align-items: center; justify-content: center; color: #10b981; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 26px; height: 26px;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: #1e293b; display: flex; align-items: center; justify-content: center; color: #10b981; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 28px; height: 28px;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
                 </svg>
             </div>
 
             <div>
-                <h4 style="font-size: 14px; font-weight: 800; color: #ffffff; margin: 0;">Kamera Belum Terhubung</h4>
-                <p style="font-size: 12px; color: #94a3b8; line-height: 1.45; margin: 6px 0 0 0; max-width: 280px;" x-text="errorMessage || 'Sedang menghubungkan ke kamera... Klik tombol di bawah jika ingin mencoba ulang atau mengambil foto tiket.'"></p>
+                <h4 style="font-size: 14px; font-weight: 800; color: #ffffff; margin: 0;">Kamera Siap Digunakan</h4>
+                <p style="font-size: 12px; color: #94a3b8; line-height: 1.45; margin: 6px 0 0 0; max-width: 290px;" x-text="errorMessage || 'Klik tombol di bawah untuk mengaktifkan kamera atau gunakan kamera bawaan HP.'"></p>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 240px; margin-top: 4px;">
+            <div style="display: flex; flex-direction: column; sm:flex-row; gap: 8px; width: 100%; max-width: 280px; margin-top: 4px;">
                 <button
                     type="button"
                     x-on:click="start()"
-                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px 16px; background: #059669; color: #ffffff; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(5, 150, 105, 0.35); min-height: 42px;"
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 16px; background: #059669; color: #ffffff; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4); min-height: 44px;"
                 >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 17px; height: 17px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
                     </svg>
-                    <span>Coba Nyalakan Ulang</span>
+                    <span>Nyalakan Kamera Langsung</span>
                 </button>
 
                 <button
                     type="button"
                     x-on:click="$refs.photoInput.click()"
-                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px 16px; background: #1e293b; color: #f1f5f9; border: 1px solid #334155; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; min-height: 42px;"
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 16px; background: #1e293b; color: #f1f5f9; border: 1px solid #334155; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; min-height: 44px;"
                 >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="width: 16px; height: 16px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="width: 17px; height: 17px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
                     </svg>
-                    <span>Foto via Kamera HP</span>
+                    <span>Buka Kamera HP (Foto Tiket)</span>
                 </button>
             </div>
         </div>
@@ -146,20 +147,5 @@
                 </div>
             </div>
         </template>
-    </div>
-
-    {{-- Fallback: Tombol Cepat Foto Kamera HP (Berguna saat di jaringan lokal HTTP) --}}
-    <div style="display: flex; justify-content: center; padding-top: 4px;">
-        <button
-            type="button"
-            x-on:click="$refs.photoInput.click()"
-            style="display: inline-flex; align-items: center; gap: 6px; background: none; border: none; font-size: 12px; font-weight: 700; color: #0284c7; cursor: pointer; text-decoration: underline;"
-        >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
-            </svg>
-            <span>Atau ambil foto QR via Kamera HP</span>
-        </button>
     </div>
 </div>
