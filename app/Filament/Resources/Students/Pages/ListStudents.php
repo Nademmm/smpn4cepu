@@ -21,6 +21,13 @@ class ListStudents extends ListRecords
 {
     protected static string $resource = StudentResource::class;
 
+    protected function isSuperAdmin(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -29,7 +36,7 @@ class ListStudents extends ListRecords
                 ->label('Unduh Template')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('gray')
-                ->visible(fn (): bool => Auth::user()?->hasRole('super_admin') ?? false)
+                ->visible(fn (): bool => $this->isSuperAdmin())
                 ->action(function (): StreamedResponse {
                     $csvContent = StudentImportService::getTemplateCsv();
                     return response()->streamDownload(function () use ($csvContent) {
@@ -44,7 +51,7 @@ class ListStudents extends ListRecords
                 ->label('Import Excel / CSV')
                 ->icon('heroicon-o-document-arrow-up')
                 ->color('success')
-                ->visible(fn (): bool => Auth::user()?->hasRole('super_admin') ?? false)
+                ->visible(fn (): bool => $this->isSuperAdmin())
                 ->modalHeading('Import Akun Siswa Massal dari Excel / CSV')
                 ->modalDescription('Unggah berkas Excel (.xlsx) atau CSV daftar siswa. Mendukung format ekspor Dapodik resmi (multi-sheet per rombel) maupun format template tabular CSV.')
                 ->modalSubmitActionLabel('Mulai Proses Impor')
