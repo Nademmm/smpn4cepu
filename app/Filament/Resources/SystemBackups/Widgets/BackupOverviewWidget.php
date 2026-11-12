@@ -42,3 +42,4 @@ class BackupOverviewWidget extends StatsOverviewWidget
         ];
     }
 }
+

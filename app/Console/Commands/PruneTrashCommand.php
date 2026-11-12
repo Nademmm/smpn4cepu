@@ -53,3 +53,4 @@ class PruneTrashCommand extends Command
         return self::SUCCESS;
     }
 }
+
