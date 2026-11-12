@@ -322,10 +322,15 @@
                                 @endif
 
                                 @if ($b->physical_stock > 0)
-                                    <span class="inline-flex items-center gap-1 bg-emerald-700 text-white text-[10px] font-black px-2 py-0.5 rounded backdrop-blur-xs shadow-xs">
+                                    <button
+                                        type="button"
+                                        wire:click.stop="openBorrowModal({{ $b->id }})"
+                                        class="inline-flex items-center gap-1 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-[10px] font-black px-2 py-0.5 rounded backdrop-blur-xs shadow-xs transition-all pointer-events-auto cursor-pointer"
+                                        title="Klik untuk pinjam buku fisik ini di perpustakaan"
+                                    >
                                         <x-app-icon name="check-circle" class="w-3 h-3" />
                                         <span>Rak: {{ $b->physical_stock }} Eks</span>
-                                    </span>
+                                    </button>
                                 @endif
                             </div>
                         </div>
@@ -364,13 +369,34 @@
                                 <x-app-icon name="book" class="w-4 h-4 text-navy" />
                                 <span>Baca E-Book Sekarang</span>
                             </button>
-                            <button
-                                type="button"
-                                wire:click="openDetail({{ $b->id }})"
-                                class="btn-ghost w-full text-xs font-bold !py-2 hover:bg-sky-soft flex items-center justify-center gap-1.5 min-h-[44px]"
-                            >
-                                <span>Detail Bibliografi</span>
-                            </button>
+                            <div class="grid grid-cols-2 gap-2">
+                                @if ($b->physical_stock > 0)
+                                    <button
+                                        type="button"
+                                        wire:click="openBorrowModal({{ $b->id }})"
+                                        class="btn-primary w-full text-[11px] font-black !py-2 shadow-2xs flex items-center justify-center gap-1 !bg-emerald-600 hover:!bg-emerald-700 !text-white min-h-[44px]"
+                                        title="Ajukan peminjaman buku fisik ke perpustakaan"
+                                    >
+                                        <x-app-icon name="bookmark" class="w-3.5 h-3.5 text-white" />
+                                        <span>Pinjam Fisik</span>
+                                    </button>
+                                @else
+                                    <button
+                                        type="button"
+                                        disabled
+                                        class="btn-ghost w-full text-[11px] font-bold !py-2 bg-slate-100 text-ink-mute flex items-center justify-center gap-1 min-h-[44px] cursor-not-allowed opacity-75"
+                                    >
+                                        <span>Stok Habis</span>
+                                    </button>
+                                @endif
+                                <button
+                                    type="button"
+                                    wire:click="openDetail({{ $b->id }})"
+                                    class="btn-ghost w-full text-[11px] font-bold !py-2 hover:bg-sky-soft flex items-center justify-center gap-1 min-h-[44px]"
+                                >
+                                    <span>Detail</span>
+                                </button>
+                            </div>
                         @else
                             @if ($b->physical_stock > 0)
                                 <button
@@ -743,45 +769,128 @@
 
                         {{-- Form Inputs --}}
                         <div class="space-y-3.5 text-xs">
+                            {{-- 1. Pilihan Kelas / Rombel Siswa Sesuai Setup Sekolah --}}
                             <div>
-                                <label for="borrower-name" class="block font-bold text-navy mb-1">
-                                    Nama Lengkap Siswa / Peminjam <span class="text-rose-500">*</span>
+                                <label for="borrower-class-select" class="block font-bold text-navy mb-1">
+                                    Pilih Kelas / Rombel Siswa <span class="text-rose-500">*</span>
                                 </label>
-                                <input
-                                    id="borrower-name"
-                                    type="text"
-                                    wire:model="borrowerName"
-                                    placeholder="Contoh: Muhammad Rizky Pratama"
-                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
-                                />
-                                @error('borrowerName')
-                                    <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
-                                @enderror
+                                <select
+                                    id="borrower-class-select"
+                                    wire:model.live="selectedClassFilter"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-semibold text-xs min-h-[44px]"
+                                >
+                                    <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+                                    <optgroup label="Tingkat Kelas VII (Angkatan 7)">
+                                        @foreach ($this->availableClasses as $cls)
+                                            @if (str_starts_with($cls, '7'))
+                                                <option value="{{ $cls }}">Kelas {{ $cls }}</option>
+                                            @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Tingkat Kelas VIII (Angkatan 8)">
+                                        @foreach ($this->availableClasses as $cls)
+                                            @if (str_starts_with($cls, '8'))
+                                                <option value="{{ $cls }}">Kelas {{ $cls }}</option>
+                                            @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Tingkat Kelas IX (Angkatan 9)">
+                                        @foreach ($this->availableClasses as $cls)
+                                            @if (str_starts_with($cls, '9'))
+                                                <option value="{{ $cls }}">Kelas {{ $cls }}</option>
+                                            @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Pendidik & Staf Sekolah">
+                                        <option value="Guru / Tenaga Pendidik">Guru / Tenaga Pendidik</option>
+                                    </optgroup>
+                                </select>
                             </div>
+
+                            {{-- 2. Pilihan Nama Siswa Berdasarkan Kelas yang Dipilih --}}
+                            @if ($selectedClassFilter && $selectedClassFilter !== 'Guru / Tenaga Pendidik' && !$isManualBorrower)
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="borrower-student-select" class="block font-bold text-navy">
+                                            Nama Siswa (Kelas {{ $selectedClassFilter }}) <span class="text-rose-500">*</span>
+                                        </label>
+                                        <button
+                                            type="button"
+                                            wire:click="toggleManualBorrower"
+                                            class="text-[11px] text-brand hover:underline font-bold cursor-pointer"
+                                        >
+                                            Ketik Nama Manual
+                                        </button>
+                                    </div>
+                                    <select
+                                        id="borrower-student-select"
+                                        wire:change="selectStudent($event.target.value)"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-semibold text-xs min-h-[44px]"
+                                    >
+                                        <option value="">-- Pilih Nama Siswa dari Daftar --</option>
+                                        @foreach ($this->studentsInSelectedClass as $st)
+                                            <option value="{{ $st->id }}" @selected($borrowerName === $st->name)>
+                                                {{ $st->name }} {{ $st->nisn ? '(NISN: ' . $st->nisn . ')' : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('borrowerName')
+                                        <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            @else
+                                {{-- Input Nama Manual / Akun Guru / Tamu --}}
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="borrower-name" class="block font-bold text-navy">
+                                            Nama Lengkap Peminjam <span class="text-rose-500">*</span>
+                                        </label>
+                                        @if ($selectedClassFilter && $selectedClassFilter !== 'Guru / Tenaga Pendidik')
+                                            <button
+                                                type="button"
+                                                wire:click="toggleManualBorrower"
+                                                class="text-[11px] text-brand hover:underline font-bold cursor-pointer"
+                                            >
+                                                Pilih dari Daftar Siswa
+                                            </button>
+                                        @endif
+                                    </div>
+                                    <input
+                                        id="borrower-name"
+                                        type="text"
+                                        wire:model="borrowerName"
+                                        placeholder="Contoh: Muhammad Rizky Pratama"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                                    />
+                                    @error('borrowerName')
+                                        <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            @endif
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label for="borrower-nisn" class="block font-bold text-navy mb-1">
-                                        NISN (Nomor Induk Siswa)
+                                        NISN / NIP (Identitas)
                                     </label>
                                     <input
                                         id="borrower-nisn"
                                         type="text"
                                         wire:model="borrowerNisn"
-                                        placeholder="10 digit NISN"
+                                        placeholder="10 digit NISN atau NIP"
                                         class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
                                     />
                                 </div>
                                 <div>
                                     <label for="borrower-class" class="block font-bold text-navy mb-1">
-                                        Kelas / Rombel <span class="text-rose-500">*</span>
+                                        Kelas / Rombel / Jabatan <span class="text-rose-500">*</span>
                                     </label>
                                     <input
                                         id="borrower-class"
                                         type="text"
                                         wire:model="borrowerClass"
                                         placeholder="Contoh: 7A / 8B / 9C"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium bg-slate-50"
                                     />
                                     @error('borrowerClass')
                                         <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>

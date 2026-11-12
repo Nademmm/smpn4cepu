@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->profile()
             ->homeUrl('/')
             ->brandName('SMP Negeri 4 Cepu')
             ->favicon(secure_asset('images/logo.png'))

@@ -59,6 +59,11 @@ class SubjectResource extends Resource
         return 1;
     }
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->hasRole('super_admin') ?? false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return SubjectForm::configure($schema);

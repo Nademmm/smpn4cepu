@@ -435,6 +435,15 @@
                                     Admin
                                 </a>
                             @endif
+                            <button
+                                type="button"
+                                @click="$dispatch('open-change-password-modal')"
+                                title="Ganti kata sandi akun"
+                                aria-label="Ganti kata sandi akun"
+                                class="p-1 rounded-full text-ink-mute hover:text-brand hover:bg-sky-soft transition-colors cursor-pointer"
+                            >
+                                <x-app-icon name="key" class="w-4 h-4" />
+                            </button>
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" title="Keluar dari akun" aria-label="Keluar dari akun" class="p-1 rounded-full text-ink-mute hover:text-rose-600 hover:bg-rose-50 transition-colors">
@@ -656,6 +665,13 @@
                                     Latihan Saya
                                 </a>
                             @endif
+                            <button
+                                type="button"
+                                @click="mobileMenuOpen = false; $dispatch('open-change-password-modal')"
+                                class="px-3 py-2 text-xs font-bold text-navy bg-white border border-sun-soft hover:bg-cream rounded-xl transition-colors cursor-pointer"
+                            >
+                                Ganti Sandi
+                            </button>
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" class="px-3 py-2 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors border border-rose-200 inline-flex items-center gap-1.5">
@@ -819,6 +835,127 @@
             &copy; {{ date('Y') }} SMP Negeri 4 Cepu. Hak cipta dilindungi.
         </div>
     </footer>
+
+    {{-- Modal Ganti Kata Sandi untuk Pengguna yang Masuk Akun --}}
+    @auth
+        <div
+            x-data="{ open: {{ $errors->has('current_password') || $errors->has('password') ? 'true' : 'false' }} }"
+            @open-change-password-modal.window="open = true"
+            x-show="open"
+            x-cloak
+            class="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-navy/80 backdrop-blur-xs"
+            @keydown.escape.window="open = false"
+        >
+            <div
+                @click.outside="open = false"
+                class="card max-w-md w-full p-6 bg-white rounded-2xl shadow-2xl space-y-4 animate-fade-in relative z-10"
+            >
+                <div class="flex items-center justify-between pb-3 border-b border-sun-soft">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-sun-soft text-navy flex items-center justify-center shrink-0">
+                            <x-app-icon name="key" class="w-5 h-5" />
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black text-navy leading-tight">Ganti Kata Sandi Akun</h3>
+                            <p class="text-[11px] text-ink-mute mt-0.5">Perbarui kata sandi Anda secara berkala</p>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        @click="open = false"
+                        class="p-1.5 rounded-lg text-ink-mute hover:text-navy hover:bg-cream transition-colors cursor-pointer"
+                        aria-label="Tutup modal"
+                    >
+                        <x-app-icon name="x" class="w-4 h-4" />
+                    </button>
+                </div>
+
+                <form action="{{ route('password.update') }}" method="POST" class="space-y-3.5 text-xs">
+                    @csrf
+                    <div>
+                        <label for="modal-current-password" class="block font-bold text-navy mb-1">
+                            Kata Sandi Saat Ini <span class="text-rose-500">*</span>
+                        </label>
+                        <input
+                            id="modal-current-password"
+                            type="password"
+                            name="current_password"
+                            required
+                            placeholder="Masukkan kata sandi lama Anda"
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                        />
+                        @error('current_password')
+                            <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="modal-new-password" class="block font-bold text-navy mb-1">
+                            Kata Sandi Baru <span class="text-rose-500">*</span>
+                        </label>
+                        <input
+                            id="modal-new-password"
+                            type="password"
+                            name="password"
+                            required
+                            minlength="8"
+                            placeholder="Minimal 8 karakter"
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                        />
+                        @error('password')
+                            <span class="text-[11px] text-rose-600 font-bold block mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="modal-confirm-password" class="block font-bold text-navy mb-1">
+                            Konfirmasi Kata Sandi Baru <span class="text-rose-500">*</span>
+                        </label>
+                        <input
+                            id="modal-confirm-password"
+                            type="password"
+                            name="password_confirmation"
+                            required
+                            minlength="8"
+                            placeholder="Ulangi kata sandi baru"
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none text-navy font-medium"
+                        />
+                    </div>
+
+                    <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+                        <button
+                            type="button"
+                            @click="open = false"
+                            class="btn-ghost text-xs min-h-[40px] px-3.5"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn-primary text-xs font-black min-h-[40px] px-4 shadow-2xs"
+                        >
+                            Simpan Sandi Baru
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endauth
+
+    {{-- Toast Notifikasi Sukses Pembaruan Sandi --}}
+    @if (session('password_status'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 5000)"
+            x-show="show"
+            x-transition
+            class="fixed bottom-5 right-5 z-[99999] p-4 bg-emerald-600 text-white rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold"
+        >
+            <x-app-icon name="check-circle" class="w-5 h-5 text-white shrink-0" />
+            <span>{{ session('password_status') }}</span>
+            <button type="button" @click="show = false" class="text-white/80 hover:text-white font-bold ml-2">✕</button>
+        </div>
+    @endif
 
     @livewireScripts
     @stack('scripts')

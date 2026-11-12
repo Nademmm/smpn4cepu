@@ -64,6 +64,16 @@ class BookResource extends Resource
         return 1;
     }
 
+    public static function canCreate(): bool
+    {
+        $user = auth()->user();
+        if ($user && $user->hasRole('guru') && ! $user->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
+        return parent::canCreate();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return BookForm::configure($schema);

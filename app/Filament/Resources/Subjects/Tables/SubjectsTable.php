@@ -26,6 +26,12 @@ class SubjectsTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+                TextColumn::make('teachers.name')
+                    ->label('Guru Pengampu')
+                    ->badge()
+                    ->color('info')
+                    ->separator(', ')
+                    ->placeholder('Belum diatur'),
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y')

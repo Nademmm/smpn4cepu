@@ -11,7 +11,16 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class LibraryBookPolicy
 {
     use HandlesAuthorization;
-    
+
+    public function before(AuthUser $user, string $ability): ?bool
+    {
+        if (method_exists($user, 'hasRole') && $user->hasRole('super_admin')) {
+            return true;
+        }
+
+        return null;
+    }
+
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:LibraryBook');
@@ -24,21 +33,37 @@ class LibraryBookPolicy
 
     public function create(AuthUser $authUser): bool
     {
+        if ($authUser->hasRole('guru') && ! $authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
         return $authUser->can('Create:LibraryBook');
     }
 
     public function update(AuthUser $authUser, LibraryBook $libraryBook): bool
     {
+        if ($authUser->hasRole('guru') && ! $authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
         return $authUser->can('Update:LibraryBook');
     }
 
     public function delete(AuthUser $authUser, LibraryBook $libraryBook): bool
     {
+        if ($authUser->hasRole('guru') && ! $authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
         return $authUser->can('Delete:LibraryBook');
     }
 
     public function deleteAny(AuthUser $authUser): bool
     {
+        if ($authUser->hasRole('guru') && ! $authUser->hasRole(['super_admin', 'staf_perpus'])) {
+            return false;
+        }
+
         return $authUser->can('DeleteAny:LibraryBook');
     }
 
@@ -71,5 +96,4 @@ class LibraryBookPolicy
     {
         return $authUser->can('Reorder:LibraryBook');
     }
-
 }

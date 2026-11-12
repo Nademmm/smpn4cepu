@@ -206,6 +206,30 @@ class BookReservationsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
+            ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('borrower_class')
+                    ->label('Filter Kelas / Rombel Siswa')
+                    ->options(function () {
+                        return BookReservation::query()
+                            ->whereNotNull('borrower_class')
+                            ->where('borrower_class', '!=', '')
+                            ->distinct()
+                            ->orderBy('borrower_class')
+                            ->pluck('borrower_class', 'borrower_class')
+                            ->toArray();
+                    })
+                    ->searchable(),
+
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->label('Filter Status Sirkulasi')
+                    ->options([
+                        BookReservation::STATUS_PENDING => 'Menunggu Pengambilan',
+                        BookReservation::STATUS_BORROWED => 'Sedang Dipinjam',
+                        BookReservation::STATUS_RETURNED => 'Sudah Dikembalikan',
+                        BookReservation::STATUS_CANCELLED => 'Dibatalkan',
+                        BookReservation::STATUS_EXPIRED => 'Kadaluarsa',
+                    ]),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

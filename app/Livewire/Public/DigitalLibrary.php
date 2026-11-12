@@ -5,6 +5,7 @@ namespace App\Livewire\Public;
 use App\Enums\BookCategory;
 use App\Models\Book;
 use App\Models\BookReservation;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,8 @@ class DigitalLibrary extends Component
     public string $pickupDate = '';
     public string $borrowNotes = '';
     public ?string $borrowErrorMessage = null;
+    public ?string $selectedClassFilter = '';
+    public bool $isManualBorrower = false;
 
     // Modal Tiket Peminjaman (Hasil Sukses + Barcode / QR)
     public bool $showTicketModal = false;
@@ -178,17 +181,29 @@ class DigitalLibrary extends Component
         $this->borrowBookId = $book->id;
         $this->borrowErrorMessage = null;
         $this->borrowNotes = '';
+        $this->isManualBorrower = false;
 
         // Otomatis isi data siswa jika sedang masuk akun
         if (Auth::check()) {
             $user = Auth::user();
             $this->borrowerName = $user->name ?? '';
-            $this->borrowerNisn = $user->nisn ?? '';
-            $this->borrowerClass = $user->student_class ?? 'Siswa SMPN 4 Cepu';
+            $this->borrowerNisn = $user->nisn ?? ($user->nip ?? '');
+            if ($user->hasRole('guru')) {
+                $this->borrowerClass = 'Guru / Tenaga Pendidik';
+                $this->selectedClassFilter = 'Guru / Tenaga Pendidik';
+                $this->isManualBorrower = true;
+            } elseif (!empty($user->student_class)) {
+                $this->borrowerClass = $user->student_class;
+                $this->selectedClassFilter = $user->student_class;
+            } else {
+                $this->borrowerClass = 'Siswa SMPN 4 Cepu';
+                $this->selectedClassFilter = '';
+            }
         } else {
             $this->borrowerName = '';
             $this->borrowerNisn = '';
             $this->borrowerClass = '';
+            $this->selectedClassFilter = '';
         }
 
         // Default tanggal ambil hari ini atau besok jika akhir pekan
@@ -198,6 +213,72 @@ class DigitalLibrary extends Component
 
         $this->showDetailModal = false;
         $this->showBorrowModal = true;
+    }
+
+    public function updatedSelectedClassFilter(string $value): void
+    {
+        $this->borrowerClass = $value;
+        if (!$this->isManualBorrower && $value !== 'Guru / Tenaga Pendidik') {
+            $this->borrowerName = '';
+            $this->borrowerNisn = '';
+        } elseif ($value === 'Guru / Tenaga Pendidik') {
+            $this->isManualBorrower = true;
+        }
+    }
+
+    public function selectStudent(int|string $studentId): void
+    {
+        if (empty($studentId)) {
+            $this->borrowerName = '';
+            $this->borrowerNisn = '';
+            return;
+        }
+
+        $student = User::find((int) $studentId);
+        if ($student) {
+            $this->borrowerName = $student->name;
+            $this->borrowerNisn = $student->nisn ?? '';
+            $this->borrowerClass = $student->student_class ?? $this->selectedClassFilter;
+        }
+    }
+
+    public function toggleManualBorrower(): void
+    {
+        $this->isManualBorrower = ! $this->isManualBorrower;
+    }
+
+    public function getAvailableClassesProperty(): array
+    {
+        return Cache::remember('library_available_classes_v1', 600, function () {
+            $classes = User::whereNotNull('student_class')
+                ->where('student_class', '!=', '')
+                ->where('student_class', 'not like', 'Kelas %')
+                ->distinct()
+                ->orderBy('student_class')
+                ->pluck('student_class')
+                ->toArray();
+
+            if (empty($classes)) {
+                $classes = [
+                    '7A', '7B', '7C', '7D', '7E', '7F', '7G',
+                    '8A', '8B', '8C', '8D', '8E', '8F', '8G',
+                    '9A', '9B', '9C', '9D', '9E', '9F',
+                ];
+            }
+
+            return $classes;
+        });
+    }
+
+    public function getStudentsInSelectedClassProperty()
+    {
+        if (empty($this->selectedClassFilter) || $this->selectedClassFilter === 'Guru / Tenaga Pendidik') {
+            return collect();
+        }
+
+        return User::where('student_class', $this->selectedClassFilter)
+            ->orderBy('name')
+            ->get(['id', 'name', 'nisn', 'student_class']);
     }
 
     public function closeBorrowModal(): void

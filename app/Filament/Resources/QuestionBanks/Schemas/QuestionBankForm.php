@@ -20,6 +20,7 @@ class QuestionBankForm
                 Select::make('subject_id')
                     ->label('Mata Pelajaran')
                     ->relationship('subject', 'name')
+                    ->default(fn () => auth()->user()?->subjects()->first()?->id)
                     ->searchable()
                     ->preload()
                     ->required(),

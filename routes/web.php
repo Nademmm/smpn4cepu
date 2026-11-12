@@ -294,6 +294,9 @@ Route::middleware('auth')->group(function () {
         return view('pages.library-history', compact('history', 'user'));
     })->name('library.history');
 
+    // 11c. Pembaruan Kata Sandi Mandiri oleh Pengguna (Siswa / Guru)
+    Route::match(['post', 'put'], '/profil/ganti-password', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->name('password.update');
+
     // 11c. Endpoint Pemrosesan Scan QR Code Sirkulasi Buku (Admin & Guru)
     Route::post('/admin/circulation/process-scan', function (Request $request, \App\Services\LibraryLoanService $loanService) {
         /** @var \App\Models\User|null $user */
