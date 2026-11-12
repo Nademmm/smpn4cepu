@@ -416,26 +416,27 @@
                 </div>
 
                 {{-- Aksi Kanan (Masuk Portal / Profil Akun) --}}
-                <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-2.5 shrink-0">
                     @if (!$currentUser)
-                        <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-sun hover:bg-sun-hover active:scale-95 text-navy font-black text-sm tracking-wide shadow-xs hover:shadow-md transition-all">
+                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-sun hover:bg-sun-hover active:scale-95 text-navy font-black text-xs sm:text-sm tracking-wide shadow-xs hover:shadow-md transition-all shrink-0">
                             <x-app-icon name="user" class="w-4 h-4 text-navy shrink-0" />
                             <span>Masuk Portal</span>
                         </a>
                     @else
                         {{-- Dropdown Menu Akun Pengguna Terotentikasi (Profil, Riwayat Belajar, Peminjaman Saya, Keluar) --}}
-                        <div x-data="{ userMenuOpen: false }" class="relative hidden sm:block">
+                        <div x-data="{ userMenuOpen: false }" class="relative flex items-center shrink-0">
                             <button
                                 type="button"
                                 @click="userMenuOpen = !userMenuOpen"
                                 :aria-expanded="userMenuOpen.toString()"
-                                class="flex items-center gap-2.5 bg-cream/90 hover:bg-cream border border-sun-soft/90 px-3 py-1.5 rounded-full text-navy transition-all cursor-pointer shadow-2xs hover:shadow-xs"
+                                class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-sun hover:bg-sun-hover active:scale-95 text-navy font-black text-xs sm:text-sm tracking-wide shadow-xs hover:shadow-md transition-all cursor-pointer shrink-0"
+                                aria-label="Menu Akun Profil Saya"
                             >
-                                <div class="w-7 h-7 rounded-full bg-brand text-white text-xs font-black flex items-center justify-center shrink-0">
+                                <div class="w-6 h-6 rounded-full bg-navy text-white text-[11px] font-black flex items-center justify-center shrink-0">
                                     {{ strtoupper(substr($currentUser->name, 0, 1)) }}
                                 </div>
-                                <span class="text-xs font-black max-w-[120px] truncate">{{ $currentUser->name }}</span>
-                                <x-app-icon name="chevron-down" class="w-3.5 h-3.5 text-ink-mute transition-transform" ::class="userMenuOpen ? 'rotate-180' : ''" />
+                                <span class="max-w-[100px] sm:max-w-[130px] truncate">{{ $currentUser->name }}</span>
+                                <svg class="w-3.5 h-3.5 text-navy transition-transform duration-200" :class="{ 'rotate-180': userMenuOpen }" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                             </button>
 
                             <div
@@ -448,7 +449,7 @@
                                 x-transition:leave="transition ease-in duration-100"
                                 x-transition:leave-start="opacity-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 translate-y-1"
-                                class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-sand/80 py-2 z-50 divide-y divide-sand/50"
+                                class="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-sand/80 py-2 z-50 divide-y divide-sand/50"
                             >
                                 <div class="px-4 py-2.5">
                                     <span class="text-[10px] font-bold text-ink-mute uppercase tracking-wider block">Akun Masuk</span>
