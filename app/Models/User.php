@@ -26,6 +26,7 @@ class User extends Authenticatable implements FilamentUser
         'birth_place',
         'birth_date',
         'student_class',
+        'status',
         'dapodik_id',
     ];
 
@@ -64,11 +65,13 @@ class User extends Authenticatable implements FilamentUser
         });
     }
 
-    public static function syncSingleRombelStatistic(string $className, string $academicYear = '2026/2027'): void
+    public static function syncSingleRombelStatistic(string $className, ?string $academicYear = null): void
     {
         if (! preg_match('/^([789])[A-Z]$/i', $className, $m)) {
             return;
         }
+
+        $academicYear = $academicYear ?: (AcademicYear::getActive()?->name ?? '2026/2027');
 
         $male = self::where('student_class', $className)->where('gender', 'L')->count();
         $female = self::where('student_class', $className)->where('gender', 'P')->count();
@@ -91,8 +94,10 @@ class User extends Authenticatable implements FilamentUser
         );
     }
 
-    public static function syncAllRombelStatistics(string $academicYear = '2026/2027'): int
+    public static function syncAllRombelStatistics(?string $academicYear = null): int
     {
+        $academicYear = $academicYear ?: (AcademicYear::getActive()?->name ?? '2026/2027');
+
         $classes = [
             '7A', '7B', '7C', '7D', '7E', '7F', '7G',
             '8A', '8B', '8C', '8D', '8E', '8F', '8G',
@@ -142,5 +147,26 @@ class User extends Authenticatable implements FilamentUser
     public function bookReservations(): HasMany
     {
         return $this->hasMany(BookReservation::class, 'user_id');
+    }
+
+    public function academicHistories(): HasMany
+    {
+        return $this->hasMany(StudentAcademicHistory::class, 'student_id');
+    }
+
+    public function currentAcademicHistory(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StudentAcademicHistory::class, 'student_id')
+            ->whereHas('academicYear', fn ($q) => $q->where('status', 'aktif'));
+    }
+
+    public function scopeActiveStudents(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->where('status', 'aktif')->whereNotNull('student_class');
+    }
+
+    public function scopeAlumni(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->where('status', 'alumni');
     }
 }

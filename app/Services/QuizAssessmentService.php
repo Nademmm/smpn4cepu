@@ -108,10 +108,18 @@ class QuizAssessmentService
 
             $isPassed = $finalScore >= $bank->passing_grade;
 
-            // Simpan data Attempt
+            // Simpan data Attempt dengan snapshot tahun ajaran dan kelas siswa saat pengerjaan
+            $activeYear = \App\Models\AcademicYear::getActive();
+            $studentClass = null;
+            if ($userId) {
+                $studentClass = \App\Models\User::find($userId)?->student_class;
+            }
+
             $attempt = QuizAttempt::create([
                 'bank_id' => $bank->id,
                 'user_id' => $userId,
+                'academic_year_id' => $activeYear?->id,
+                'student_class' => $studentClass,
                 'participant_identifier' => $participantIdentifier,
                 'total_questions' => $totalQuestions,
                 'correct_answers' => $correctAnswersCount,

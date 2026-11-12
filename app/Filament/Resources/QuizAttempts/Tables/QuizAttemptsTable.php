@@ -27,11 +27,18 @@ class QuizAttemptsTable
                     ->weight('bold')
                     ->description(fn ($record): string => $record->user?->nisn ? "NISN: {$record->user->nisn}" : 'Peserta Umum / Tanpa NISN'),
 
-                TextColumn::make('user.student_class')
-                    ->label('Rombel')
+                TextColumn::make('student_class')
+                    ->label('Rombel Saat Kuis')
                     ->badge()
                     ->color('primary')
-                    ->placeholder('-')
+                    ->formatStateUsing(fn ($state, $record): string => $state ?: ($record->user?->student_class ?: '-'))
+                    ->sortable(),
+
+                TextColumn::make('academicYear.name')
+                    ->label('Tahun Ajaran')
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('2026/2027')
                     ->sortable(),
 
                 TextColumn::make('bank.subject.name')
@@ -70,6 +77,12 @@ class QuizAttemptsTable
             ])
             ->defaultSort('completed_at', 'desc')
             ->filters([
+                SelectFilter::make('academic_year_id')
+                    ->label('Filter Tahun Ajaran')
+                    ->relationship('academicYear', 'name')
+                    ->searchable()
+                    ->preload(),
+
                 SelectFilter::make('bank_id')
                     ->label('Filter Paket Soal')
                     ->relationship('bank', 'title')
@@ -77,14 +90,17 @@ class QuizAttemptsTable
                     ->preload(),
 
                 SelectFilter::make('student_class')
-                    ->label('Filter Kelas / Rombel')
+                    ->label('Filter Kelas / Rombel Saat Kuis')
                     ->options(StudentForm::getRombelOptions())
                     ->query(function (Builder $query, array $data): Builder {
                         if (empty($data['value'])) {
                             return $query;
                         }
 
-                        return $query->whereHas('user', fn (Builder $q) => $q->where('student_class', $data['value']));
+                        return $query->where(function (Builder $q) use ($data) {
+                            $q->where('student_class', $data['value'])
+                                ->orWhereHas('user', fn (Builder $uq) => $uq->where('student_class', $data['value']));
+                        });
                     }),
 
                 TernaryFilter::make('is_passed')

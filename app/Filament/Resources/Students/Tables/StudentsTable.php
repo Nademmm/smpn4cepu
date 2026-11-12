@@ -73,6 +73,21 @@ class StudentsTable
                     ->color('warning')
                     ->placeholder('-'),
 
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'alumni' => 'Alumni (Lulus)',
+                        'mutasi_keluar' => 'Pindah Sekolah',
+                        default => 'Siswa Aktif',
+                    })
+                    ->color(fn (?string $state): string => match ($state) {
+                        'alumni' => 'info',
+                        'mutasi_keluar' => 'danger',
+                        default => 'success',
+                    })
+                    ->sortable(),
+
                 TextColumn::make('birth_place')
                     ->label('Tempat, Tgl Lahir')
                     ->searchable()
@@ -97,10 +112,30 @@ class StudentsTable
             ])
             ->defaultSort('student_class', 'asc')
             ->filters([
+                SelectFilter::make('status')
+                    ->label('Filter Status Siswa')
+                    ->options([
+                        'aktif' => 'Siswa Aktif',
+                        'alumni' => 'Alumni (Lulus)',
+                        'mutasi_keluar' => 'Pindah Sekolah / Mutasi',
+                    ]),
+
                 SelectFilter::make('student_class')
                     ->label('Filter Rombel Kelas')
                     ->options($classOptions)
                     ->searchable(),
+
+                SelectFilter::make('academic_year_id')
+                    ->label('Filter Berdasarkan Tahun Ajaran')
+                    ->options(fn (): array => \App\Models\AcademicYear::orderBy('name', 'desc')->pluck('name', 'id')->toArray())
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        if (! empty($data['value'])) {
+                            return $query->whereHas('academicHistories', function (\Illuminate\Database\Eloquent\Builder $hq) use ($data) {
+                                $hq->where('academic_year_id', $data['value']);
+                            });
+                        }
+                        return $query;
+                    }),
 
                 SelectFilter::make('gender')
                     ->label('Filter Jenis Kelamin')
@@ -168,6 +203,56 @@ class StudentsTable
 
                             Notification::make()
                                 ->title($records->count() . " siswa berhasil dipindahkan ke Kelas {$targetClass}")
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+
+                    BulkAction::make('planBulkPromotion')
+                        ->label('Petakan ke Tahun Ajaran Baru (Persiapan)')
+                        ->icon('heroicon-o-academic-cap')
+                        ->color('success')
+                        ->visible(fn (): bool => auth()->user()?->hasRole('super_admin') ?? false)
+                        ->form([
+                            Select::make('academic_year_id')
+                                ->label('Pilih Tahun Ajaran Persiapan')
+                                ->options(fn (): array => \App\Models\AcademicYear::planning()->pluck('name', 'id')->toArray())
+                                ->required()
+                                ->helperText('Hanya menampilkan tahun ajaran berstatus persiapan.'),
+
+                            Select::make('target_class')
+                                ->label('Rombel / Tindakan Tujuan')
+                                ->options(array_merge($classOptions, [
+                                    'lulus' => 'Lulus Sekolah (Calon Alumni)',
+                                    'mutasi_keluar' => 'Pindah Sekolah / Mutasi Keluar',
+                                ]))
+                                ->required()
+                                ->searchable(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $targetYearId = (int) $data['academic_year_id'];
+                            $targetClass = $data['target_class'];
+                            $isLulus = $targetClass === 'lulus';
+                            $isMutasi = $targetClass === 'mutasi_keluar';
+
+                            foreach ($records as $student) {
+                                \App\Models\StudentAcademicHistory::updateOrCreate(
+                                    [
+                                        'academic_year_id' => $targetYearId,
+                                        'student_id' => $student->id,
+                                    ],
+                                    [
+                                        'student_class' => (! $isLulus && ! $isMutasi) ? $targetClass : null,
+                                        'grade_level' => (! $isLulus && ! $isMutasi && preg_match('/^([789])/i', $targetClass, $m)) ? (int) $m[1] : null,
+                                        'status' => $isLulus ? 'lulus' : ($isMutasi ? 'mutasi_keluar' : 'persiapan'),
+                                        'notes' => 'Pemetaan massal dari tabel siswa',
+                                        'updated_at' => now(),
+                                    ]
+                                );
+                            }
+
+                            Notification::make()
+                                ->title($records->count() . ' siswa berhasil dipetakan ke draf tahun ajaran baru')
                                 ->success()
                                 ->send();
                         })

@@ -12,6 +12,8 @@ class QuizAttempt extends Model
     protected $fillable = [
         'bank_id',
         'user_id',
+        'academic_year_id',
+        'student_class',
         'participant_identifier',
         'total_questions',
         'correct_answers',
@@ -36,6 +38,11 @@ class QuizAttempt extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
     }
 
     public function bank(): BelongsTo
