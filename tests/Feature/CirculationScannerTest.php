@@ -15,6 +15,7 @@ class CirculationScannerTest extends TestCase
 
     public function test_admin_book_reservations_page_includes_fixed_live_and_photo_scanner_scripts(): void
     {
+        /** @var User $librarian */
         $librarian = User::factory()->create();
         $librarian->assignRole('staf_perpus');
 
@@ -42,9 +43,11 @@ class CirculationScannerTest extends TestCase
 
     public function test_qr_svg_has_clean_quiet_zone_and_process_scan_endpoint_works_for_checkout_and_return(): void
     {
+        /** @var User $librarian */
         $librarian = User::factory()->create();
         $librarian->assignRole('staf_perpus');
 
+        /** @var User $student */
         $student = User::factory()->create([
             'student_class' => '8A',
             'nisn' => '99' . str_pad((string) random_int(10000000, 99999999), 8, '0', STR_PAD_LEFT),
