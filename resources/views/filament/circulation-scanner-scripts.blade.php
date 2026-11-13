@@ -416,6 +416,10 @@
             throw new Error('Peramban memblokir kamera live pada koneksi HTTP non-localhost (' + location.origin + '). Buka panel lewat HTTPS atau http://localhost, atau gunakan tab Foto Kamera HP.');
         }
 
+        if (document.featurePolicy && typeof document.featurePolicy.allowsFeature === 'function' && !document.featurePolicy.allowsFeature('camera')) {
+            throw new Error('Header server Permissions-Policy masih memblokir kamera (camera=()). Lakukan hard refresh (Ctrl+Shift+R) atau deploy pembaruan header camera=(self).');
+        }
+
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error('Peramban tidak menyediakan API kamera langsung (getUserMedia). Gunakan tab Foto Kamera HP.');
         }

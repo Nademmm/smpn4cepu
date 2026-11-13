@@ -31,6 +31,13 @@ class CirculationScannerTest extends TestCase
         $this->assertStringContainsString('x-ref="liveVideoEl"', $modalHtml);
         $this->assertStringContainsString('x-on:close-modal.window="stopLiveCamera()"', $modalHtml);
         $this->assertStringNotContainsString('<template x-if="isLiveActive">', $modalHtml);
+
+        $caddyfile = file_get_contents(base_path('docker/Caddyfile'));
+        $htaccess = file_get_contents(public_path('.htaccess'));
+        $this->assertStringContainsString('camera=(self)', $caddyfile);
+        $this->assertStringNotContainsString('camera=()', $caddyfile);
+        $this->assertStringContainsString('camera=(self)', $htaccess);
+        $this->assertStringNotContainsString('camera=()', $htaccess);
     }
 
     public function test_qr_svg_has_clean_quiet_zone_and_process_scan_endpoint_works_for_checkout_and_return(): void
