@@ -71,7 +71,26 @@ class QuizAttemptResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['user', 'bank.subject']);
+        $query = parent::getEloquentQuery()->with(['user', 'bank.subject']);
+        /** @var \App\Models\User|null $user */
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        if ($user instanceof \App\Models\User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            $subjectIds = $user->subjects()->pluck('subjects.id')->all();
+
+            $query->whereHas('bank', function (Builder $bankQuery) use ($user, $subjectIds): void {
+                if (! empty($subjectIds)) {
+                    $bankQuery->where(function (Builder $q) use ($user, $subjectIds): void {
+                        $q->where('created_by', $user->id)
+                            ->orWhereIn('subject_id', $subjectIds);
+                    });
+                } else {
+                    $bankQuery->where('created_by', $user->id);
+                }
+            });
+        }
+
+        return $query;
     }
 
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response

@@ -33,79 +33,108 @@ class BackupRecoveryService
         Storage::disk('local')->makeDirectory('backups');
         $fullZipPath = Storage::disk('local')->path($relativePath);
 
-        $zip = new ZipArchive();
-        if ($zip->open($fullZipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            throw new Exception("Gagal membuat arsip ZIP backup di {$fullZipPath}");
-        }
+        try {
+            $zip = new ZipArchive();
+            if ($zip->open($fullZipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                throw new Exception("Gagal membuat arsip ZIP backup di {$fullZipPath}");
+            }
 
-        $filesCount = 0;
+            $filesCount = 0;
 
-        // 1. Salin Database SQLite ke dalam ZIP
-        $databasePath = database_path('database.sqlite');
-        if (File::exists($databasePath)) {
-            $zip->addFile($databasePath, 'database/database.sqlite');
-            $filesCount++;
-        }
+            // 1. Salin Database SQLite ke dalam ZIP
+            $databasePath = database_path('database.sqlite');
+            if (File::exists($databasePath)) {
+                $zip->addFile($databasePath, 'database/database.sqlite');
+                $filesCount++;
+            }
 
-        // 2. Salin Seluruh File Unggahan (PDF materi, foto galeri, cover buku, avatar)
-        $publicStoragePath = storage_path('app/public');
-        if (File::isDirectory($publicStoragePath)) {
-            $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($publicStoragePath, RecursiveDirectoryIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::SELF_FIRST
-            );
+            // 2. Salin Seluruh File Unggahan (PDF materi, foto galeri, cover buku, avatar)
+            $publicStoragePath = storage_path('app/public');
+            if (File::isDirectory($publicStoragePath)) {
+                $iterator = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($publicStoragePath, RecursiveDirectoryIterator::SKIP_DOTS),
+                    RecursiveIteratorIterator::SELF_FIRST
+                );
 
-            foreach ($iterator as $item) {
-                if ($item->isFile()) {
-                    $localPath = $item->getPathname();
-                    $relativeInZip = 'storage_public/' . str_replace('\\', '/', substr($localPath, strlen($publicStoragePath) + 1));
-                    $zip->addFile($localPath, $relativeInZip);
-                    $filesCount++;
+                foreach ($iterator as $item) {
+                    if ($item->isFile()) {
+                        $localPath = $item->getPathname();
+                        $relativeInZip = 'storage_public/' . str_replace('\\', '/', substr($localPath, strlen($publicStoragePath) + 1));
+                        $zip->addFile($localPath, $relativeInZip);
+                        $filesCount++;
+                    }
                 }
             }
-        }
 
-        // 3. Tambahkan Berkas Manifest Integritas
-        $manifest = [
-            'app_name' => 'SMP Negeri 4 Cepu',
-            'created_at' => now()->toIso8601String(),
-            'created_by' => $actorName,
-            'database_engine' => config('database.default'),
-            'total_files_archived' => $filesCount,
-            'scope' => 'Database SQLite + File Unggahan (PDF & Gambar)',
-            'version' => '1.0.0',
-        ];
-        $zip->addFromString('manifest.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            // 3. Tambahkan Berkas Manifest Integritas
+            $manifest = [
+                'app_name' => 'SMP Negeri 4 Cepu',
+                'created_at' => now()->toIso8601String(),
+                'created_by' => $actorName,
+                'database_engine' => config('database.default'),
+                'total_files_archived' => $filesCount,
+                'scope' => 'Database SQLite + File Unggahan (PDF & Gambar)',
+                'version' => '1.0.0',
+            ];
+            $zip->addFromString('manifest.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        $zip->close();
+            $zip->close();
 
-        $sizeBytes = file_exists($fullZipPath) ? filesize($fullZipPath) : 0;
+            $sizeBytes = file_exists($fullZipPath) ? filesize($fullZipPath) : 0;
 
-        $backup = SystemBackup::create([
-            'filename' => $filename,
-            'disk' => 'local',
-            'filepath' => $relativePath,
-            'size_bytes' => $sizeBytes,
-            'scope' => 'Database SQLite + File Unggahan (PDF & Gambar)',
-            'status' => 'berhasil',
-            'created_by' => $currentUser?->id,
-        ]);
-
-        // Catat ke Activity Log
-        ActivityLog::record(
-            action: 'create_backup',
-            description: "{$actorName} membuat berkas backup sistem lengkap ({$backup->formatted_size}).",
-            reason: 'Pemeliharaan dan perlindungan data rutin (database dan seluruh berkas unggahan)',
-            subject: $backup,
-            properties: [
+            $backup = SystemBackup::create([
                 'filename' => $filename,
+                'disk' => 'local',
+                'filepath' => $relativePath,
                 'size_bytes' => $sizeBytes,
-                'files_count' => $filesCount,
-            ],
-            module: 'Pengaturan'
-        );
+                'scope' => 'Database SQLite + File Unggahan (PDF & Gambar)',
+                'status' => 'berhasil',
+                'created_by' => $currentUser?->id,
+            ]);
 
-        return $backup;
+            // Catat ke Activity Log
+            ActivityLog::record(
+                action: 'create_backup',
+                description: "{$actorName} membuat berkas backup sistem lengkap ({$backup->formatted_size}).",
+                reason: 'Pemeliharaan dan perlindungan data rutin (database dan seluruh berkas unggahan)',
+                subject: $backup,
+                properties: [
+                    'filename' => $filename,
+                    'size_bytes' => $sizeBytes,
+                    'files_count' => $filesCount,
+                ],
+                module: 'Pengaturan',
+                actor: $currentUser
+            );
+
+            return $backup;
+        } catch (\Throwable $e) {
+            $failedBackup = SystemBackup::create([
+                'filename' => $filename,
+                'disk' => 'local',
+                'filepath' => $relativePath,
+                'size_bytes' => 0,
+                'scope' => 'Database SQLite + File Unggahan (PDF & Gambar)',
+                'status' => 'gagal',
+                'test_notes' => 'Backup gagal dibuat: ' . $e->getMessage(),
+                'created_by' => $currentUser?->id,
+            ]);
+
+            ActivityLog::record(
+                action: 'backup_failed',
+                description: "Proses backup oleh {$actorName} gagal dijalankan: {$e->getMessage()}",
+                reason: 'Kegagalan pembuatan arsip backup sistem',
+                subject: $failedBackup,
+                properties: [
+                    'filename' => $filename,
+                    'error' => $e->getMessage(),
+                ],
+                module: 'Pengaturan',
+                actor: $currentUser
+            );
+
+            throw $e;
+        }
     }
 
     /**
@@ -219,14 +248,29 @@ class BackupRecoveryService
     public function getBackupOverview(): array
     {
         $lastBackup = SystemBackup::where('status', 'berhasil')->latest('created_at')->first();
+        $latestAttempt = SystemBackup::latest('created_at')->first();
         $lastTest = SystemBackup::whereNotNull('tested_at')->latest('tested_at')->first();
+
+        $isLatestSuccess = $latestAttempt ? $latestAttempt->status === 'berhasil' : null;
+        $statusLabel = match (true) {
+            ! $latestAttempt => 'Belum Ada',
+            $latestAttempt->status === 'berhasil' => 'Berhasil (100% Utuh)',
+            default => 'Gagal',
+        };
+        $statusDescription = match (true) {
+            ! $latestAttempt => 'Belum ada arsip backup yang tercatat',
+            $latestAttempt->status === 'berhasil' => 'Arsip utuh dan terlindungi',
+            default => 'Percobaan terakhir gagal pada ' . $latestAttempt->formatted_created_at,
+        };
 
         return [
             'last_backup_time' => $lastBackup ? $lastBackup->formatted_created_at : 'Belum pernah dilakukan',
             'last_backup_filename' => $lastBackup?->filename ?? '-',
             'last_backup_size' => $lastBackup ? $lastBackup->formatted_size : '-',
             'scope' => 'Database SQLite + File Unggahan (PDF & Gambar)',
-            'status' => $lastBackup ? 'Berhasil (100% Utuh)' : 'Belum Ada',
+            'status' => $statusLabel,
+            'status_description' => $statusDescription,
+            'is_latest_success' => $isLatestSuccess,
             'next_schedule' => 'Setiap Hari pukul 02.00 WIB (Otomatis)',
             'last_recovery_test' => $lastTest ? $lastTest->formatted_tested_at : 'Belum pernah diuji',
             'last_recovery_status' => $lastTest ? ($lastTest->test_status === 'lolos' ? 'Lolos Uji Integritas' : 'Perlu Perhatian') : 'Siap Diuji',

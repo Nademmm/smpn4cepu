@@ -42,8 +42,8 @@ class VotingBooth extends Component
 
     public function submitVote(PilketosFingerprintService $fingerprintService, Request $request): void
     {
-        if (!$this->selectedCandidateId || !ElectionCandidate::whereKey($this->selectedCandidateId)->exists()) {
-            $this->errorMessage = 'Silakan pilih salah satu kandidat terlebih dahulu.';
+        if (!$this->selectedCandidateId || !ElectionCandidate::active()->whereKey($this->selectedCandidateId)->exists()) {
+            $this->errorMessage = 'Silakan pilih salah satu kandidat aktif terlebih dahulu.';
             return;
         }
 
@@ -62,7 +62,7 @@ class VotingBooth extends Component
 
     public function render()
     {
-        $candidates = ElectionCandidate::orderBy('candidate_number')->get();
+        $candidates = ElectionCandidate::active()->orderBy('candidate_number')->get();
 
         return view('livewire.pilketos.voting-booth', compact('candidates'));
     }

@@ -2,19 +2,31 @@
 
 namespace App\Filament\Resources\LibraryBooks\Tables;
 
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class LibraryBooksTable
 {
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -60,13 +72,23 @@ class LibraryBooksTable
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->modalHeading('Pindahkan Buku ke Daftar Terhapus?')
+                    ->modalDescription('Buku ini akan disembunyikan dari katalog publik dan masuk ke Daftar Terhapus. Data buku tetap tersimpan dan dapat dipulihkan sebelum penghapusan permanen.'),
+                RestoreAction::make()
+                    ->label('Pulihkan')
+                    ->modalHeading('Pulihkan Data Buku?')
+                    ->modalDescription('Buku akan dikembalikan ke daftar aktif perpustakaan.'),
+                ForceDeleteAction::make()
+                    ->label('Hapus Permanen')
+                    ->visible(fn (): bool => static::isSuperAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
+                    ForceDeleteBulkAction::make()
+                        ->visible(fn (): bool => static::isSuperAdmin()),
                 ]),
             ]);
     }

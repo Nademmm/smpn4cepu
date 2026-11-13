@@ -95,7 +95,16 @@ class UsersTable
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make()
-                    ->hidden(fn ($record): bool => (int) $record->id === (int) auth()->id()),
+                    ->hidden(fn ($record): bool => (int) $record->id === (int) auth()->id())
+                    ->before(function ($record): void {
+                        \App\Models\ActivityLog::record(
+                            action: 'delete_user_account',
+                            description: "Super Admin menghapus akun pengguna {$record->name} ({$record->email}).",
+                            reason: 'Penghapusan akun melalui manajemen pengguna',
+                            subject: $record,
+                            module: 'Pengaturan'
+                        );
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

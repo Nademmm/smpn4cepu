@@ -44,7 +44,21 @@ class StudentStatisticsTable
             ])
             ->defaultSort('academic_year', 'desc')
             ->filters([
-                //
+                \Filament\Tables\Filters\SelectFilter::make('academic_year')
+                    ->label('Filter Tahun Ajaran')
+                    ->options(fn (): array => \App\Models\StudentStatistic::query()
+                        ->distinct()
+                        ->orderByDesc('academic_year')
+                        ->pluck('academic_year', 'academic_year')
+                        ->toArray()),
+
+                \Filament\Tables\Filters\SelectFilter::make('grade_level')
+                    ->label('Filter Tingkat Kelas')
+                    ->options([
+                        7 => 'Kelas 7',
+                        8 => 'Kelas 8',
+                        9 => 'Kelas 9',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

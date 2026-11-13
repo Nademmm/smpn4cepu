@@ -14,11 +14,22 @@ class BackupOverviewWidget extends StatsOverviewWidget
         $service = app(BackupRecoveryService::class);
         $overview = $service->getBackupOverview();
 
+        $statusColor = match ($overview['is_latest_success']) {
+            true => 'success',
+            false => 'danger',
+            null => 'gray',
+        };
+        $statusIcon = match ($overview['is_latest_success']) {
+            true => 'heroicon-m-check-circle',
+            false => 'heroicon-m-exclamation-triangle',
+            null => 'heroicon-m-information-circle',
+        };
+
         return [
             Stat::make('Waktu Backup Terakhir', $overview['last_backup_time'])
                 ->description('Ukuran: ' . $overview['last_backup_size'])
                 ->descriptionIcon('heroicon-m-clock')
-                ->color('success'),
+                ->color($overview['last_backup_size'] !== '-' ? 'success' : 'gray'),
 
             Stat::make('Cakupan Backup', 'Database + File Unggahan')
                 ->description('SQLite, PDF Materi, & Foto')
@@ -26,9 +37,9 @@ class BackupOverviewWidget extends StatsOverviewWidget
                 ->color('info'),
 
             Stat::make('Status Backup', $overview['status'])
-                ->description('Arsip utuh dan terlindungi')
-                ->descriptionIcon('heroicon-m-check-circle')
-                ->color('success'),
+                ->description($overview['status_description'])
+                ->descriptionIcon($statusIcon)
+                ->color($statusColor),
 
             Stat::make('Jadwal Berikutnya', 'Pukul 02.00 WIB')
                 ->description('Otomatis harian')

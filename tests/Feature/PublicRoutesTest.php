@@ -83,12 +83,16 @@ class PublicRoutesTest extends TestCase
         $book = LibraryBook::where('available_stock', '>', 0)->first();
         $this->assertNotNull($book);
 
+        $pickupDate = now()->addDay()->isWeekend()
+            ? now()->next(\Carbon\Carbon::MONDAY)->toDateString()
+            : now()->addDay()->toDateString();
+
         // Uji endpoint kanonikal baru
         $responseNew = $this->postJson('/belajar/perpustakaan/reservasi', [
             'book_id' => $book->id,
             'borrower_name' => 'Ahmad Fauzi',
             'borrower_class' => '8A',
-            'pickup_date' => now()->addDay()->toDateString(),
+            'pickup_date' => $pickupDate,
         ]);
 
         $responseNew->assertStatus(200)
@@ -100,7 +104,7 @@ class PublicRoutesTest extends TestCase
             'book_id' => $book->id,
             'borrower_name' => 'Ahmad Fauzi 2',
             'borrower_class' => '8A',
-            'pickup_date' => now()->addDay()->toDateString(),
+            'pickup_date' => $pickupDate,
         ]);
 
         $response->assertStatus(200)

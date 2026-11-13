@@ -21,13 +21,28 @@ class QuestionBankForm
             ->components([
                 Select::make('subject_id')
                     ->label('Mata Pelajaran')
-                    ->relationship('subject', 'name')
+                    ->relationship(
+                        name: 'subject',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
+                            /** @var User|null $user */
+                            $user = Auth::user();
+
+                            if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+                                $subjectIds = $user->subjects()->pluck('subjects.id')->all();
+                                if (! empty($subjectIds)) {
+                                    $query->whereIn('id', $subjectIds);
+                                }
+                            }
+                        }
+                    )
                     ->default(function () {
                         /** @var User|null $user */
                         $user = Auth::user();
 
                         return $user instanceof User ? $user->subjects()->first()?->id : null;
                     })
+                    ->helperText('Bagi guru pengampu, pilihan otomatis difilter sesuai mata pelajaran yang ditugaskan oleh admin.')
                     ->searchable()
                     ->preload()
                     ->required(),

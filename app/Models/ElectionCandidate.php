@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -18,6 +19,13 @@ class ElectionCandidate extends Model
         'period_year',
         'status',
     ];
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where(function (Builder $q): void {
+            $q->where('status', 'aktif')->orWhereNull('status');
+        });
+    }
 
     protected function casts(): array
     {

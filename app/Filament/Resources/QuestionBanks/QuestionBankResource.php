@@ -120,8 +120,17 @@ class QuestionBankResource extends Resource
         /** @var User|null $user */
         $user = Auth::user();
 
-        if ($user instanceof User && $user->hasRole('guru') && ! $user->hasRole('super_admin')) {
-            $query->where('created_by', $user->id);
+        if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            $subjectIds = $user->subjects()->pluck('subjects.id')->all();
+
+            if (! empty($subjectIds)) {
+                $query->where(function (Builder $q) use ($user, $subjectIds): void {
+                    $q->where('created_by', $user->id)
+                        ->orWhereIn('subject_id', $subjectIds);
+                });
+            } else {
+                $query->where('created_by', $user->id);
+            }
         }
 
         return $query;

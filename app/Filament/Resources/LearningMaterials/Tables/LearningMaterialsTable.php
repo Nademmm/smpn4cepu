@@ -67,13 +67,15 @@ class LearningMaterialsTable
                     ->modalHeading('Pulihkan Materi Pelajaran?')
                     ->modalDescription('Materi ini akan dikembalikan ke status aktif dan dapat kembali diakses oleh siswa.'),
                 ForceDeleteAction::make()
-                    ->label('Hapus Permanen'),
+                    ->label('Hapus Permanen')
+                    ->visible(fn (): bool => \Illuminate\Support\Facades\Auth::user()?->hasRole('super_admin') ?? false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
+                    ForceDeleteBulkAction::make()
+                        ->visible(fn (): bool => \Illuminate\Support\Facades\Auth::user()?->hasRole('super_admin') ?? false),
                 ]),
             ]);
     }
