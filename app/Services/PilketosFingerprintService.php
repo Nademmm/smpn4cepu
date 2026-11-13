@@ -24,8 +24,8 @@ class PilketosFingerprintService
     public function generateFingerprint(Request $request, string $clientHardwareHash): string
     {
         // Jika pemilih masuk dengan akun siswa/guru resmi, ikatkan hak suara secara eksklusif ke ID akun (1 Akun = 1 Suara, aman di Lab Komputer bersama)
-        if (auth()->check()) {
-            return hash('sha256', 'AUTH_VOTER_USER_ID|' . auth()->id());
+        if (Auth::check()) {
+            return hash('sha256', 'AUTH_VOTER_USER_ID|' . Auth::id());
         }
 
         $userAgent = $request->userAgent() ?? 'UNKNOWN_UA';
