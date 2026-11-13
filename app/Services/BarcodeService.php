@@ -108,7 +108,7 @@ class BarcodeService
 
         try {
             $renderer = new \BaconQrCode\Renderer\ImageRenderer(
-                new \BaconQrCode\Renderer\RendererStyle\RendererStyle($size, 1),
+                new \BaconQrCode\Renderer\RendererStyle\RendererStyle($size, 3),
                 new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
             );
             $writer = new \BaconQrCode\Writer($renderer);
