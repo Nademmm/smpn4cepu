@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources\LearningMaterials\Schemas;
 
-use App\Models\User;
+use App\Support\SubjectPermissionFormHelper;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -20,38 +19,12 @@ class LearningMaterialForm
     {
         return $schema
             ->components([
-                Select::make('subject_id')
-                    ->label('Mata Pelajaran')
-                    ->relationship(
-                        name: 'subject',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
-                            /** @var User|null $user */
-                            $user = Auth::user();
+                SubjectPermissionFormHelper::subjectField(),
 
-                            if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
-                                $subjectIds = $user->subjects()->pluck('subjects.id')->all();
-                                if (! empty($subjectIds)) {
-                                    $query->whereIn('id', $subjectIds);
-                                }
-                            }
-                        }
-                    )
-                    ->default(function () {
-                        /** @var User|null $user */
-                        $user = Auth::user();
+                SubjectPermissionFormHelper::gradeLevelField('Tingkat Kelas'),
 
-                        return $user instanceof User ? $user->subjects()->first()?->id : null;
-                    })
-                    ->helperText('Bagi guru pengampu, pilihan otomatis difilter sesuai mata pelajaran yang ditugaskan oleh admin.')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
-                Select::make('grade_level')
-                    ->label('Tingkat Kelas')
-                    ->options(\App\Enums\GradeLevel::class)
-                    ->required(),
+                SubjectPermissionFormHelper::targetClassesField()
+                    ->columnSpanFull(),
 
                 TextInput::make('title')
                     ->label('Judul Materi Pembelajaran')
@@ -109,7 +82,7 @@ class LearningMaterialForm
                     ->default(true),
 
                 Hidden::make('created_by')
-                    ->default(fn () => auth()->id()),
+                    ->default(fn () => Auth::id()),
             ]);
     }
 }

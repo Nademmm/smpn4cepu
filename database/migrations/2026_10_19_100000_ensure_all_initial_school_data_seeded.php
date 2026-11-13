@@ -13,8 +13,12 @@ return new class extends Migration
         // Jalankan DatabaseSeeder secara otomatis sehingga deployment di PaaS/Railway
         // yang mengeksekusi 'php artisan migrate --force' langsung memiliki seluruh master data resmi,
         // konten berita, fasilitas, ekstrakurikuler, galeri, staf & guru, dokumen, serta akun pengguna.
-        $seeder = new DatabaseSeeder();
-        $seeder->run();
+        try {
+            $seeder = new DatabaseSeeder();
+            $seeder->run();
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     /**

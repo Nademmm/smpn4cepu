@@ -80,24 +80,42 @@ class QuizAttemptResource extends Resource
             $isWaliKelas = $user->hasRole('wali_kelas');
 
             if ($isGuru || $isWaliKelas) {
-                $subjectIds = $isGuru ? $user->subjects()->pluck('subjects.id')->all() : [];
+                $assignedSubjects = $isGuru ? $user->subjects()->get() : collect();
                 $homeroomClass = $isWaliKelas ? $user->homeroom_class : null;
 
                 if (! $isGuru && empty($homeroomClass)) {
                     $query->whereRaw('1 = 0');
                 } else {
-                    $query->where(function (Builder $scopeQuery) use ($user, $isGuru, $subjectIds, $homeroomClass): void {
+                    $query->where(function (Builder $scopeQuery) use ($user, $isGuru, $assignedSubjects, $homeroomClass): void {
                         if ($isGuru) {
-                            $scopeQuery->orWhereHas('bank', function (Builder $bankQuery) use ($user, $subjectIds): void {
-                                if (! empty($subjectIds)) {
-                                    $bankQuery->where(function (Builder $q) use ($user, $subjectIds): void {
-                                        $q->where('created_by', $user->id)
-                                            ->orWhereIn('subject_id', $subjectIds);
-                                    });
-                                } else {
-                                    $bankQuery->where('created_by', $user->id);
-                                }
+                            $scopeQuery->orWhereHas('bank', function (Builder $bankQuery) use ($user): void {
+                                $bankQuery->where('created_by', $user->id);
                             });
+
+                            foreach ($assignedSubjects as $subject) {
+                                $allowedGrades = $user->allowedGradesForSubject((int) $subject->id);
+                                $allowedClasses = array_values(array_unique(array_filter(
+                                    array_map(
+                                        fn ($c): string => strtoupper(trim((string) $c)),
+                                        User::parsePivotArray($subject->pivot?->allowed_classes)
+                                    ),
+                                    fn (string $c): bool => $c !== ''
+                                )));
+
+                                $scopeQuery->orWhere(function (Builder $attemptBranch) use ($subject, $allowedGrades, $allowedClasses): void {
+                                    $attemptBranch->whereHas('bank', function (Builder $bankQ) use ($subject, $allowedGrades): void {
+                                        $bankQ->where('subject_id', $subject->id)
+                                            ->whereIn('grade_level', $allowedGrades);
+                                    });
+
+                                    if (! empty($allowedClasses)) {
+                                        $attemptBranch->where(function (Builder $clsQ) use ($allowedClasses): void {
+                                            $clsQ->whereIn('student_class', $allowedClasses)
+                                                ->orWhereNull('student_class');
+                                        });
+                                    }
+                                });
+                            }
                         }
 
                         if (! empty($homeroomClass)) {
@@ -120,7 +138,31 @@ class QuizAttemptResource extends Resource
             return Response::deny();
         }
 
-        if ($user->hasAnyRole(['super_admin', 'guru', 'wali_kelas', 'operator_sekolah'])) {
+        if ($user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            return Response::allow();
+        }
+
+        if ($user->hasAnyRole(['guru', 'wali_kelas'])) {
+            if ($record instanceof QuizAttempt && $user instanceof User) {
+                $matchesHomeroom = $user->hasRole('wali_kelas')
+                    && ! empty($user->homeroom_class)
+                    && strcasecmp((string) $record->student_class, (string) $user->homeroom_class) === 0;
+
+                $bank = $record->bank;
+                $matchesTeacher = $user->hasRole('guru') && (
+                    ((int) ($bank?->created_by ?? 0) === (int) $user->id)
+                    || $user->canAccessSubjectContent(
+                        $bank?->subject_id,
+                        $bank?->grade_level,
+                        $record->student_class ? [$record->student_class] : null
+                    )
+                );
+
+                if (! $matchesHomeroom && ! $matchesTeacher) {
+                    return Response::deny('Anda tidak memiliki izin mengakses hasil kuis untuk mapel atau rombel ini.');
+                }
+            }
+
             return Response::allow();
         }
 

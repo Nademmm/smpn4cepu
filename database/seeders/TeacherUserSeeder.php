@@ -68,17 +68,20 @@ class TeacherUserSeeder extends Seeder
                 ]);
             }
 
-            // Tentukan Roles
-            $roles = ['guru'];
-            $pos = strtolower($s->position);
+            // Tentukan Roles sesuai jabatan di sekolah
+            $roles = [];
+            $pos = strtolower((string) $s->position);
             if (str_contains($pos, 'kepala sekolah')) {
                 $roles[] = 'super_admin';
+            }
+            if (str_contains($pos, 'guru')) {
+                $roles[] = 'guru';
             }
             if (str_contains($pos, 'perpustakaan') || str_contains($pos, 'pustakawan')) {
                 $roles[] = 'staf_perpus';
             }
 
-            $user->syncRoles($roles);
+            $user->syncRoles(array_values(array_unique($roles)));
         }
     }
 }

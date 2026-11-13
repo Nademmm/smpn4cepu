@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\QuestionBanks\Schemas;
 
-use App\Models\User;
+use App\Support\SubjectPermissionFormHelper;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -19,39 +19,15 @@ class QuestionBankForm
     {
         return $schema
             ->components([
-                Select::make('subject_id')
-                    ->label('Mata Pelajaran')
-                    ->relationship(
-                        name: 'subject',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
-                            /** @var User|null $user */
-                            $user = Auth::user();
+                SubjectPermissionFormHelper::subjectField(),
 
-                            if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
-                                $subjectIds = $user->subjects()->pluck('subjects.id')->all();
-                                if (! empty($subjectIds)) {
-                                    $query->whereIn('id', $subjectIds);
-                                }
-                            }
-                        }
-                    )
-                    ->default(function () {
-                        /** @var User|null $user */
-                        $user = Auth::user();
+                SubjectPermissionFormHelper::gradeLevelField(
+                    'Tingkat Angkatan Kelas',
+                    'Pilih tingkat angkatan peserta didik (otomatis disesuaikan dengan izin mapel guru).'
+                ),
 
-                        return $user instanceof User ? $user->subjects()->first()?->id : null;
-                    })
-                    ->helperText('Bagi guru pengampu, pilihan otomatis difilter sesuai mata pelajaran yang ditugaskan oleh admin.')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
-                Select::make('grade_level')
-                    ->label('Tingkat Angkatan Kelas')
-                    ->options(\App\Enums\GradeLevel::class)
-                    ->helperText('Pilih tingkat angkatan peserta didik (Kelas VII, VIII, atau IX).')
-                    ->required(),
+                SubjectPermissionFormHelper::targetClassesField()
+                    ->columnSpanFull(),
 
                 TextInput::make('title')
                     ->label('Judul Paket Ujian / Latihan Soal')
@@ -110,7 +86,7 @@ class QuestionBankForm
                     ->suffix('Kali'),
 
                 Hidden::make('created_by')
-                    ->default(fn () => auth()->id()),
+                    ->default(fn () => Auth::id()),
 
                 Section::make('Daftar Butir Soal Pilihan Ganda')
                     ->description('Kelola daftar pertanyaan, bobot nilai, pembahasan, dan pilihan jawaban langsung dalam paket soal ini.')

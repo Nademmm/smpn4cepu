@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             StudentUserSeeder::class,
             TeacherUserSeeder::class,
             DemoSchoolSeeder::class,
+            TeacherSubjectAssignmentSeeder::class,
             AchievementSeeder::class,
             ExtracurricularSeeder::class,
             GalleryPhotoSeeder::class,

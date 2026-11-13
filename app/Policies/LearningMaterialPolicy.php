@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\LearningMaterial;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LearningMaterialPolicy
@@ -19,7 +20,23 @@ class LearningMaterialPolicy
 
     public function view(AuthUser $authUser, LearningMaterial $learningMaterial): bool
     {
-        return $authUser->can('View:LearningMaterial');
+        if (! $authUser->can('View:LearningMaterial')) {
+            return false;
+        }
+
+        if ($authUser instanceof User && $authUser->hasRole('guru') && ! $authUser->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            if ((int) $learningMaterial->created_by === (int) $authUser->id) {
+                return true;
+            }
+
+            return $authUser->canAccessSubjectContent(
+                $learningMaterial->subject_id,
+                $learningMaterial->grade_level,
+                $learningMaterial->target_classes
+            );
+        }
+
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -41,9 +58,11 @@ class LearningMaterialPolicy
             return true;
         }
 
-        return $learningMaterial->subject_id
-            && method_exists($authUser, 'subjects')
-            && $authUser->subjects()->whereKey($learningMaterial->subject_id)->exists();
+        return $authUser instanceof User && $authUser->canAccessSubjectContent(
+            $learningMaterial->subject_id,
+            $learningMaterial->grade_level,
+            $learningMaterial->target_classes
+        );
     }
 
     public function delete(AuthUser $authUser, LearningMaterial $learningMaterial): bool
@@ -60,9 +79,11 @@ class LearningMaterialPolicy
             return true;
         }
 
-        return $learningMaterial->subject_id
-            && method_exists($authUser, 'subjects')
-            && $authUser->subjects()->whereKey($learningMaterial->subject_id)->exists();
+        return $authUser instanceof User && $authUser->canAccessSubjectContent(
+            $learningMaterial->subject_id,
+            $learningMaterial->grade_level,
+            $learningMaterial->target_classes
+        );
     }
 
     public function deleteAny(AuthUser $authUser): bool

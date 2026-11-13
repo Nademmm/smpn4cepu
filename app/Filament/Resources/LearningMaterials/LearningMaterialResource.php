@@ -131,16 +131,7 @@ class LearningMaterialResource extends Resource
         $user = Auth::user();
 
         if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
-            $subjectIds = $user->subjects()->pluck('subjects.id')->all();
-
-            if (! empty($subjectIds)) {
-                $query->where(function (Builder $q) use ($user, $subjectIds): void {
-                    $q->where('created_by', $user->id)
-                        ->orWhereIn('subject_id', $subjectIds);
-                });
-            } else {
-                $query->where('created_by', $user->id);
-            }
+            $user->applyTeacherContentScope($query);
         }
 
         return $query;

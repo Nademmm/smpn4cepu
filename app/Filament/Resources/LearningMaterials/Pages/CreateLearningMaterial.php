@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LearningMaterials\Pages;
 
 use App\Filament\Resources\LearningMaterials\LearningMaterialResource;
+use App\Support\SubjectPermissionFormHelper;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateLearningMaterial extends CreateRecord
@@ -11,8 +12,7 @@ class CreateLearningMaterial extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['created_by'] ??= auth()->id();
-        return $data;
+        return SubjectPermissionFormHelper::validateAndNormalizePayload($data, isCreate: true);
     }
 }
 

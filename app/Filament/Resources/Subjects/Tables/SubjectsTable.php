@@ -27,10 +27,25 @@ class SubjectsTable
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('teachers.name')
-                    ->label('Guru Pengampu')
+                    ->label('Guru Pengampu & Rombel')
+                    ->getStateUsing(function ($record): array {
+                        return $record->teachers->map(function ($teacher): string {
+                            $classes = \App\Models\User::parsePivotArray($teacher->pivot?->allowed_classes);
+                            $grades = \App\Models\User::parsePivotArray($teacher->pivot?->allowed_grades);
+
+                            if (! empty($classes)) {
+                                return $teacher->name . ' (' . implode(', ', $classes) . ')';
+                            }
+
+                            if (! empty($grades)) {
+                                return $teacher->name . ' (Kelas ' . implode(', ', $grades) . ')';
+                            }
+
+                            return $teacher->name;
+                        })->all();
+                    })
                     ->badge()
                     ->color('info')
-                    ->separator(', ')
                     ->placeholder('Belum diatur'),
                 TextColumn::make('created_at')
                     ->label('Dibuat')

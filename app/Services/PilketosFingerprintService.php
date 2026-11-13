@@ -6,6 +6,7 @@ use App\Models\ElectionCandidate;
 use App\Models\ElectionDevice;
 use App\Models\ElectionVote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;

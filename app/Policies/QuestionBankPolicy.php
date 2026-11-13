@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\QuestionBank;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class QuestionBankPolicy
@@ -19,7 +20,23 @@ class QuestionBankPolicy
 
     public function view(AuthUser $authUser, QuestionBank $questionBank): bool
     {
-        return $authUser->can('View:QuestionBank');
+        if (! $authUser->can('View:QuestionBank')) {
+            return false;
+        }
+
+        if ($authUser instanceof User && $authUser->hasRole('guru') && ! $authUser->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            if ((int) $questionBank->created_by === (int) $authUser->id) {
+                return true;
+            }
+
+            return $authUser->canAccessSubjectContent(
+                $questionBank->subject_id,
+                $questionBank->grade_level,
+                $questionBank->target_classes
+            );
+        }
+
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -41,9 +58,11 @@ class QuestionBankPolicy
             return true;
         }
 
-        return $questionBank->subject_id
-            && method_exists($authUser, 'subjects')
-            && $authUser->subjects()->whereKey($questionBank->subject_id)->exists();
+        return $authUser instanceof User && $authUser->canAccessSubjectContent(
+            $questionBank->subject_id,
+            $questionBank->grade_level,
+            $questionBank->target_classes
+        );
     }
 
     public function delete(AuthUser $authUser, QuestionBank $questionBank): bool
@@ -60,9 +79,11 @@ class QuestionBankPolicy
             return true;
         }
 
-        return $questionBank->subject_id
-            && method_exists($authUser, 'subjects')
-            && $authUser->subjects()->whereKey($questionBank->subject_id)->exists();
+        return $authUser instanceof User && $authUser->canAccessSubjectContent(
+            $questionBank->subject_id,
+            $questionBank->grade_level,
+            $questionBank->target_classes
+        );
     }
 
     public function deleteAny(AuthUser $authUser): bool

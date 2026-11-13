@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -254,45 +255,49 @@ class RolePermissionSeeder extends Seeder
         $pilketos->syncRoles([$panitiaPilketosRole]);
 
         // 11. Contoh Riwayat Log Aktivitas Perubahan Penting
-        if (ActivityLog::count() === 0) {
-            $sampleStudent = User::whereNotNull('nisn')->first();
-            $sampleStudentName = $sampleStudent?->name ?? 'Zakia Nur Rahmawati';
+        try {
+            if (Schema::hasTable('activity_logs') && ActivityLog::count() === 0) {
+                $sampleStudent = User::whereNotNull('nisn')->first();
+                $sampleStudentName = $sampleStudent?->name ?? 'Zakia Nur Rahmawati';
 
-            ActivityLog::create([
-                'actor_id' => $operator->id,
-                'actor_name' => 'Operator A',
-                'actor_role' => 'operator_sekolah',
-                'module' => 'Kesiswaan',
-                'action' => 'move_class',
-                'description' => "Operator A memindahkan Siswa B dari rombel 7A ke 7B.",
-                'reason' => 'penyesuaian pembagian kelas.',
-                'subject_type' => User::class,
-                'subject_id' => $sampleStudent?->id ?? 1,
-                'subject_label' => 'Siswa B',
-                'properties' => [
-                    'from_class' => '7A',
-                    'to_class' => '7B',
-                    'student_name' => 'Siswa B',
-                ],
-                'created_at' => Carbon::parse('2026-11-12 14:30:00'),
-                'updated_at' => Carbon::parse('2026-11-12 14:30:00'),
-            ]);
+                ActivityLog::create([
+                    'actor_id' => $operator->id,
+                    'actor_name' => 'Operator A',
+                    'actor_role' => 'operator_sekolah',
+                    'module' => 'Kesiswaan',
+                    'action' => 'move_class',
+                    'description' => "Operator A memindahkan Siswa B dari rombel 7A ke 7B.",
+                    'reason' => 'penyesuaian pembagian kelas.',
+                    'subject_type' => User::class,
+                    'subject_id' => $sampleStudent?->id ?? 1,
+                    'subject_label' => 'Siswa B',
+                    'properties' => [
+                        'from_class' => '7A',
+                        'to_class' => '7B',
+                        'student_name' => 'Siswa B',
+                    ],
+                    'created_at' => Carbon::parse('2026-11-12 14:30:00'),
+                    'updated_at' => Carbon::parse('2026-11-12 14:30:00'),
+                ]);
 
-            ActivityLog::create([
-                'actor_id' => $admin->id,
-                'actor_name' => $admin->name,
-                'actor_role' => 'super_admin',
-                'module' => 'Tahun Ajaran',
-                'action' => 'activate_academic_year',
-                'description' => "{$admin->name} mengaktifkan Tahun Ajaran 2026/2027 dan menutup Tahun Ajaran 2025/2026.",
-                'reason' => 'Aktivasi kalender akademik resmi SMP Negeri 4 Cepu.',
-                'properties' => [
-                    'previous_year' => '2025/2026',
-                    'new_active_year' => '2026/2027',
-                ],
-                'created_at' => Carbon::parse('2026-11-10 08:30:00'),
-                'updated_at' => Carbon::parse('2026-11-10 08:30:00'),
-            ]);
+                ActivityLog::create([
+                    'actor_id' => $admin->id,
+                    'actor_name' => $admin->name,
+                    'actor_role' => 'super_admin',
+                    'module' => 'Tahun Ajaran',
+                    'action' => 'activate_academic_year',
+                    'description' => "{$admin->name} mengaktifkan Tahun Ajaran 2026/2027 dan menutup Tahun Ajaran 2025/2026.",
+                    'reason' => 'Aktivasi kalender akademik resmi SMP Negeri 4 Cepu.',
+                    'properties' => [
+                        'previous_year' => '2025/2026',
+                        'new_active_year' => '2026/2027',
+                    ],
+                    'created_at' => Carbon::parse('2026-11-10 08:30:00'),
+                    'updated_at' => Carbon::parse('2026-11-10 08:30:00'),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            report($e);
         }
     }
 }

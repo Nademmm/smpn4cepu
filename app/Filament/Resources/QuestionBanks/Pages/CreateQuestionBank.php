@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\QuestionBanks\Pages;
 
 use App\Filament\Resources\QuestionBanks\QuestionBankResource;
+use App\Support\SubjectPermissionFormHelper;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateQuestionBank extends CreateRecord
@@ -11,8 +12,7 @@ class CreateQuestionBank extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['created_by'] ??= auth()->id();
-        return $data;
+        return SubjectPermissionFormHelper::validateAndNormalizePayload($data, isCreate: true);
     }
 }
 

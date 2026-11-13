@@ -14,6 +14,7 @@ class LearningMaterial extends Model
     protected $fillable = [
         'subject_id',
         'grade_level',
+        'target_classes',
         'title',
         'slug',
         'summary',
@@ -28,6 +29,7 @@ class LearningMaterial extends Model
     {
         return [
             'grade_level' => 'integer',
+            'target_classes' => 'array',
             'is_active' => 'boolean',
         ];
     }

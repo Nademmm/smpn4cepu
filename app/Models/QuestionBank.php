@@ -14,6 +14,7 @@ class QuestionBank extends Model
     protected $fillable = [
         'subject_id',
         'grade_level',
+        'target_classes',
         'title',
         'description',
         'duration_minutes',
@@ -29,6 +30,7 @@ class QuestionBank extends Model
     {
         return [
             'grade_level' => 'integer',
+            'target_classes' => 'array',
             'duration_minutes' => 'integer',
             'passing_grade' => 'integer',
             'is_active' => 'boolean',
