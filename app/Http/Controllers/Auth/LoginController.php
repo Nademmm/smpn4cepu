@@ -24,7 +24,7 @@ class LoginController extends Controller
             if ($user->hasRole('siswa')) {
                 return redirect()->intended(route('quizzes'));
             }
-            if ($user->hasRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos'])) {
+            if ($user instanceof User && $user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin'))) {
                 return redirect()->intended(route('filament.admin.pages.dashboard'));
             }
             return redirect()->intended(route('home'));
@@ -94,7 +94,7 @@ class LoginController extends Controller
                     ->with('status', 'Selamat datang, ' . $user->name . '! Anda berhasil masuk ke portal belajar.');
             }
 
-            if ($user->hasRole(['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos'])) {
+            if ($user->hasRole(['super_admin', 'operator_sekolah', 'guru', 'wali_kelas', 'staf_perpus', 'panitia_pilketos'])) {
                 return redirect()->intended(route('filament.admin.pages.dashboard'))
                     ->with('status', 'Selamat datang kembali, ' . $user->name . '.');
             }

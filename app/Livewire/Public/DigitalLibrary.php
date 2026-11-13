@@ -249,25 +249,7 @@ class DigitalLibrary extends Component
 
     public function getAvailableClassesProperty(): array
     {
-        return Cache::remember('library_available_classes_v1', 600, function () {
-            $classes = User::whereNotNull('student_class')
-                ->where('student_class', '!=', '')
-                ->where('student_class', 'not like', 'Kelas %')
-                ->distinct()
-                ->orderBy('student_class')
-                ->pluck('student_class')
-                ->toArray();
-
-            if (empty($classes)) {
-                $classes = [
-                    '7A', '7B', '7C', '7D', '7E', '7F', '7G',
-                    '8A', '8B', '8C', '8D', '8E', '8F', '8G',
-                    '9A', '9B', '9C', '9D', '9E', '9F',
-                ];
-            }
-
-            return $classes;
-        });
+        return \App\Support\ClassroomOptions::allClasses();
     }
 
     public function getStudentsInSelectedClassProperty()

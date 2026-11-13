@@ -83,12 +83,24 @@ class StudentResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
+        $query = parent::getEloquentQuery()
             ->withCount('quizAttempts')
             ->where(function (Builder $q) {
                 $q->whereNotNull('nisn')
                     ->orWhereHas('roles', fn (Builder $rq) => $rq->where('name', 'siswa'));
             });
+
+        /** @var User|null $user */
+        $user = Auth::user();
+        if ($user instanceof User && $user->hasRole('wali_kelas') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            if (! empty($user->homeroom_class)) {
+                $query->where('student_class', $user->homeroom_class);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        return $query;
     }
 
     public static function getGloballySearchableAttributes(): array

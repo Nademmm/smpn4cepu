@@ -33,11 +33,17 @@ class QuestionBankPolicy
             return false;
         }
 
-        if ($authUser->hasRole('super_admin')) {
+        if ($authUser->hasAnyRole(['super_admin', 'operator_sekolah'])) {
             return true;
         }
 
-        return (int) $questionBank->created_by === (int) $authUser->id;
+        if ((int) $questionBank->created_by === (int) $authUser->id) {
+            return true;
+        }
+
+        return $questionBank->subject_id
+            && method_exists($authUser, 'subjects')
+            && $authUser->subjects()->whereKey($questionBank->subject_id)->exists();
     }
 
     public function delete(AuthUser $authUser, QuestionBank $questionBank): bool
@@ -46,11 +52,17 @@ class QuestionBankPolicy
             return false;
         }
 
-        if ($authUser->hasRole('super_admin')) {
+        if ($authUser->hasAnyRole(['super_admin', 'operator_sekolah'])) {
             return true;
         }
 
-        return (int) $questionBank->created_by === (int) $authUser->id;
+        if ((int) $questionBank->created_by === (int) $authUser->id) {
+            return true;
+        }
+
+        return $questionBank->subject_id
+            && method_exists($authUser, 'subjects')
+            && $authUser->subjects()->whereKey($questionBank->subject_id)->exists();
     }
 
     public function deleteAny(AuthUser $authUser): bool

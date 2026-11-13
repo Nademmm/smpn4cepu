@@ -72,22 +72,40 @@ class QuizAttemptResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()->with(['user', 'bank.subject']);
-        /** @var \App\Models\User|null $user */
-        $user = \Illuminate\Support\Facades\Auth::user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
-        if ($user instanceof \App\Models\User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
-            $subjectIds = $user->subjects()->pluck('subjects.id')->all();
+        if ($user instanceof User && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            $isGuru = $user->hasRole('guru');
+            $isWaliKelas = $user->hasRole('wali_kelas');
 
-            $query->whereHas('bank', function (Builder $bankQuery) use ($user, $subjectIds): void {
-                if (! empty($subjectIds)) {
-                    $bankQuery->where(function (Builder $q) use ($user, $subjectIds): void {
-                        $q->where('created_by', $user->id)
-                            ->orWhereIn('subject_id', $subjectIds);
-                    });
+            if ($isGuru || $isWaliKelas) {
+                $subjectIds = $isGuru ? $user->subjects()->pluck('subjects.id')->all() : [];
+                $homeroomClass = $isWaliKelas ? $user->homeroom_class : null;
+
+                if (! $isGuru && empty($homeroomClass)) {
+                    $query->whereRaw('1 = 0');
                 } else {
-                    $bankQuery->where('created_by', $user->id);
+                    $query->where(function (Builder $scopeQuery) use ($user, $isGuru, $subjectIds, $homeroomClass): void {
+                        if ($isGuru) {
+                            $scopeQuery->orWhereHas('bank', function (Builder $bankQuery) use ($user, $subjectIds): void {
+                                if (! empty($subjectIds)) {
+                                    $bankQuery->where(function (Builder $q) use ($user, $subjectIds): void {
+                                        $q->where('created_by', $user->id)
+                                            ->orWhereIn('subject_id', $subjectIds);
+                                    });
+                                } else {
+                                    $bankQuery->where('created_by', $user->id);
+                                }
+                            });
+                        }
+
+                        if (! empty($homeroomClass)) {
+                            $scopeQuery->orWhere('student_class', $homeroomClass);
+                        }
+                    });
                 }
-            });
+            }
         }
 
         return $query;

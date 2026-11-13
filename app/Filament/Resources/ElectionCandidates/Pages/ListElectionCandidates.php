@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ElectionCandidates\Pages;
 
 use App\Filament\Resources\ElectionCandidates\ElectionCandidateResource;
+use App\Models\ActivityLog;
 use App\Models\User;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
@@ -37,6 +38,8 @@ class ListElectionCandidates extends ListRecords
                 ->modalDescription('Tindakan ini akan menghapus semua suara masuk dan riwayat perangkat pemilih. Seluruh kandidat akan kembali ke 0 suara sehingga simulasi atau hari pemilihan dapat dimulai dari awal.')
                 ->modalSubmitActionLabel('Ya, Kosongkan Kotak Suara')
                 ->action(function () {
+                    $votesCount = \App\Models\ElectionVote::count();
+
                     \Illuminate\Support\Facades\DB::transaction(function () {
                         \App\Models\ElectionVote::query()->delete();
                         \App\Models\ElectionDevice::query()->delete();
@@ -46,6 +49,16 @@ class ListElectionCandidates extends ListRecords
                     \Illuminate\Support\Facades\Cache::forget('pilketos_public_live_count');
                     \Illuminate\Support\Facades\Cache::forget('pilketos_admin_chart_data');
                     \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
+
+                    ActivityLog::record(
+                        action: 'reset_pilketos_votes',
+                        description: "Super Admin mengosongkan kotak suara Pilketos ({$votesCount} suara direset ke 0).",
+                        reason: 'Reset kotak suara untuk simulasi atau pembukaan periode pemilihan baru',
+                        properties: [
+                            'cleared_votes' => $votesCount,
+                        ],
+                        module: 'Kesiswaan'
+                    );
 
                     \Filament\Notifications\Notification::make()
                         ->title('Kotak suara berhasil direset ke nol')

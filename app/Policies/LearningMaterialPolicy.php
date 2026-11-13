@@ -33,11 +33,17 @@ class LearningMaterialPolicy
             return false;
         }
 
-        if ($authUser->hasRole('super_admin')) {
+        if ($authUser->hasAnyRole(['super_admin', 'operator_sekolah'])) {
             return true;
         }
 
-        return (int) $learningMaterial->created_by === (int) $authUser->id;
+        if ((int) $learningMaterial->created_by === (int) $authUser->id) {
+            return true;
+        }
+
+        return $learningMaterial->subject_id
+            && method_exists($authUser, 'subjects')
+            && $authUser->subjects()->whereKey($learningMaterial->subject_id)->exists();
     }
 
     public function delete(AuthUser $authUser, LearningMaterial $learningMaterial): bool
@@ -46,11 +52,17 @@ class LearningMaterialPolicy
             return false;
         }
 
-        if ($authUser->hasRole('super_admin')) {
+        if ($authUser->hasAnyRole(['super_admin', 'operator_sekolah'])) {
             return true;
         }
 
-        return (int) $learningMaterial->created_by === (int) $authUser->id;
+        if ((int) $learningMaterial->created_by === (int) $authUser->id) {
+            return true;
+        }
+
+        return $learningMaterial->subject_id
+            && method_exists($authUser, 'subjects')
+            && $authUser->subjects()->whereKey($learningMaterial->subject_id)->exists();
     }
 
     public function deleteAny(AuthUser $authUser): bool

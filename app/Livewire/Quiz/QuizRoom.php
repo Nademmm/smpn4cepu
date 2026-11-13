@@ -3,11 +3,14 @@
 namespace App\Livewire\Quiz;
 
 use App\Models\QuestionBank;
+use App\Models\QuizAttempt;
 use App\Services\QuizAssessmentService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -66,6 +69,21 @@ class QuizRoom extends Component
     #[Locked]
     public ?array $resultSummary = null;
 
+    #[Locked]
+    public bool $canRetry = true;
+
+    #[Locked]
+    public bool $allowRetrySetting = true;
+
+    #[Locked]
+    public int $attemptsUsed = 0;
+
+    #[Locked]
+    public int $maxAttempts = 0;
+
+    #[Locked]
+    public string $attemptToken = '';
+
     public string $authErrorMessage = '';
 
     public function mount(int $bankId): void
@@ -98,6 +116,33 @@ class QuizRoom extends Component
             $this->restoreProgressFromSession();
         } else {
             $this->studentClass = 'Kelas ' . $this->gradeLevel;
+        }
+
+        $this->refreshRetryState($this->bank);
+    }
+
+    protected function refreshRetryState(?QuestionBank $bank = null): void
+    {
+        $bank ??= $this->bank ?? QuestionBank::find($this->bankId);
+        $this->allowRetrySetting = $bank ? (bool) ($bank->allow_retry ?? true) : true;
+        $this->maxAttempts = $bank ? (int) ($bank->max_attempts ?? 0) : 0;
+
+        if (! Auth::check()) {
+            $this->attemptsUsed = 0;
+            $this->canRetry = true;
+            return;
+        }
+
+        $this->attemptsUsed = QuizAttempt::where('bank_id', $this->bankId)
+            ->where('user_id', Auth::id())
+            ->count();
+
+        if (! $this->allowRetrySetting) {
+            $this->canRetry = $this->attemptsUsed === 0;
+        } elseif ($this->maxAttempts > 0) {
+            $this->canRetry = $this->attemptsUsed < $this->maxAttempts;
+        } else {
+            $this->canRetry = true;
         }
     }
 
@@ -141,6 +186,12 @@ class QuizRoom extends Component
         ];
 
         $bank = QuestionBank::where('is_active', true)->findOrFail($this->bankId);
+        $this->refreshRetryState($bank);
+
+        if (! $this->canRetry) {
+            $this->authErrorMessage = 'Batas maksimal pengerjaan paket soal ini telah tercapai.';
+            return;
+        }
 
         if ($bank->requiresPassword()) {
             $rules['quizPassword'] = 'required|string|min:2|max:50';
@@ -175,6 +226,7 @@ class QuizRoom extends Component
         $this->participantIdentifier = trim($this->studentName) . ' (' . $cohort . ')';
         $this->hasStarted = true;
         $this->startedAt = now();
+        $this->attemptToken = (string) Str::uuid();
         $this->saveProgressToSession();
     }
 
@@ -195,6 +247,12 @@ class QuizRoom extends Component
 
     public function retryQuiz(): void
     {
+        $this->refreshRetryState();
+        if (! $this->canRetry) {
+            $this->authErrorMessage = 'Pengulangan latihan untuk paket soal ini tidak diizinkan atau batas percobaan telah habis.';
+            return;
+        }
+
         $this->clearProgressSession();
         $this->hasStarted = false;
         $this->isFinished = false;
@@ -202,6 +260,7 @@ class QuizRoom extends Component
         $this->answers = [];
         $this->questions = [];
         $this->startedAt = null;
+        $this->attemptToken = '';
         $this->quizPassword = '';
         $this->authErrorMessage = '';
     }
@@ -227,6 +286,7 @@ class QuizRoom extends Component
             'student_name' => $this->studentName,
             'student_class' => $this->studentClass,
             'duration_seconds' => $this->durationSeconds,
+            'attempt_token' => $this->attemptToken,
         ]);
     }
 
@@ -261,6 +321,7 @@ class QuizRoom extends Component
         $this->questions = $data['questions'];
         $this->questionsCount = (int) ($data['questions_count'] ?? count($this->questions));
         $this->answers = $data['answers'] ?? [];
+        $this->attemptToken = (string) ($data['attempt_token'] ?? Str::uuid());
         $this->hasStarted = true;
     }
 
@@ -276,6 +337,12 @@ class QuizRoom extends Component
         }
 
         $userId = Auth::id();
+        $token = $this->attemptToken ?: 'default';
+        $lock = Cache::lock("quiz_submit_{$userId}_{$this->bankId}_{$token}", 10);
+
+        if (! $lock->get()) {
+            return;
+        }
 
         try {
             $startedAtTime = $this->startedAt ?? now();
@@ -294,6 +361,7 @@ class QuizRoom extends Component
 
             $this->resultSummary = $summary;
             $this->isFinished = true;
+            $this->refreshRetryState();
             $this->clearProgressSession();
         } catch (\Throwable $e) {
             Log::error('Gagal menyimpan hasil kuis: ' . $e->getMessage(), [
@@ -301,6 +369,8 @@ class QuizRoom extends Component
                 'user_id' => $userId,
             ]);
             $this->authErrorMessage = 'Terjadi kendala saat memproses hasil kuis. Silakan coba lagi.';
+        } finally {
+            $lock->release();
         }
     }
 

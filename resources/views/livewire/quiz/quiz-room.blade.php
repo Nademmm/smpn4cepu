@@ -157,16 +157,22 @@
                             <x-app-icon name="arrow-left" class="w-3.5 h-3.5" />
                             <span>Kembali ke Daftar Soal</span>
                         </a>
-                        <button
-                            type="submit"
-                            wire:loading.attr="disabled"
-                            class="btn-primary w-full sm:flex-1 !min-h-[46px] text-sm font-extrabold shadow-xs flex items-center justify-center gap-2"
-                        >
-                            <x-app-icon name="shield" class="w-4 h-4" />
-                            <span wire:loading.remove target="startQuiz">Buka Kunci & Mulai Kerjakan Soal</span>
-                            <span wire:loading target="startQuiz">Memverifikasi Akses Soal...</span>
-                            <x-app-icon name="arrow-right" class="w-4 h-4" />
-                        </button>
+                        @if ($canRetry)
+                            <button
+                                type="submit"
+                                wire:loading.attr="disabled"
+                                class="btn-primary w-full sm:flex-1 !min-h-[46px] text-sm font-extrabold shadow-xs flex items-center justify-center gap-2"
+                            >
+                                <x-app-icon name="shield" class="w-4 h-4" />
+                                <span wire:loading.remove target="startQuiz">Buka Kunci & Mulai Kerjakan Soal</span>
+                                <span wire:loading target="startQuiz">Memverifikasi Akses Soal...</span>
+                                <x-app-icon name="arrow-right" class="w-4 h-4" />
+                            </button>
+                        @else
+                            <div class="w-full sm:flex-1 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-800 text-center">
+                                Anda telah mencapai batas pengerjaan paket soal ini ({{ $attemptsUsed }} kali).
+                            </div>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -471,31 +477,38 @@
 
                 <div class="pt-4 border-t-2 border-sun-soft flex flex-wrap items-center justify-center gap-3">
                     <a
-                        href="{{ route('materials') }}"
-                        class="btn-secondary text-xs inline-flex items-center gap-2 min-h-[42px]"
+                        href="{{ route('materials', ['grade' => $gradeLevel, 'subject' => $subjectName]) }}"
+                        class="btn-secondary text-xs inline-flex items-center gap-2 min-h-[44px]"
                     >
                         <x-app-icon name="book" class="w-4 h-4" />
                         <span>Pelajari Materi Terkait</span>
                     </a>
 
-                    <button
-                        type="button"
-                        wire:click="retryQuiz"
-                        @click="
-                            try {
-                                localStorage.removeItem('quiz_idx_{{ $bankId }}');
-                                localStorage.removeItem('quiz_ans_{{ $bankId }}');
-                            } catch (e) {}
-                        "
-                        class="btn-primary text-xs inline-flex items-center gap-2 min-h-[42px]"
-                    >
-                        <x-app-icon name="refresh" class="w-4 h-4" />
-                        <span>Ulangi Latihan</span>
-                    </button>
+                    @if ($canRetry)
+                        <button
+                            type="button"
+                            wire:click="retryQuiz"
+                            @click="
+                                try {
+                                    localStorage.removeItem('quiz_idx_{{ $bankId }}');
+                                    localStorage.removeItem('quiz_ans_{{ $bankId }}');
+                                } catch (e) {}
+                            "
+                            class="btn-primary text-xs inline-flex items-center gap-2 min-h-[44px]"
+                        >
+                            <x-app-icon name="refresh" class="w-4 h-4" />
+                            <span>Ulangi Latihan</span>
+                        </button>
+                    @else
+                        <span class="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-800 inline-flex items-center gap-2 min-h-[44px]">
+                            <x-app-icon name="shield" class="w-4 h-4" />
+                            <span>Batas Pengerjaan Tercapai ({{ $attemptsUsed }}x)</span>
+                        </span>
+                    @endif
 
                     <a
                         href="{{ route('quizzes') }}"
-                        class="btn-ghost text-xs inline-flex items-center gap-2 min-h-[42px]"
+                        class="btn-ghost text-xs inline-flex items-center gap-2 min-h-[44px]"
                     >
                         <x-app-icon name="arrow-left" class="w-3.5 h-3.5" />
                         <span>Kembali ke Daftar</span>

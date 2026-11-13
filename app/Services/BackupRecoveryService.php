@@ -7,6 +7,7 @@ use App\Models\SystemBackup;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use PDO;
@@ -41,7 +42,16 @@ class BackupRecoveryService
 
             $filesCount = 0;
 
-            // 1. Salin Database SQLite ke dalam ZIP
+            // 1. Pastikan WAL SQLite ter-flush sebelum disalin ke dalam ZIP (lewati jika berada di dalam transaksi aktif)
+            if (DB::connection()->getDriverName() === 'sqlite' && DB::transactionLevel() === 0) {
+                try {
+                    DB::connection()->getPdo()->exec('PRAGMA wal_checkpoint(TRUNCATE);');
+                } catch (\Throwable) {
+                    // Lewati jika sedang ada lock baca/tulis paralel agar pembuatan ZIP tidak gagal
+                }
+            }
+
+            // 2. Salin Database SQLite ke dalam ZIP
             $databasePath = database_path('database.sqlite');
             if (File::exists($databasePath)) {
                 $zip->addFile($databasePath, 'database/database.sqlite');
@@ -277,6 +287,118 @@ class BackupRecoveryService
             'last_recovery_notes' => $lastTest?->test_notes ?? 'Silakan jalankan simulasi uji pemulihan untuk memverifikasi arsip.',
             'total_backups' => SystemBackup::count(),
         ];
+    }
+
+    /**
+     * Pangkas arsip backup lama sesuai kebijakan retensi (secara default simpan 30 arsip terbaru).
+     */
+    public function pruneOldBackups(int $keep = 30): int
+    {
+        if ($keep < 1) {
+            return 0;
+        }
+
+        $idsToKeep = SystemBackup::orderByDesc('created_at')
+            ->limit($keep)
+            ->pluck('id');
+
+        $oldBackups = SystemBackup::whereNotIn('id', $idsToKeep)->get();
+        $deletedCount = 0;
+
+        foreach ($oldBackups as $oldBackup) {
+            if ($oldBackup->filepath && Storage::disk($oldBackup->disk)->exists($oldBackup->filepath)) {
+                Storage::disk($oldBackup->disk)->delete($oldBackup->filepath);
+            }
+            $oldBackup->delete();
+            $deletedCount++;
+        }
+
+        return $deletedCount;
+    }
+
+    /**
+     * Pulihkan database SQLite dan file unggahan publik dari arsip backup ZIP terpilih.
+     */
+    public function restoreBackup(SystemBackup $backup, ?User $actor = null): array
+    {
+        /** @var User|null $currentUser */
+        $currentUser = $actor ?: Auth::user();
+        $actorName = $currentUser?->name ?? 'Sistem';
+
+        $zipFullPath = Storage::disk($backup->disk)->path($backup->filepath);
+        if (! File::exists($zipFullPath)) {
+            throw new Exception("File arsip backup tidak ditemukan di penyimpanan: {$backup->filename}");
+        }
+
+        $tempExtractDir = storage_path('app/temp_restore_' . $backup->id . '_' . time());
+        File::makeDirectory($tempExtractDir, 0755, true);
+
+        try {
+            $zip = new ZipArchive();
+            if ($zip->open($zipFullPath) !== true) {
+                throw new Exception("Berkas ZIP backup {$backup->filename} rusak atau tidak dapat dibuka.");
+            }
+            $zip->extractTo($tempExtractDir);
+            $zip->close();
+
+            $restoredDbSource = $tempExtractDir . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'database.sqlite';
+            if (! File::exists($restoredDbSource)) {
+                throw new Exception('Berkas database/database.sqlite tidak ditemukan di dalam arsip backup.');
+            }
+
+            $pdo = new PDO('sqlite:' . $restoredDbSource);
+            $integrityResult = $pdo->query('PRAGMA integrity_check;')->fetchColumn();
+            $pdo = null;
+            if (strtolower((string) $integrityResult) !== 'ok') {
+                throw new Exception("Database dalam arsip backup gagal lolos PRAGMA integrity_check: {$integrityResult}");
+            }
+
+            // Tutup koneksi database aktif lalu timpa database utama & bersihkan sidecar WAL/SHM
+            $targetDbPath = database_path('database.sqlite');
+            DB::disconnect();
+            gc_collect_cycles();
+
+            foreach (['-wal', '-shm'] as $suffix) {
+                if (File::exists($targetDbPath . $suffix)) {
+                    @File::delete($targetDbPath . $suffix);
+                }
+            }
+
+            File::copy($restoredDbSource, $targetDbPath);
+
+            $restoredStorageSource = $tempExtractDir . DIRECTORY_SEPARATOR . 'storage_public';
+            $restoredFilesCount = 0;
+            if (File::isDirectory($restoredStorageSource)) {
+                $targetPublicPath = storage_path('app/public');
+                File::ensureDirectoryExists($targetPublicPath);
+                File::copyDirectory($restoredStorageSource, $targetPublicPath);
+                $restoredFilesCount = count(File::allFiles($restoredStorageSource));
+            }
+
+            DB::reconnect();
+
+            ActivityLog::record(
+                action: 'restore_backup',
+                description: "{$actorName} memulihkan sistem dari arsip backup {$backup->filename} ({$restoredFilesCount} berkas unggahan).",
+                reason: 'Pemulihan database dan file unggahan dari arsip backup terverifikasi',
+                subject: $backup,
+                properties: [
+                    'filename' => $backup->filename,
+                    'restored_files_count' => $restoredFilesCount,
+                ],
+                module: 'Pengaturan',
+                actor: $currentUser
+            );
+
+            return [
+                'success' => true,
+                'message' => "Sistem berhasil dipulihkan dari {$backup->filename} ({$restoredFilesCount} berkas unggahan).",
+            ];
+        } finally {
+            if (File::isDirectory($tempExtractDir)) {
+                File::deleteDirectory($tempExtractDir);
+            }
+        }
     }
 }
 

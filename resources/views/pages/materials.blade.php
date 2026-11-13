@@ -21,13 +21,15 @@
         $count7 = $gradeCounts['7'] ?? 0;
         $count8 = $gradeCounts['8'] ?? 0;
         $count9 = $gradeCounts['9'] ?? 0;
+        $initialGrade = in_array((string) request('grade'), ['7', '8', '9'], true) ? (string) request('grade') : 'all';
+        $initialSubject = trim((string) request('subject', ''));
     @endphp
 
     <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-16 space-y-8"
         x-data="{
-            selectedGrade: 'all',
-            searchQuery: '',
+            selectedGrade: @js($initialGrade),
+            searchQuery: @js($initialSubject),
             activeMaterial: null,
             materialsList: @js($materials->map(fn($m) => ['id' => $m->id, 'grade' => (string) $m->grade_level, 'title' => $m->title, 'subject' => $m->subject?->name ?? ''])),
             openMaterial(mat) {

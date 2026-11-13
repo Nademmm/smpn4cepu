@@ -7,6 +7,7 @@ use App\Models\ActivityLog;
 use App\Models\StudentAcademicHistory;
 use App\Models\StudentStatistic;
 use App\Models\User;
+use App\Support\ClassroomOptions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -325,35 +326,56 @@ class AcademicYearService
             $alumniCount = 0;
             $mutasiCount = 0;
 
-            foreach ($histories as $history) {
-                $student = $history->student;
-                if (! $student) {
-                    continue;
-                }
+            // Jeda sinkronisasi statistik per-model agar tidak memicu N+1 query saat looping ratusan siswa
+            User::$skipStatisticSync = true;
+            try {
+                foreach ($histories as $history) {
+                    $student = $history->student;
+                    if (! $student) {
+                        continue;
+                    }
 
-                if ($history->status === 'lulus') {
-                    // Siswa kelas 9 lulus menjadi alumni, akun tetap tersimpan
-                    $student->update([
-                        'student_class' => null,
-                        'status' => 'alumni',
-                    ]);
-                    $history->update(['status' => 'lulus']);
-                    $alumniCount++;
-                } elseif ($history->status === 'mutasi_keluar') {
-                    $student->update([
-                        'student_class' => null,
-                        'status' => 'mutasi_keluar',
-                    ]);
-                    $mutasiCount++;
-                } else {
-                    // Siswa aktif di rombel baru
-                    $student->update([
-                        'student_class' => $history->student_class,
-                        'status' => 'aktif',
-                    ]);
-                    $history->update(['status' => 'aktif']);
-                    $updatedCount++;
+                    // Simpan snapshot kelas pada tahun ajaran sebelumnya jika belum tercatat di riwayat
+                    if ($previousActiveYear && $previousActiveYear->id !== $targetYear->id && ! empty($student->student_class)) {
+                        StudentAcademicHistory::firstOrCreate(
+                            [
+                                'student_id' => $student->id,
+                                'academic_year_id' => $previousActiveYear->id,
+                            ],
+                            [
+                                'student_class' => $student->student_class,
+                                'status' => 'aktif',
+                                'notes' => 'Snapshot otomatis sebelum aktivasi tahun ajaran ' . $targetYear->name,
+                            ]
+                        );
+                    }
+
+                    if ($history->status === 'lulus') {
+                        // Siswa kelas 9 lulus menjadi alumni, akun tetap tersimpan
+                        $student->update([
+                            'student_class' => null,
+                            'status' => 'alumni',
+                        ]);
+                        $history->update(['status' => 'lulus']);
+                        $alumniCount++;
+                    } elseif ($history->status === 'mutasi_keluar') {
+                        $student->update([
+                            'student_class' => null,
+                            'status' => 'mutasi_keluar',
+                        ]);
+                        $mutasiCount++;
+                    } else {
+                        // Siswa aktif di rombel baru
+                        $student->update([
+                            'student_class' => $history->student_class,
+                            'status' => 'aktif',
+                        ]);
+                        $history->update(['status' => 'aktif']);
+                        $updatedCount++;
+                    }
                 }
+            } finally {
+                User::$skipStatisticSync = false;
             }
 
             // 2. Tutup tahun ajaran aktif sebelumnya
@@ -364,8 +386,9 @@ class AcademicYearService
             // 3. Aktifkan tahun ajaran target
             $targetYear->update(['status' => 'aktif']);
 
-            // 4. Sinkronkan statistik rombel untuk tahun ajaran baru
+            // 4. Sinkronkan statistik rombel untuk tahun ajaran baru & bersihkan cache rombel
             User::syncAllRombelStatistics($targetYear->name);
+            ClassroomOptions::flushCache();
 
             /** @var User|null $actor */
             $actor = Auth::user();

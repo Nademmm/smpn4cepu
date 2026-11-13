@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Book;
 use App\Models\ElectionVote;
-use App\Models\LibraryBook;
 use App\Models\StaffMember;
 use App\Models\StudentStatistic;
 use Filament\Widgets\StatsOverviewWidget;
@@ -29,7 +28,7 @@ class SchoolOverviewWidget extends StatsOverviewWidget
                 'totalStudents' => (int) $studentQuery->sum('total_count'),
                 'totalStaff' => StaffMember::where('is_active', true)->count(),
                 'totalBooks' => (int) Book::active()->sum('physical_stock'),
-                'totalVotes' => ElectionVote::count(),
+                'totalVotes' => ElectionVote::whereHas('candidate', fn ($q) => $q->active())->count(),
             ];
         });
 

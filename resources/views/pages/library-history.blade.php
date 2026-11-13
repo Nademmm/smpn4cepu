@@ -6,6 +6,20 @@
     />
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+        @if (session('library_status'))
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-bold flex items-center gap-3 shadow-2xs" role="status">
+                <x-app-icon name="check-circle" class="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>{{ session('library_status') }}</span>
+            </div>
+        @endif
+
+        @if (session('library_error'))
+            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-sm font-bold flex items-center gap-3 shadow-2xs" role="alert">
+                <x-app-icon name="x-circle" class="w-5 h-5 text-rose-600 shrink-0" />
+                <span>{{ session('library_error') }}</span>
+            </div>
+        @endif
+
         {{-- Ringkasan Statistik Peminjam --}}
         @php
             $activeLoans = $history->whereIn('status', ['diambil', 'dipinjam']);
@@ -130,7 +144,7 @@
                             <div class="flex flex-wrap items-center gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
                                 <a
                                     href="{{ route('library.ticket', $item->reservation_code) }}"
-                                    class="btn-ghost bg-slate-50 border border-slate-200 hover:border-brand text-xs font-bold px-3 py-2 rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
+                                    class="btn-ghost bg-slate-50 border border-slate-200 hover:border-brand text-xs font-bold px-3.5 py-2.5 min-h-[44px] rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
                                 >
                                     <x-app-icon name="qr-code" class="w-4 h-4 text-navy" />
                                     <span>Lihat Tiket &amp; QR Code</span>
@@ -139,11 +153,28 @@
                                 <a
                                     href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
                                     download="qr-{{ $item->reservation_code }}.svg"
-                                    class="btn-primary text-xs font-extrabold px-3 py-2 rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
+                                    class="btn-primary text-xs font-extrabold px-3.5 py-2.5 min-h-[44px] rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
                                 >
                                     <x-app-icon name="arrow-down-tray" class="w-4 h-4 text-white" />
                                     <span>Unduh QR Code</span>
                                 </a>
+
+                                @if ($item->status === 'menunggu')
+                                    <form
+                                        method="POST"
+                                        action="{{ route('library.ticket.cancel', $item->reservation_code) }}"
+                                        onsubmit="return confirm('Batalkan pemesanan buku ini? Stok eksemplar akan dikembalikan ke rak perpustakaan.');"
+                                    >
+                                        @csrf
+                                        <button
+                                            type="submit"
+                                            class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-800 text-xs font-bold inline-flex items-center gap-1.5 transition shadow-2xs"
+                                        >
+                                            <x-app-icon name="x-circle" class="w-4 h-4 text-rose-600" />
+                                            <span>Batalkan Pemesanan</span>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     @endforeach

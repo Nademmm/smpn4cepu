@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Livewire\Public\ContactForm;
-use App\Models\LibraryBook;
+use App\Models\Book;
 use App\Models\Post;
 use App\Models\QuestionBank;
 use App\Models\SchoolDocument;
@@ -80,7 +80,7 @@ class PublicRoutesTest extends TestCase
 
     public function test_library_book_reservation_validates_and_creates_ticket(): void
     {
-        $book = LibraryBook::where('available_stock', '>', 0)->first();
+        $book = Book::active()->where('physical_stock', '>', 0)->first();
         $this->assertNotNull($book);
 
         $pickupDate = now()->addDay()->isWeekend()

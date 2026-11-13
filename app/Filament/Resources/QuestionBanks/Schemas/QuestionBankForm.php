@@ -96,6 +96,19 @@ class QuestionBankForm
                     ->helperText('Jika diaktifkan, paket soal ini tampil di halaman Latihan Soal.')
                     ->default(true),
 
+                Toggle::make('allow_retry')
+                    ->label('Izinkan Ulangi Latihan')
+                    ->helperText('Jika dimatikan, siswa hanya boleh mengerjakan paket soal ini 1 kali.')
+                    ->default(true),
+
+                TextInput::make('max_attempts')
+                    ->label('Batas Maksimal Percobaan')
+                    ->numeric()
+                    ->minValue(0)
+                    ->default(0)
+                    ->helperText('Isi 0 untuk mengizinkan pengulangan tanpa batas selama fitur ulangi aktif.')
+                    ->suffix('Kali'),
+
                 Hidden::make('created_by')
                     ->default(fn () => auth()->id()),
 

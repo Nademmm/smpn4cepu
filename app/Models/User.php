@@ -15,6 +15,8 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable, HasRoles;
 
+    public static bool $skipStatisticSync = false;
+
     protected $fillable = [
         'name',
         'email',
@@ -26,6 +28,7 @@ class User extends Authenticatable implements FilamentUser
         'birth_place',
         'birth_date',
         'student_class',
+        'homeroom_class',
         'status',
         'dapodik_id',
     ];
@@ -47,7 +50,13 @@ class User extends Authenticatable implements FilamentUser
     protected static function booted(): void
     {
         static::saved(function (self $user) {
-            if ($user->wasChanged(['student_class', 'gender']) || $user->wasRecentlyCreated) {
+            if ($user->wasChanged(['student_class', 'gender', 'status']) || $user->wasRecentlyCreated) {
+                \App\Support\ClassroomOptions::flushCache();
+
+                if (self::$skipStatisticSync) {
+                    return;
+                }
+
                 $oldClass = $user->getOriginal('student_class');
                 if ($oldClass && preg_match('/^[789][A-Z]$/i', (string) $oldClass)) {
                     self::syncSingleRombelStatistic(strtoupper((string) $oldClass));
@@ -59,7 +68,9 @@ class User extends Authenticatable implements FilamentUser
         });
 
         static::deleted(function (self $user) {
-            if ($user->student_class && preg_match('/^[789][A-Z]$/i', (string) $user->student_class)) {
+            \App\Support\ClassroomOptions::flushCache();
+
+            if (! self::$skipStatisticSync && $user->student_class && preg_match('/^[789][A-Z]$/i', (string) $user->student_class)) {
                 self::syncSingleRombelStatistic(strtoupper((string) $user->student_class));
             }
         });
@@ -73,8 +84,13 @@ class User extends Authenticatable implements FilamentUser
 
         $academicYear = $academicYear ?: (AcademicYear::getActive()?->name ?? '2026/2027');
 
-        $male = self::where('student_class', $className)->where('gender', 'L')->count();
-        $female = self::where('student_class', $className)->where('gender', 'P')->count();
+        $baseQuery = self::where('student_class', $className)
+            ->where(function ($q): void {
+                $q->whereNull('status')->orWhere('status', 'aktif');
+            });
+
+        $male = (clone $baseQuery)->where('gender', 'L')->count();
+        $female = (clone $baseQuery)->where('gender', 'P')->count();
 
         if ($male === 0 && $female === 0) {
             return;
@@ -98,11 +114,7 @@ class User extends Authenticatable implements FilamentUser
     {
         $academicYear = $academicYear ?: (AcademicYear::getActive()?->name ?? '2026/2027');
 
-        $classes = [
-            '7A', '7B', '7C', '7D', '7E', '7F', '7G',
-            '8A', '8B', '8C', '8D', '8E', '8F', '8G',
-            '9A', '9B', '9C', '9D', '9E', '9F',
-        ];
+        $classes = \App\Support\ClassroomOptions::allClasses();
 
         $synced = 0;
         foreach ($classes as $cls) {

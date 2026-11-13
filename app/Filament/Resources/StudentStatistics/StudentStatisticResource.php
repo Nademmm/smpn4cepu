@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,6 +61,23 @@ class StudentStatisticResource extends Resource
         $user = Auth::user();
 
         return $user instanceof User && $user->hasRole('super_admin');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        /** @var User|null $user */
+        $user = Auth::user();
+        if ($user instanceof User && $user->hasRole('wali_kelas') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            if (! empty($user->homeroom_class)) {
+                $query->where('class_name', $user->homeroom_class);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        return $query;
     }
 
     public static function getGloballySearchableAttributes(): array

@@ -20,6 +20,8 @@ class QuestionBank extends Model
         'passing_grade',
         'access_code',
         'is_active',
+        'allow_retry',
+        'max_attempts',
         'created_by',
     ];
 
@@ -30,6 +32,8 @@ class QuestionBank extends Model
             'duration_minutes' => 'integer',
             'passing_grade' => 'integer',
             'is_active' => 'boolean',
+            'allow_retry' => 'boolean',
+            'max_attempts' => 'integer',
         ];
     }
 

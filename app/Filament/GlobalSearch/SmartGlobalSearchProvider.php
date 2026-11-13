@@ -140,20 +140,6 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
                 'permission' => 'Create:Book',
             ],
             [
-                'title' => 'Katalog Buku Perpustakaan (Koleksi Fisik Lama)',
-                'group' => 'Akademik & Pembelajaran',
-                'keywords' => ['buku', 'perpustakaan', 'katalog', 'pustaka', 'literasi', 'bacaan', 'novel', 'pelajaran'],
-                'routeName' => 'filament.admin.resources.library-books.index',
-                'permission' => 'ViewAny:LibraryBook',
-            ],
-            [
-                'title' => 'Tambah Buku Perpustakaan',
-                'group' => 'Akademik & Pembelajaran',
-                'keywords' => ['tambah buku', 'input buku', 'katalog baru', 'buku baru'],
-                'routeName' => 'filament.admin.resources.library-books.create',
-                'permission' => 'Create:LibraryBook',
-            ],
-            [
                 'title' => 'Bank Soal & Ujian',
                 'group' => 'Akademik & Pembelajaran',
                 'keywords' => ['soal', 'bank soal', 'ujian', 'cbt', 'asesmen', 'tes', 'evaluasi', 'kuis'],

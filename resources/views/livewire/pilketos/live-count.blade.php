@@ -10,7 +10,7 @@
                 <span class="text-xs font-black uppercase tracking-wider text-emerald-700">SIARAN REAL-TIME LANGSUNG</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-navy leading-snug">Hasil Sementara Perolehan Suara</h2>
-            <p class="text-xs text-ink-soft font-medium">Data diperbarui otomatis setiap 5 detik langsung dari kotak suara digital.</p>
+            <p class="text-xs text-ink-soft font-medium">Data diperbarui otomatis setiap 8 detik langsung dari kotak suara digital.</p>
         </div>
 
         <div class="flex items-center gap-3 bg-cream/70 border border-sun-soft px-5 py-3 rounded-2xl shrink-0">

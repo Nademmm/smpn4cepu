@@ -16,7 +16,7 @@ class LiveCount extends Component
                 ->orderBy('candidate_number')
                 ->get();
 
-            $totalVotes = ElectionVote::count();
+            $totalVotes = (int) $candidates->sum('votes_count');
 
             $chartData = [
                 'labels' => $candidates->pluck('candidate_name')->toArray(),

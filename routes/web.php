@@ -303,17 +303,43 @@ Route::middleware('auth')->group(function () {
         return view('pages.library-history', compact('history', 'user'));
     })->name('library.history');
 
+    // 11b-2. Pembatalan Reservasi Mandiri oleh Peminjam (Khusus Status Menunggu)
+    Route::post('/belajar/perpustakaan/tiket/{code}/batal', function (string $code, \App\Services\LibraryLoanService $loanService) {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $ticket = $loanService->findByCode($code);
+
+        if (! $ticket) {
+            return back()->with('library_error', 'Tiket peminjaman tidak ditemukan.');
+        }
+
+        $isOwner = ($user && (int) $ticket->user_id === (int) $user->id)
+            || ($user && ! empty($user->nisn) && $ticket->borrower_nisn === $user->nisn);
+
+        if (! $isOwner) {
+            abort(403, 'Anda tidak berwenang membatalkan tiket peminjaman ini.');
+        }
+
+        try {
+            $loanService->cancel($ticket, 'Dibatalkan mandiri oleh peminjam melalui halaman Riwayat Peminjaman.');
+
+            return back()->with('library_status', "Tiket {$ticket->reservation_code} berhasil dibatalkan dan stok buku telah dikembalikan.");
+        } catch (\DomainException $e) {
+            return back()->with('library_error', $e->getMessage());
+        }
+    })->middleware('throttle:30,1')->name('library.ticket.cancel');
+
     // 11c. Pembaruan Kata Sandi Mandiri oleh Pengguna (Siswa / Guru)
     Route::match(['post', 'put'], '/profil/ganti-password', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->name('password.update');
 
-    // 11c. Endpoint Pemrosesan Scan QR Code Sirkulasi Buku (Admin & Guru)
+    // 11d. Endpoint Pemrosesan Scan QR Code Sirkulasi Buku (Khusus Super Admin & Staf Perpus)
     Route::post('/admin/circulation/process-scan', function (Request $request, \App\Services\LibraryLoanService $loanService) {
         /** @var \App\Models\User|null $user */
         $user = $request->user();
-        if (! $user || ! $user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin'))) {
+        if (! $user || ! $user->hasAnyRole(['super_admin', 'staf_perpus'])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Akses ditolak: Anda tidak memiliki izin mengelola sirkulasi perpustakaan.',
+                'message' => 'Akses ditolak: Hanya Petugas Perpustakaan dan Super Admin yang berwenang memproses sirkulasi.',
             ], 403);
         }
 

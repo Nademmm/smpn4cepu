@@ -18,6 +18,6 @@ class CirculationCameraWidget extends Widget
         /** @var User|null $user */
         $user = Auth::user();
 
-        return $user?->hasAnyRole(['super_admin', 'staf_perpus', 'admin', 'guru']) ?? false;
+        return $user?->hasAnyRole(['super_admin', 'staf_perpus']) ?? false;
     }
 }
