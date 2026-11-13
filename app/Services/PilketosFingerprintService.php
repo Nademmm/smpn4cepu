@@ -48,7 +48,7 @@ class PilketosFingerprintService
      */
     public function hasAlreadyVoted(Request $request, ?string $fingerprint = null): bool
     {
-        if (auth()->check()) {
+        if (Auth::check()) {
             $userFp = $fingerprint ?? $this->generateFingerprint($request, '');
             return ElectionDevice::where('device_fingerprint', $userFp)->exists();
         }
