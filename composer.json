@@ -35,6 +35,10 @@
         }
     },
     "scripts": {
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan serve --host=127.0.0.1 --port=8000"
+        ],
         "test": "@php artisan test",
         "lint": "./vendor/bin/pint --test",
         "post-autoload-dump": [

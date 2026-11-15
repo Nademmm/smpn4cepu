@@ -140,8 +140,10 @@ php artisan storage:link
 # 5. Kompilasi aset frontend (Tailwind CSS, Alpine.js, & Chart.js)
 npm run build
 
-# 6. Jalankan server lokal
+# 6. Jalankan server lokal (buka http://127.0.0.1:8000 di browser)
 php artisan serve
+# atau:
+composer serve
 ```
 
 ---
