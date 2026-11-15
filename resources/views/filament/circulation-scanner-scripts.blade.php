@@ -258,6 +258,12 @@
     margin: 2px 0 0 0;
     overflow-wrap: anywhere;
 }
+.circulation-preview-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
 .circulation-retake-btn {
     padding: 8px 12px;
     background: #f8fafc;
@@ -269,6 +275,25 @@
     cursor: pointer;
     min-height: 44px;
     white-space: nowrap;
+}
+.circulation-clear-preview-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 8px;
+    color: #be123c;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.circulation-clear-preview-btn:hover {
+    background: #ffe4e6;
 }
 .circulation-manual-card {
     background: #ffffff;
@@ -464,8 +489,11 @@
     .circulation-manual-submit {
         width: 100%;
     }
-    .circulation-retake-btn {
+    .circulation-preview-actions {
         width: 100%;
+    }
+    .circulation-retake-btn {
+        flex: 1;
     }
     .circulation-ticket-row {
         flex-direction: column;
@@ -950,6 +978,24 @@
                 if (this._hasMutated && window.Livewire) {
                     this._hasMutated = false;
                     Livewire.dispatch('$refresh');
+                }
+            },
+
+            clearPreview() {
+                if (this._previewObjectUrl && URL.revokeObjectURL) {
+                    URL.revokeObjectURL(this._previewObjectUrl);
+                    this._previewObjectUrl = null;
+                }
+                this.previewImage = null;
+                this.lastResult = null;
+                this.lastScannedCode = '';
+                this.lastScannedAt = 0;
+                this.statusText = 'Siap memindai foto QR tiket';
+                if (this.$refs?.nativeCameraInput) {
+                    this.$refs.nativeCameraInput.value = '';
+                }
+                if (this.$refs?.fileUploadInput) {
+                    this.$refs.fileUploadInput.value = '';
                 }
             },
 

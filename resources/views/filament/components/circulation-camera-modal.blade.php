@@ -132,13 +132,24 @@
                         <span class="circulation-preview-label">Pratinjau Gambar</span>
                         <p class="circulation-preview-status" x-text="statusText"></p>
                     </div>
-                    <button
-                        type="button"
-                        x-on:click="$refs.nativeCameraInput.click()"
-                        class="circulation-retake-btn"
-                    >
-                        Foto Ulang
-                    </button>
+                    <div class="circulation-preview-actions">
+                        <button
+                            type="button"
+                            x-on:click="$refs.nativeCameraInput.click()"
+                            class="circulation-retake-btn"
+                        >
+                            Foto Ulang
+                        </button>
+                        <button
+                            type="button"
+                            x-on:click="clearPreview()"
+                            class="circulation-clear-preview-btn"
+                            title="Hapus gambar pratinjau"
+                            aria-label="Hapus gambar pratinjau"
+                        >
+                            ✕
+                        </button>
+                    </div>
                 </div>
             </template>
         </div>

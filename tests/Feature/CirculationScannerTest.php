@@ -35,6 +35,7 @@ class CirculationScannerTest extends TestCase
         $this->assertStringContainsString("circulationScanner('hand_over')", $pinjamModalHtml);
         $this->assertStringContainsString('Mode Peminjaman', $pinjamModalHtml);
         $this->assertStringContainsString('capture="environment"', $pinjamModalHtml);
+        $this->assertStringContainsString('clearPreview()', $pinjamModalHtml);
         $this->assertStringNotContainsString('Video Live Scanner', $pinjamModalHtml);
         $this->assertStringNotContainsString('liveVideoEl', $pinjamModalHtml);
         $this->assertStringNotContainsString('circulation-action-mode', $pinjamModalHtml);
