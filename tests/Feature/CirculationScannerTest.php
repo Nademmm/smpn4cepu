@@ -88,6 +88,15 @@ class CirculationScannerTest extends TestCase
 
         $svg = BarcodeService::generateQrCodeSvg($reservation->reservation_code);
         $this->assertStringContainsString('<svg', $svg);
+        $this->assertTrue($reservation->has_active_qr);
+
+        // Active ticket page shows QR code and download endpoint is available
+        $this->get(route('library.ticket', $ticketCode))
+            ->assertStatus(200)
+            ->assertSee('id="ticket-page-qr-box"', false)
+            ->assertSee('Unduh Tiket QR', false);
+        $this->get(route('library.ticket.download-barcode', $ticketCode))
+            ->assertStatus(200);
 
         // 1. Return mode on PENDING ticket should reject gracefully with ticket info
         $wrongReturn = $this->actingAs($librarian)->postJson(route('admin.circulation.process-scan'), [
@@ -148,5 +157,18 @@ class CirculationScannerTest extends TestCase
                     'status' => BookReservation::STATUS_RETURNED,
                 ],
             ]);
+
+        $reservation->refresh();
+        $this->assertFalse($reservation->has_active_qr);
+
+        // 5. Returned ticket hides QR code and blocks barcode download
+        $this->get(route('library.ticket', $ticketCode))
+            ->assertStatus(200)
+            ->assertDontSee('id="ticket-page-qr-box"', false)
+            ->assertDontSee('Unduh Tiket QR', false)
+            ->assertSee('Buku Sudah Dikembalikan', false);
+
+        $this->get(route('library.ticket.download-barcode', $ticketCode))
+            ->assertStatus(410);
     }
 }

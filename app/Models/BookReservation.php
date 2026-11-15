@@ -156,6 +156,14 @@ class BookReservation extends Model
     }
 
     /**
+     * Apakah tiket masih aktif membutuhkan QR Code untuk serah terima atau pengembalian.
+     */
+    public function getHasActiveQrAttribute(): bool
+    {
+        return in_array($this->status, self::HOLDING_STOCK, true);
+    }
+
+    /**
      * Mengembalikan Barcode Code 128 dalam format SVG murni.
      */
     public function getBarcodeSvgAttribute(): string

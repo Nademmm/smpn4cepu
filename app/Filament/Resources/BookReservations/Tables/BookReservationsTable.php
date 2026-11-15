@@ -70,11 +70,12 @@ class BookReservationsTable
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
-                // 1. Lihat Tiket & QR Code
+                // 1. Lihat Tiket & QR Code (hanya untuk tiket aktif)
                 Action::make('viewQrCode')
                     ->label('Tiket & QR Code')
                     ->icon('heroicon-o-qr-code')
                     ->color('primary')
+                    ->visible(fn (BookReservation $record): bool => $record->has_active_qr)
                     ->modalHeading(fn (BookReservation $record) => "Tiket Sirkulasi: {$record->reservation_code}")
                     ->modalDescription('Pindai QR Code di bawah ini menggunakan kamera sirkulasi perpustakaan.')
                     ->modalSubmitAction(false)

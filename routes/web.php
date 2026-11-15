@@ -228,6 +228,9 @@ Route::get('/belajar/perpustakaan/tiket/{code}/unduh-barcode', function (string 
     if (! $ticket) {
         abort(404, 'Tiket sirkulasi perpustakaan tidak ditemukan.');
     }
+    if (! $ticket->has_active_qr) {
+        abort(410, 'QR Code tidak lagi tersedia karena tiket peminjaman sudah selesai atau tidak aktif.');
+    }
 
     return response($ticket->qr_svg, 200, [
         'Content-Type' => 'image/svg+xml',

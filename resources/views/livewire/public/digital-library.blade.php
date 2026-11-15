@@ -1222,28 +1222,43 @@
                                     <div><span class="text-ink-mute">Tenggat Kembali:</span> <strong class="text-brand font-bold">{{ $checkedTicket->due_date ? $checkedTicket->due_date->format('d M Y') : '-' }}</strong></div>
                                 </div>
 
-                                <div class="p-3 bg-white rounded-lg border border-slate-200 text-center space-y-2">
-                                    <div id="checked-ticket-qr-box" class="w-40 h-40 p-2 mx-auto flex items-center justify-center">
-                                        {!! $checkedTicket->qr_svg !!}
+                                @if($checkedTicket->has_active_qr)
+                                    <div class="p-3 bg-white rounded-lg border border-slate-200 text-center space-y-2">
+                                        <div id="checked-ticket-qr-box" class="w-40 h-40 p-2 mx-auto flex items-center justify-center">
+                                            {!! $checkedTicket->qr_svg !!}
+                                        </div>
+                                        <div class="flex flex-wrap items-center justify-center gap-2">
+                                            <button
+                                                type="button"
+                                                onclick="downloadBarcodePng('checked-ticket-qr-box', 'qr-{{ $checkedTicket->reservation_code }}.png')"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold bg-navy text-white hover:bg-brand transition-colors cursor-pointer shadow-2xs"
+                                            >
+                                                <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
+                                                <span>Unduh QR Code (PNG)</span>
+                                            </button>
+                                            <a
+                                                href="{{ route('library.ticket.download-barcode', $checkedTicket->reservation_code) }}"
+                                                download="qr-{{ $checkedTicket->reservation_code }}.svg"
+                                                class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                                            >
+                                                <span>Unduh SVG</span>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="flex flex-wrap items-center justify-center gap-2">
-                                        <button
-                                            type="button"
-                                            onclick="downloadBarcodePng('checked-ticket-qr-box', 'qr-{{ $checkedTicket->reservation_code }}.png')"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold bg-navy text-white hover:bg-brand transition-colors cursor-pointer shadow-2xs"
-                                        >
-                                            <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
-                                            <span>Unduh QR Code (PNG)</span>
-                                        </button>
-                                        <a
-                                            href="{{ route('library.ticket.download-barcode', $checkedTicket->reservation_code) }}"
-                                            download="qr-{{ $checkedTicket->reservation_code }}.svg"
-                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
-                                        >
-                                            <span>Unduh SVG</span>
-                                        </a>
+                                @else
+                                    <div class="p-3 bg-white rounded-lg border border-slate-200 text-center space-y-1">
+                                        <p class="text-xs font-extrabold {{ $checkedTicket->status === 'selesai' ? 'text-emerald-700' : 'text-slate-700' }}">
+                                            {{ $checkedTicket->status === 'selesai' ? 'Buku sudah dikembalikan' : $checkedTicket->status_label }}
+                                        </p>
+                                        <p class="text-[11px] text-ink-mute">
+                                            @if($checkedTicket->status === 'selesai')
+                                                Peminjaman selesai{{ $checkedTicket->returned_at ? ' (' . $checkedTicket->returned_at->format('d M Y, H:i') . ')' : '' }}. QR Code tidak lagi ditampilkan.
+                                            @else
+                                                Tiket ini sudah tidak aktif sehingga QR Code tidak berlaku lagi.
+                                            @endif
+                                        </p>
                                     </div>
-                                </div>
+                                @endif
 
                                 <div class="pt-2 text-center">
                                     <a
@@ -1359,18 +1374,20 @@
                                                     target="_blank"
                                                     class="btn-ghost bg-white border border-slate-300 hover:border-brand text-[11px] font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1 shadow-2xs"
                                                 >
-                                                    <x-app-icon name="qr-code" class="w-3.5 h-3.5 text-navy" />
-                                                    <span>Tiket &amp; QR Code</span>
+                                                    <x-app-icon name="{{ $item->has_active_qr ? 'qr-code' : 'document' }}" class="w-3.5 h-3.5 text-navy" />
+                                                    <span>{{ $item->has_active_qr ? 'Tiket & QR Code' : 'Bukti Tiket' }}</span>
                                                 </a>
 
-                                                <a
-                                                    href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
-                                                    download="qr-{{ $item->reservation_code }}.svg"
-                                                    class="btn-primary text-[11px] font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1 shadow-2xs"
-                                                >
-                                                    <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
-                                                    <span>Unduh QR Code</span>
-                                                </a>
+                                                @if($item->has_active_qr)
+                                                    <a
+                                                        href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
+                                                        download="qr-{{ $item->reservation_code }}.svg"
+                                                        class="btn-primary text-[11px] font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1 shadow-2xs"
+                                                    >
+                                                        <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
+                                                        <span>Unduh QR Code</span>
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

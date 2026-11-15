@@ -146,18 +146,20 @@
                                     href="{{ route('library.ticket', $item->reservation_code) }}"
                                     class="btn-ghost bg-slate-50 border border-slate-200 hover:border-brand text-xs font-bold px-3.5 py-2.5 min-h-[44px] rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
                                 >
-                                    <x-app-icon name="qr-code" class="w-4 h-4 text-navy" />
-                                    <span>Lihat Tiket &amp; QR Code</span>
+                                    <x-app-icon name="{{ $item->has_active_qr ? 'qr-code' : 'document' }}" class="w-4 h-4 text-navy" />
+                                    <span>{{ $item->has_active_qr ? 'Lihat Tiket & QR Code' : 'Lihat Bukti Tiket' }}</span>
                                 </a>
 
-                                <a
-                                    href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
-                                    download="qr-{{ $item->reservation_code }}.svg"
-                                    class="btn-primary text-xs font-extrabold px-3.5 py-2.5 min-h-[44px] rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
-                                >
-                                    <x-app-icon name="arrow-down-tray" class="w-4 h-4 text-white" />
-                                    <span>Unduh QR Code</span>
-                                </a>
+                                @if ($item->has_active_qr)
+                                    <a
+                                        href="{{ route('library.ticket.download-barcode', $item->reservation_code) }}"
+                                        download="qr-{{ $item->reservation_code }}.svg"
+                                        class="btn-primary text-xs font-extrabold px-3.5 py-2.5 min-h-[44px] rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
+                                    >
+                                        <x-app-icon name="arrow-down-tray" class="w-4 h-4 text-white" />
+                                        <span>Unduh QR Code</span>
+                                    </a>
+                                @endif
 
                                 @if ($item->status === 'menunggu')
                                     <form

@@ -76,44 +76,72 @@
                 @endif
             </div>
 
-            {{-- QR Code Standar Sirkulasi Perpustakaan --}}
-            <div class="p-6 bg-slate-50/60 border-b border-slate-200 text-center space-y-4">
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs inline-flex flex-col items-center justify-center mx-auto max-w-full">
-                    <div id="ticket-page-qr-box" class="w-48 h-48 sm:w-56 sm:h-56 p-2 bg-white flex items-center justify-center">
-                        {!! $ticket->qr_svg !!}
+            {{-- QR Code Standar Sirkulasi Perpustakaan (Hanya untuk Tiket Aktif) --}}
+            @if($ticket->has_active_qr)
+                <div class="p-6 bg-slate-50/60 border-b border-slate-200 text-center space-y-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs inline-flex flex-col items-center justify-center mx-auto max-w-full">
+                        <div id="ticket-page-qr-box" class="w-48 h-48 sm:w-56 sm:h-56 p-2 bg-white flex items-center justify-center">
+                            {!! $ticket->qr_svg !!}
+                        </div>
+                        <div class="mt-2 text-center">
+                            <span class="text-[10px] uppercase font-bold text-ink-mute tracking-wider block">Kode Sirkulasi</span>
+                            <span class="font-mono font-black text-base sm:text-lg text-navy tracking-widest block">
+                                {{ $ticket->reservation_code }}
+                            </span>
+                        </div>
                     </div>
-                    <div class="mt-2 text-center">
-                        <span class="text-[10px] uppercase font-bold text-ink-mute tracking-wider block">Kode Sirkulasi</span>
-                        <span class="font-mono font-black text-base sm:text-lg text-navy tracking-widest block">
+
+                    {{-- Tombol Aksi Unduh QR --}}
+                    <div class="flex flex-wrap items-center justify-center gap-2 print:hidden">
+                        <button
+                            type="button"
+                            onclick="downloadQrPng('ticket-page-qr-box', 'qr-{{ $ticket->reservation_code }}.png')"
+                            class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-4 py-2.5 rounded-xl cursor-pointer shadow-2xs min-h-[44px]"
+                        >
+                            <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
+                            <span>Unduh Tiket QR (PNG)</span>
+                        </button>
+                        <a
+                            href="{{ route('library.ticket.download-barcode', $ticket->reservation_code) }}"
+                            download="qr-{{ $ticket->reservation_code }}.svg"
+                            class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-4 py-2.5 rounded-xl inline-flex items-center gap-1.5 min-h-[44px]"
+                        >
+                            <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-navy" />
+                            <span>Unduh Berkas SVG</span>
+                        </a>
+                    </div>
+
+                    <p class="text-xs text-ink-mute max-w-md mx-auto">
+                        Tunjukkan QR Code di atas kepada staf perpustakaan untuk proses serah terima atau pengembalian buku fisik. Simpan ke galeri ponsel Anda agar tidak hilang.
+                    </p>
+                </div>
+            @else
+                <div class="p-6 {{ $ticket->status === \App\Models\BookReservation::STATUS_RETURNED ? 'bg-emerald-50/50' : 'bg-slate-50/70' }} border-b border-slate-200 text-center space-y-3">
+                    <div class="inline-flex flex-col items-center justify-center bg-white px-6 py-5 rounded-2xl border {{ $ticket->status === \App\Models\BookReservation::STATUS_RETURNED ? 'border-emerald-200' : 'border-slate-200' }} shadow-2xs max-w-md mx-auto">
+                        <div class="w-12 h-12 rounded-full {{ $ticket->status === \App\Models\BookReservation::STATUS_RETURNED ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' }} flex items-center justify-center mb-2">
+                            @if($ticket->status === \App\Models\BookReservation::STATUS_RETURNED)
+                                <x-app-icon name="check-circle" class="w-7 h-7" />
+                            @else
+                                <x-app-icon name="x-circle" class="w-7 h-7" />
+                            @endif
+                        </div>
+                        <span class="text-[10px] uppercase font-bold text-ink-mute tracking-wider block">Kode Referensi Tiket</span>
+                        <span class="font-mono font-black text-base sm:text-lg text-navy tracking-widest block mt-0.5">
                             {{ $ticket->reservation_code }}
                         </span>
+                        <h2 class="text-sm font-extrabold {{ $ticket->status === \App\Models\BookReservation::STATUS_RETURNED ? 'text-emerald-800' : 'text-slate-800' }} mt-2">
+                            {{ $ticket->status === \App\Models\BookReservation::STATUS_RETURNED ? 'Buku Sudah Dikembalikan' : $ticket->status_label }}
+                        </h2>
+                        <p class="text-xs text-ink-mute mt-1 leading-relaxed">
+                            @if($ticket->status === \App\Models\BookReservation::STATUS_RETURNED)
+                                Transaksi peminjaman ini telah selesai{{ $ticket->returned_at ? ' pada ' . $ticket->returned_at->format('d M Y, H:i') : '' }}. QR Code dinonaktifkan karena tidak lagi digunakan.
+                            @else
+                                Tiket sirkulasi ini sudah tidak aktif sehingga QR Code tidak lagi berlaku.
+                            @endif
+                        </p>
                     </div>
                 </div>
-
-                {{-- Tombol Aksi Unduh QR --}}
-                <div class="flex flex-wrap items-center justify-center gap-2 print:hidden">
-                    <button
-                        type="button"
-                        onclick="downloadQrPng('ticket-page-qr-box', 'qr-{{ $ticket->reservation_code }}.png')"
-                        class="btn-primary text-xs flex items-center gap-1.5 font-extrabold px-4 py-2.5 rounded-xl cursor-pointer shadow-2xs min-h-[44px]"
-                    >
-                        <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-white" />
-                        <span>Unduh Tiket QR (PNG)</span>
-                    </button>
-                    <a
-                        href="{{ route('library.ticket.download-barcode', $ticket->reservation_code) }}"
-                        download="qr-{{ $ticket->reservation_code }}.svg"
-                        class="btn-ghost bg-white border border-slate-300 hover:border-brand text-xs font-bold px-4 py-2.5 rounded-xl inline-flex items-center gap-1.5 min-h-[44px]"
-                    >
-                        <x-app-icon name="arrow-down-tray" class="w-3.5 h-3.5 text-navy" />
-                        <span>Unduh Berkas SVG</span>
-                    </a>
-                </div>
-
-                <p class="text-xs text-ink-mute max-w-md mx-auto">
-                    Tunjukkan QR Code di atas kepada staf perpustakaan untuk proses serah terima atau pengembalian buku fisik. Simpan ke galeri ponsel Anda agar tidak hilang.
-                </p>
-            </div>
+            @endif
 
             {{-- Detail Rincian Tiket --}}
             <div class="p-6 space-y-5">
@@ -172,10 +200,16 @@
                             <span class="text-ink-mute">Batas Ambil:</span>
                             <span class="text-slate-700">{{ $ticket->pickup_deadline ? $ticket->pickup_deadline->format('d M Y') : '-' }}</span>
                         </div>
-                        <div class="flex justify-between py-1">
+                        <div class="flex justify-between py-1 {{ $ticket->returned_at ? 'border-b border-slate-100' : '' }}">
                             <span class="text-ink-mute">Tenggat Kembali:</span>
                             <strong class="text-brand font-black">{{ $ticket->due_date ? $ticket->due_date->format('d M Y') : '7 hari setelah diambil' }}</strong>
                         </div>
+                        @if($ticket->returned_at)
+                            <div class="flex justify-between py-1">
+                                <span class="text-ink-mute">Dikembalikan:</span>
+                                <strong class="text-emerald-700 font-bold">{{ $ticket->returned_at->format('d M Y, H:i') }}</strong>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
