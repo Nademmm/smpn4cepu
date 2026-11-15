@@ -427,9 +427,23 @@ Route::middleware('auth')->group(function () {
                 ],
             ]);
         } catch (\DomainException $e) {
+            $ticket->refresh();
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
+                'ticket' => [
+                    'code' => $ticket->reservation_code,
+                    'borrower_name' => $ticket->borrower_name,
+                    'borrower_class' => $ticket->borrower_class,
+                    'borrower_nisn' => $ticket->borrower_nisn,
+                    'book_title' => $ticket->book?->title,
+                    'status' => $ticket->status,
+                    'status_label' => $ticket->status_label,
+                    'status_color' => $ticket->status_color,
+                    'pickup_date' => $ticket->pickup_date?->format('d M Y'),
+                    'due_date' => $ticket->due_date?->format('d M Y'),
+                ],
             ], 422);
         } catch (\Throwable $e) {
             return response()->json([

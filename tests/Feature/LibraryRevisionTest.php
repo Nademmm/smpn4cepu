@@ -77,7 +77,7 @@ class LibraryRevisionTest extends TestCase
             'book_id' => $book->id,
             'borrower_name' => 'Ahmad Fajar',
             'borrower_class' => '8A',
-            'pickup_date' => now()->format('Y-m-d'),
+            'pickup_date' => (now()->isWeekend() ? now()->nextWeekday() : now())->format('Y-m-d'),
         ]);
 
         $response->assertStatus(200);
@@ -140,7 +140,7 @@ class LibraryRevisionTest extends TestCase
             ->assertSet('borrowBookId', $book->id)
             ->set('borrowerName', 'Siti Rahma')
             ->set('borrowerClass', '9B')
-            ->set('pickupDate', now()->format('Y-m-d'))
+            ->set('pickupDate', (now()->isWeekend() ? now()->nextWeekday() : now())->format('Y-m-d'))
             ->call('submitBorrow')
             ->assertHasNoErrors()
             ->assertSet('showBorrowModal', false)
@@ -226,7 +226,7 @@ class LibraryRevisionTest extends TestCase
             ->call('openBorrowModal', $book->id)
             ->assertSet('borrowerName', $student->name)
             ->assertSet('borrowerNisn', $student->nisn)
-            ->set('pickupDate', now()->format('Y-m-d'))
+            ->set('pickupDate', (now()->isWeekend() ? now()->nextWeekday() : now())->format('Y-m-d'))
             ->call('submitBorrow')
             ->assertHasNoErrors();
 
@@ -273,7 +273,7 @@ class LibraryRevisionTest extends TestCase
             name: 'Ahmad Siswa Kamera',
             class: '7A',
             nisn: '1234567890',
-            pickupDate: now()->format('Y-m-d')
+            pickupDate: (now()->isWeekend() ? now()->nextWeekday() : now())->format('Y-m-d')
         );
 
         $this->assertEquals(BookReservation::STATUS_PENDING, $ticket->status);

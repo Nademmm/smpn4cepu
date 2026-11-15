@@ -13,7 +13,7 @@ class CirculationScannerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_admin_book_reservations_page_includes_fixed_live_and_photo_scanner_scripts(): void
+    public function test_admin_book_reservations_page_uses_photo_scanner_with_separate_pinjam_and_kembali_buttons(): void
     {
         /** @var User $librarian */
         $librarian = User::factory()->create();
@@ -21,27 +21,34 @@ class CirculationScannerTest extends TestCase
 
         $response = $this->actingAs($librarian)->get('/admin/book-reservations');
         $response->assertStatus(200);
+        $response->assertSee('Scan Pinjam Buku', false);
+        $response->assertSee('Scan Kembali Buku', false);
         $response->assertSee('circulationScannerComponent', false);
-        $response->assertSee('circulationWidgetScanner', false);
-        $response->assertSee('acquireCameraStream', false);
-        $response->assertSee('decodeQrFromVideoFrame', false);
         $response->assertSee('decodeQrFromImageSource', false);
-        $response->assertDontSee('if (!cleanCode || this.isProcessing) return;', false);
+        $response->assertDontSee('acquireCameraStream', false);
+        $response->assertDontSee('getUserMedia', false);
+        $response->assertDontSee('decodeQrFromVideoFrame', false);
 
-        $modalHtml = view('filament.components.circulation-camera-modal')->render();
-        $this->assertStringContainsString('x-ref="liveVideoEl"', $modalHtml);
-        $this->assertStringContainsString('x-on:close-modal.window="stopLiveCamera()"', $modalHtml);
-        $this->assertStringNotContainsString('<template x-if="isLiveActive">', $modalHtml);
+        $pinjamModalHtml = view('filament.components.circulation-camera-modal', [
+            'actionMode' => 'hand_over',
+        ])->render();
+        $this->assertStringContainsString("circulationScanner('hand_over')", $pinjamModalHtml);
+        $this->assertStringContainsString('Mode Peminjaman', $pinjamModalHtml);
+        $this->assertStringContainsString('capture="environment"', $pinjamModalHtml);
+        $this->assertStringNotContainsString('Video Live Scanner', $pinjamModalHtml);
+        $this->assertStringNotContainsString('liveVideoEl', $pinjamModalHtml);
+        $this->assertStringNotContainsString('circulation-action-mode', $pinjamModalHtml);
 
-        $caddyfile = file_get_contents(base_path('docker/Caddyfile'));
-        $htaccess = file_get_contents(public_path('.htaccess'));
-        $this->assertStringContainsString('camera=(self)', $caddyfile);
-        $this->assertStringNotContainsString('camera=()', $caddyfile);
-        $this->assertStringContainsString('camera=(self)', $htaccess);
-        $this->assertStringNotContainsString('camera=()', $htaccess);
+        $kembaliModalHtml = view('filament.components.circulation-camera-modal', [
+            'actionMode' => 'return',
+        ])->render();
+        $this->assertStringContainsString("circulationScanner('return')", $kembaliModalHtml);
+        $this->assertStringContainsString('Mode Pengembalian', $kembaliModalHtml);
+        $this->assertStringContainsString('Proses Pengembalian', $kembaliModalHtml);
+        $this->assertStringNotContainsString('circulation-action-mode', $kembaliModalHtml);
     }
 
-    public function test_qr_svg_has_clean_quiet_zone_and_process_scan_endpoint_works_for_checkout_and_return(): void
+    public function test_qr_svg_has_clean_quiet_zone_and_process_scan_endpoint_works_for_hand_over_and_return(): void
     {
         /** @var User $librarian */
         $librarian = User::factory()->create();
@@ -81,10 +88,24 @@ class CirculationScannerTest extends TestCase
         $svg = BarcodeService::generateQrCodeSvg($reservation->reservation_code);
         $this->assertStringContainsString('<svg', $svg);
 
-        // 1. Auto scan on PENDING ticket hands over the book (checkout)
+        // 1. Return mode on PENDING ticket should reject gracefully with ticket info
+        $wrongReturn = $this->actingAs($librarian)->postJson(route('admin.circulation.process-scan'), [
+            'code' => $reservation->reservation_code,
+            'circulation_action' => 'return',
+        ]);
+        $wrongReturn->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+                'ticket' => [
+                    'code' => $ticketCode,
+                    'status' => BookReservation::STATUS_PENDING,
+                ],
+            ]);
+
+        // 2. Hand-over mode on PENDING ticket hands over the book (checkout)
         $handOverResponse = $this->actingAs($librarian)->postJson(route('admin.circulation.process-scan'), [
             'code' => $reservation->reservation_code,
-            'circulation_action' => 'auto',
+            'circulation_action' => 'hand_over',
         ]);
 
         $handOverResponse->assertStatus(200)
@@ -97,10 +118,24 @@ class CirculationScannerTest extends TestCase
                 ],
             ]);
 
-        // 2. Auto scan on BORROWED ticket receives return
+        // 3. Hand-over mode on already BORROWED ticket rejects with ticket info
+        $wrongHandOver = $this->actingAs($librarian)->postJson(route('admin.circulation.process-scan'), [
+            'code' => $suffix,
+            'circulation_action' => 'hand_over',
+        ]);
+        $wrongHandOver->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+                'ticket' => [
+                    'code' => $ticketCode,
+                    'status' => BookReservation::STATUS_BORROWED,
+                ],
+            ]);
+
+        // 4. Return mode on BORROWED ticket receives return
         $returnResponse = $this->actingAs($librarian)->postJson(route('admin.circulation.process-scan'), [
             'code' => $suffix,
-            'circulation_action' => 'auto',
+            'circulation_action' => 'return',
         ]);
 
         $returnResponse->assertStatus(200)

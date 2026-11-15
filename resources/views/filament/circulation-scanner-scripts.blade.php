@@ -1,29 +1,6 @@
-<script src="{{ asset('vendor/html5-qrcode/html5-qrcode.min.js') }}"></script>
-<script src="{{ asset('vendor/jsqr/jsQR.js') }}"></script>
+<script src="{{ parse_url(asset('vendor/html5-qrcode/html5-qrcode.min.js'), PHP_URL_PATH) }}"></script>
+<script src="{{ parse_url(asset('vendor/jsqr/jsQR.js'), PHP_URL_PATH) }}"></script>
 <style>
-@keyframes qrPulseRing {
-    0% { transform: scale(0.95); opacity: 0.8; }
-    50% { transform: scale(1.03); opacity: 1; }
-    100% { transform: scale(0.95); opacity: 0.8; }
-}
-.qr-pulse-card {
-    animation: qrPulseRing 2.5s ease-in-out infinite;
-}
-@keyframes laserSweep {
-    0% { top: 8%; opacity: 0.4; }
-    50% { top: 92%; opacity: 1; }
-    100% { top: 8%; opacity: 0.4; }
-}
-.qr-laser-line {
-    position: absolute;
-    left: 8%;
-    right: 8%;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #22c55e, #10b981, transparent);
-    box-shadow: 0 0 12px #22c55e;
-    animation: laserSweep 2s ease-in-out infinite;
-    pointer-events: none;
-}
 @keyframes circulationSpin {
     to { transform: rotate(360deg); }
 }
@@ -33,8 +10,20 @@
 </style>
 <script>
 (function () {
-    const PROCESS_SCAN_URL = '{{ route("admin.circulation.process-scan") }}';
+    const PROCESS_SCAN_URL = '{{ route("admin.circulation.process-scan", [], false) }}';
     const FALLBACK_CSRF = '{{ csrf_token() }}';
+
+    function withTimeout(promise, ms, fallbackValue = null) {
+        let timer = null;
+        return Promise.race([
+            Promise.resolve(promise),
+            new Promise((resolve) => {
+                timer = setTimeout(() => resolve(fallbackValue), ms);
+            })
+        ]).finally(() => {
+            if (timer) clearTimeout(timer);
+        });
+    }
 
     let cachedBarcodeDetector = undefined;
     function getBarcodeDetector() {
@@ -70,6 +59,16 @@
         return { canvas: c, ctx };
     }
 
+    function createScaledCanvas(source, maxDim, paddingRatio = 0.05) {
+        const origW = source.naturalWidth || source.width || 1;
+        const origH = source.naturalHeight || source.height || 1;
+        const scale = Math.min(1, maxDim / Math.max(origW, origH));
+        const w = Math.max(1, Math.round(origW * scale));
+        const h = Math.max(1, Math.round(origH * scale));
+        const pad = Math.max(16, Math.round(Math.min(w, h) * paddingRatio));
+        return createWhiteBackedCanvas(source, w, h, pad);
+    }
+
     async function scanFileWithZxing(file) {
         if (typeof window.Html5Qrcode === 'undefined' || !file) {
             return null;
@@ -77,20 +76,23 @@
         const tempId = 'circulation-zxing-' + Math.random().toString(36).slice(2);
         const tempEl = document.createElement('div');
         tempEl.id = tempId;
-        tempEl.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:2px;height:2px;opacity:0;pointer-events:none;';
+        tempEl.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:40px;height:40px;opacity:0;pointer-events:none;';
         document.body.appendChild(tempEl);
 
         let html5Qr = null;
         try {
             html5Qr = new window.Html5Qrcode(tempId, { verbose: false });
-            const res = await html5Qr.scanFile(file, false);
+            const res = await withTimeout(html5Qr.scanFile(file, false), 3500, null);
             return (typeof res === 'string' && res.trim()) ? res.trim() : null;
         } catch (e) {
             return null;
         } finally {
             try {
                 if (html5Qr) {
-                    html5Qr.clear();
+                    const clearRes = html5Qr.clear();
+                    if (clearRes && typeof clearRes.catch === 'function') {
+                        clearRes.catch(() => {});
+                    }
                 }
             } catch (err) {}
             tempEl.remove();
@@ -113,7 +115,7 @@
                 } catch (e) {
                     resolve(blob);
                 }
-            }, 'image/jpeg', 0.88);
+            }, 'image/jpeg', 0.9);
         });
     }
 
@@ -171,23 +173,19 @@
     }
 
     function scanWithMultiScaleJsQr(source) {
-        const origW = source.naturalWidth || source.videoWidth || source.width;
-        const origH = source.naturalHeight || source.videoHeight || source.height;
+        const origW = source.naturalWidth || source.width;
+        const origH = source.naturalHeight || source.height;
         if (!origW || !origH) return null;
 
         // A. Coba berbagai skala resolusi dengan background putih & padding quiet-zone
         const targetScales = [1000, 720, 1400, 480];
         for (const maxDim of targetScales) {
-            const scale = Math.min(1, maxDim / Math.max(origW, origH));
-            const w = Math.max(1, Math.round(origW * scale));
-            const h = Math.max(1, Math.round(origH * scale));
-            const pad = Math.max(16, Math.round(Math.min(w, h) * 0.05));
-            const { canvas } = createWhiteBackedCanvas(source, w, h, pad);
+            const { canvas } = createScaledCanvas(source, maxDim, 0.05);
             const code = tryDecodeJsQrFromCanvas(canvas, true);
             if (code) return code;
         }
 
-        // B. Center-crop 65% fokus ke tengah frame
+        // B. Center-crop 65% fokus ke tengah foto
         const cropW = Math.max(1, Math.round(origW * 0.65));
         const cropH = Math.max(1, Math.round(origH * 0.65));
         const startX = Math.round((origW - cropW) / 2);
@@ -231,51 +229,45 @@
     }
 
     async function decodeQrFromImageSource(source, originalFile = null) {
-        const detector = getBarcodeDetector();
+        const { canvas: padded1000 } = createScaledCanvas(source, 1000, 0.06);
 
-        // Tier 1: Hardware BarcodeDetector API
+        // Tier 1: Hardware BarcodeDetector API pada canvas terukur (dengan batas waktu 1.5 detik)
+        const detector = getBarcodeDetector();
         if (detector) {
             try {
-                let results = await detector.detect(source);
+                let results = await withTimeout(detector.detect(padded1000), 1500, []);
                 if (results && results.length > 0 && results[0].rawValue) {
                     return results[0].rawValue.trim();
                 }
 
                 const origW = source.naturalWidth || source.width || 1;
                 const origH = source.naturalHeight || source.height || 1;
-                const scale = Math.min(1, 1200 / Math.max(origW, origH));
-                const w = Math.max(1, Math.round(origW * scale));
-                const h = Math.max(1, Math.round(origH * scale));
-                const { canvas } = createWhiteBackedCanvas(source, w, h, 24);
-                results = await detector.detect(canvas);
-                if (results && results.length > 0 && results[0].rawValue) {
-                    return results[0].rawValue.trim();
+                if (Math.max(origW, origH) <= 1800) {
+                    results = await withTimeout(detector.detect(source), 1500, []);
+                    if (results && results.length > 0 && results[0].rawValue) {
+                        return results[0].rawValue.trim();
+                    }
                 }
             } catch (e) {}
         }
 
-        // Tier 2: ZXing via Html5Qrcode (file asli + canvas putih)
-        if (originalFile) {
-            const zxingDirect = await scanFileWithZxing(originalFile);
-            if (zxingDirect) return zxingDirect;
-        }
+        // Tier 2: Fast jsQR langsung pada canvas 1000px & 720px (< 100ms)
+        const fastJsQr = tryDecodeJsQrFromCanvas(padded1000, true);
+        if (fastJsQr) return fastJsQr;
 
-        const origW = source.naturalWidth || source.width || 1;
-        const origH = source.naturalHeight || source.height || 1;
-        const zxingScale = Math.min(1, 1000 / Math.max(origW, origH));
-        const { canvas: paddedCanvas } = createWhiteBackedCanvas(
-            source,
-            Math.max(1, Math.round(origW * zxingScale)),
-            Math.max(1, Math.round(origH * zxingScale)),
-            24
-        );
-        const paddedFile = await canvasToJpegFile(paddedCanvas, 'padded-qr.jpg');
+        // Tier 3: ZXing via Html5Qrcode pada canvas terukur + file asli (dengan batas waktu 3.5 detik)
+        const paddedFile = await canvasToJpegFile(padded1000, 'padded-qr.jpg');
         if (paddedFile) {
             const zxingPadded = await scanFileWithZxing(paddedFile);
             if (zxingPadded) return zxingPadded;
         }
 
-        // Tier 3: Multi-Scale & Contrast/Threshold jsQR
+        if (originalFile && originalFile.size <= 4 * 1024 * 1024) {
+            const zxingDirect = await scanFileWithZxing(originalFile);
+            if (zxingDirect) return zxingDirect;
+        }
+
+        // Tier 4: Multi-Scale, Center-Crop, & Rotasi jsQR penuh
         const jsQrResult = scanWithMultiScaleJsQr(source);
         if (jsQrResult) {
             return jsQrResult;
@@ -284,196 +276,106 @@
         return null;
     }
 
-    async function decodeQrFromVideoFrame(video, workCanvas, tickCount) {
-        if (!video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) {
-            return null;
-        }
-
-        // 1. Hardware BarcodeDetector langsung ke element <video>
-        const detector = getBarcodeDetector();
-        if (detector) {
-            try {
-                const barcodes = await detector.detect(video);
-                if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
-                    return barcodes[0].rawValue.trim();
-                }
-            } catch (e) {}
-        }
-
-        // 2. Skalakan frame video maksimal 720px ke satu canvas terpakai ulang
-        const vw = video.videoWidth;
-        const vh = video.videoHeight;
-        const scale = Math.min(1, 720 / Math.max(vw, vh));
-        const w = Math.max(1, Math.round(vw * scale));
-        const h = Math.max(1, Math.round(vh * scale));
-
-        workCanvas.width = w;
-        workCanvas.height = h;
-        const ctx = workCanvas.getContext('2d', { willReadFrequently: true });
-        ctx.drawImage(video, 0, 0, w, h);
-
-        // 2a. jsQR cepat (tanpa threshold berat tiap frame; contrast boost setiap 3 tick)
-        const enhance = (tickCount % 3 === 0);
-        const fullRes = tryDecodeJsQrFromCanvas(workCanvas, enhance);
-        if (fullRes) return fullRes;
-
-        // 2b. Setiap 4 tick, potong fokus area tengah 65% + contrast boost
-        if (tickCount % 4 === 2) {
-            const cw = Math.max(1, Math.round(vw * 0.65));
-            const ch = Math.max(1, Math.round(vh * 0.65));
-            const sx = Math.round((vw - cw) / 2);
-            const sy = Math.round((vh - ch) / 2);
-            workCanvas.width = Math.min(540, cw);
-            workCanvas.height = Math.min(540, ch);
-            ctx.drawImage(video, sx, sy, cw, ch, 0, 0, workCanvas.width, workCanvas.height);
-            const cropRes = tryDecodeJsQrFromCanvas(workCanvas, true);
-            if (cropRes) return cropRes;
-        }
-
-        // 3. Fallback ZXing tiap 6 tick jika browser tidak punya BarcodeDetector (Firefox/Safari)
-        if (!detector && tickCount % 6 === 0) {
-            const frameFile = await canvasToJpegFile(workCanvas, 'live-frame.jpg');
-            if (frameFile) {
-                const zxingRes = await scanFileWithZxing(frameFile);
-                if (zxingRes) return zxingRes;
-            }
-        }
-
-        return null;
-    }
-
-    async function sendCirculationScanRequest(code, circulationAction = 'auto') {
+    async function sendCirculationScanRequest(code, circulationAction = 'hand_over') {
         const tokenMeta = document.querySelector('meta[name="csrf-token"]');
-        const csrfToken = (tokenMeta ? tokenMeta.getAttribute('content') : '') || FALLBACK_CSRF;
+        const csrfToken = (tokenMeta ? tokenMeta.getAttribute('content') : '')
+            || window.livewireScriptConfig?.csrf
+            || FALLBACK_CSRF;
 
-        const response = await fetch(PROCESS_SCAN_URL, {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({
-                code: code,
-                circulation_action: circulationAction || 'auto'
-            })
-        });
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 15000);
 
-        const rawText = await response.text();
-        let data = null;
         try {
-            data = JSON.parse(rawText);
-        } catch (e) {
-            data = null;
-        }
+            const response = await fetch(PROCESS_SCAN_URL, {
+                method: 'POST',
+                credentials: 'same-origin',
+                signal: controller.signal,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    code: code,
+                    circulation_action: circulationAction || 'hand_over'
+                })
+            });
 
-        if (!response.ok) {
-            return {
+            const rawText = await response.text();
+            let data = null;
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                data = null;
+            }
+
+            if (response.status === 419) {
+                return {
+                    success: false,
+                    message: 'Sesi keamanan halaman habis (CSRF 419). Muat ulang halaman lalu coba lagi.'
+                };
+            }
+
+            if (!response.ok) {
+                return {
+                    success: false,
+                    message: (data && data.message)
+                        ? data.message
+                        : ('Gagal memproses permintaan (HTTP ' + response.status + '). Muat ulang halaman jika sesi berakhir.'),
+                    ticket: data?.ticket || null
+                };
+            }
+
+            return data || {
                 success: false,
-                message: (data && data.message)
-                    ? data.message
-                    : ('Gagal memproses permintaan (HTTP ' + response.status + '). Muat ulang halaman jika sesi berakhir.')
+                message: 'Respons server tidak valid.'
             };
+        } catch (err) {
+            if (err && err.name === 'AbortError') {
+                return {
+                    success: false,
+                    message: 'Koneksi ke server melebihi batas waktu (15 detik). Periksa jaringan lalu coba lagi.'
+                };
+            }
+            throw err;
+        } finally {
+            clearTimeout(timer);
         }
-
-        if (window.Livewire) {
-            Livewire.dispatch('refresh');
-        }
-
-        return data || {
-            success: false,
-            message: 'Respons server tidak valid.'
-        };
     }
 
     function readImageFromFile(file) {
         return new Promise((resolve, reject) => {
+            const objectUrl = (window.URL && URL.createObjectURL) ? URL.createObjectURL(file) : null;
+            if (objectUrl) {
+                const img = new Image();
+                img.onload = () => resolve({ source: img, previewUrl: objectUrl, isObjectUrl: true });
+                img.onerror = async () => {
+                    if (typeof window.createImageBitmap === 'function') {
+                        try {
+                            const bitmap = await window.createImageBitmap(file);
+                            resolve({ source: bitmap, previewUrl: objectUrl, isObjectUrl: true });
+                            return;
+                        } catch (err) {}
+                    }
+                    URL.revokeObjectURL(objectUrl);
+                    reject(new Error('Format foto tidak dapat dibaca peramban. Gunakan JPG, PNG, atau WebP.'));
+                };
+                img.src = objectUrl;
+                return;
+            }
+
             const reader = new FileReader();
             reader.onerror = () => reject(new Error('Gagal membaca berkas gambar.'));
             reader.onload = (e) => {
                 const dataUrl = e.target.result;
                 const img = new Image();
-                img.onload = () => resolve({ source: img, previewUrl: dataUrl });
-                img.onerror = async () => {
-                    if (typeof window.createImageBitmap === 'function') {
-                        try {
-                            const bitmap = await window.createImageBitmap(file);
-                            resolve({ source: bitmap, previewUrl: dataUrl });
-                            return;
-                        } catch (err) {}
-                    }
-                    reject(new Error('Format foto tidak dapat dibaca peramban. Gunakan JPG, PNG, atau WebP.'));
-                };
+                img.onload = () => resolve({ source: img, previewUrl: dataUrl, isObjectUrl: false });
+                img.onerror = () => reject(new Error('Format foto tidak dapat dibaca peramban. Gunakan JPG, PNG, atau WebP.'));
                 img.src = dataUrl;
             };
             reader.readAsDataURL(file);
         });
-    }
-
-    async function acquireCameraStream(preferredDeviceId = null) {
-        if (!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-            throw new Error('Peramban memblokir kamera live pada koneksi HTTP non-localhost (' + location.origin + '). Buka panel lewat HTTPS atau http://localhost, atau gunakan tab Foto Kamera HP.');
-        }
-
-        if (document.featurePolicy && typeof document.featurePolicy.allowsFeature === 'function' && !document.featurePolicy.allowsFeature('camera')) {
-            throw new Error('Header server Permissions-Policy masih memblokir kamera (camera=()). Lakukan hard refresh (Ctrl+Shift+R) atau deploy pembaruan header camera=(self).');
-        }
-
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Error('Peramban tidak menyediakan API kamera langsung (getUserMedia). Gunakan tab Foto Kamera HP.');
-        }
-
-        const attempts = [];
-        if (preferredDeviceId) {
-            attempts.push({
-                video: {
-                    deviceId: { exact: preferredDeviceId },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                },
-                audio: false
-            });
-            attempts.push({
-                video: { deviceId: { exact: preferredDeviceId } },
-                audio: false
-            });
-        } else {
-            attempts.push({
-                video: {
-                    facingMode: { ideal: 'environment' },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                },
-                audio: false
-            });
-            attempts.push({
-                video: { facingMode: 'environment' },
-                audio: false
-            });
-            attempts.push({ video: true, audio: false });
-        }
-
-        let lastErr = null;
-        for (const constraints of attempts) {
-            try {
-                return await navigator.mediaDevices.getUserMedia(constraints);
-            } catch (err) {
-                lastErr = err;
-                if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
-                    throw new Error('Izin akses kamera ditolak. Klik ikon gembok/kamera di address bar browser lalu pilih Izinkan (Allow), kemudian klik Coba Lagi.');
-                }
-                if (err && (err.name === 'NotReadableError' || err.name === 'TrackStartError')) {
-                    throw new Error('Kamera sedang dipakai oleh aplikasi lain (mis. Zoom/Meet/Kamera Windows). Tutup aplikasi tersebut lalu coba lagi.');
-                }
-            }
-        }
-
-        if (lastErr && lastErr.name === 'NotFoundError') {
-            throw new Error('Perangkat kamera / webcam tidak ditemukan pada perangkat ini.');
-        }
-
-        throw new Error('Kamera live gagal dinyalakan (' + (lastErr?.message || 'Unknown error') + ').');
     }
 
     function playSuccessBeep() {
@@ -492,34 +394,27 @@
         } catch (e) {}
     }
 
-    function circulationScannerComponent() {
+    function circulationScannerComponent(initialActionMode = 'hand_over') {
+        const validModes = ['auto', 'hand_over', 'return', 'view_only'];
+        const resolvedMode = validModes.includes(initialActionMode) ? initialActionMode : 'hand_over';
+
         return {
-            activeTab: 'live',
-            actionMode: 'auto',
+            activeTab: 'photo',
+            actionMode: resolvedMode,
             isProcessing: false,
             isDecodingPhoto: false,
-            statusText: 'Siap memindai tiket sirkulasi',
+            statusText: 'Siap memindai foto QR tiket',
             lastScannedCode: '',
             lastScannedAt: 0,
             lastResult: null,
             manualCode: '',
             dragOver: false,
             previewImage: null,
-            isLiveActive: false,
-            isLiveStarting: false,
-            liveError: null,
-            availableCameras: [],
-            selectedCameraId: '',
-            _liveStream: null,
-            _liveLoopTimer: null,
-            _liveSessionId: 0,
-            _isDecodingFrame: false,
+            _previewObjectUrl: null,
             _isSubmitting: false,
-            _workCanvas: null,
-            _tickCount: 0,
+            _hasMutated: false,
 
             init() {
-                this._workCanvas = document.createElement('canvas');
                 this._pasteHandler = (e) => {
                     const items = (e.clipboardData || window.clipboardData)?.items;
                     if (!items) return;
@@ -528,7 +423,6 @@
                             const file = items[i].getAsFile();
                             if (file) {
                                 this.activeTab = 'photo';
-                                this.stopLiveCamera();
                                 this.scanPhotoFile(file);
                                 break;
                             }
@@ -536,20 +430,23 @@
                     }
                 };
                 window.addEventListener('paste', this._pasteHandler);
-
-                if (navigator.permissions && navigator.permissions.query) {
-                    navigator.permissions.query({ name: 'camera' }).then((status) => {
-                        if (status && status.state === 'granted' && this.activeTab === 'live') {
-                            this.$nextTick(() => this.startLiveCamera());
-                        }
-                    }).catch(() => {});
-                }
             },
 
             destroy() {
-                this.stopLiveCamera();
                 if (this._pasteHandler) {
                     window.removeEventListener('paste', this._pasteHandler);
+                }
+                if (this._previewObjectUrl && URL.revokeObjectURL) {
+                    URL.revokeObjectURL(this._previewObjectUrl);
+                    this._previewObjectUrl = null;
+                }
+                this.refreshOnClose();
+            },
+
+            refreshOnClose() {
+                if (this._hasMutated && window.Livewire) {
+                    this._hasMutated = false;
+                    Livewire.dispatch('$refresh');
                 }
             },
 
@@ -564,9 +461,14 @@
                 try {
                     const data = await sendCirculationScanRequest(cleanCode, this.actionMode);
                     this.lastResult = data;
-                    this.statusText = data.success ? 'Berhasil memproses tiket' : 'Gagal memproses tiket';
+                    this.statusText = data.success
+                        ? 'Berhasil memproses tiket: ' + cleanCode
+                        : 'Gagal memproses tiket: ' + cleanCode;
                     if (data.success) {
                         this.manualCode = '';
+                        if (this.actionMode !== 'view_only') {
+                            this._hasMutated = true;
+                        }
                     }
                 } catch (err) {
                     this.lastResult = {
@@ -584,22 +486,6 @@
                 return this.submitCode(code);
             },
 
-            async onDetected(rawCode) {
-                const code = (rawCode || '').trim();
-                if (!code) return;
-
-                const now = Date.now();
-                if (code === this.lastScannedCode && (now - this.lastScannedAt) < 2500) {
-                    return;
-                }
-
-                this.lastScannedAt = now;
-                this.lastScannedCode = code;
-                playSuccessBeep();
-                this.stopLiveCamera();
-                await this.submitCode(code);
-            },
-
             async scanPhotoFile(file, inputEl = null) {
                 if (!file) return;
                 if (inputEl) {
@@ -611,8 +497,15 @@
                 this.lastResult = null;
                 this.statusText = 'Membaca & mendeteksi QR Code dari foto...';
 
+                // Beri kesempatan Alpine merender spinner sebelum komputasi canvas dimulai
+                await new Promise((r) => setTimeout(r, 25));
+
                 try {
-                    const { source, previewUrl } = await readImageFromFile(file);
+                    const { source, previewUrl, isObjectUrl } = await readImageFromFile(file);
+                    if (this._previewObjectUrl && URL.revokeObjectURL) {
+                        URL.revokeObjectURL(this._previewObjectUrl);
+                    }
+                    this._previewObjectUrl = isObjectUrl ? previewUrl : null;
                     this.previewImage = previewUrl;
 
                     const code = await decodeQrFromImageSource(source, file);
@@ -629,7 +522,7 @@
                     } else {
                         this.lastResult = {
                             success: false,
-                            message: 'QR Code tidak ditemukan pada gambar ini. Pastikan QR Code terlihat utuh, fokus, dan cukup cahaya, atau gunakan Video Live Scanner / Ketik Kode.'
+                            message: 'QR Code tidak ditemukan pada gambar ini. Pastikan QR Code terlihat utuh, fokus, dan cukup cahaya, atau gunakan tab Ketik / Alat Barcode.'
                         };
                         this.statusText = 'QR Code tidak terdeteksi';
                     }
@@ -647,147 +540,11 @@
                 }
             },
 
-            async refreshCameraList() {
-                try {
-                    if (!navigator.mediaDevices?.enumerateDevices) return;
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    this.availableCameras = devices.filter(d => d.kind === 'videoinput');
-                } catch (e) {}
-            },
-
-            async startLiveCamera(deviceId = null) {
-                this.stopLiveCamera();
-                this.liveError = null;
-                this.isLiveStarting = true;
-
-                const sessionId = ++this._liveSessionId;
-                const chosenId = deviceId || this.selectedCameraId || null;
-
-                try {
-                    const stream = await acquireCameraStream(chosenId);
-                    if (sessionId !== this._liveSessionId) {
-                        stream.getTracks().forEach(t => t.stop());
-                        return;
-                    }
-
-                    this._liveStream = stream;
-                    const activeTrack = stream.getVideoTracks()[0];
-                    const activeSettings = activeTrack?.getSettings?.();
-                    if (activeSettings?.deviceId) {
-                        this.selectedCameraId = activeSettings.deviceId;
-                    }
-
-                    await this.refreshCameraList();
-
-                    const video = this.$refs.liveVideoEl;
-                    if (!video) {
-                        throw new Error('Elemen video kamera tidak ditemukan di modal.');
-                    }
-
-                    video.srcObject = stream;
-                    if (video.readyState < 1) {
-                        await new Promise((resolve) => {
-                            const done = () => {
-                                video.removeEventListener('loadedmetadata', done);
-                                resolve();
-                            };
-                            video.addEventListener('loadedmetadata', done);
-                            setTimeout(done, 1200);
-                        });
-                    }
-
-                    try {
-                        await video.play();
-                    } catch (e) {}
-
-                    if (sessionId !== this._liveSessionId) {
-                        this.stopLiveCamera();
-                        return;
-                    }
-
-                    this.isLiveStarting = false;
-                    this.isLiveActive = true;
-                    this._tickCount = 0;
-                    this.scheduleNextLiveTick(sessionId);
-                } catch (err) {
-                    this.isLiveStarting = false;
-                    this.isLiveActive = false;
-                    this.liveError = err?.message || 'Gagal membuka kamera live.';
-                }
-            },
-
-            switchLiveCamera() {
-                if (this.selectedCameraId) {
-                    this.startLiveCamera(this.selectedCameraId);
-                }
-            },
-
-            scheduleNextLiveTick(sessionId) {
-                if (!this.isLiveActive || sessionId !== this._liveSessionId) {
-                    return;
-                }
-                this._liveLoopTimer = setTimeout(() => this.runLiveScanTick(sessionId), 130);
-            },
-
-            async runLiveScanTick(sessionId) {
-                if (!this.isLiveActive || sessionId !== this._liveSessionId) {
-                    return;
-                }
-
-                if (this._isDecodingFrame || this.isProcessing || this._isSubmitting) {
-                    this.scheduleNextLiveTick(sessionId);
-                    return;
-                }
-
-                const video = this.$refs.liveVideoEl;
-                if (!video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) {
-                    this.scheduleNextLiveTick(sessionId);
-                    return;
-                }
-
-                this._isDecodingFrame = true;
-                this._tickCount++;
-                try {
-                    const code = await decodeQrFromVideoFrame(video, this._workCanvas, this._tickCount);
-                    if (code && this.isLiveActive && sessionId === this._liveSessionId) {
-                        await this.onDetected(code);
-                        return;
-                    }
-                } catch (e) {
-                } finally {
-                    this._isDecodingFrame = false;
-                }
-
-                this.scheduleNextLiveTick(sessionId);
-            },
-
-            stopLiveCamera() {
-                this._liveSessionId++;
-                if (this._liveLoopTimer) {
-                    clearTimeout(this._liveLoopTimer);
-                    this._liveLoopTimer = null;
-                }
-                if (this._liveStream) {
-                    this._liveStream.getTracks().forEach(track => {
-                        try { track.stop(); } catch (e) {}
-                    });
-                    this._liveStream = null;
-                }
-                if (this.$refs?.liveVideoEl) {
-                    try {
-                        this.$refs.liveVideoEl.pause();
-                        this.$refs.liveVideoEl.srcObject = null;
-                    } catch (e) {}
-                }
-                this.isLiveStarting = false;
-                this.isLiveActive = false;
-                this._isDecodingFrame = false;
-            },
-
             handleDrop(e) {
                 this.dragOver = false;
                 const files = e.dataTransfer?.files;
                 if (files && files.length > 0) {
+                    this.activeTab = 'photo';
                     this.scanPhotoFile(files[0]);
                 }
             }
@@ -796,148 +553,25 @@
 
     function circulationWidgetScannerComponent() {
         return {
-            isCameraRunning: false,
-            isCameraOpen: false,
-            permissionError: null,
-            actionMode: 'auto',
-            cameras: [],
-            selectedCameraId: '',
+            actionMode: 'hand_over',
             isProcessing: false,
             scannedCode: '',
             lastResult: null,
-            _stream: null,
-            _loopTimer: null,
-            _sessionId: 0,
-            _isDecodingFrame: false,
-            _workCanvas: null,
-            _tickCount: 0,
 
-            init() {
-                this._workCanvas = document.createElement('canvas');
-            },
-
-            destroy() {
-                this.stopCamera();
-            },
-
-            toggleCamera() {
-                if (this.isCameraRunning) {
-                    this.stopCamera();
-                } else {
-                    this.startCamera(this.selectedCameraId || 'environment');
-                }
-            },
-
-            async startCamera(target = 'environment') {
-                this.stopCamera();
-                this.permissionError = null;
-                this.isCameraOpen = true;
-                const sessionId = ++this._sessionId;
-                const deviceId = (target && target !== 'environment' && target !== 'user') ? target : null;
-
-                try {
-                    const stream = await acquireCameraStream(deviceId);
-                    if (sessionId !== this._sessionId) {
-                        stream.getTracks().forEach(t => t.stop());
-                        return;
-                    }
-                    this._stream = stream;
-
-                    if (navigator.mediaDevices?.enumerateDevices) {
-                        const devs = await navigator.mediaDevices.enumerateDevices();
-                        this.cameras = devs.filter(d => d.kind === 'videoinput').map((d, idx) => ({
-                            id: d.deviceId,
-                            label: d.label || ('Kamera ' + (idx + 1))
-                        }));
-                    }
-
-                    const readerHost = document.getElementById('widget-camera-reader');
-                    if (readerHost) {
-                        readerHost.innerHTML = '';
-                        const v = document.createElement('video');
-                        v.setAttribute('playsinline', 'true');
-                        v.muted = true;
-                        v.autoplay = true;
-                        v.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-                        v.srcObject = stream;
-                        readerHost.appendChild(v);
-                        this._videoEl = v;
-                        try { await v.play(); } catch (e) {}
-                    }
-
-                    this.isCameraRunning = true;
-                    this._tickCount = 0;
-                    this.scheduleNextTick(sessionId);
-                } catch (err) {
-                    this.isCameraRunning = false;
-                    this.permissionError = err?.message || 'Gagal mengakses kamera.';
-                }
-            },
-
-            switchCamera() {
-                if (this.selectedCameraId) {
-                    this.startCamera(this.selectedCameraId);
-                }
-            },
-
-            scheduleNextTick(sessionId) {
-                if (!this.isCameraRunning || sessionId !== this._sessionId) return;
-                this._loopTimer = setTimeout(() => this.runTick(sessionId), 140);
-            },
-
-            async runTick(sessionId) {
-                if (!this.isCameraRunning || sessionId !== this._sessionId) return;
-                if (this._isDecodingFrame || this.isProcessing || !this._videoEl) {
-                    this.scheduleNextTick(sessionId);
-                    return;
-                }
-
-                this._isDecodingFrame = true;
-                this._tickCount++;
-                try {
-                    const code = await decodeQrFromVideoFrame(this._videoEl, this._workCanvas, this._tickCount);
-                    if (code && this.isCameraRunning && sessionId === this._sessionId) {
-                        playSuccessBeep();
-                        await this.submitScannedCode(code);
-                        return;
-                    }
-                } catch (e) {
-                } finally {
-                    this._isDecodingFrame = false;
-                }
-
-                this.scheduleNextTick(sessionId);
-            },
-
-            stopCamera() {
-                this._sessionId++;
-                if (this._loopTimer) {
-                    clearTimeout(this._loopTimer);
-                    this._loopTimer = null;
-                }
-                if (this._stream) {
-                    this._stream.getTracks().forEach(t => { try { t.stop(); } catch (e) {} });
-                    this._stream = null;
-                }
-                if (this._videoEl) {
-                    try {
-                        this._videoEl.pause();
-                        this._videoEl.srcObject = null;
-                    } catch (e) {}
-                    this._videoEl = null;
-                }
-                this.isCameraRunning = false;
-            },
-
-            async scanSelectedFile(file) {
+            async scanSelectedFile(file, inputEl = null) {
                 if (!file || this.isProcessing) return;
-                this.isCameraOpen = true;
+                if (inputEl) {
+                    inputEl.value = '';
+                }
                 this.isProcessing = true;
-                this.scannedCode = 'Menganalisis gambar...';
+                this.scannedCode = 'Menganalisis foto QR Code...';
                 this.lastResult = null;
                 try {
-                    const { source } = await readImageFromFile(file);
+                    const { source, previewUrl, isObjectUrl } = await readImageFromFile(file);
                     const code = await decodeQrFromImageSource(source, file);
+                    if (isObjectUrl && previewUrl && URL.revokeObjectURL) {
+                        URL.revokeObjectURL(previewUrl);
+                    }
                     if (typeof source.close === 'function') {
                         try { source.close(); } catch (e) {}
                     }
@@ -946,21 +580,14 @@
                         return;
                     }
                     playSuccessBeep();
-                    await this.submitScannedCode(code);
+                    this.scannedCode = code;
+                    const result = await sendCirculationScanRequest(code, this.actionMode);
+                    this.lastResult = result;
+                    if (result?.success && window.Livewire) {
+                        Livewire.dispatch('$refresh');
+                    }
                 } catch (err) {
                     this.lastResult = { success: false, message: err?.message || 'Gagal membaca foto.' };
-                } finally {
-                    this.isProcessing = false;
-                }
-            },
-
-            async submitScannedCode(code) {
-                this.isProcessing = true;
-                this.scannedCode = code;
-                try {
-                    this.lastResult = await sendCirculationScanRequest(code, this.actionMode);
-                } catch (err) {
-                    this.lastResult = { success: false, message: 'Kendala jaringan: ' + (err?.message || 'Error') };
                 } finally {
                     this.isProcessing = false;
                 }

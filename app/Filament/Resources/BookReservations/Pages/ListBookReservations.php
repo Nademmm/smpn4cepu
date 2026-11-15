@@ -23,16 +23,31 @@ class ListBookReservations extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('scanQr')
-                ->label('Scan / Validasi Tiket QR')
+            Action::make('scanPinjam')
+                ->label('Scan Pinjam Buku')
                 ->icon('heroicon-m-qr-code')
                 ->color('success')
-                ->modalHeading('Validasi & Scan Tiket Sirkulasi')
-                ->modalDescription('Pindai tiket peminjaman siswa untuk serah terima atau pengembalian buku fisik.')
+                ->modalHeading('Scan QR Peminjaman (Serahkan Buku)')
+                ->modalDescription('Ambil foto atau pilih gambar QR Code tiket reservasi untuk menyerahkan buku fisik kepada siswa.')
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Tutup')
                 ->modalWidth('lg')
-                ->modalContent(fn () => view('filament.components.circulation-camera-modal')),
+                ->modalContent(fn () => view('filament.components.circulation-camera-modal', [
+                    'actionMode' => 'hand_over',
+                ])),
+
+            Action::make('scanKembali')
+                ->label('Scan Kembali Buku')
+                ->icon('heroicon-m-arrow-uturn-left')
+                ->color('info')
+                ->modalHeading('Scan QR Pengembalian (Terima Kembali)')
+                ->modalDescription('Ambil foto atau pilih gambar QR Code tiket peminjaman untuk mencatat pengembalian buku ke rak.')
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Tutup')
+                ->modalWidth('lg')
+                ->modalContent(fn () => view('filament.components.circulation-camera-modal', [
+                    'actionMode' => 'return',
+                ])),
         ];
     }
 
