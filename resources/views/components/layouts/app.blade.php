@@ -452,7 +452,6 @@
                                 class="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-sand/80 py-2 z-50 divide-y divide-sand/50"
                             >
                                 <div class="px-4 py-2.5">
-                                    <span class="text-[10px] font-bold text-ink-mute uppercase tracking-wider block">Akun Masuk</span>
                                     <p class="text-xs font-black text-navy truncate leading-tight">{{ $currentUser->name }}</p>
                                     <p class="text-[11px] text-ink-soft truncate font-medium mt-0.5">
                                         {{ $currentUser->email }}{{ $currentUser->student_class ? ' · ' . $currentUser->student_class : '' }}
@@ -494,7 +493,7 @@
                                             class="px-4 py-2 text-brand hover:bg-sky-soft font-extrabold flex items-center gap-2.5 transition-colors"
                                         >
                                             <x-app-icon name="shield" class="w-4 h-4 text-brand shrink-0" />
-                                            <span>Panel Dashboard Admin</span>
+                                            <span>Dashboard Admin</span>
                                         </a>
                                     @endif
                                 </div>
