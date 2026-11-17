@@ -259,6 +259,9 @@ class DigitalLibrary extends Component
         }
 
         return User::where('student_class', $this->selectedClassFilter)
+            ->where(function (Builder $q): void {
+                $q->whereNull('status')->orWhere('status', 'aktif');
+            })
             ->orderBy('name')
             ->get(['id', 'name', 'nisn', 'student_class']);
     }

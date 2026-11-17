@@ -28,8 +28,8 @@ class ListUsers extends ListRecords
                 ->badge(fn (): int => User::query()->count()),
 
             'staff' => Tab::make('Staf, Guru & Panitia')
-                ->modifyQueryUsing(fn (Builder $query): Builder => $query->whereHas('roles', fn (Builder $q) => $q->whereIn('name', ['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos'])))
-                ->badge(fn (): int => User::query()->whereHas('roles', fn (Builder $q) => $q->whereIn('name', ['super_admin', 'guru', 'staf_perpus', 'panitia_pilketos']))->count())
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->whereHas('roles', fn (Builder $q) => $q->whereIn('name', ['super_admin', 'operator_sekolah', 'guru', 'wali_kelas', 'staf_perpus', 'panitia_pilketos'])))
+                ->badge(fn (): int => User::query()->whereHas('roles', fn (Builder $q) => $q->whereIn('name', ['super_admin', 'operator_sekolah', 'guru', 'wali_kelas', 'staf_perpus', 'panitia_pilketos']))->count())
                 ->badgeColor('success'),
 
             'siswa' => Tab::make('Akun Siswa')

@@ -92,4 +92,29 @@ class QuestionBank extends Model
     {
         return $query->where('is_active', true);
     }
+
+    public function isVisibleToStudent(?User $user): bool
+    {
+        if (! ($user instanceof User)
+            || ! $user->hasRole('siswa')
+            || $user->hasAnyRole(['super_admin', 'operator_sekolah', 'guru', 'wali_kelas', 'staf_perpus', 'panitia_pilketos'])) {
+            return true;
+        }
+
+        $targets = array_values(array_unique(array_filter(
+            array_map(fn ($c): string => strtoupper(trim((string) $c)), is_array($this->target_classes) ? $this->target_classes : []),
+            fn (string $c): bool => $c !== ''
+        )));
+
+        if (empty($targets)) {
+            return true;
+        }
+
+        $studentClass = strtoupper(trim((string) $user->student_class));
+        if ($studentClass === '' || ! preg_match('/^[789][A-Z]$/', $studentClass)) {
+            return true;
+        }
+
+        return in_array($studentClass, $targets, true);
+    }
 }

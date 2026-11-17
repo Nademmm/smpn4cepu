@@ -60,10 +60,10 @@ class User extends Authenticatable implements FilamentUser
 
                 $oldClass = $user->getOriginal('student_class');
                 if ($oldClass && preg_match('/^[789][A-Z]$/i', (string) $oldClass)) {
-                    self::syncSingleRombelStatistic(strtoupper((string) $oldClass));
+                    self::syncSingleRombelStatistic(strtoupper((string) $oldClass), null, true);
                 }
                 if ($user->student_class && preg_match('/^[789][A-Z]$/i', (string) $user->student_class)) {
-                    self::syncSingleRombelStatistic(strtoupper((string) $user->student_class));
+                    self::syncSingleRombelStatistic(strtoupper((string) $user->student_class), null, true);
                 }
             }
         });
@@ -72,12 +72,12 @@ class User extends Authenticatable implements FilamentUser
             \App\Support\ClassroomOptions::flushCache();
 
             if (! self::$skipStatisticSync && $user->student_class && preg_match('/^[789][A-Z]$/i', (string) $user->student_class)) {
-                self::syncSingleRombelStatistic(strtoupper((string) $user->student_class));
+                self::syncSingleRombelStatistic(strtoupper((string) $user->student_class), null, true);
             }
         });
     }
 
-    public static function syncSingleRombelStatistic(string $className, ?string $academicYear = null): void
+    public static function syncSingleRombelStatistic(string $className, ?string $academicYear = null, bool $allowZeroUpdate = false): void
     {
         if (! preg_match('/^([789])[A-Z]$/i', $className, $m)) {
             return;
@@ -94,6 +94,18 @@ class User extends Authenticatable implements FilamentUser
         $female = (clone $baseQuery)->where('gender', 'P')->count();
 
         if ($male === 0 && $female === 0) {
+            if ($allowZeroUpdate) {
+                StudentStatistic::where('academic_year', $academicYear)
+                    ->where('class_name', strtoupper($className))
+                    ->update([
+                        'male_count' => 0,
+                        'female_count' => 0,
+                        'total_count' => 0,
+                    ]);
+                \Illuminate\Support\Facades\Cache::forget('public_student_stats_v1');
+                \Illuminate\Support\Facades\Cache::forget('admin_school_overview_stats');
+            }
+
             return;
         }
 
@@ -445,7 +457,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function scopeActiveStudents(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->where('status', 'aktif')->whereNotNull('student_class');
+        return $query->where(function (\Illuminate\Database\Eloquent\Builder $q): void {
+            $q->whereNull('status')->orWhere('status', 'aktif');
+        })->whereNotNull('student_class');
     }
 
     public function scopeAlumni(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder

@@ -111,6 +111,7 @@ class StudentImportService
                 'birth_place' => ! empty($st['birth_place']) ? trim((string) $st['birth_place']) : null,
                 'birth_date' => ! empty($st['birth_date']) ? $st['birth_date'] : null,
                 'student_class' => $cleanClass ?: null,
+                'status' => 'aktif',
                 'password' => $password,
                 'email_verified_at' => $now,
                 'created_at' => $now,
@@ -125,7 +126,7 @@ class StudentImportService
                 DB::table('users')->upsert(
                     $chunk,
                     ['nisn'],
-                    ['name', 'email', 'nis', 'gender', 'birth_place', 'birth_date', 'student_class', 'updated_at']
+                    ['name', 'email', 'nis', 'gender', 'birth_place', 'birth_date', 'student_class', 'status', 'updated_at']
                 );
             }
 

@@ -95,7 +95,13 @@ class QuizAttemptsTable
 
                 SelectFilter::make('bank_id')
                     ->label('Filter Paket Soal')
-                    ->relationship('bank', 'title')
+                    ->relationship(
+                        'bank',
+                        'title',
+                        fn (Builder $query): Builder => (Auth::user() instanceof User && Auth::user()->hasRole('guru') && ! Auth::user()->hasAnyRole(['super_admin', 'operator_sekolah']))
+                            ? Auth::user()->applyTeacherContentScope($query)
+                            : $query
+                    )
                     ->searchable()
                     ->preload(),
 

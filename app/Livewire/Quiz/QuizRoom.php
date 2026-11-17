@@ -95,6 +95,12 @@ class QuizRoom extends Component
             abort(404);
         }
 
+        /** @var \App\Models\User|null $currentUser */
+        $currentUser = Auth::user();
+        if ($currentUser && ! $this->bank->isVisibleToStudent($currentUser)) {
+            abort(403, 'Paket soal ini dikhususkan untuk rombel kelas lain.');
+        }
+
         $this->bankTitle = (string) $this->bank->title;
         $this->subjectName = (string) ($this->bank->subject?->name ?? 'Mata Pelajaran');
         $this->gradeLevel = (int) ($this->bank->grade_level ?: 7);
@@ -186,6 +192,10 @@ class QuizRoom extends Component
         ];
 
         $bank = QuestionBank::where('is_active', true)->findOrFail($this->bankId);
+        if (! $bank->isVisibleToStudent(Auth::user())) {
+            $this->authErrorMessage = 'Paket soal ini dikhususkan untuk rombel kelas lain.';
+            return;
+        }
         $this->refreshRetryState($bank);
 
         if (! $this->canRetry) {

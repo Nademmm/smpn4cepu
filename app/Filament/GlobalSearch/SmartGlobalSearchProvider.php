@@ -187,6 +187,7 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
                 'keywords' => ['siswa', 'peserta didik', 'murid', 'nisn', 'nis', 'biodata siswa', 'daftar siswa', 'rombel', 'kelas'],
                 'routeName' => 'filament.admin.resources.students.index',
                 'permission' => null,
+                'roles' => ['super_admin', 'operator_sekolah', 'wali_kelas'],
             ],
             [
                 'title' => 'Tambah Peserta Didik Baru',
@@ -194,6 +195,7 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
                 'keywords' => ['tambah siswa', 'input siswa', 'siswa baru', 'daftar siswa baru', 'buat akun siswa'],
                 'routeName' => 'filament.admin.resources.students.create',
                 'permission' => null,
+                'roles' => ['super_admin', 'operator_sekolah'],
             ],
             [
                 'title' => 'Rekap Statistik Rombel',
@@ -208,6 +210,7 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
                 'keywords' => ['nilai', 'hasil kuis', 'skor', 'rekap nilai', 'jawaban siswa', 'remedial', 'kkm'],
                 'routeName' => 'filament.admin.resources.quiz-attempts.index',
                 'permission' => null,
+                'roles' => ['super_admin', 'operator_sekolah', 'guru', 'wali_kelas'],
             ],
             [
                 'title' => 'Kotak Suara & Log Pilketos',
@@ -215,6 +218,7 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
                 'keywords' => ['kotak suara', 'log pilketos', 'suara masuk', 'rekap suara', 'fingerprint', 'audit suara'],
                 'routeName' => 'filament.admin.resources.election-votes.index',
                 'permission' => null,
+                'roles' => ['super_admin', 'panitia_pilketos'],
             ],
             [
                 'title' => 'Kelola Data Statistik Siswa',
@@ -229,6 +233,10 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
 
         foreach ($routes as $route) {
             if (!empty($route['permission']) && (!$user || !$user->can($route['permission']))) {
+                continue;
+            }
+
+            if (!empty($route['roles']) && (!$user || !$user->hasAnyRole($route['roles']))) {
                 continue;
             }
 

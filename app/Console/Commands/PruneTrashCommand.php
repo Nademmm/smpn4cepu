@@ -9,6 +9,7 @@ use App\Models\LibraryBook;
 use App\Models\Post;
 use App\Models\QuestionBank;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class PruneTrashCommand extends Command
 {
@@ -22,6 +23,18 @@ class PruneTrashCommand extends Command
         $cutoff = now()->subDays($days);
 
         $this->info("Menghapus permanen data di tong sampah yang berumur lebih dari {$days} hari (sebelum {$cutoff->toDateString()})...");
+
+        $disk = Storage::disk('public');
+
+        $expiredMaterials = LearningMaterial::onlyTrashed()->where('deleted_at', '<', $cutoff)->get(['id', 'attachment_path']);
+        foreach ($expiredMaterials as $mat) {
+            if ($mat->attachment_path
+                && str_starts_with($mat->attachment_path, 'materials/')
+                && ! LearningMaterial::withTrashed()->where('id', '!=', $mat->id)->where('attachment_path', $mat->attachment_path)->exists()
+                && $disk->exists($mat->attachment_path)) {
+                $disk->delete($mat->attachment_path);
+            }
+        }
 
         $prunedMaterials = LearningMaterial::onlyTrashed()->where('deleted_at', '<', $cutoff)->forceDelete();
         $prunedQuestions = QuestionBank::onlyTrashed()->where('deleted_at', '<', $cutoff)->forceDelete();

@@ -532,6 +532,55 @@ class TeacherTemplateImportTest extends TestCase
         );
     }
 
+    public function test_student_portal_target_classes_isolation_and_quiz_attempts_export(): void
+    {
+        [$teacherA, $teacherB, $subject] = $this->createTwoTeachersForSameSubject();
+
+        $mat7A = LearningMaterial::create([
+            'subject_id' => $subject->id,
+            'grade_level' => 7,
+            'target_classes' => ['7A', '7B'],
+            'title' => 'Materi Khusus Rombel 7A-7B',
+            'slug' => 'materi-khusus-7a-7b',
+            'summary' => 'Ringkasan 7A-7B',
+            'created_by' => $teacherA->id,
+            'is_active' => true,
+        ]);
+
+        $bank7A = QuestionBank::create([
+            'subject_id' => $subject->id,
+            'grade_level' => 7,
+            'target_classes' => ['7A', '7B'],
+            'title' => 'Ujian Khusus Rombel 7A-7B',
+            'duration_minutes' => 30,
+            'passing_grade' => 75,
+            'access_code' => 'R7AB',
+            'is_active' => true,
+            'created_by' => $teacherA->id,
+        ]);
+
+        $student7A = User::factory()->create(['student_class' => '7A', 'status' => 'aktif']);
+        $student7A->assignRole('siswa');
+
+        $student7D = User::factory()->create(['student_class' => '7D', 'status' => 'aktif']);
+        $student7D->assignRole('siswa');
+
+        $this->actingAs($student7A)->get('/belajar/materi')->assertOk()->assertSee('Materi Khusus Rombel 7A-7B');
+        $this->actingAs($student7A)->get('/belajar/latihan-soal')->assertOk()->assertSee('Ujian Khusus Rombel 7A-7B');
+        $this->actingAs($student7A)->get('/belajar/latihan-soal/' . $bank7A->id)->assertOk();
+
+        $this->actingAs($student7D)->get('/belajar/materi')->assertOk()->assertDontSee('Materi Khusus Rombel 7A-7B');
+        $this->actingAs($student7D)->get('/belajar/latihan-soal')->assertOk()->assertDontSee('Ujian Khusus Rombel 7A-7B');
+        $this->actingAs($student7D)->get('/belajar/latihan-soal/' . $bank7A->id)->assertStatus(403);
+
+        // Export Rekap Nilai (.xlsx) on ListQuizAttempts for Guru
+        Livewire::actingAs($teacherA)
+            ->test(\App\Filament\Resources\QuizAttempts\Pages\ListQuizAttempts::class)
+            ->assertActionExists('exportScoresXlsx')
+            ->callAction('exportScoresXlsx')
+            ->assertFileDownloaded();
+    }
+
     /**
      * @param  list<array{text: string, bold: bool}>  $items
      */

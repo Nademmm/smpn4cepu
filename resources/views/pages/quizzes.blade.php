@@ -266,7 +266,12 @@
                                 <span class="text-xs font-black text-brand uppercase tracking-wider">
                                     {{ $bank->subject?->name ?? 'Umum' }}
                                 </span>
-                                <div class="flex items-center gap-1.5">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    @if (!empty($bank->target_classes) && is_array($bank->target_classes))
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-cream text-navy border border-sun-soft">
+                                            {{ implode(', ', $bank->target_classes) }}
+                                        </span>
+                                    @endif
                                     @if ($bank->requiresPassword())
                                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300" title="Memerlukan Password / Token Soal dari Guru">
                                             <x-app-icon name="shield" class="w-3 h-3 text-amber-700" />

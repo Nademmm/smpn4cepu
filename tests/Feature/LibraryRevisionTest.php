@@ -7,11 +7,13 @@ use App\Models\BookReservation;
 use App\Models\User;
 use App\Services\BarcodeService;
 use App\Services\BookImportService;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class LibraryRevisionTest extends TestCase
 {
+    use DatabaseTransactions;
     /**
      * Test 1: Import Massal Buku via BookImportService (CSV & Excel)
      */
@@ -265,9 +267,12 @@ class LibraryRevisionTest extends TestCase
 
         $book = Book::where('physical_stock', '>', 0)->first();
         $this->assertNotNull($book);
-        $initialStock = $book->physical_stock;
 
         $loanService = app(\App\Services\LibraryLoanService::class);
+        $loanService->expireStale($book->id);
+        $book->refresh();
+        $initialStock = $book->physical_stock;
+
         $ticket = $loanService->reserve(
             bookId: $book->id,
             name: 'Ahmad Siswa Kamera',

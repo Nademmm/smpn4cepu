@@ -254,24 +254,31 @@ Route::get('/latihan-soal/{id}', fn ($id) => redirect('/belajar/latihan-soal/' .
 Route::middleware('auth')->group(function () {
     // 9. Materi Pelajaran
     Route::get('/belajar/materi', function () {
-        $materials = Cache::remember('public_active_materials_v1', 300, function () {
+        $allMaterials = Cache::remember('public_active_materials_v1', 300, function () {
             return LearningMaterial::with(['subject', 'author'])
                 ->where('is_active', true)
                 ->orderBy('grade_level')
                 ->get();
         });
+        /** @var \App\Models\User|null $currentUser */
+        $currentUser = Auth::user();
+        $materials = $allMaterials->filter(fn (LearningMaterial $m): bool => $m->isVisibleToStudent($currentUser))->values();
+
         return view('pages.materials', compact('materials'));
     })->name('materials');
 
     // 10. Daftar Kuis Bank Soal
     Route::get('/belajar/latihan-soal', function () {
-        $questionBanks = Cache::remember('public_active_question_banks_v1', 300, function () {
+        $allQuestionBanks = Cache::remember('public_active_question_banks_v1', 300, function () {
             return QuestionBank::with('subject')
                 ->withCount('questions')
                 ->where('is_active', true)
                 ->orderBy('grade_level')
                 ->get();
         });
+        /** @var \App\Models\User|null $currentUser */
+        $currentUser = Auth::user();
+        $questionBanks = $allQuestionBanks->filter(fn (QuestionBank $b): bool => $b->isVisibleToStudent($currentUser))->values();
 
         $allAttempts = collect();
         $myAttempts = collect();
@@ -296,6 +303,13 @@ Route::middleware('auth')->group(function () {
         $bank = QuestionBank::with('subject')
             ->where('is_active', true)
             ->findOrFail($id);
+
+        /** @var \App\Models\User|null $currentUser */
+        $currentUser = Auth::user();
+        if (! $bank->isVisibleToStudent($currentUser)) {
+            abort(403, 'Paket soal ini dikhususkan untuk rombel kelas lain.');
+        }
+
         return view('pages.quiz-play', compact('bank'));
     })->name('quiz.play');
 

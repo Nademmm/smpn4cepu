@@ -126,7 +126,20 @@ class StudentsTable
                         'aktif' => 'Siswa Aktif',
                         'alumni' => 'Alumni (Lulus)',
                         'mutasi_keluar' => 'Pindah Sekolah / Mutasi',
-                    ]),
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        $value = $data['value'] ?? null;
+                        if (empty($value)) {
+                            return $query;
+                        }
+                        if ($value === 'aktif') {
+                            return $query->where(function (\Illuminate\Database\Eloquent\Builder $q): void {
+                                $q->whereNull('status')->orWhere('status', 'aktif');
+                            });
+                        }
+
+                        return $query->where('status', $value);
+                    }),
 
                 SelectFilter::make('student_class')
                     ->label('Filter Rombel Kelas')
@@ -289,15 +302,20 @@ class StudentsTable
                             $reason = trim((string) ($data['reason'] ?? 'penyesuaian pembagian kelas'));
                             $affectedClasses = [$targetClass];
 
-                            foreach ($records as $student) {
-                                if ($student->student_class) {
-                                    $affectedClasses[] = $student->student_class;
+                            User::$skipStatisticSync = true;
+                            try {
+                                foreach ($records as $student) {
+                                    if ($student->student_class) {
+                                        $affectedClasses[] = $student->student_class;
+                                    }
+                                    $student->update(['student_class' => $targetClass]);
                                 }
-                                $student->update(['student_class' => $targetClass]);
+                            } finally {
+                                User::$skipStatisticSync = false;
                             }
 
                             foreach (array_unique($affectedClasses) as $cls) {
-                                User::syncSingleRombelStatistic((string) $cls);
+                                User::syncSingleRombelStatistic((string) $cls, null, true);
                             }
 
                             /** @var User|null $actor */

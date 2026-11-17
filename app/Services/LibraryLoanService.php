@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\BookReservation;
 use Carbon\Carbon;
 use DomainException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -95,6 +96,7 @@ class LibraryLoanService
             }
 
             $book->decrement('physical_stock');
+            $this->flushLibraryStatsCache();
 
             return BookReservation::create([
                 'book_id' => $book->id,
@@ -330,6 +332,13 @@ class LibraryLoanService
         $r->forceFill($attributes)->save();
 
         Book::whereKey($r->book_id)->increment('physical_stock');
+        $this->flushLibraryStatsCache();
+    }
+
+    private function flushLibraryStatsCache(): void
+    {
+        Cache::forget('public_books_stats_v1');
+        Cache::forget('admin_school_overview_stats');
     }
 
     private function generateCode(): string

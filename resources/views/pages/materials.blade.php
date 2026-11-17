@@ -147,7 +147,14 @@
                                 <span class="text-xs font-black text-brand uppercase tracking-wider">
                                     {{ $mat->subject?->name ?? 'Mata Pelajaran' }}
                                 </span>
-                                <x-badge type="blue">Kelas {{ $mat->grade_level }}</x-badge>
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    @if (!empty($mat->target_classes) && is_array($mat->target_classes))
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-cream text-navy border border-sun-soft">
+                                            {{ implode(', ', $mat->target_classes) }}
+                                        </span>
+                                    @endif
+                                    <x-badge type="blue">Kelas {{ $mat->grade_level }}</x-badge>
+                                </div>
                             </div>
                             <h3 class="font-extrabold text-navy text-[17px] mb-2 leading-snug group-hover:text-brand transition-colors">
                                 <button

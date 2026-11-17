@@ -64,7 +64,9 @@ class UsersTable
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'super_admin' => 'danger',
+                        'operator_sekolah' => 'warning',
                         'guru' => 'success',
+                        'wali_kelas' => 'info',
                         'siswa' => 'primary',
                         'staf_perpus' => 'warning',
                         'panitia_pilketos' => 'info',
@@ -104,7 +106,12 @@ class UsersTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(function (\Illuminate\Database\Eloquent\Collection $records): void {
+                            $records->reject(fn ($record): bool => (int) $record->id === (int) auth()->id())
+                                ->each
+                                ->delete();
+                        }),
                 ]),
             ]);
     }
