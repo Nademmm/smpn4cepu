@@ -8,6 +8,7 @@ use App\Models\BookReservation;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -55,7 +56,8 @@ class DigitalLibrary extends Component
     public string $ticketSearchCode = '';
     public ?BookReservation $checkedTicket = null;
     public ?string $checkTicketErrorMessage = null;
-    public $searchedHistory = null;
+    /** @var Collection<int, BookReservation>|null */
+    public ?Collection $searchedHistory = null;
 
     // Modal Histori Peminjaman Akun Siswa
     public bool $showHistoryModal = false;

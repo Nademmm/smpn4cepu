@@ -24,7 +24,7 @@ class UserMaintenancePrioritiesTest extends TestCase
             $book = Book::create([
                 'title' => 'Buku Uji Sirkulasi Fisik',
                 'slug' => 'buku-uji-sirkulasi-fisik',
-                'category' => \App\Enums\BookCategory::BUKU_PAKET->value,
+                'category' => \App\Enums\BookCategory::KELAS_7->value,
                 'author' => 'Pengarang Uji',
                 'physical_stock' => 5,
                 'is_active' => true,

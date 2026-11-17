@@ -56,7 +56,7 @@ return new class extends Migration
                         'author' => $legacy->author,
                         'publisher' => $legacy->publisher,
                         'published_year' => $legacy->publication_year,
-                        'category' => $legacy->category ?: BookCategory::BUKU_PAKET->value,
+                        'category' => $legacy->category ?: BookCategory::LITERASI_UMUM->value,
                         'description' => $legacy->synopsis,
                         'cover_path' => $legacy->cover_image,
                         'pdf_path' => $legacy->digital_file_path,

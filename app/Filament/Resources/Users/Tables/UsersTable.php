@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class UsersTable
 {
@@ -93,7 +94,7 @@ class UsersTable
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make()
-                    ->hidden(fn ($record): bool => (int) $record->id === (int) auth()->id())
+                    ->hidden(fn ($record): bool => (int) $record->id === (int) Auth::id())
                     ->before(function ($record): void {
                         \App\Models\ActivityLog::record(
                             action: 'delete_user_account',
@@ -108,7 +109,7 @@ class UsersTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->action(function (\Illuminate\Database\Eloquent\Collection $records): void {
-                            $records->reject(fn ($record): bool => (int) $record->id === (int) auth()->id())
+                            $records->reject(fn ($record): bool => (int) $record->id === (int) Auth::id())
                                 ->each
                                 ->delete();
                         }),

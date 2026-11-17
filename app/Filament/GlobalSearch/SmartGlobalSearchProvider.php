@@ -2,10 +2,12 @@
 
 namespace App\Filament\GlobalSearch;
 
+use App\Models\User;
 use Filament\Facades\Filament;
 use Filament\GlobalSearch\GlobalSearchResult;
 use Filament\GlobalSearch\GlobalSearchResults;
 use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class SmartGlobalSearchProvider implements GlobalSearchProvider
@@ -59,8 +61,8 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
 
     protected function searchNavigation(string $query): \Illuminate\Support\Collection
     {
-        /** @var \App\Models\User|null $user */
-        $user = auth()->user();
+        $authUser = Auth::user();
+        $user = $authUser instanceof User ? $authUser : null;
 
         $routes = [
             [

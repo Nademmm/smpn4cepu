@@ -39,7 +39,7 @@ class PostForm
                     )
                     ->searchable()
                     ->preload()
-                    ->default(fn () => auth()->id())
+                    ->default(fn () => Auth::id())
                     ->disabled(function (): bool {
                         $user = Auth::user();
 
