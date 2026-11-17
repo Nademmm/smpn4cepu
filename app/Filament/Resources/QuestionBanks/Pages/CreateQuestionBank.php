@@ -4,6 +4,8 @@ namespace App\Filament\Resources\QuestionBanks\Pages;
 
 use App\Filament\Resources\QuestionBanks\QuestionBankResource;
 use App\Models\ActivityLog;
+use App\Models\QuestionBank;
+use App\Models\User;
 use App\Services\QuestionImportService;
 use App\Services\Support\FlexibleDocumentReader;
 use App\Support\SubjectPermissionFormHelper;
@@ -13,6 +15,9 @@ use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property QuestionBank $record
+ */
 class CreateQuestionBank extends CreateRecord
 {
     protected static string $resource = QuestionBankResource::class;

@@ -59,7 +59,7 @@ class LearningMaterial extends Model
         return $query->where('grade_level', $grade);
     }
 
-    public function isVisibleToStudent(?User $user): bool
+    public function isVisibleToStudent(?\Illuminate\Contracts\Auth\Authenticatable $user): bool
     {
         if (! ($user instanceof User)
             || ! $user->hasRole('siswa')
