@@ -15,14 +15,12 @@
             width="{{ $px }}"
             height="{{ $px }}"
             decoding="async"
-            {{ $attributes->merge(['class' => 'inline-block shrink-0 object-contain']) }}
-            style="width: {{ $px }}px; height: {{ $px }}px;"
+            {{ $attributes->merge(['class' => 'inline-block shrink-0 object-contain', 'style' => "width: {$px}px; height: {$px}px;"]) }}
         />
     </picture>
 @else
     <span
         aria-hidden="true"
-        {{ $attributes->merge(['class' => 'inline-flex shrink-0 items-center justify-center rounded-full bg-sun font-extrabold text-navy']) }}
-        style="width: {{ $px }}px; height: {{ $px }}px; font-size: {{ $font }}px;"
+        {{ $attributes->merge(['class' => 'inline-flex shrink-0 items-center justify-center rounded-full bg-sun font-extrabold text-navy', 'style' => "width: {$px}px; height: {$px}px; font-size: {$font}px;"]) }}
     >4C</span>
 @endif

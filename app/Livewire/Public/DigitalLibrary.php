@@ -185,14 +185,15 @@ class DigitalLibrary extends Component
 
         // Otomatis isi data siswa jika sedang masuk akun
         if (Auth::check()) {
+            /** @var User|null $user */
             $user = Auth::user();
-            $this->borrowerName = $user->name ?? '';
-            $this->borrowerNisn = $user->nisn ?? ($user->nip ?? '');
-            if ($user->hasRole('guru')) {
+            $this->borrowerName = $user?->name ?? '';
+            $this->borrowerNisn = $user?->nisn ?? ($user?->nip ?? '');
+            if ($user instanceof User && $user->hasRole('guru')) {
                 $this->borrowerClass = 'Guru / Tenaga Pendidik';
                 $this->selectedClassFilter = 'Guru / Tenaga Pendidik';
                 $this->isManualBorrower = true;
-            } elseif (!empty($user->student_class)) {
+            } elseif (!empty($user?->student_class)) {
                 $this->borrowerClass = $user->student_class;
                 $this->selectedClassFilter = $user->student_class;
             } else {
@@ -369,6 +370,7 @@ class DigitalLibrary extends Component
             return collect();
         }
 
+        /** @var User $user */
         $user = Auth::user();
         return app(\App\Services\LibraryLoanService::class)->getBorrowerHistory(
             userId: $user->id,

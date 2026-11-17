@@ -315,6 +315,7 @@ Route::middleware('auth')->group(function () {
 
     // 11b. Riwayat Sirkulasi Peminjaman Buku Akun Siswa
     Route::get('/belajar/perpustakaan/riwayat', function (\App\Services\LibraryLoanService $loanService) {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $history = $loanService->getBorrowerHistory(userId: $user->id, nisn: $user->nisn ?? null);
         return view('pages.library-history', compact('history', 'user'));

@@ -20,8 +20,9 @@ class LoginController extends Controller
     public function showLoginForm(): View|RedirectResponse
     {
         if (Auth::check()) {
+            /** @var User|null $user */
             $user = Auth::user();
-            if ($user->hasRole('siswa')) {
+            if ($user instanceof User && $user->hasRole('siswa')) {
                 return redirect()->intended(route('quizzes'));
             }
             if ($user instanceof User && $user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin'))) {

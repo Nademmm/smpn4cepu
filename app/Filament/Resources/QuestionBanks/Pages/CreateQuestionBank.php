@@ -64,9 +64,11 @@ class CreateQuestionBank extends CreateRecord
         $this->pendingColumnOverrides = [];
 
         if ($result['success']) {
+            /** @var User|null $actor */
+            $actor = Auth::user();
             ActivityLog::record(
                 action: 'import_questions',
-                description: (Auth::user()?->name ?? 'Guru') . " mengimpor {$result['imported_questions']} butir soal ke paket \"{$this->record->title}\".",
+                description: ($actor?->name ?? 'Guru') . " mengimpor {$result['imported_questions']} butir soal ke paket \"{$this->record->title}\".",
                 reason: "Impor soal cepat via {$result['format_label']}",
                 properties: [
                     'question_bank_id' => $this->record->id,

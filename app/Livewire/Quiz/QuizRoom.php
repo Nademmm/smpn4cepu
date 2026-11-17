@@ -117,8 +117,10 @@ class QuizRoom extends Component
         }
 
         if (Auth::check()) {
-            $this->studentName = Auth::user()->name;
-            $this->studentClass = $this->normalizeCohort((string) Auth::user()->student_class, $this->gradeLevel);
+            /** @var \App\Models\User|null $authUser */
+            $authUser = Auth::user();
+            $this->studentName = (string) ($authUser?->name ?? '');
+            $this->studentClass = $this->normalizeCohort((string) ($authUser?->student_class ?? ''), $this->gradeLevel);
             $this->restoreProgressFromSession();
         } else {
             $this->studentClass = 'Kelas ' . $this->gradeLevel;
@@ -231,8 +233,9 @@ class QuizRoom extends Component
         $cohort = $this->normalizeCohort($this->studentClass, $this->gradeLevel);
         $this->studentClass = $cohort;
 
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $this->studentName = $user->name;
+        $this->studentName = (string) ($user?->name ?? '');
         $this->participantIdentifier = trim($this->studentName) . ' (' . $cohort . ')';
         $this->hasStarted = true;
         $this->startedAt = now();
@@ -323,8 +326,10 @@ class QuizRoom extends Component
             return;
         }
 
+        /** @var \App\Models\User|null $authUser */
+        $authUser = Auth::user();
         $this->participantIdentifier = (string) ($data['participant_identifier'] ?? '');
-        $this->studentName = (string) ($data['student_name'] ?? (Auth::user()?->name ?? ''));
+        $this->studentName = (string) ($data['student_name'] ?? ($authUser?->name ?? ''));
         $this->studentClass = (string) ($data['student_class'] ?? '');
         $this->startedAt = $startedAt;
         $this->durationSeconds = $durationSeconds;

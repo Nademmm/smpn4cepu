@@ -3,9 +3,13 @@
 namespace App\Filament\Resources\Students\Pages;
 
 use App\Filament\Resources\Students\StudentResource;
+use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
 use Spatie\Permission\Models\Role;
 
+/**
+ * @property User $record
+ */
 class CreateStudent extends CreateRecord
 {
     protected static string $resource = StudentResource::class;

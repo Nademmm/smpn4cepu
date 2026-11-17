@@ -4,8 +4,12 @@ namespace App\Filament\Resources\SchoolSettings\Pages;
 
 use App\Filament\Resources\SchoolSettings\SchoolSettingResource;
 use App\Models\ActivityLog;
+use App\Models\SchoolSetting;
 use Filament\Resources\Pages\EditRecord;
 
+/**
+ * @property SchoolSetting $record
+ */
 class EditSchoolSetting extends EditRecord
 {
     protected static string $resource = SchoolSettingResource::class;

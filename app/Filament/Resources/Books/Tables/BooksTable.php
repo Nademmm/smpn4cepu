@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Books\Tables;
 
 use App\Enums\BookCategory;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -20,9 +21,18 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class BooksTable
 {
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -123,14 +133,14 @@ class BooksTable
                     ->modalDescription('Katalog buku fisik akan dikembalikan ke status aktif dan dapat kembali dipinjam oleh siswa.'),
                 ForceDeleteAction::make()
                     ->label('Hapus Permanen')
-                    ->visible(fn (): bool => \Illuminate\Support\Facades\Auth::user()?->hasRole('super_admin') ?? false),
+                    ->visible(fn (): bool => static::isSuperAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make()
-                        ->visible(fn (): bool => \Illuminate\Support\Facades\Auth::user()?->hasRole('super_admin') ?? false),
+                        ->visible(fn (): bool => static::isSuperAdmin()),
                 ]),
             ]);
     }

@@ -97,6 +97,7 @@ class TeacherSubjectPermissionSheetTest extends TestCase
         $husnul = User::where('email', 'husnul.khotimah@guru.smpn4cepu.sch.id')->firstOrFail();
         $setyorini = User::where('email', 'setyorini@guru.smpn4cepu.sch.id')->firstOrFail();
 
+        /** @var User $admin */
         $admin = User::factory()->create();
         $admin->assignRole('super_admin');
 
@@ -224,7 +225,9 @@ class TeacherSubjectPermissionSheetTest extends TestCase
         $this->assertContains($sharedIndBank->id, $setyoriniBanks);
         $this->assertNotContains($bank7CDE->id, $setyoriniBanks);
 
+        /** @var User $student7C */
         $student7C = User::factory()->create(['student_class' => '7C', 'status' => 'aktif']);
+        /** @var User $student7F */
         $student7F = User::factory()->create(['student_class' => '7F', 'status' => 'aktif']);
 
         $attempt7C = QuizAttempt::create([
@@ -278,6 +281,7 @@ class TeacherSubjectPermissionSheetTest extends TestCase
 
     public function test_unrestricted_legacy_pivot_row_still_allows_all_grades(): void
     {
+        /** @var User $guru */
         $guru = User::factory()->create();
         $guru->assignRole('guru');
         $subject = Subject::create(['code' => 'TEST-1', 'name' => 'Mapel Uji']);

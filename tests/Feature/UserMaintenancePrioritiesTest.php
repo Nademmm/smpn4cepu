@@ -63,6 +63,7 @@ class UserMaintenancePrioritiesTest extends TestCase
 
     public function test_authenticated_user_can_change_password(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'password' => Hash::make('passwordLama123'),
         ]);
@@ -80,6 +81,7 @@ class UserMaintenancePrioritiesTest extends TestCase
 
     public function test_change_password_fails_with_invalid_current_password(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'password' => Hash::make('passwordAsli123'),
         ]);

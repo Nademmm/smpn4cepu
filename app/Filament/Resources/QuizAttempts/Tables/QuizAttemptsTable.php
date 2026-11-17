@@ -98,9 +98,15 @@ class QuizAttemptsTable
                     ->relationship(
                         'bank',
                         'title',
-                        fn (Builder $query): Builder => (Auth::user() instanceof User && Auth::user()->hasRole('guru') && ! Auth::user()->hasAnyRole(['super_admin', 'operator_sekolah']))
-                            ? Auth::user()->applyTeacherContentScope($query)
-                            : $query
+                        function (Builder $query): Builder {
+                            /** @var User|null $user */
+                            $user = Auth::user();
+                            if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+                                return $user->applyTeacherContentScope($query);
+                            }
+
+                            return $query;
+                        }
                     )
                     ->searchable()
                     ->preload(),

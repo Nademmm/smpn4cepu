@@ -9,6 +9,9 @@ use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @property User $record
+ */
 class EditStudent extends EditRecord
 {
     protected static string $resource = StudentResource::class;

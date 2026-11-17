@@ -59,6 +59,7 @@ class SmartGlobalSearchProvider implements GlobalSearchProvider
 
     protected function searchNavigation(string $query): \Illuminate\Support\Collection
     {
+        /** @var \App\Models\User|null $user */
         $user = auth()->user();
 
         $routes = [

@@ -4,6 +4,8 @@ namespace App\Filament\Resources\QuestionBanks\Pages;
 
 use App\Filament\Resources\QuestionBanks\QuestionBankResource;
 use App\Models\ActivityLog;
+use App\Models\QuestionBank;
+use App\Models\User;
 use App\Services\QuestionImportService;
 use App\Support\SubjectPermissionFormHelper;
 use App\Support\TemplateImportUiHelper;
@@ -17,6 +19,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * @property QuestionBank $record
+ */
 class EditQuestionBank extends EditRecord
 {
     protected static string $resource = QuestionBankResource::class;
@@ -72,9 +77,11 @@ class EditQuestionBank extends EditRecord
                     Storage::disk('local')->delete($relativePath);
 
                     if ($result['success']) {
+                        /** @var User|null $actor */
+                        $actor = Auth::user();
                         ActivityLog::record(
                             action: 'import_questions',
-                            description: (Auth::user()?->name ?? 'Guru') . " mengimpor {$result['imported_questions']} butir soal ke paket \"{$this->record->title}\".",
+                            description: ($actor?->name ?? 'Guru') . " mengimpor {$result['imported_questions']} butir soal ke paket \"{$this->record->title}\".",
                             reason: ($replace ? 'Menggantikan' : 'Menambahkan') . " soal via {$result['format_label']}",
                             properties: [
                                 'question_bank_id' => $this->record->id,

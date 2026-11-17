@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LearningMaterials\Tables;
 
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -14,9 +15,18 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class LearningMaterialsTable
 {
+    public static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user instanceof User && $user->hasRole('super_admin');
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -68,14 +78,14 @@ class LearningMaterialsTable
                     ->modalDescription('Materi ini akan dikembalikan ke status aktif dan dapat kembali diakses oleh siswa.'),
                 ForceDeleteAction::make()
                     ->label('Hapus Permanen')
-                    ->visible(fn (): bool => \Illuminate\Support\Facades\Auth::user()?->hasRole('super_admin') ?? false),
+                    ->visible(fn (): bool => static::isSuperAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make()
-                        ->visible(fn (): bool => \Illuminate\Support\Facades\Auth::user()?->hasRole('super_admin') ?? false),
+                        ->visible(fn (): bool => static::isSuperAdmin()),
                 ]),
             ]);
     }

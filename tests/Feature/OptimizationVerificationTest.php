@@ -51,6 +51,7 @@ class OptimizationVerificationTest extends TestCase
             ['name' => 'Bahasa Uji Scope B']
         );
 
+        /** @var User $guruA */
         $guruA = User::factory()->create([
             'name' => 'Guru Scope A',
             'email' => 'guru.scope.a.' . uniqid() . '@smpn4cepu.sch.id',
@@ -177,6 +178,7 @@ class OptimizationVerificationTest extends TestCase
 
     public function test_quiz_room_preserves_student_official_rombel_on_start(): void
     {
+        /** @var User $student */
         $student = User::factory()->create([
             'name' => 'Siswa Rombel 7A',
             'email' => 'siswa.rombel.7a.' . uniqid() . '@smpn4cepu.sch.id',
@@ -273,12 +275,15 @@ class OptimizationVerificationTest extends TestCase
 
     public function test_circulation_scan_is_restricted_to_super_admin_and_staf_perpus(): void
     {
+        /** @var User $guru */
         $guru = User::factory()->create(['email' => 'guru.scan.' . uniqid() . '@smpn4cepu.sch.id']);
         $guru->assignRole('guru');
 
+        /** @var User $panitia */
         $panitia = User::factory()->create(['email' => 'panitia.scan.' . uniqid() . '@smpn4cepu.sch.id']);
         $panitia->assignRole('panitia_pilketos');
 
+        /** @var User $stafPerpus */
         $stafPerpus = User::factory()->create(['email' => 'perpus.scan.' . uniqid() . '@smpn4cepu.sch.id']);
         $stafPerpus->assignRole('staf_perpus');
 
@@ -302,6 +307,7 @@ class OptimizationVerificationTest extends TestCase
         $subjectA = Subject::firstOrCreate(['code' => 'POL-A-' . uniqid()], ['name' => 'Mapel A']);
         $subjectB = Subject::firstOrCreate(['code' => 'POL-B-' . uniqid()], ['name' => 'Mapel B']);
 
+        /** @var User $guru */
         $guru = User::factory()->create(['email' => 'guru.policy.' . uniqid() . '@smpn4cepu.sch.id']);
         $guru->assignRole('guru');
         $guru->subjects()->sync([$subjectA->id]);
@@ -354,17 +360,20 @@ class OptimizationVerificationTest extends TestCase
     {
         $admin = User::where('email', 'admin@smpn4cepu.sch.id')->firstOrFail();
 
+        /** @var User $wali */
         $wali = User::factory()->create([
             'email' => 'wali.7a.' . uniqid() . '@smpn4cepu.sch.id',
             'homeroom_class' => '7A',
         ]);
         $wali->assignRole('wali_kelas');
 
+        /** @var User $student7A */
         $student7A = User::factory()->create([
             'nisn' => '0088' . rand(100000, 999999),
             'student_class' => '7A',
             'status' => 'aktif',
         ]);
+        /** @var User $student8B */
         $student8B = User::factory()->create([
             'nisn' => '0077' . rand(100000, 999999),
             'student_class' => '8B',
@@ -442,6 +451,7 @@ class OptimizationVerificationTest extends TestCase
 
     public function test_login_controller_redirects_operator_and_wali_kelas_to_admin_panel(): void
     {
+        /** @var User $operator */
         $operator = User::factory()->create([
             'email' => 'operator.redir.' . uniqid() . '@smpn4cepu.sch.id',
             'password' => Hash::make('secret123'),
@@ -458,6 +468,7 @@ class OptimizationVerificationTest extends TestCase
     public function test_quiz_room_enforces_retry_limit_and_invalidates_option_cache(): void
     {
         $admin = User::where('email', 'admin@smpn4cepu.sch.id')->firstOrFail();
+        /** @var User $student */
         $student = User::factory()->create([
             'email' => 'siswa.retry.' . uniqid() . '@smpn4cepu.sch.id',
             'student_class' => '7B',
@@ -576,6 +587,7 @@ class OptimizationVerificationTest extends TestCase
         /** @var LibraryLoanService $loanService */
         $loanService = app(LibraryLoanService::class);
 
+        /** @var User $student */
         $student = User::factory()->create([
             'name' => 'Siswa Batal Pinjam',
             'email' => 'siswa.batal.' . uniqid() . '@smpn4cepu.sch.id',
@@ -621,6 +633,7 @@ class OptimizationVerificationTest extends TestCase
 
     public function test_navbar_displays_user_name_and_system_restore_command_exists(): void
     {
+        /** @var User $student */
         $student = User::factory()->create([
             'name' => 'Nama Lengkap Siswa Uji',
             'email' => 'email.rahasia.uji.' . uniqid() . '@smpn4cepu.sch.id',

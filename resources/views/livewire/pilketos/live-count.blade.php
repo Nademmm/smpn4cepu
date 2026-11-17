@@ -95,7 +95,7 @@
                     <div class="h-4 w-full bg-sun-soft/60 rounded-full overflow-hidden p-0.5 border border-sun-soft">
                         <div
                             class="h-full {{ $barBg }} rounded-full transition-all duration-700 ease-out shadow-xs"
-                            style="width: {{ $percent }}%;"
+                            @style(["width: {$percent}%"])
                         ></div>
                     </div>
                 </div>

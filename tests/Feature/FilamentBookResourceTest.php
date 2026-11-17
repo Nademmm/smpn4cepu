@@ -13,8 +13,10 @@ class FilamentBookResourceTest extends TestCase
 {
     public function test_super_admin_can_access_books_resource(): void
     {
+        /** @var User|null $admin */
         $admin = User::where('email', 'admin@smpn4cepu.sch.id')->first();
         if (!$admin) {
+            /** @var User $admin */
             $admin = User::factory()->create(['email' => 'admin@smpn4cepu.sch.id']);
             $admin->assignRole('super_admin');
         }
@@ -34,8 +36,10 @@ class FilamentBookResourceTest extends TestCase
 
     public function test_admin_can_create_book_manually_via_filament_form(): void
     {
+        /** @var User|null $admin */
         $admin = User::where('email', 'admin@smpn4cepu.sch.id')->first();
         if (!$admin) {
+            /** @var User $admin */
             $admin = User::factory()->create(['email' => 'admin@smpn4cepu.sch.id']);
             $admin->assignRole('super_admin');
         }

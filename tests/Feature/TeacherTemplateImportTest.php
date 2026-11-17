@@ -45,6 +45,7 @@ class TeacherTemplateImportTest extends TestCase
             ['name' => 'IPA Uji Template']
         );
 
+        /** @var User $teacherA */
         $teacherA = User::factory()->create(['email_verified_at' => now()]);
         $teacherA->assignRole('guru');
         DB::table('subject_teacher')->insert([
@@ -56,6 +57,7 @@ class TeacherTemplateImportTest extends TestCase
             'updated_at' => now(),
         ]);
 
+        /** @var User $teacherB */
         $teacherB = User::factory()->create(['email_verified_at' => now()]);
         $teacherB->assignRole('guru');
         DB::table('subject_teacher')->insert([
@@ -559,9 +561,11 @@ class TeacherTemplateImportTest extends TestCase
             'created_by' => $teacherA->id,
         ]);
 
+        /** @var User $student7A */
         $student7A = User::factory()->create(['student_class' => '7A', 'status' => 'aktif']);
         $student7A->assignRole('siswa');
 
+        /** @var User $student7D */
         $student7D = User::factory()->create(['student_class' => '7D', 'status' => 'aktif']);
         $student7D->assignRole('siswa');
 
