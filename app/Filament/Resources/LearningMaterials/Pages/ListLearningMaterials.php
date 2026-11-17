@@ -9,7 +9,6 @@ use App\Services\LearningMaterialImportService;
 use App\Support\SubjectPermissionFormHelper;
 use App\Support\TemplateImportUiHelper;
 use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
@@ -26,70 +25,12 @@ class ListLearningMaterials extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ActionGroup::make([
-                Action::make('downloadTemplateXlsx')
-                    ->label('Template Excel (.xlsx)')
-                    ->icon('heroicon-o-table-cells')
-                    ->action(function (): StreamedResponse {
-                        $content = LearningMaterialImportService::getTemplateXlsx();
-
-                        return response()->streamDownload(function () use ($content): void {
-                            echo $content;
-                        }, 'template_materi_smpn4cepu.xlsx', [
-                            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                        ]);
-                    }),
-
-                Action::make('downloadTemplateCsv')
-                    ->label('Template CSV (.csv)')
-                    ->icon('heroicon-o-document-text')
-                    ->action(function (): StreamedResponse {
-                        $content = LearningMaterialImportService::getTemplateCsv();
-
-                        return response()->streamDownload(function () use ($content): void {
-                            echo $content;
-                        }, 'template_materi_smpn4cepu.csv', [
-                            'Content-Type' => 'text/csv; charset=UTF-8',
-                        ]);
-                    }),
-
-                Action::make('downloadTemplateDocx')
-                    ->label('Template Word (.docx)')
-                    ->icon('heroicon-o-document')
-                    ->action(function (): StreamedResponse {
-                        $content = LearningMaterialImportService::getTemplateDocx();
-
-                        return response()->streamDownload(function () use ($content): void {
-                            echo $content;
-                        }, 'template_materi_smpn4cepu.docx', [
-                            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        ]);
-                    }),
-
-                Action::make('downloadTemplateTxt')
-                    ->label('Template Teks (.txt)')
-                    ->icon('heroicon-o-code-bracket')
-                    ->action(function (): StreamedResponse {
-                        $content = LearningMaterialImportService::getTemplateTxt();
-
-                        return response()->streamDownload(function () use ($content): void {
-                            echo $content;
-                        }, 'template_materi_smpn4cepu.txt', [
-                            'Content-Type' => 'text/plain; charset=UTF-8',
-                        ]);
-                    }),
-            ])
-                ->label('Unduh Template Materi')
-                ->icon('heroicon-o-arrow-down-tray')
-                ->color('gray')
-                ->button(),
-
             Action::make('importMaterialsFromTemplate')
-                ->label('Import Materi dari Template')
+                ->label('Import Materi dari Berkas')
                 ->icon('heroicon-o-document-arrow-up')
                 ->color('success')
-                ->modalHeading('Import Materi Pembelajaran dari Template Apapun')
-                ->modalDescription('Unggah berkas Excel (.xlsx/.csv), Word (.docx/.dotx), TXT/MD, JSON, atau modul PDF/PPTX. Bisa memakai template resmi maupun template pribadi guru.')
+                ->modalHeading('Import Materi Pembelajaran dari Berkas Apapun')
+                ->modalDescription('Unggah berkas Excel (.xlsx/.csv), Word (.docx/.dotx), TXT/MD, JSON, atau modul PDF/PPTX milik Anda sendiri.')
                 ->modalSubmitActionLabel('Proses & Simpan Materi')
                 ->modalWidth('3xl')
                 ->form([

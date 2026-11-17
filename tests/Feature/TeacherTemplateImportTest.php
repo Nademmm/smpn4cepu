@@ -346,7 +346,7 @@ class TeacherTemplateImportTest extends TestCase
             $this->assertTrue($docxImport['success']);
             $docxMaterial = LearningMaterial::findOrFail($docxImport['created_ids'][0]);
             $this->assertNotEmpty($docxMaterial->attachment_path);
-            Storage::disk('public')->assertExists($docxMaterial->attachment_path);
+            $this->assertTrue(Storage::disk('public')->exists($docxMaterial->attachment_path));
             $this->assertStringContainsString('Modul Zat', $docxMaterial->title);
 
             $pdfImport = $materialSvc->importBatch($pdfPath, [
@@ -357,7 +357,7 @@ class TeacherTemplateImportTest extends TestCase
 
             $this->assertTrue($pdfImport['success']);
             $pdfMaterial = LearningMaterial::findOrFail($pdfImport['created_ids'][0]);
-            Storage::disk('public')->assertExists($pdfMaterial->attachment_path);
+            $this->assertTrue(Storage::disk('public')->exists($pdfMaterial->attachment_path));
         } finally {
             @unlink($xlsxPath);
             @unlink($docxPath);
@@ -510,13 +510,12 @@ class TeacherTemplateImportTest extends TestCase
 
         Livewire::actingAs($teacherA)
             ->test(ListLearningMaterials::class)
-            ->assertActionExists('downloadTemplateXlsx')
-            ->assertActionExists('downloadTemplateCsv')
-            ->assertActionExists('downloadTemplateDocx')
+            ->assertActionDoesNotExist('downloadTemplateXlsx')
+            ->assertActionDoesNotExist('downloadTemplateCsv')
+            ->assertActionDoesNotExist('downloadTemplateDocx')
+            ->assertActionDoesNotExist('downloadTemplateTxt')
             ->assertActionExists('importMaterialsFromTemplate')
             ->assertActionExists('exportMaterials')
-            ->callAction('downloadTemplateXlsx')
-            ->assertFileDownloaded('template_materi_smpn4cepu.xlsx')
             ->callAction('importMaterialsFromTemplate', [
                 'subject_id' => $subject->id,
                 'grade_level' => 7,
