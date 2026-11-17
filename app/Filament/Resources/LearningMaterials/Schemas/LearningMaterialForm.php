@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\LearningMaterials\Schemas;
 
+use App\Services\LearningMaterialImportService;
+use App\Services\Support\FlexibleDocumentReader;
 use App\Support\SubjectPermissionFormHelper;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -9,6 +11,9 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -19,6 +24,58 @@ class LearningMaterialForm
     {
         return $schema
             ->components([
+                Section::make('Isi Otomatis dari File Template / Dokumen (Opsional)')
+                    ->description('Unggah berkas Word (.docx, .dotx), Excel (.xlsx, .csv), TXT/MD, atau JSON untuk mengisi Judul, Ringkasan, dan Isi Materi secara otomatis.')
+                    ->collapsed()
+                    ->columnSpanFull()
+                    ->schema([
+                        FileUpload::make('template_extract_file')
+                            ->label('Pilih File Template untuk Ekstrak Konten')
+                            ->disk('local')
+                            ->directory('temp_imports')
+                            ->dehydrated(false)
+                            ->rules([FlexibleDocumentReader::importFileRule()])
+                            ->live()
+                            ->afterStateUpdated(function ($state, Set $set): void {
+                                $resolved = FlexibleDocumentReader::resolveUploadedFile($state, 'local');
+                                if (! $resolved) {
+                                    return;
+                                }
+
+                                $draft = app(LearningMaterialImportService::class)->extractSingleFormDraft($resolved['path'], $resolved['name']);
+                                if (! $draft) {
+                                    Notification::make()
+                                        ->title('Isi File Belum Terbaca')
+                                        ->body('Pastikan berkas Word/Excel/CSV/TXT memiliki teks atau kolom judul yang jelas.')
+                                        ->warning()
+                                        ->send();
+
+                                    return;
+                                }
+
+                                if ($draft['title'] !== '') {
+                                    $set('title', $draft['title']);
+                                    $set('slug', $draft['slug']);
+                                }
+                                if ($draft['summary'] !== '') {
+                                    $set('summary', $draft['summary']);
+                                }
+                                if ($draft['content'] !== '') {
+                                    $set('content', $draft['content']);
+                                }
+                                if (! empty($draft['external_url'])) {
+                                    $set('external_url', $draft['external_url']);
+                                }
+
+                                Notification::make()
+                                    ->title('Template Materi Berhasil Dibaca')
+                                    ->body("Judul dan konten diisi otomatis dari {$draft['format_label']}. Silakan tinjau sebelum menyimpan.")
+                                    ->success()
+                                    ->send();
+                            })
+                            ->helperText('Mendukung .docx, .dotx, .xlsx, .xltx, .ods, .odt, .csv, .txt, .md, .rtf, dan .json.'),
+                    ]),
+
                 SubjectPermissionFormHelper::subjectField(),
 
                 SubjectPermissionFormHelper::gradeLevelField('Tingkat Kelas'),
@@ -54,20 +111,12 @@ class LearningMaterialForm
                     ->columnSpanFull(),
 
                 FileUpload::make('attachment_path')
-                    ->label('Berkas Lampiran / Bahan Ajar Digital')
+                    ->label('Berkas Lampiran / Bahan Ajar Digital / Template')
                     ->directory('materials')
                     ->disk('public')
-                    ->acceptedFileTypes([
-                        'application/pdf',
-                        'application/msword',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        'application/vnd.ms-powerpoint',
-                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                        'application/vnd.ms-excel',
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                        'application/zip',
-                    ])
-                    ->helperText('Pilih berkas dari komputer (format PDF, DOCX, PPTX, XLSX, atau ZIP).')
+                    ->maxSize(25600)
+                    ->rules([FlexibleDocumentReader::materialAttachmentRule()])
+                    ->helperText('Mendukung PDF, Word (.doc/.docx/.dotx), Excel (.xls/.xlsx/.xltx/.csv), PowerPoint (.ppt/.pptx/.potx), LibreOffice (.odt/.ods/.odp), TXT/MD/RTF, ZIP/RAR/7Z, atau gambar (maks. 25 MB).')
                     ->columnSpanFull(),
 
                 TextInput::make('external_url')

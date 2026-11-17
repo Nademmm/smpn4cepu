@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Enums\GradeLevel;
+use App\Models\Subject;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Get;
@@ -13,27 +14,28 @@ use Illuminate\Validation\ValidationException;
 
 class SubjectPermissionFormHelper
 {
-    public static function subjectField(): Select
+    public static function subjectField(bool $useRelationship = true): Select
     {
-        return Select::make('subject_id')
-            ->label('Mata Pelajaran')
-            ->relationship(
+        $select = Select::make('subject_id')
+            ->label('Mata Pelajaran');
+
+        if ($useRelationship) {
+            $select->relationship(
                 name: 'subject',
                 titleAttribute: 'name',
-                modifyQueryUsing: function (Builder $query): void {
-                    /** @var User|null $user */
-                    $user = Auth::user();
-
-                    if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
-                        $subjectIds = $user->subjects()->pluck('subjects.id')->all();
-                        if (! empty($subjectIds)) {
-                            $query->whereIn('id', $subjectIds);
-                        } else {
-                            $query->whereRaw('1 = 0');
-                        }
-                    }
-                }
+                modifyQueryUsing: fn (Builder $query) => self::scopeSubjectQueryForUser($query)
             )
+            ->preload();
+        } else {
+            $select->options(function (): array {
+                $query = Subject::query()->orderBy('name');
+                self::scopeSubjectQueryForUser($query);
+
+                return $query->pluck('name', 'id')->all();
+            });
+        }
+
+        return $select
             ->default(function (): ?int {
                 /** @var User|null $user */
                 $user = Auth::user();
@@ -62,8 +64,22 @@ class SubjectPermissionFormHelper
             })
             ->helperText('Bagi guru pengampu, pilihan otomatis difilter sesuai mata pelajaran yang ditugaskan oleh admin.')
             ->searchable()
-            ->preload()
             ->required();
+    }
+
+    private static function scopeSubjectQueryForUser(Builder $query): void
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
+            $subjectIds = $user->subjects()->pluck('subjects.id')->all();
+            if (! empty($subjectIds)) {
+                $query->whereIn('id', $subjectIds);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
     }
 
     public static function gradeLevelField(string $label = 'Tingkat Kelas', ?string $helperText = null): Select
@@ -195,16 +211,16 @@ class SubjectPermissionFormHelper
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public static function validateAndNormalizePayload(array $data, bool $isCreate = false): array
+    public static function validateAndNormalizePayload(array $data, bool $isCreate = false, ?User $actor = null): array
     {
         /** @var User|null $user */
-        $user = Auth::user();
+        $user = $actor ?? Auth::user();
 
         if ($isCreate) {
             if ($user instanceof User && $user->hasRole('guru') && ! $user->hasAnyRole(['super_admin', 'operator_sekolah'])) {
                 $data['created_by'] = $user->id;
             } else {
-                $data['created_by'] ??= Auth::id();
+                $data['created_by'] ??= $user?->id ?? Auth::id();
             }
         }
 

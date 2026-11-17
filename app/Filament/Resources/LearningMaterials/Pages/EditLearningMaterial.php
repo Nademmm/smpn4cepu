@@ -4,6 +4,7 @@ namespace App\Filament\Resources\LearningMaterials\Pages;
 
 use App\Filament\Resources\LearningMaterials\LearningMaterialResource;
 use App\Support\SubjectPermissionFormHelper;
+use App\Support\TemplateImportUiHelper;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -15,7 +16,10 @@ class EditLearningMaterial extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        return SubjectPermissionFormHelper::validateAndNormalizePayload($data, isCreate: false);
+        return SubjectPermissionFormHelper::validateAndNormalizePayload(
+            TemplateImportUiHelper::stripTransientKeys($data),
+            isCreate: false
+        );
     }
 
     protected function getHeaderActions(): array

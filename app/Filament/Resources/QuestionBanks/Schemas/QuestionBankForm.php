@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\QuestionBanks\Schemas;
 
 use App\Support\SubjectPermissionFormHelper;
+use App\Support\TemplateImportUiHelper;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionBankForm
@@ -87,6 +89,12 @@ class QuestionBankForm
 
                 Hidden::make('created_by')
                     ->default(fn () => Auth::id()),
+
+                Section::make('Impor Cepat Soal dari File Template (Opsional)')
+                    ->description('Unggah berkas Excel, CSV, Word (.docx), atau TXT milik Anda (atau template resmi) untuk mengisi butir soal otomatis saat menyimpan paket ini. Untuk menambah/mengganti soal di paket yang sudah tersimpan, gunakan tombol "Import Soal" di bagian atas halaman Edit.')
+                    ->visible(fn (?Model $record): bool => $record === null)
+                    ->columnSpanFull()
+                    ->schema(TemplateImportUiHelper::questionUploadFields('quick_import_file', required: false, dehydratedFile: true, autoFillTitle: true)),
 
                 Section::make('Daftar Butir Soal Pilihan Ganda')
                     ->description('Kelola daftar pertanyaan, bobot nilai, pembahasan, dan pilihan jawaban langsung dalam paket soal ini.')

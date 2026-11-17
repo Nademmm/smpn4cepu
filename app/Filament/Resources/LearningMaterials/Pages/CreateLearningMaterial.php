@@ -4,6 +4,7 @@ namespace App\Filament\Resources\LearningMaterials\Pages;
 
 use App\Filament\Resources\LearningMaterials\LearningMaterialResource;
 use App\Support\SubjectPermissionFormHelper;
+use App\Support\TemplateImportUiHelper;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateLearningMaterial extends CreateRecord
@@ -12,7 +13,10 @@ class CreateLearningMaterial extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return SubjectPermissionFormHelper::validateAndNormalizePayload($data, isCreate: true);
+        return SubjectPermissionFormHelper::validateAndNormalizePayload(
+            TemplateImportUiHelper::stripTransientKeys($data),
+            isCreate: true
+        );
     }
 }
 

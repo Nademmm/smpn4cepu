@@ -2,8 +2,13 @@
 
 namespace App\Filament\Resources\QuestionBanks\Tables;
 
+use App\Models\QuestionBank;
 use App\Models\User;
+use App\Services\QuestionImportService;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -108,6 +113,20 @@ class QuestionBanksTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                Action::make('exportTemplate')
+                    ->label('Export Soal')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('gray')
+                    ->action(function (QuestionBank $record): StreamedResponse {
+                        $xlsxContent = QuestionImportService::exportBankToXlsx($record);
+                        $slug = Str::slug((string) $record->title) ?: 'bank-soal';
+
+                        return response()->streamDownload(function () use ($xlsxContent): void {
+                            echo $xlsxContent;
+                        }, "soal_{$slug}.xlsx", [
+                            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        ]);
+                    }),
                 EditAction::make(),
                 DeleteAction::make()
                     ->modalHeading('Pindahkan Paket Soal ke Tong Sampah?')
